@@ -5,7 +5,7 @@ spring:
   config:
     import: optional:file:.env[.properties]
 
-    datasource:
+  datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DB}
     username: ${MYSQL_USER}
@@ -20,19 +20,19 @@ spring:
       max-lifetime: 1800000
       auto-commit: true
 
-    sql:
-      init:
-        mode: always
+  sql:
+    init:
+      mode: always
 
-      # JPA ??
-      jpa:
+    # JPA ??
+    jpa:
+      hibernate:
+        ddl-auto: ${DDL_AUTO_OPTION}
+      properties:
         hibernate:
-          ddl-auto: ${DDL_AUTO_OPTION}
-        properties:
-          hibernate:
-            dialect: org.hibernate.dialect.MySQL8Dialect
-            format_sql: true
-            default_batch_fetch_size: 100
+          dialect: org.hibernate.dialect.MySQL8Dialect
+          format_sql: true
+          default_batch_fetch_size: 100
 
 
 # Log ?? ??
