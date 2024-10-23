@@ -1,0 +1,46 @@
+spring:
+  application:
+    name: backend
+
+  config:
+    import: optional:file:.env[.properties]
+
+    datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DB}
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
+    hikari:
+      pool-name: hikari-pool
+      maximum-pool-size: 50
+      minimum-idle: 50
+      connection-timeout: 5000
+      connection-init-sql: SELECT 1
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      auto-commit: true
+
+    sql:
+      init:
+        mode: always
+
+      # JPA ??
+      jpa:
+        hibernate:
+          ddl-auto: ${DDL_AUTO_OPTION}
+        properties:
+          hibernate:
+            dialect: org.hibernate.dialect.MySQL8Dialect
+            format_sql: true
+            default_batch_fetch_size: 100
+
+
+# Log ?? ??
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+      hibernate:
+        SQL: debug
+        type: trace
