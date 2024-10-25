@@ -1,11 +1,11 @@
-package com.checkitout.ijoa.service.user;
+package com.checkitout.ijoa.user.service;
 
-import com.checkitout.ijoa.domain.User;
-import com.checkitout.ijoa.dto.ResponseDto;
-import com.checkitout.ijoa.dto.user.UserSignupRequestDto;
+import com.checkitout.ijoa.common.dto.ResponseDto;
 import com.checkitout.ijoa.exception.CustomException;
 import com.checkitout.ijoa.exception.ErrorCode;
-import com.checkitout.ijoa.repository.UserRepository;
+import com.checkitout.ijoa.user.domain.User;
+import com.checkitout.ijoa.user.dto.UserSignupRequestDto;
+import com.checkitout.ijoa.user.repository.UserRepository;
 import com.checkitout.ijoa.util.PasswordEncoder;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;

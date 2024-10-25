@@ -1,8 +1,7 @@
-package com.checkitout.ijoa.handler;
+package com.checkitout.ijoa.exception;
 
-import com.checkitout.ijoa.dto.ErrorResponseDto;
-import com.checkitout.ijoa.dto.ResponseDto;
-import com.checkitout.ijoa.exception.CustomException;
+import com.checkitout.ijoa.common.dto.ErrorResponseDto;
+import com.checkitout.ijoa.common.dto.ResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;

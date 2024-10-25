@@ -1,4 +1,4 @@
-package com.checkitout.ijoa.domain;
+package com.checkitout.ijoa.user.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

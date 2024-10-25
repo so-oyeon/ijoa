@@ -1,6 +1,6 @@
-package com.checkitout.ijoa.repository;
+package com.checkitout.ijoa.user.repository;
 
-import com.checkitout.ijoa.domain.User;
+import com.checkitout.ijoa.user.domain.User;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

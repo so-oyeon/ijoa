@@ -1,7 +1,7 @@
-package com.checkitout.ijoa.docs;
+package com.checkitout.ijoa.user.docs;
 
-import com.checkitout.ijoa.dto.ResponseDto;
-import com.checkitout.ijoa.dto.user.UserSignupRequestDto;
+import com.checkitout.ijoa.common.dto.ResponseDto;
+import com.checkitout.ijoa.user.dto.UserSignupRequestDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -26,7 +26,7 @@ public interface UserApiDocumentation {
     @PostMapping
     public ResponseEntity<ResponseDto> signUp(@Valid @RequestBody UserSignupRequestDto requestDto);
 
-    
+
     @Operation(summary = "이메일 중복 확인", description = "회원가입시 이메일 중복 검사")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "중복된 이메일이 없습니다 ", content = @Content(schema = @Schema(implementation = ResponseDto.class))),

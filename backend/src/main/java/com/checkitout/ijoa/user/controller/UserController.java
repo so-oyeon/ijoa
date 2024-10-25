@@ -1,9 +1,9 @@
-package com.checkitout.ijoa.controller;
+package com.checkitout.ijoa.user.controller;
 
-import com.checkitout.ijoa.docs.UserApiDocumentation;
-import com.checkitout.ijoa.dto.ResponseDto;
-import com.checkitout.ijoa.dto.user.UserSignupRequestDto;
-import com.checkitout.ijoa.service.user.UserService;
+import com.checkitout.ijoa.common.dto.ResponseDto;
+import com.checkitout.ijoa.user.docs.UserApiDocumentation;
+import com.checkitout.ijoa.user.dto.UserSignupRequestDto;
+import com.checkitout.ijoa.user.service.UserService;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
