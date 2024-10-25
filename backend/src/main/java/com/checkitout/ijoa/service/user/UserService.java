@@ -3,6 +3,8 @@ package com.checkitout.ijoa.service.user;
 import com.checkitout.ijoa.domain.User;
 import com.checkitout.ijoa.dto.ResponseDto;
 import com.checkitout.ijoa.dto.user.UserSignupRequestDto;
+import com.checkitout.ijoa.exception.CustomException;
+import com.checkitout.ijoa.exception.ErrorCode;
 import com.checkitout.ijoa.repository.UserRepository;
 import com.checkitout.ijoa.util.PasswordEncoder;
 import java.time.LocalDateTime;
@@ -31,4 +33,19 @@ public class UserService {
 
         return new ResponseDto();
     }
+
+    /**
+     * 이메일 중복 체크
+     */
+    public ResponseDto checkEmailDuplication(String email) {
+
+        User user = userRepository.findByEmail(email).orElse(null);
+
+        if (user != null) {
+            throw new CustomException(ErrorCode.EMAIL_ALREADY_EXISTS);
+        } else {
+            return new ResponseDto();
+        }
+    }
+
 }
