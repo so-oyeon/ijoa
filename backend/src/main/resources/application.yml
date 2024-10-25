@@ -24,18 +24,18 @@ spring:
     init:
       mode: always
 
-    # JPA ??
-    jpa:
+  # JPA
+  jpa:
+    hibernate:
+      ddl-auto: ${DDL_AUTO_OPTION}
+    properties:
       hibernate:
-        ddl-auto: ${DDL_AUTO_OPTION}
-      properties:
-        hibernate:
-          dialect: org.hibernate.dialect.MySQL8Dialect
-          format_sql: true
-          default_batch_fetch_size: 100
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+        default_batch_fetch_size: 100
 
 
-# Log ?? ??
+# Log
 logging:
   level:
     org:
