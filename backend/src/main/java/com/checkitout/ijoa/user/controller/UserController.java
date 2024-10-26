@@ -4,7 +4,6 @@ import com.checkitout.ijoa.common.dto.ResponseDto;
 import com.checkitout.ijoa.user.docs.UserApiDocumentation;
 import com.checkitout.ijoa.user.dto.UserSignupRequestDto;
 import com.checkitout.ijoa.user.service.UserService;
-import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -32,8 +31,7 @@ public class UserController implements UserApiDocumentation {
 
 
     @GetMapping("/check-email/{email}")
-    public ResponseEntity<ResponseDto> checkEmailDuplication(
-            @Parameter(description = "중복 확인할 이메일 주소", example = "email@email.com") @PathVariable String email) {
+    public ResponseEntity<ResponseDto> checkEmailDuplication(@PathVariable String email) {
 
         ResponseDto response = userService.checkEmailDuplication(email);
         return ResponseEntity.status(HttpStatus.OK).body(response);
