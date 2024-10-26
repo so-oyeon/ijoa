@@ -13,7 +13,9 @@ public enum ErrorCode {
 
     //email
     EMAIL_ALREADY_EXISTS(HttpStatus.CONFLICT, "EMAIL-001", "이미 사용 중인 이메일입니다."),
-    EMAIL_VERIFICATION_SEND_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "EMAIL-002", "인증번호 발송에 실패했습니다.");
+    EMAIL_VERIFICATION_SEND_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "EMAIL-002", "인증번호 발송에 실패했습니다."),
+    EMAIL_VERIFICATION_NOT_FOUND(HttpStatus.NOT_FOUND, "EMAIL-003", "유효하지 않은 이메일입니다."),
+    INVALID_EMAIL_VERIFICATION_CODE(HttpStatus.BAD_REQUEST, "EMAIL-004", "유효하지 않은 인증 코드입니다.");
 
 
     private final HttpStatus httpStatus;

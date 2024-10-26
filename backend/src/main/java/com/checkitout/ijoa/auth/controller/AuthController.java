@@ -1,12 +1,14 @@
 package com.checkitout.ijoa.auth.controller;
 
 import com.checkitout.ijoa.auth.docs.AuthApiDocumentation;
+import com.checkitout.ijoa.auth.dto.EmailVerificationRequestDto;
 import com.checkitout.ijoa.auth.service.AuthService;
 import com.checkitout.ijoa.common.dto.ResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,7 +23,15 @@ public class AuthController implements AuthApiDocumentation {
     @PostMapping("/email/verify-code/send")
     public ResponseEntity<ResponseDto> sendEmailVerificationCode(@RequestParam String email) {
 
-        ResponseDto response = authService.setEmailVerificationCode(email);
+        ResponseDto response = authService.sendEmailVerificationCode(email);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PostMapping("/email/verify-code/confirm")
+    public ResponseEntity<ResponseDto> confirmEmailVerificationCode(
+            @RequestBody EmailVerificationRequestDto requestDto) {
+
+        ResponseDto response = authService.confirmEmailVerificationCode(requestDto);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
