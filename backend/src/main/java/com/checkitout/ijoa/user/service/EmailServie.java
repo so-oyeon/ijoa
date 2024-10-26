@@ -26,9 +26,12 @@ public class EmailServie {
     @Value("${spring.mail.username}")
     private String SENDER_EMAIL;
 
+    /**
+     * 이메일 전송
+     */
     public String sendEmail(String email) {
 
-        String code = generateVerificationCode();
+        String authCode = generateVerificationCode();
 
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = null;
@@ -39,16 +42,19 @@ public class EmailServie {
             helper.setFrom(SENDER_EMAIL);
             helper.setTo(email);
             helper.setSubject(EMAIL_SUBJECT);
-            helper.setText(String.format(EMAIL_CONTENT, code), true);
+            helper.setText(String.format(EMAIL_CONTENT, authCode), true);
             mailSender.send(message);
 
         } catch (MessagingException e) {
             throw new CustomException(ErrorCode.EMAIL_VERIFICATION_SEND_FAILED);
         }
 
-        return code;
+        return authCode;
     }
 
+    /**
+     * 인증번호 생성
+     */
     public String generateVerificationCode() {
 
         Random random = new Random();
