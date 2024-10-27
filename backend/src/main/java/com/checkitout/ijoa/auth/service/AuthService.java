@@ -4,7 +4,9 @@ import com.checkitout.ijoa.auth.domain.redis.RedisEmail;
 import com.checkitout.ijoa.auth.dto.request.EmailVerificationRequestDto;
 import com.checkitout.ijoa.auth.dto.request.LoginRequestDto;
 import com.checkitout.ijoa.auth.dto.request.PasswordVerificationRequestDto;
+import com.checkitout.ijoa.auth.dto.request.TokenReissueRequestDto;
 import com.checkitout.ijoa.auth.dto.response.LoginResponseDto;
+import com.checkitout.ijoa.auth.dto.response.TokenReissueResponseDto;
 import com.checkitout.ijoa.auth.repository.redis.EmailRepository;
 import com.checkitout.ijoa.common.dto.ResponseDto;
 import com.checkitout.ijoa.exception.CustomException;
@@ -73,6 +75,20 @@ public class AuthService {
 
         return response;
     }
+
+    /**
+     * accessToken 재발급
+     */
+    public TokenReissueResponseDto reissueRefreshToken(TokenReissueRequestDto requestDto) {
+
+        Long userId = tokenService.getUserIdFromRefreshToken(requestDto.getRefreshToken());
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        LoginResponseDto response = tokenService.saveRefreshToken(user.getId());
+
+        return TokenReissueResponseDto.of(response);
+    }
+
 
     /**
      * 비밀번호 검증 API용 메서드

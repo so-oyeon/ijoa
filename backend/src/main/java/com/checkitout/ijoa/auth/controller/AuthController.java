@@ -4,7 +4,9 @@ import com.checkitout.ijoa.auth.docs.AuthApiDocumentation;
 import com.checkitout.ijoa.auth.dto.request.EmailVerificationRequestDto;
 import com.checkitout.ijoa.auth.dto.request.LoginRequestDto;
 import com.checkitout.ijoa.auth.dto.request.PasswordVerificationRequestDto;
+import com.checkitout.ijoa.auth.dto.request.TokenReissueRequestDto;
 import com.checkitout.ijoa.auth.dto.response.LoginResponseDto;
+import com.checkitout.ijoa.auth.dto.response.TokenReissueResponseDto;
 import com.checkitout.ijoa.auth.service.AuthService;
 import com.checkitout.ijoa.common.dto.ResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +44,13 @@ public class AuthController implements AuthApiDocumentation {
     public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto requestDto) {
 
         LoginResponseDto response = authService.login(requestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PostMapping("/refresh-token")
+    public ResponseEntity<TokenReissueResponseDto> reissueRefreshToken(@RequestBody TokenReissueRequestDto requestDto) {
+
+        TokenReissueResponseDto response = authService.reissueRefreshToken(requestDto);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

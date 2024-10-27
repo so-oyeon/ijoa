@@ -3,7 +3,9 @@ package com.checkitout.ijoa.auth.docs;
 import com.checkitout.ijoa.auth.dto.request.EmailVerificationRequestDto;
 import com.checkitout.ijoa.auth.dto.request.LoginRequestDto;
 import com.checkitout.ijoa.auth.dto.request.PasswordVerificationRequestDto;
+import com.checkitout.ijoa.auth.dto.request.TokenReissueRequestDto;
 import com.checkitout.ijoa.auth.dto.response.LoginResponseDto;
+import com.checkitout.ijoa.auth.dto.response.TokenReissueResponseDto;
 import com.checkitout.ijoa.common.dto.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -40,6 +42,7 @@ public interface AuthApiDocumentation {
     public ResponseEntity<ResponseDto> confirmEmailVerificationCode(
             @RequestBody EmailVerificationRequestDto requestDto);
 
+
     @Operation(summary = "로그인", description = "로그인 합니다")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "로그인 성공", content = @Content(schema = @Schema(implementation = LoginResponseDto.class))),
@@ -48,6 +51,17 @@ public interface AuthApiDocumentation {
     })
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto requestDto);
+
+
+    @Operation(summary = "토큰 재발급", description = "accessToken을 재발급합니다")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "로그인 성공", content = @Content(schema = @Schema(implementation = TokenReissueResponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+    })
+    @PostMapping("/refresh-token")
+    public ResponseEntity<TokenReissueResponseDto> reissueRefreshToken(@RequestBody TokenReissueRequestDto requestDto);
+
 
     @Operation(summary = "비밀번호 검증", description = "비밀번호 일치여부를 확인합니다")
     @ApiResponses(value = {
