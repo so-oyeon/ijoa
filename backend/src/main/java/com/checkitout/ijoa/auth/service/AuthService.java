@@ -3,9 +3,9 @@ package com.checkitout.ijoa.auth.service;
 import com.checkitout.ijoa.auth.domain.redis.RedisEmail;
 import com.checkitout.ijoa.auth.dto.request.EmailVerificationRequestDto;
 import com.checkitout.ijoa.auth.dto.request.LoginRequestDto;
+import com.checkitout.ijoa.auth.dto.request.PasswordVerificationRequestDto;
 import com.checkitout.ijoa.auth.dto.response.LoginResponseDto;
 import com.checkitout.ijoa.auth.repository.redis.EmailRepository;
-import com.checkitout.ijoa.auth.repository.redis.TokenRepository;
 import com.checkitout.ijoa.common.dto.ResponseDto;
 import com.checkitout.ijoa.exception.CustomException;
 import com.checkitout.ijoa.exception.ErrorCode;
@@ -13,6 +13,7 @@ import com.checkitout.ijoa.user.domain.User;
 import com.checkitout.ijoa.user.repository.UserRepository;
 import com.checkitout.ijoa.user.service.EmailServie;
 import com.checkitout.ijoa.util.PasswordEncoder;
+import com.checkitout.ijoa.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +28,8 @@ public class AuthService {
 
     private final EmailRepository emailRepository;
     private final UserRepository userRepository;
-    private final TokenRepository tokenRepository;
+
+    private final SecurityUtil securityUtil;
 
     /**
      * 이메일 인증코드 전송
@@ -61,10 +63,10 @@ public class AuthService {
      */
     public LoginResponseDto login(LoginRequestDto requestDto) {
 
-        String email = requestDto.getEmail();
-        String encryptedPw = PasswordEncoder.encrypt(email, requestDto.getPassword());
+        User user = userRepository.findByEmail(requestDto.getEmail())
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        User user = validatePassword(email, encryptedPw);
+        validatePassword(user, requestDto.getPassword());
 
         LoginResponseDto response = tokenService.saveRefreshToken(user.getId());
         response.setNickname(user.getNickname());
@@ -73,13 +75,27 @@ public class AuthService {
     }
 
     /**
-     * 비밀번호 검증
+     * 비밀번호 검증 API용 메서드
      */
-    public User validatePassword(String email, String encryptedPw) {
+    public ResponseDto verifyPassword(PasswordVerificationRequestDto requestDto) {
 
-        User user = userRepository.findByEmailAndPassword(email, encryptedPw)
-                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        User user = securityUtil.getUserByToken();
+        validatePassword(user, requestDto.getPassword());
 
-        return user;
+        return new ResponseDto();
+    }
+
+    /**
+     * 비밀번호 검증 메서드
+     */
+    @Transactional(readOnly = true)
+    public void validatePassword(User user, String password) {
+
+        String email = user.getEmail();
+        String encryptedPw = PasswordEncoder.encrypt(email, password);
+
+        if (!user.getPassword().equals(encryptedPw)) {
+            throw new CustomException(ErrorCode.PASSWORD_MISMATCH);
+        }
     }
 }

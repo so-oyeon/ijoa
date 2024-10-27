@@ -13,6 +13,7 @@ public enum ErrorCode {
 
     //auth
     INVALID_JWT_TOKEN(HttpStatus.UNAUTHORIZED, "AUTH-001", "유효하지 않은 JWT 토큰입니다."),
+    PASSWORD_MISMATCH(HttpStatus.UNAUTHORIZED, "AUTH-002", "비밀번호가 일치하지 않습니다."),
 
     //email
     EMAIL_ALREADY_EXISTS(HttpStatus.CONFLICT, "EMAIL-001", "이미 사용 중인 이메일입니다."),

@@ -3,6 +3,7 @@ package com.checkitout.ijoa.auth.controller;
 import com.checkitout.ijoa.auth.docs.AuthApiDocumentation;
 import com.checkitout.ijoa.auth.dto.request.EmailVerificationRequestDto;
 import com.checkitout.ijoa.auth.dto.request.LoginRequestDto;
+import com.checkitout.ijoa.auth.dto.request.PasswordVerificationRequestDto;
 import com.checkitout.ijoa.auth.dto.response.LoginResponseDto;
 import com.checkitout.ijoa.auth.service.AuthService;
 import com.checkitout.ijoa.common.dto.ResponseDto;
@@ -41,6 +42,13 @@ public class AuthController implements AuthApiDocumentation {
     public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto requestDto) {
 
         LoginResponseDto response = authService.login(requestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PostMapping("/verify-password")
+    public ResponseEntity<ResponseDto> verifyPassword(@RequestBody PasswordVerificationRequestDto requestDto) {
+
+        ResponseDto response = authService.verifyPassword(requestDto);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

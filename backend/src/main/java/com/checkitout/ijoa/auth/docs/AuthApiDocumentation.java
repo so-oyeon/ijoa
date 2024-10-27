@@ -2,6 +2,7 @@ package com.checkitout.ijoa.auth.docs;
 
 import com.checkitout.ijoa.auth.dto.request.EmailVerificationRequestDto;
 import com.checkitout.ijoa.auth.dto.request.LoginRequestDto;
+import com.checkitout.ijoa.auth.dto.request.PasswordVerificationRequestDto;
 import com.checkitout.ijoa.auth.dto.response.LoginResponseDto;
 import com.checkitout.ijoa.common.dto.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,10 +42,19 @@ public interface AuthApiDocumentation {
 
     @Operation(summary = "로그인", description = "로그인 합니다")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "중복된 이메일이 없습니다 ", content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+            @ApiResponse(responseCode = "201", description = "로그인 성공", content = @Content(schema = @Schema(implementation = LoginResponseDto.class))),
             @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content),
             @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
     })
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto requestDto);
+
+    @Operation(summary = "비밀번호 검증", description = "비밀번호 일치여부를 확인합니다")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "비밀번호가 일치합니다", content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+    })
+    @PostMapping("/verify-password")
+    public ResponseEntity<ResponseDto> verifyPassword(@RequestBody PasswordVerificationRequestDto requestDto);
 }
