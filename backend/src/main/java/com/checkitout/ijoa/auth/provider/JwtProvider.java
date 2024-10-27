@@ -30,17 +30,18 @@ public class JwtProvider {
     /**
      * 토큰 생성
      */
-    private String generateToken(String subject, int days, Long userId) {
-
+    private String generateToken(String subject, int days, Long userId, Long childId) {
         Date expiredDate = Date.from(Instant.now().plus(days, ChronoUnit.DAYS));
 
         Claims claims = Jwts.claims().setSubject(subject);
         claims.put("userId", userId);
+        if (childId != null) {
+            claims.put("childId", childId);
+        }
 
         String jwt = Jwts.builder()
-                .signWith(getKey(), SignatureAlgorithm.HS256)
-                .setSubject(subject)
                 .setClaims(claims)
+                .signWith(getKey(), SignatureAlgorithm.HS256)
                 .setIssuedAt(new Date())
                 .setExpiration(expiredDate)
                 .compact();
@@ -51,31 +52,29 @@ public class JwtProvider {
     /**
      * AccessToken 생성
      */
-    public String generateAccessToken(Long userId) {
-        return generateToken("accessToken", 7, userId);
+    public String generateAccessToken(Long userId, Long childId) {
+        return generateToken("accessToken", 7, userId, childId);
     }
 
     /**
      * RefreshToken 생성
      */
-    public String generagteRefreshToken(Long userId) {
-        return generateToken("refreshToken", 7, userId);
+    public String generagteRefreshToken(Long userId, Long childId) {
+        return generateToken("refreshToken", 7, userId, childId);
     }
 
     /**
      * Jwt 유효성 검증
      *
-     * @return userId
+     * @return Claims 객체
      */
-    public Long validateToken(String jwt) throws ExpiredJwtException {
+    public Claims validateToken(String jwt) throws ExpiredJwtException {
         try {
-            Claims claims = Jwts.parserBuilder()
+            return Jwts.parserBuilder()
                     .setSigningKey(getKey())
                     .build()
                     .parseClaimsJws(jwt)
                     .getBody();
-
-            return claims.get("userId", Long.class);
         } catch (ExpiredJwtException expiredJwtException) {
             throw expiredJwtException;
         } catch (Exception e) {

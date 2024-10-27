@@ -9,9 +9,13 @@ import com.checkitout.ijoa.auth.dto.response.LoginResponseDto;
 import com.checkitout.ijoa.auth.dto.response.TokenReissueResponseDto;
 import com.checkitout.ijoa.auth.service.AuthService;
 import com.checkitout.ijoa.common.dto.ResponseDto;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -59,5 +63,19 @@ public class AuthController implements AuthApiDocumentation {
 
         ResponseDto response = authService.verifyPassword(requestDto);
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PatchMapping("/switch-child/{childId}")
+    public ResponseEntity<LoginResponseDto> switchToChild(@PathVariable Long childId, HttpServletRequest request) {
+
+        LoginResponseDto response = authService.switchToChild(childId, request);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/user-test")
+    public ResponseEntity<ResponseDto> getCurrentUser() {
+
+        ResponseDto response = authService.getCurrentUser();
+        return ResponseEntity.ok(response);
     }
 }

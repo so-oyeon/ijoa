@@ -1,23 +1,17 @@
 package com.checkitout.ijoa.auth.filter;
 
+import com.checkitout.ijoa.auth.authentication.CustomAuthentication;
 import com.checkitout.ijoa.auth.provider.JwtProvider;
 import com.checkitout.ijoa.exception.CustomException;
 import com.checkitout.ijoa.exception.ErrorCode;
-import com.checkitout.ijoa.user.domain.User;
-import com.checkitout.ijoa.user.repository.UserRepository;
 import com.checkitout.ijoa.util.LogUtil;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AbstractAuthenticationToken;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -30,7 +24,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtAutheticationFilter extends OncePerRequestFilter {
 
     private final JwtProvider jwtProvider;
-    private final UserRepository userRepository;
 
     @Override
     protected void doFilterInternal(
@@ -43,28 +36,15 @@ public class JwtAutheticationFilter extends OncePerRequestFilter {
                 throw new CustomException(ErrorCode.INVALID_JWT_TOKEN);
             }
 
-            // 유효성 검사
-            Long userId = jwtProvider.validateToken(token);
-            if (userId == null) {
-                throw new CustomException(ErrorCode.INVALID_JWT_TOKEN);
-            }
+            Claims claims = jwtProvider.validateToken(token);
+            Long userId = claims.get("userId", Long.class);
+            Long childId = claims.get("childId", Long.class);
 
-            User user = userRepository.findById(userId).orElseThrow(
-                    () -> new CustomException(ErrorCode.USER_NOT_FOUND)
-            );
-
-            String role = "user";
-            List<GrantedAuthority> authorities = new ArrayList<>();
-            authorities.add(new SimpleGrantedAuthority(role));
+            CustomAuthentication customAuthentication = new CustomAuthentication(userId, childId);
+            customAuthentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
             SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
-
-            AbstractAuthenticationToken authenticationToken =
-                    new UsernamePasswordAuthenticationToken(userId, null, authorities);
-
-            authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-            securityContext.setAuthentication(authenticationToken);
+            securityContext.setAuthentication(customAuthentication);
             SecurityContextHolder.setContext(securityContext);
         } catch (Exception e) {
             LogUtil.error("", e.getMessage());

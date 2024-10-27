@@ -14,8 +14,10 @@ import com.checkitout.ijoa.exception.ErrorCode;
 import com.checkitout.ijoa.user.domain.User;
 import com.checkitout.ijoa.user.repository.UserRepository;
 import com.checkitout.ijoa.user.service.EmailServie;
+import com.checkitout.ijoa.util.LogUtil;
 import com.checkitout.ijoa.util.PasswordEncoder;
 import com.checkitout.ijoa.util.SecurityUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -89,7 +91,6 @@ public class AuthService {
         return TokenReissueResponseDto.of(response);
     }
 
-
     /**
      * 비밀번호 검증 API용 메서드
      */
@@ -97,6 +98,33 @@ public class AuthService {
 
         User user = securityUtil.getUserByToken();
         validatePassword(user, requestDto.getPassword());
+
+        return new ResponseDto();
+    }
+
+    /**
+     * 자녀 프로필 전환
+     */
+    public LoginResponseDto switchToChild(Long childId, HttpServletRequest request) {
+
+        Long userId = securityUtil.getCurrentUserId();
+
+        // 새로운 토큰 발급
+        LoginResponseDto response = tokenService.switchToChild(userId, childId);
+
+        // 시큐리티에 추가
+        securityUtil.setAuthentication(userId, childId, request);
+
+        return response;
+    }
+
+    /**
+     * Test용 - 현재 유저 조회
+     */
+    public ResponseDto getCurrentUser() {
+
+        LogUtil.info("userId", securityUtil.getCurrentUserId());
+        LogUtil.info("childId", securityUtil.getCurrentChildId());
 
         return new ResponseDto();
     }
