@@ -22,6 +22,7 @@ public class UserService {
     /**
      * 회원가입
      */
+    @Transactional
     public ResponseDto signUp(UserSignupRequestDto requestDto) {
 
         String email = requestDto.getEmail();

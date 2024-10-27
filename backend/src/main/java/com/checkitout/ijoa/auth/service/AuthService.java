@@ -38,6 +38,7 @@ public class AuthService {
     /**
      * 이메일 인증코드 전송
      */
+    @Transactional
     public ResponseDto sendEmailVerificationCode(String email) {
 
         String authCode = emailServie.sendEmail(email);
@@ -49,6 +50,7 @@ public class AuthService {
     /**
      * 이메일 인증코드 검증
      */
+    @Transactional(readOnly = true)
     public ResponseDto confirmEmailVerificationCode(EmailVerificationRequestDto requestDto) {
 
         RedisEmail email = emailRepository.findById(requestDto.getEmail()).orElseThrow(
@@ -65,6 +67,7 @@ public class AuthService {
     /**
      * 로그인
      */
+    @Transactional
     public LoginResponseDto login(LoginRequestDto requestDto) {
 
         User user = userRepository.findByEmail(requestDto.getEmail())
@@ -81,6 +84,7 @@ public class AuthService {
     /**
      * accessToken 재발급
      */
+    @Transactional
     public TokenReissueResponseDto reissueRefreshToken(TokenReissueRequestDto requestDto) {
 
         Long userId = tokenService.getUserIdFromRefreshToken(requestDto.getRefreshToken());
