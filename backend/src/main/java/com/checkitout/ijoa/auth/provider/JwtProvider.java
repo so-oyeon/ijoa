@@ -53,7 +53,7 @@ public class JwtProvider {
      * AccessToken 생성
      */
     public String generateAccessToken(Long userId, Long childId) {
-        return generateToken("accessToken", 7, userId, childId);
+        return generateToken("accessToken", 1, userId, childId);
     }
 
     /**
