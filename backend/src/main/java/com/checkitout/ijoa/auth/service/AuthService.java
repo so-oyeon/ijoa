@@ -130,6 +130,16 @@ public class AuthService {
     }
 
     /**
+     * 로그아웃
+     */
+    public ResponseDto logout() {
+
+        long userId = securityUtil.getCurrentUserId();
+        tokenService.deleteRefreshToken(userId);
+        return new ResponseDto();
+    }
+
+    /**
      * Test용 - 현재 유저 조회
      */
     public ResponseDto getCurrentUser() {

@@ -78,4 +78,11 @@ public class AuthController implements AuthApiDocumentation {
         ResponseDto response = authService.getCurrentUser();
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<ResponseDto> logout() {
+
+        ResponseDto response = authService.logout();
+        return ResponseEntity.ok(response);
+    }
 }

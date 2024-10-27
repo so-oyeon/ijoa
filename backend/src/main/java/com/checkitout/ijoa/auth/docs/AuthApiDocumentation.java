@@ -97,4 +97,14 @@ public interface AuthApiDocumentation {
     })
     @GetMapping("/user-test")
     public ResponseEntity<ResponseDto> getCurrentUser();
+
+
+    @Operation(summary = "로그아웃", description = "로그아웃 합니다")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "로그아웃 성공", content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+    })
+    @PostMapping("/logout")
+    public ResponseEntity<ResponseDto> logout();
 }

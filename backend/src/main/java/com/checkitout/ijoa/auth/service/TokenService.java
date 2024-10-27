@@ -50,4 +50,9 @@ public class TokenService {
         Claims claims = jwtProvider.validateToken(refreshToken);
         return claims.get("childId", Long.class);
     }
+
+    public void deleteRefreshToken(long userId) {
+
+        tokenRepository.deleteById(userId);
+    }
 }
