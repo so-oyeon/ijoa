@@ -2,6 +2,10 @@ spring:
   application:
     name: backend
 
+  mvc:
+    servlet:
+      path: /api/v1
+
   config:
     import: optional:file:.env[.properties]
 
