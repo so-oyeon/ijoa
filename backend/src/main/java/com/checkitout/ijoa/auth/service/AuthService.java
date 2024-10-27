@@ -84,9 +84,16 @@ public class AuthService {
     public TokenReissueResponseDto reissueRefreshToken(TokenReissueRequestDto requestDto) {
 
         Long userId = tokenService.getUserIdFromRefreshToken(requestDto.getRefreshToken());
-
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        LoginResponseDto response = tokenService.saveRefreshToken(user.getId());
+
+        Long childId = tokenService.getChildIdFromRefreshToken(requestDto.getRefreshToken());
+        LoginResponseDto response;
+
+        if (childId != null) {
+            response = tokenService.saveRefreshToken(user.getId(), childId);
+        } else {
+            response = tokenService.saveRefreshToken(user.getId(), null);
+        }
 
         return TokenReissueResponseDto.of(response);
     }

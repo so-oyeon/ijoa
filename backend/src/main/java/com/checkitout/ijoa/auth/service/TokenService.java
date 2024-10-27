@@ -18,9 +18,13 @@ public class TokenService {
     private final TokenRepository tokenRepository;
 
     public LoginResponseDto saveRefreshToken(Long userId) {
+        return saveRefreshToken(userId, null);
+    }
 
-        String accessToken = jwtProvider.generateAccessToken(userId, null);
-        String refreshToken = jwtProvider.generagteRefreshToken(userId, null);
+    public LoginResponseDto saveRefreshToken(Long userId, Long childId) {
+
+        String accessToken = jwtProvider.generateAccessToken(userId, childId);
+        String refreshToken = jwtProvider.generagteRefreshToken(userId, childId);
 
         tokenRepository.save(new RedisToken(userId, refreshToken));
         return new LoginResponseDto(userId, accessToken, refreshToken);
@@ -39,5 +43,11 @@ public class TokenService {
 
         Claims claims = jwtProvider.validateToken(refreshToken);
         return claims.get("userId", Long.class);
+    }
+
+    public Long getChildIdFromRefreshToken(String refreshToken) {
+
+        Claims claims = jwtProvider.validateToken(refreshToken);
+        return claims.get("childId", Long.class);
     }
 }
