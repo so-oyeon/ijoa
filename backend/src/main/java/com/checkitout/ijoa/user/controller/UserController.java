@@ -22,7 +22,7 @@ public class UserController implements UserApiDocumentation {
 
     private final UserService userService;
 
-    @PostMapping
+    @PostMapping("/signup")
     public ResponseEntity<ResponseDto> signUp(@Valid @RequestBody UserSignupRequestDto requestDto) {
 
         ResponseDto response = userService.signUp(requestDto);

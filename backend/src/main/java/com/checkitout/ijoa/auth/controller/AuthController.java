@@ -1,7 +1,9 @@
 package com.checkitout.ijoa.auth.controller;
 
 import com.checkitout.ijoa.auth.docs.AuthApiDocumentation;
-import com.checkitout.ijoa.auth.dto.EmailVerificationRequestDto;
+import com.checkitout.ijoa.auth.dto.request.EmailVerificationRequestDto;
+import com.checkitout.ijoa.auth.dto.request.LoginRequestDto;
+import com.checkitout.ijoa.auth.dto.response.LoginResponseDto;
 import com.checkitout.ijoa.auth.service.AuthService;
 import com.checkitout.ijoa.common.dto.ResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +34,13 @@ public class AuthController implements AuthApiDocumentation {
             @RequestBody EmailVerificationRequestDto requestDto) {
 
         ResponseDto response = authService.confirmEmailVerificationCode(requestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto requestDto) {
+
+        LoginResponseDto response = authService.login(requestDto);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

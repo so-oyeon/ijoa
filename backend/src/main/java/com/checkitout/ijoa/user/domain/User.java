@@ -8,10 +8,12 @@ import jakarta.persistence.Id;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Getter
 @NoArgsConstructor
+@ToString
 public class User {
 
     @Id

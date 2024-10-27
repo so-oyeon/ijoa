@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+@Tag(name = "User", description = "사용자 관련 API")
 public interface UserApiDocumentation {
 
     @Operation(summary = "회원가입", description = "새로운 사용자를 등록합니다.")
@@ -23,7 +25,7 @@ public interface UserApiDocumentation {
             @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content),
             @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
     })
-    @PostMapping
+    @PostMapping("/signup")
     public ResponseEntity<ResponseDto> signUp(@Valid @RequestBody UserSignupRequestDto requestDto);
 
 

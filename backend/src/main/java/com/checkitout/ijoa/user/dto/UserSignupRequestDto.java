@@ -30,6 +30,6 @@ public class UserSignupRequestDto {
     @NotNull
     @NotBlank
     @Size(min = 2, max = 10, message = "닉네임은 2자에서 10자 사이여야 합니다.")
-    @Schema(description = "닉네임", example = "나는 바보다")
+    @Schema(description = "닉네임", example = "아이조아")
     private String nickname;
 }
