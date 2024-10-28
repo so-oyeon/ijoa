@@ -1,15 +1,12 @@
-import "./App.css";
-import "./pages/fairytales/FairytaleListPage";
-// import FairytaleListPage from "./pages/fairytales/FairytaleListPage";
-import FairytaleContentPage from "./pages/fairytales/FairytaleContentPage";
+import { BrowserRouter } from "react-router-dom";
+import RenderRoutes from "./router/routes";
 
-function App() {
+const App = () => {
   return (
-    <div>
-      {/* <FairytaleListPage /> */}
-      <FairytaleContentPage />
-    </div>
+    <BrowserRouter>
+      <RenderRoutes />
+    </BrowserRouter>
   );
-}
+};
 
 export default App;
