@@ -16,10 +16,6 @@ const routes: RouteType[] = [
     path: "/",
     element: React.lazy(() => import("../pages/index")),
   },
-  {
-    path: "/products",
-    element: React.lazy(() => import("../pages/products/index")),
-  },
 ];
 
 const RenderRoutes = () => {
