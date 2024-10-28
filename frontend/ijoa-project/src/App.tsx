@@ -1,12 +1,7 @@
-import { BrowserRouter } from "react-router-dom";
-import RenderRoutes from "./router/routes";
+import React from "react";
 
 const App = () => {
-  return (
-    <BrowserRouter>
-      <RenderRoutes />
-    </BrowserRouter>
-  );
+  return <div>메인입니다</div>;
 };
 
 export default App;
