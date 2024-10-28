@@ -29,12 +29,10 @@ const App = () => {
 
         {/* 홈 화면 */}
         <Route path="/" element={<Home />} />
-
         {/* 동화 목록 */}
         <Route path="/fairytale/list" element={<FairytaleListPage />} />
-
         {/* 동화 내용 */}
-        <Route path="fairytale/content" element={<FairyTaleContentPage />} />
+        <Route path="/fairytale/content" element={<FairyTaleContentPage />} />
       </Routes>
     </BrowserRouter>
   );
