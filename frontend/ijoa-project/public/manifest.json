@@ -6,6 +6,7 @@
   "background_color": "#F8F7DA",
   "theme_color": "#8C383A",
   "description": "PWA with Vite.js, React.js and TypeScript",
+  "orientation": "landscape",
   "icons": [
     {
       "src": "icons/favicon.ico",
