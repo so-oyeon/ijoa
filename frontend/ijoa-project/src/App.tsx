@@ -1,7 +1,15 @@
-import React from "react";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
+import Home from "./pages/Home";
 
 const App = () => {
-  return <div>메인입니다</div>;
+  return (
+    <BrowserRouter>
+      <Routes>
+        {/* 홈 화면 */}
+        <Route path="/" element={<Home />} />
+      </Routes>
+    </BrowserRouter>
+  );
 };
 
 export default App;
