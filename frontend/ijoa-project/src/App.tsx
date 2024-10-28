@@ -1,9 +1,11 @@
 import "./App.css";
+import "./pages/fairytales/FairytaleListPage";
+import FairytaleListPage from "./pages/fairytales/FairytaleListPage";
 
 function App() {
   return (
     <div>
-      <p className="text-3xl font-bold">Tailwind</p>
+      <FairytaleListPage />
     </div>
   );
 }
