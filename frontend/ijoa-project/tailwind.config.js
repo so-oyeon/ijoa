@@ -4,13 +4,8 @@ export default {
   theme: {
     extend: {},
   },
-  plugins: [
-    require("daisyui"),
-  ],
+  plugins: [require("daisyui"), require("@tailwindcss/aspect-ratio")],
   daisyui: {
-    themes: [
-      "light",
-      "dark", 
-    ],
+    themes: ["light", "dark"],
   },
 };
