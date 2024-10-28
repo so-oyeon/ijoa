@@ -1,11 +1,12 @@
-import "./App.css";
+import { BrowserRouter } from "react-router-dom";
+import RenderRoutes from "./router/routes";
 
-function App() {
+const App = () => {
   return (
-    <div>
-      <p className="text-3xl font-bold">Tailwind</p>
-    </div>
+    <BrowserRouter>
+      <RenderRoutes />
+    </BrowserRouter>
   );
-}
+};
 
 export default App;
