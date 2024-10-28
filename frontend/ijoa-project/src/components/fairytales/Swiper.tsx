@@ -12,19 +12,14 @@ interface BookCoverSwiperProps {
 const BookCoverSwiper: React.FC<BookCoverSwiperProps> = ({
   bookCovers, // 책 표지 사진들
   titles, // 책 제목들
-  spaceBetween = 30, // 사진 간 간격
+  spaceBetween = 10, // 사진 간 간격
   slidesPerView = 3.5, // 화면 당 슬라이드 개수
 }) => {
   return (
-    <Swiper
-      spaceBetween={spaceBetween}
-      slidesPerView={slidesPerView}
-      onSlideChange={() => {}}
-      onSwiper={(swiper) => console.log(swiper)}
-    >
+    <Swiper spaceBetween={spaceBetween} slidesPerView={slidesPerView} onSlideChange={() => {}} onSwiper={() => {}}>
       {bookCovers.map((cover, index) => (
         <SwiperSlide key={index}>
-          <img src={cover} alt={`Fairytale ${index + 1}`} />
+          <img src={cover} alt={`Fairytale ${index + 1}`} className="w-full" />
           <div className="mt-2 text-left">
             {" "}
             <span className="text-xl">{titles[index]}</span>
