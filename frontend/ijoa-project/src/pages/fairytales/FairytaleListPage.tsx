@@ -1,7 +1,7 @@
 import React from "react";
 import Swiper from "../../components/Swiper"; // 스와이퍼 컴포넌트 import
 import ChoiceTab from "../../components/ChoiceTab"; // 선택탭 컴포넌트 import
-import bookcover from "../../assets/images/bookcover.png";
+import bookcover from "../../assets/images/BookCover.png";
 
 const FairytaleListPage: React.FC = () => {
   // 스와이퍼에 들어갈 사진 리스트

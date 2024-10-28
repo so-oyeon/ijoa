@@ -10,10 +10,10 @@ interface BookCoverSwiperProps {
 }
 
 const BookCoverSwiper: React.FC<BookCoverSwiperProps> = ({
-  bookCovers,
-  titles,
-  spaceBetween = 30,
-  slidesPerView = 3.5,
+  bookCovers, // 책 표지 사진들
+  titles, // 책 제목들
+  spaceBetween = 30, // 사진 간 간격
+  slidesPerView = 3.5, // 화면 당 슬라이드 개수
 }) => {
   return (
     <Swiper
