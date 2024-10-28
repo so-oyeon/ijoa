@@ -9,7 +9,12 @@ interface BookCoverSwiperProps {
   slidesPerView?: number; // 페이지 당 이미지 개수
 }
 
-const BookCoverSwiper: React.FC<BookCoverSwiperProps> = ({ bookCovers, titles, spaceBetween, slidesPerView = 3.5 }) => {
+const BookCoverSwiper: React.FC<BookCoverSwiperProps> = ({
+  bookCovers,
+  titles,
+  spaceBetween = 30,
+  slidesPerView = 3.5,
+}) => {
   return (
     <Swiper
       spaceBetween={spaceBetween}
@@ -22,7 +27,7 @@ const BookCoverSwiper: React.FC<BookCoverSwiperProps> = ({ bookCovers, titles, s
           <img src={cover} alt={`Fairytale ${index + 1}`} />
           <div className="mt-2 text-left">
             {" "}
-            <span>{titles[index]}</span>
+            <span className="text-xl">{titles[index]}</span>
           </div>
         </SwiperSlide>
       ))}
