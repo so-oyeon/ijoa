@@ -1,9 +1,11 @@
-import React, { FC } from "react";
+import React, { FC, ReactNode } from "react";
 import { Route, Routes } from "react-router-dom";
 // import LoadingPage from "@/pages/common/loading";
 // import DashboardLayout from "@/layouts/DashboardLayout";
 
-type DashboardLayout = any;
+type DashboardLayout = {
+  children: ReactNode;
+};
 
 interface RouteType {
   path: string;
