@@ -1,6 +1,6 @@
 import React from "react";
-import FairyTaleContent from "../../assets/images/FairytaleContent.png";
-import MenuButton from "../../assets/images/MenuButton.png";
+import FairyTaleContent from "/assets/fairytales/FairytaleContent.png";
+import MenuButton from "/assets/fairytales/MenuButton.png";
 
 const FairyTaleContentPage: React.FC = () => {
   return (

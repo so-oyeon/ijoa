@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import Tiger from "/images/tiger.png";
-import Elephant from "/images/elephant.png";
-import Giraffe from "/images/giraffe.png";
-import Tablet from "/images/tablet.png";
-import Logo from "/images/logo.png";
+import Tiger from "/assets/user/tiger.png";
+import Elephant from "/assets/user/elephant.png";
+import Giraffe from "/assets/user/giraffe.png";
+import Tablet from "/assets/user/tablet.png";
+import Logo from "/assets/user/logo.png";
 
 const SplashScreen: React.FC = () => {
   const [fadeOut, setFadeOut] = useState(false);
@@ -17,7 +17,9 @@ const SplashScreen: React.FC = () => {
   }, []);
 
   return (
-    <div className={`splash-screen relative w-screen h-screen bg-[#f3fbff] overflow-hidden ${fadeOut ? 'fade-out' : ''}`}>
+    <div
+      className={`splash-screen relative w-screen h-screen bg-[#f3fbff] overflow-hidden ${fadeOut ? "fade-out" : ""}`}
+    >
       <div className="absolute top-[30%] right-[15%] w-[30vw]">
         <img src={Logo} alt="아이조아 로고" className="w-[600px] mb-4" />
         <p className="text-center font-semibold text-2xl">엄마, 아빠가 읽어주는 동화책</p>
