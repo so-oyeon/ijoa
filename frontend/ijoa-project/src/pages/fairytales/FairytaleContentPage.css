@@ -5,6 +5,26 @@
   font-style: normal;
 }
 
+/* 동화책 내용 글씨체 - 배민주아체 */
 .fairytale-content {
   font-family: "BMJUA";
+}
+
+/* 모달창 제목에 형광펜 효과 */
+.blue-highlight {
+  display: inline;
+  box-shadow: inset 0 -8px 0 #67ccff;
+}
+
+.custom-toggle {
+  transform: scale(1.6);
+  border-color: #bcb8b8;
+}
+
+.custom-toggle:checked {
+  background-color: #67ccff;
+}
+
+.custom-toggle:disabled {
+ background-color: #ffffff;
 }
