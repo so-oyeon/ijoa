@@ -3,7 +3,8 @@ import Tiger from "/assets/user/tiger.png";
 import Elephant from "/assets/user/elephant.png";
 import Giraffe from "/assets/user/giraffe.png";
 import Tablet from "/assets/user/tablet.png";
-import Logo from "/assets/user/logo.png";
+// import Logo from "/assets/user/logo.png";
+import "../../css/Login.css";
 
 const SplashScreen: React.FC = () => {
   const [fadeOut, setFadeOut] = useState(false);
@@ -20,9 +21,14 @@ const SplashScreen: React.FC = () => {
     <div
       className={`splash-screen relative w-screen h-screen bg-[#f3fbff] overflow-hidden ${fadeOut ? "fade-out" : ""}`}
     >
-      <div className="absolute top-[30%] right-[15%] w-[30vw]">
-        <img src={Logo} alt="아이조아 로고" className="w-[600px] mb-4" />
-        <p className="text-center font-semibold text-2xl">엄마, 아빠가 읽어주는 동화책</p>
+      <div className="absolute top-[30%] right-[15%] w-[30vw] flex flex-col items-center">
+        <div className="flex space-x-2 text-[140px] font-['SDGothic'] text-white-stroke">
+          <span className="text-[#FFCC00] ">아</span>
+          <span className="text-[#99CC66] ">이</span>
+          <span className="text-[#FF6666] ">조</span>
+          <span className="text-[#339999] ">아</span>
+        </div>
+        <p className="w-full text-center font-semibold text-2xl mt-4">엄마, 아빠가 읽어주는 동화책</p>
       </div>
 
       <div className="flex items-end absolute left-[10%] bottom-[15%] gap-[0vw] z-10">
