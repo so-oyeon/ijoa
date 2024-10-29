@@ -20,6 +20,8 @@ const App = () => {
                   <Route>
                     {/* 부모의 자녀 목록 화면 */}
                     <Route path="/parent/child/list" element={<CreateChildProfile />} />
+                    {/* 동화 목록 */}
+                    <Route path="/fairytale/list" element={<FairytaleListPage />} />
                   </Route>
                 </Routes>
               </div>
@@ -29,8 +31,6 @@ const App = () => {
 
         {/* 홈 화면 */}
         <Route path="/" element={<Home />} />
-        {/* 동화 목록 */}
-        <Route path="/fairytale/list" element={<FairytaleListPage />} />
         {/* 동화 내용 */}
         <Route path="/fairytale/content" element={<FairyTaleContentPage />} />
       </Routes>

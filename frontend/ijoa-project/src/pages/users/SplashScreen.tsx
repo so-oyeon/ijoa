@@ -3,7 +3,7 @@ import Tiger from "/assets/user/tiger.png";
 import Elephant from "/assets/user/elephant.png";
 import Giraffe from "/assets/user/giraffe.png";
 import Tablet from "/assets/user/tablet.png";
-import Logo from "/assets/user/logo.png";
+import Logo from "/assets/logo.png";
 
 const SplashScreen: React.FC = () => {
   const [fadeOut, setFadeOut] = useState(false);

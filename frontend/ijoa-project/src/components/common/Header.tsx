@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { IoSearchSharp } from "react-icons/io5";
 
 const ParentHeader = () => {
-  const [type, setType] = useState("parent");
+  const [type] = useState("child");
   const path = window.location.pathname;
 
   const parentMenu = [
