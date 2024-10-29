@@ -1,6 +1,6 @@
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import Home from "./pages/Home";
-import ParentHeader from "./components/common/ParentHeader";
+import ParentHeader from "./components/common/Header";
 import CreateChildProfile from "./pages/parent/ChildProfileList";
 import FairytaleListPage from "./pages/fairytales/FairytaleListPage";
 import FairyTaleContentPage from "./pages/fairytales/FairytaleContentPage";
