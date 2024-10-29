@@ -40,7 +40,7 @@ public class SecurityConfig {
                                 new AntPathRequestMatcher("/api/v1/test/**"),
                                 new AntPathRequestMatcher("/api/v1/auth/**"),
                                 new AntPathRequestMatcher("/api/v1/user/signup"),
-                                new AntPathRequestMatcher("/api/v1/user/check-email"),
+                                new AntPathRequestMatcher("/api/v1/user/check-email/**"),
                                 new AntPathRequestMatcher("/api/v1/swagger-ui/**"),
                                 new AntPathRequestMatcher("/api/v1/v3/api-docs/**")
                         ).permitAll()
