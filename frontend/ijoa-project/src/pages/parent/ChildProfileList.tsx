@@ -16,11 +16,6 @@ const ChildProfileList = () => {
       name: "다울이",
       age: 7,
     },
-    {
-      img: "sampleProfileImg",
-      name: "다울이",
-      age: 7,
-    },
   ];
 
   return (
