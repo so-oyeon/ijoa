@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom"; // Import useLocation
+import { useLocation } from "react-router-dom";
 import "./FairytaleContentPage.css";
 import ReadCompleteModal from "../../components/fairytales/ReadCompleteModal";
 import LevelUpModal from "../../components/fairytales/LevelUpModal";
@@ -36,24 +36,29 @@ const FairyTaleContentPage: React.FC = () => {
   const [isLevelUpModalOpen, setIsLevelUpModalOpen] = useState(false);
   const [isReadCompleteModalOpen, setIsReadCompleteModalOpen] = useState(false);
 
+  // 왼쪽 화살표 클릭 시 현재 페이지를 감소시키는 함수
   const handleLeftClick = () => {
     if (fairytaleCurrentPage > 0) {
       setFairytaleCurrentPage(fairytaleCurrentPage - 1);
     }
   };
 
+  // 오른쪽 화살표 클릭 시 현재 페이지를 증가시키는 함수
   const handleRightClick = () => {
     if (fairytaleCurrentPage < fairyTales.length - 1) {
       setFairytaleCurrentPage(fairytaleCurrentPage + 1);
     } else {
+      // Fix: 레벨 업 요건 충족 시 켜지도록 추후 수정!
       setIsLevelUpModalOpen(true);
     }
   };
 
+  // TTS 선택 모달을 닫는 함수
   const handleCloseTTSChoiceModal = () => {
     setIsTTSChoiceModalOpen(false);
   };
 
+  // 레벨 업 모달이 열릴 때 3초 후에 읽기 완료 모달을 여는 타이머 설정하는 useEffect
   useEffect(() => {
     if (isLevelUpModalOpen) {
       const timer = setTimeout(() => {
@@ -99,10 +104,12 @@ const FairyTaleContentPage: React.FC = () => {
           <img src={RightArrow} alt="오른쪽 화살표" />
         </button>
       </div>
-
+      {/* TTS 선택 모달 */}
       <TTSChoiceModal isOpen={isTTSChoiceModalOpen} onClose={handleCloseTTSChoiceModal} />
+      {/* 레벨업 모달 */}
       <LevelUpModal isOpen={isLevelUpModalOpen} />
-      <ReadCompleteModal isOpen={isReadCompleteModalOpen} title={title}/>
+      {/* 독서완료 모달 */}
+      <ReadCompleteModal isOpen={isReadCompleteModalOpen} title={title} />
     </div>
   );
 };
