@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Login from "./users/Login";
 import SplashScreen from "./users/SplashScreen";
 
