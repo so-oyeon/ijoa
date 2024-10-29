@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./FairytaleContentPage.css";
 import ReadCompleteModal from "../../components/fairytales/ReadCompleteModal";
+import LevelUpModal from "../../components/fairytales/LevelUpModal";
 import MenuButton from "/assets/fairytales/buttons/menu-button.png";
 import SoundOnButton from "/assets/fairytales/buttons/sound-on-button.png";
 import LeftArrow from "/assets/fairytales/buttons/left-arrow.png";
@@ -26,26 +27,37 @@ const fairyTales = [
 ];
 
 const FairyTaleContentPage: React.FC = () => {
-  const [fairytaleCurrentPage, setfairytaleCurrentPage] = useState(0); // 현재 페이지를 추적하는 상태 변수
-  const [isModalOpen, setIsModalOpen] = useState(false); // 모달창 열림 여부 상태 변수
+  const [fairytaleCurrentPage, setFairytaleCurrentPage] = useState(0); // 현재 페이지를 추적하는 상태 변수
+  const [isLevelUpModalOpen, setIsLevelUpModalOpen] = useState(false);
+  const [isReadCompleteModalOpen, setIsReadCompleteModalOpen] = useState(false);
 
   // 좌측 화살표 버튼 클릭 시 호출되는 함수 (현재 페이지가 첫 페이지보다 크면, 이전 페이지로 이동)
   const handleLeftClick = () => {
     if (fairytaleCurrentPage > 0) {
-      setfairytaleCurrentPage(fairytaleCurrentPage - 1);
+      setFairytaleCurrentPage(fairytaleCurrentPage - 1);
     }
   };
 
   // 우측 화살표 버튼 클릭 시 호출되는 함수 (현재 페이지가 마지막 페이지보다 작으면, 다음 페이지로 이동)
   const handleRightClick = () => {
     if (fairytaleCurrentPage < fairyTales.length - 1) {
-      setfairytaleCurrentPage(fairytaleCurrentPage + 1);
+      setFairytaleCurrentPage(fairytaleCurrentPage + 1);
     } else {
-      // 마지막 페이지에서 우측 화살표 버튼을 누르는 경우
-      setIsModalOpen(true);
+      setIsLevelUpModalOpen(true); // Fix: 추후에 특정 조건 만족 시 레벨업 모달 뜨도록 수정
     }
   };
 
+  // 레벨업 모달 5초 노출 후 독서 완료 모달 열리도록
+  useEffect(() => {
+    if (isLevelUpModalOpen) {
+      const timer = setTimeout(() => {
+        setIsLevelUpModalOpen(false);
+        setIsReadCompleteModalOpen(true);
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isLevelUpModalOpen]);
 
   return (
     <div className="relative h-screen">
@@ -89,8 +101,10 @@ const FairyTaleContentPage: React.FC = () => {
         </button>
       </div>
 
+      {/* 레벨업 모달 */}
+      <LevelUpModal isOpen={isLevelUpModalOpen} />
       {/* 독서 완료 모달 */}
-      <ReadCompleteModal isOpen={isModalOpen} />
+      <ReadCompleteModal isOpen={isReadCompleteModalOpen} />
     </div>
   );
 };
