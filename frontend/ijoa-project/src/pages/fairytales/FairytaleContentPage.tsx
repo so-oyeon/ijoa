@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import "./FairytaleContentPage.css";
-import MenuButton from "../../../public/assets/fairytales/MenuButton.png";
-import SoundOnButton from "../../../public/assets/fairytales/SoundOnButton.png";
-import LeftArrow from "../../../public/assets/fairytales/LeftArrow.png";
-import RightArrow from "../../../public/assets/fairytales/RightArrow.png";
-import dummy1 from "../../../public/assets/fairytales/dummy1.png";
-import dummy2 from "../../../public/assets/fairytales/dummy2.png";
-import dummy3 from "../../../public/assets/fairytales/dummy3.png";
+import MenuButton from "/assets/fairytales/MenuButton.png";
+import SoundOnButton from "/assets/fairytales/SoundOnButton.png";
+import LeftArrow from "/assets/fairytales/LeftArrow.png";
+import RightArrow from "/assets/fairytales/RightArrow.png";
+import dummy1 from "/assets/fairytales/dummy1.png";
+import dummy2 from "/assets/fairytales/dummy2.png";
+import dummy3 from "/assets/fairytales/dummy3.png";
 
 // 더미 데이터
 const fairyTales = [
@@ -51,7 +51,7 @@ const FairyTaleContentPage: React.FC = () => {
 
       {/* 우측 상단 메뉴 버튼 */}
       <div className="absolute top-[-12px] right-10">
-        <button className="px-3 py-4 bg-gray-700 bg-opacity-50 rounded-2xl shadow-md hover:bg-gray-200 hover:bg-opacity-80">
+        <button className="px-3 py-4 bg-gray-700 bg-opacity-50 rounded-2xl shadow-md">
           <img src={MenuButton} alt="메뉴 버튼" />
           <p className="text-xs text-white">메뉴</p>
         </button>
