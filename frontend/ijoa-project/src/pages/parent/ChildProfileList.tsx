@@ -1,7 +1,10 @@
+import { useState } from "react";
 import { TbPencilMinus } from "react-icons/tb";
 import { IoIosAdd } from "react-icons/io";
+import ChildProfileCreateModal from "../../components/parent/ChildProfileCreateModal";
 
 const ChildProfileList = () => {
+  const [isCreateModal, setIsCreateModal] = useState(false);
   const childList = [
     {
       img: "sampleProfileImg",
@@ -21,7 +24,7 @@ const ChildProfileList = () => {
   ];
 
   return (
-    <div className="min-h-screen pt-24 bg-[#EAF8FF]">
+    <div className="min-h-screen pt-24 bg-[#EAF8FF] relative">
       <div className="px-40 py-10 grid gap-10">
         {/* 상단 타이틀 */}
         <div className="flex justify-center items-center space-x-3">
@@ -52,14 +55,16 @@ const ChildProfileList = () => {
 
           {/* 자녀 추가 버튼 */}
           {childList.length < 9 ? (
-            <div className="flex justify-center items-center">
+            <button className="flex justify-center items-center" onClick={() => setIsCreateModal(true)}>
               <IoIosAdd className="text-[150px] text-white bg-[#D9D9D9] rounded-full" />
-            </div>
+            </button>
           ) : (
             <></>
           )}
         </div>
       </div>
+
+      {isCreateModal ? <ChildProfileCreateModal setIsCreateModal={setIsCreateModal} /> : <></>}
     </div>
   );
 };
