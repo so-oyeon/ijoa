@@ -1,10 +1,11 @@
 import { Routes, Route, BrowserRouter } from "react-router-dom";
-import ParentHeader from "./components/common/Header";
+import Header from "./components/common/Header";
 import CreateChildProfile from "./pages/parent/ChildProfileList";
 import FairytaleListPage from "./pages/fairytales/FairytaleListPage";
 import FairyTaleContentPage from "./pages/fairytales/FairytaleContentPage";
 import SplashScreen from "./pages/users/SplashScreen";
 import Login from "./pages/users/Login";
+import TTSList from "./pages/parent/TTSList";
 
 const App = () => {
   return (
@@ -15,12 +16,14 @@ const App = () => {
           path="/*"
           element={
             <>
-              <ParentHeader />
+              <Header />
               <div>
                 <Routes>
                   <Route>
                     {/* 부모의 자녀 목록 화면 */}
                     <Route path="/parent/child/list" element={<CreateChildProfile />} />
+                    {/* 부모의 TTS 목록 화면 */}
+                    <Route path="/parent/tts/list" element={<TTSList />} />
                     {/* 동화 목록 */}
                     <Route path="/fairytale/list" element={<FairytaleListPage />} />
                   </Route>
