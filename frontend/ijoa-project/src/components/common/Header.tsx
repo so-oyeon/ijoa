@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import { IoSearchSharp } from "react-icons/io5";
 
 const ParentHeader = () => {
   const [type, setType] = useState("parent");
+  const path = window.location.pathname;
 
   const parentMenu = [
     { img: "child-icon", text: "자녀" },
@@ -22,8 +24,23 @@ const ParentHeader = () => {
   const menuToDisplay = type === "parent" ? parentMenu : childMenu;
 
   return (
-    <div className="w-full h-24 px-10 py-3 bg-gradient-to-b from-white flex justify-between fixed top-0">
-      <img className="h-full" src="/assets/logo.png" alt="" />
+    <div className="w-full h-24 px-10 py-3 bg-gradient-to-b from-white flex justify-between items-center fixed top-0">
+      <div className="w-2/3 h-full flex items-center space-x-5">
+        <img className="h-full" src="/assets/logo.png" alt="" />
+
+        {path === "/fairytale/list" ? (
+          <div className="w-1/2 h-5/6 px-5 py-3 bg-white border-2 rounded-[100px] flex items-center space-x-3">
+            <IoSearchSharp className="text-2xl" />
+            <input
+              className="w-full text-xl font-semibold outline-none"
+              type="text"
+              placeholder="제목 또는 키워드로 검색해 보세요"
+            />
+          </div>
+        ) : (
+          <></>
+        )}
+      </div>
 
       <div className="grid grid-cols-5 gap-3">
         {menuToDisplay.map((menu, index) => (
