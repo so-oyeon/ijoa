@@ -38,7 +38,7 @@ const App = () => {
         {/* 홈 화면 */}
         <Route path="/home" element={<Login />} />
         {/* 동화 내용 */}
-        <Route path="/fairytale/content" element={<FairyTaleContentPage />} />
+        <Route path="/fairytale/content/:index" element={<FairyTaleContentPage />} />
       </Routes>
     </BrowserRouter>
   );

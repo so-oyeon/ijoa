@@ -13,7 +13,7 @@
 /* 모달창 제목에 형광펜 효과 */
 .blue-highlight {
   display: inline;
-  box-shadow: inset 0 -8px 0 #67ccff;
+  box-shadow: inset 0 -10px 0 #67ccff;
 }
 
 /* 토글 버튼 */
