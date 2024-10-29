@@ -3,16 +3,18 @@ import Tiger from "/assets/user/tiger.png";
 import Elephant from "/assets/user/elephant.png";
 import Giraffe from "/assets/user/giraffe.png";
 import Tablet from "/assets/user/tablet.png";
-// import Logo from "/assets/user/logo.png";
 import "../../css/Login.css";
+import { useNavigate } from "react-router-dom";
 
 const SplashScreen: React.FC = () => {
   const [fadeOut, setFadeOut] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // 1초 후에 fadeOut을 true로 설정하여 서서히 사라지도록 함
     const timer = setTimeout(() => {
       setFadeOut(true);
+      navigate("/home");
     }, 2000); // 2초 동안 대기 후 fadeOut 상태 변경
     return () => clearTimeout(timer);
   }, []);
