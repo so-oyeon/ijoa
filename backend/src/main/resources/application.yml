@@ -38,6 +38,11 @@ spring:
         format_sql: true
         default_batch_fetch_size: 100
 
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      password: ${REDIS_PASSWORD:}
+      port: 6379
 
   mail:
     host: smtp.gmail.com
