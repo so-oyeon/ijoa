@@ -1,18 +1,19 @@
 import React from "react";
 import Pororo from "/assets/fairytales/images/pororo.png";
-import Hachuping from "/assets/fairytales/images/hachuping.png"
-import Father from "/assets/fairytales/images/father.png"
-import Mother from "/assets/fairytales/images/mother.png"
+import Hachuping from "/assets/fairytales/images/hachuping.png";
+import Father from "/assets/fairytales/images/father.png";
+import Mother from "/assets/fairytales/images/mother.png";
 
 interface TTSChoiceModalProps {
   isOpen: boolean;
+  onClose: () => void; // 모달을 닫는 함수 추가
 }
 
-const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({ isOpen }) => {
+const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   // TTS 이미지 배열 예시 데이터
-  const images = [Pororo, Hachuping, Father, Mother]; // 이미지 개수에 따라 조정
+  const images = [Pororo, Hachuping, Father, Mother];
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
@@ -43,10 +44,16 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({ isOpen }) => {
 
           {/* 취소/완료 버튼 */}
           <div className="flex gap-4 justify-center items-center">
-            <button className="w-36 py-2 text-[#67CCFF] text-lg font-bold bg-white rounded-3xl border-2 border-[#67CCFF]">
+            <button
+              className="w-36 py-2 text-[#67CCFF] text-lg font-bold bg-white rounded-3xl border-2 border-[#67CCFF]"
+              onClick={onClose} // 이어서 읽기 버튼 클릭 시 모달 닫기
+            >
               이어서 읽기
             </button>
-            <button className="w-36 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-3xl border-2 border-[#67CCFF]">
+            <button
+              className="w-36 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-3xl border-2 border-[#67CCFF]"
+              onClick={onClose} // 처음부터 읽기 버튼 클릭 시 모달 닫기
+            >
               처음부터 읽기
             </button>
           </div>

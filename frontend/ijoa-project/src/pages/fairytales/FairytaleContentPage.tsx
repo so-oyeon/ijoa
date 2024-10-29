@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom"; // Import useLocation
 import "./FairytaleContentPage.css";
 import ReadCompleteModal from "../../components/fairytales/ReadCompleteModal";
 import LevelUpModal from "../../components/fairytales/LevelUpModal";
@@ -14,33 +15,33 @@ import dummy3 from "/assets/fairytales/images/dummy3.png";
 // 더미 데이터
 const fairyTales = [
   {
-    image: dummy1, // 첫 번째 페이지 배경 이미지
-    text: "준비~ 땅! 토끼와 거북이의 달리기 대결이 시작됐어요.", // 첫 번째 페이지 대사
+    image: dummy1,
+    text: "준비~ 땅! 토끼와 거북이의 달리기 대결이 시작됐어요.",
   },
   {
-    image: dummy2, // 두 번째 페이지 배경 이미지
-    text: "느림보가 어디쯤 오나? 헤헤. 쫓아오려면 아직도 멀었네. 한숨 자야지.", // 두 번째 페이지 대사
+    image: dummy2,
+    text: "느림보가 어디쯤 오나? 헤헤. 쫓아오려면 아직도 멀었네. 한숨 자야지.",
   },
   {
-    image: dummy3, // 세 번째 페이지 배경 이미지
-    text: "동물 친구들은 하하호호 웃으며 즐거워했어요.", // 세 번째 페이지 대사
+    image: dummy3,
+    text: "동물 친구들은 하하호호 웃으며 즐거워했어요.",
   },
 ];
 
 const FairyTaleContentPage: React.FC = () => {
-  const [fairytaleCurrentPage, setFairytaleCurrentPage] = useState(0); // 현재 페이지를 추적하는 상태 변수
-  const [isTTSChoiceModalOpen, ] = useState(true);
+  const location = useLocation();
+  const { title } = location.state || { title: "제목 없음" };
+  const [fairytaleCurrentPage, setFairytaleCurrentPage] = useState(0);
+  const [isTTSChoiceModalOpen, setIsTTSChoiceModalOpen] = useState(true);
   const [isLevelUpModalOpen, setIsLevelUpModalOpen] = useState(false);
   const [isReadCompleteModalOpen, setIsReadCompleteModalOpen] = useState(false);
 
-  // 좌측 화살표 버튼 클릭 시 호출되는 함수
   const handleLeftClick = () => {
     if (fairytaleCurrentPage > 0) {
       setFairytaleCurrentPage(fairytaleCurrentPage - 1);
     }
   };
 
-  // 우측 화살표 버튼 클릭 시 호출되는 함수
   const handleRightClick = () => {
     if (fairytaleCurrentPage < fairyTales.length - 1) {
       setFairytaleCurrentPage(fairytaleCurrentPage + 1);
@@ -49,7 +50,10 @@ const FairyTaleContentPage: React.FC = () => {
     }
   };
 
-  // 레벨업 모달 5초 노출 후 독서 완료 모달 열리도록
+  const handleCloseTTSChoiceModal = () => {
+    setIsTTSChoiceModalOpen(false);
+  };
+
   useEffect(() => {
     if (isLevelUpModalOpen) {
       const timer = setTimeout(() => {
@@ -63,10 +67,8 @@ const FairyTaleContentPage: React.FC = () => {
 
   return (
     <div className="relative h-screen">
-      {/* 현재 페이지 배경사진 */}
       <img src={fairyTales[fairytaleCurrentPage].image} alt="동화책 내용 사진" className="w-screen h-screen" />
 
-      {/* 우측 상단 메뉴 버튼 */}
       <div className="absolute top-[-12px] right-10">
         <button className="px-3 py-4 bg-gray-700 bg-opacity-50 rounded-2xl shadow-md">
           <img src={MenuButton} alt="메뉴 버튼" />
@@ -74,20 +76,16 @@ const FairyTaleContentPage: React.FC = () => {
         </button>
       </div>
 
-      {/* 중앙 하단 동화 내용 */}
       <div className="w-3/4 h-[140px] p-4 flex absolute bottom-10 left-1/2 transform -translate-x-1/2 justify-between items-center bg-white bg-opacity-70 rounded-3xl shadow-lg">
-        {/* 다시 듣기 버튼 */}
         <button className="items-center ml-5">
           <img src={SoundOnButton} alt="다시 듣기 버튼" className="w-20 h-20" />
           <p className="text-sm text-[#565656] font-bold">다시 듣기</p>
         </button>
-        {/* 동화 내용 텍스트 */}
         <p className="text-3xl font-bold text-center break-words flex-1 fairytale-font">
           {fairyTales[fairytaleCurrentPage].text}
         </p>
       </div>
 
-      {/* 좌측 화살표 버튼 - 첫 페이지일 경우 숨김 */}
       {fairytaleCurrentPage > 0 && (
         <div className="absolute left-10 top-1/2 transform -translate-y-1/2">
           <button className="bg-transparent border-none" onClick={handleLeftClick}>
@@ -96,19 +94,15 @@ const FairyTaleContentPage: React.FC = () => {
         </div>
       )}
 
-      {/* 우측 화살표 버튼 */}
       <div className="absolute right-10 top-1/2 transform -translate-y-1/2">
         <button className="bg-transparent border-none" onClick={handleRightClick}>
           <img src={RightArrow} alt="오른쪽 화살표" />
         </button>
       </div>
 
-      {/* TTS 선택 모달 */}
-      <TTSChoiceModal isOpen={isTTSChoiceModalOpen} />
-      {/* 레벨업 모달 */}
+      <TTSChoiceModal isOpen={isTTSChoiceModalOpen} onClose={handleCloseTTSChoiceModal} />
       <LevelUpModal isOpen={isLevelUpModalOpen} />
-      {/* 독서 완료 모달 */}
-      <ReadCompleteModal isOpen={isReadCompleteModalOpen} />
+      <ReadCompleteModal isOpen={isReadCompleteModalOpen} title={title}/>
     </div>
   );
 };
