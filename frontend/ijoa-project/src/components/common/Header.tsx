@@ -3,7 +3,7 @@ import { IoSearchSharp } from "react-icons/io5";
 import SettingsModal from "../../components/fairytales/SettingsModal";
 
 const ParentHeader = () => {
-  const [type] = useState("child");
+  const [type] = useState("parent");
   const path = window.location.pathname;
   const [isChildSettingsModalOpen, setIsChildSettingsModalOpen] = useState(false); // 자녀 헤더 설정 모달창 열림 여부 상태 변수
 
@@ -56,8 +56,7 @@ const ParentHeader = () => {
           <button
             className="w-14 flex flex-col justify-center items-center space-y-1"
             key={index}
-            onClick={menu.action}
-          >
+            onClick={menu.action}>
             <img
               className="w-12 aspect-1 p-2 bg-white rounded-full shadow-[0_3px_3px_1px_rgba(0,0,0,0.1)]"
               src={`/assets/header/${type}/${menu.img}.png`}
