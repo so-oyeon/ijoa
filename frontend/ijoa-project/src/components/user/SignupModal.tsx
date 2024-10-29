@@ -9,13 +9,13 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [nickname, setNickname] = useState("");
-
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const [generalError, setGeneralError] = useState("");
-
-  //   const [isSignupSuccess, setIsSignupSuccess] = useState(false);
+  const [isVerificationRequested, setIsVerificationRequested] = useState(false);
+  const [verificationCode, setVerificationCode] = useState("");
+  const [isVerified, setIsVerified] = useState(false);
 
   // 유효한 이메일인지 검사
   const validateEmail = (email: string) => {
@@ -31,6 +31,24 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
 
     if (newEmail && !validateEmail(newEmail)) {
       setEmailError("이메일 형식을 지켜주세요!");
+    }
+  };
+
+  // 이메일 인증 요청 핸들러
+  const handleEmailVerificationRequest = () => {
+    setIsVerificationRequested(true);
+    // 이메일 인증 코드 발송 API 요청 추가.
+  };
+
+  // 인증 코드 확인 핸들러
+  const handleVerificationCodeConfirm = () => {
+    // 입력한 인증 코드를 확인하는 로직을 추가할 수 있습니다.
+    if (verificationCode === "1234") {
+      // 예시 코드
+      Swal.fire("인증 성공", "이메일 인증이 완료되었습니다.", "success");
+      setIsVerified(true);
+    } else {
+      Swal.fire("인증 실패", "잘못된 인증번호입니다.", "error");
     }
   };
 
@@ -89,7 +107,34 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
       />
       {emailError && <p className="text-red-500 text-sm mb-4">{emailError}</p>}
 
-      <button className="w-3/4 mb-4 py-3 rounded-xl font-bold bg-red-100 hover:bg-red-200">이메일 인증요청</button>
+      {!isVerificationRequested ? (
+        <button
+          className="w-3/4 mb-4 py-3 rounded-xl font-bold bg-red-100 hover:bg-red-200"
+          onClick={handleEmailVerificationRequest}
+        >
+          이메일 인증요청
+        </button>
+      ) : (
+        <div className="flex items-center w-full justify-center space-x-2 mb-4">
+          <input
+            type="text"
+            placeholder="인증번호를 입력해주세요"
+            className="flex-grow max-w-[60%] px-4 py-3 rounded-full bg-gray-100 text-gray-500 placeholder-gray-400 focus:outline-none"
+            value={verificationCode}
+            onChange={(e) => setVerificationCode(e.target.value)}
+            disabled={isVerified} // 인증 완료 시 입력 비활성화
+          />
+          <button
+            className={`px-4 py-3 rounded-full font-bold ${
+              isVerified ? "bg-red-300" : "bg-blue-100 hover:bg-blue-200"
+            }`}
+            onClick={handleVerificationCodeConfirm}
+            disabled={isVerified} // 인증 완료 시 버튼 비활성화
+          >
+            {isVerified ? "완료" : "확인"}
+          </button>
+        </div>
+      )}
 
       <input
         type="password"
@@ -125,8 +170,6 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
       >
         회원가입
       </button>
-
-      {/* {isSignupSuccess && <SignupSuccessModal />} */}
     </div>
   );
 };
