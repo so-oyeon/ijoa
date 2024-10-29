@@ -32,7 +32,7 @@ const App = () => {
         {/* 홈 화면 */}
         <Route path="/" element={<Home />} />
         {/* 동화 내용 */}
-        <Route path="/fairytale/content" element={<FairyTaleContentPage />} />
+        <Route path="/fairytale/content/:id" element={<FairyTaleContentPage />} />
       </Routes>
     </BrowserRouter>
   );
