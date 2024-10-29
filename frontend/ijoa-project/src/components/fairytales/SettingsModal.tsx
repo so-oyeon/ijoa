@@ -45,13 +45,13 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
         <div className="flex gap-4 justify-center items-center">
           <button
             onClick={handleClose}
-            className="mt-6 px-8 py-2 text-[#67CCFF] text-lg font-bold bg-white rounded-3xl border border-2 border-[#67CCFF]"
+            className="mt-6 px-8 py-2 text-[#67CCFF] text-lg font-bold bg-white rounded-3xl border-2 border-[#67CCFF]"
           >
             취소
           </button>
           <button
             onClick={handleClose}
-            className="mt-6 px-8 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-3xl border border-2 border-[#67CCFF]"
+            className="mt-6 px-8 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-3xl border-2 border-[#67CCFF]"
           >
             완료
           </button>
