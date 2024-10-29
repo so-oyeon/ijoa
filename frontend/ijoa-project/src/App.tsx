@@ -1,9 +1,10 @@
 import { Routes, Route, BrowserRouter } from "react-router-dom";
-import Home from "./pages/Home";
 import ParentHeader from "./components/common/Header";
 import CreateChildProfile from "./pages/parent/ChildProfileList";
 import FairytaleListPage from "./pages/fairytales/FairytaleListPage";
 import FairyTaleContentPage from "./pages/fairytales/FairytaleContentPage";
+import SplashScreen from "./pages/users/SplashScreen";
+import Login from "./pages/users/Login";
 
 const App = () => {
   return (
@@ -29,8 +30,10 @@ const App = () => {
           }
         />
 
+        {/* 스플래시 화면 */}
+        <Route path="/" element={<SplashScreen />} />
         {/* 홈 화면 */}
-        <Route path="/" element={<Home />} />
+        <Route path="/home" element={<Login />} />
         {/* 동화 내용 */}
         <Route path="/fairytale/content" element={<FairyTaleContentPage />} />
       </Routes>

@@ -5,7 +5,7 @@ FROM nginx:latest
 COPY default.conf /etc/nginx/conf.d/default.conf
 
 # React 빌드 결과물을 Nginx의 기본 HTML 위치로 복사
-COPY build/ /usr/share/nginx/html
+COPY dist/ /usr/share/nginx/html
 
 # Nginx 포트 설정
 EXPOSE 80
