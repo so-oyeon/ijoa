@@ -24,7 +24,7 @@ const ParentHeader = () => {
   const menuToDisplay = type === "parent" ? parentMenu : childMenu;
 
   return (
-    <div className="w-full h-24 px-10 py-3 bg-gradient-to-b from-white flex justify-between items-center fixed top-0">
+    <div className="w-full h-24 px-10 py-3 bg-gradient-to-b from-white flex justify-between items-center fixed top-0 z-50">
       <div className="w-2/3 h-full flex items-center space-x-5">
         <img className="h-full" src="/assets/logo.png" alt="" />
 
