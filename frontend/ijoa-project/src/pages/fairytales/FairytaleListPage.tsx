@@ -14,8 +14,10 @@ const FairytaleListPage: React.FC = () => {
 
   return (
     <div>
+      {/* 헤더 */}
       <ParentHeader />
-      <div className="pt-24 pb-10 px-10">
+      {/* 내용 */}
+      <div className="pt-24 pb-24 px-10">
         <div className="mb-10">
           <div className="mb-5 text-2xl font-bold">🏆 9살 인기 동화책</div>
           <Swiper bookCovers={bookCovers} titles={titles} />
