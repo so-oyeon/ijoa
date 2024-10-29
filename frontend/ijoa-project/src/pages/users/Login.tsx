@@ -40,13 +40,7 @@ const Login: React.FC = () => {
         alt="로그인 화면"
         className="absolute inset-0 w-full h-full object-cover z-0 opacity-70"
       />
-      {/* 아이조아 텍스트 */}
-      <div className="absolute top-1/4 left-1/2 transform -translate-x-1/2 z-20 flex space-x-2 text-[140px] font-['SDGothic'] text-white-stroke">
-        <span className="text-[#FFCC00] ">아</span>
-        <span className="text-[#99CC66] ">이</span>
-        <span className="text-[#FF6666] ">조</span>
-        <span className="text-[#339999] ">아</span>
-      </div>
+
       {/* 동물들 위치조정 */}
       <div className="absolute inset-0 z-20">
         <img src={Bat} alt="박쥐" className="absolute -ml-5 bottom-40 w-[200px]" />
@@ -55,20 +49,28 @@ const Login: React.FC = () => {
         <img src={Bear} alt="곰" className="absolute right-2 -mr-9 bottom-4 w-[200px]" />
         <img src={Monkey} alt="원숭이" className="absolute top-1/3 left-[17%] transform -translate-y-1/2 w-[180px]" />
       </div>
-      {/* 로그인, 회원가입 버튼 */}
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 mt-16 flex flex-col items-center space-y-4 z-20">
-        <button
-          onClick={() => openModal("login")}
-          className="w-72 h-20 bg-yellow-400 text-black text-2xl font-bold rounded-full shadow-md border-4 border-white hover:shadow-lg transition-shadow duration-200"
-        >
-          로그인
-        </button>
-        <button
-          onClick={() => openModal("signup")}
-          className="w-72 h-20 bg-orange-500 text-black text-2xl font-bold rounded-full shadow-md border-4 border-white hover:shadow-lg transition-shadow duration-200"
-        >
-          회원가입
-        </button>
+
+      <div className="h-full flex flex-col justify-center items-center relative z-50">
+        {/* 아이조아 텍스트 */}
+        <div className="flex space-x-2 text-[140px] font-['SDGothic'] text-white-stroke">
+          <span className="text-[#FFCC00] ">아</span>
+          <span className="text-[#99CC66] ">이</span>
+          <span className="text-[#FF6666] ">조</span>
+          <span className="text-[#339999] ">아</span>
+        </div>
+        {/* 로그인, 회원가입 버튼 */}
+        <div className="w-full flex flex-col items-center space-y-3">
+          <button
+            onClick={() => openModal("login")}
+            className="w-1/3 h-20 bg-yellow-400 text-black text-2xl font-bold rounded-full shadow-md border-4 border-white hover:shadow-lg transition-shadow duration-200">
+            로그인
+          </button>
+          <button
+            onClick={() => openModal("signup")}
+            className="w-1/3 h-20 bg-orange-500 text-black text-2xl font-bold rounded-full shadow-md border-4 border-white hover:shadow-lg transition-shadow duration-200">
+            회원가입
+          </button>
+        </div>
       </div>
 
       {/* 모달창 */}
