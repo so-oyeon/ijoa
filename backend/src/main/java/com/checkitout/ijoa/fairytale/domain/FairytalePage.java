@@ -22,22 +22,23 @@ public class FairytalePage {
     @Column(name = "fairytale_page_id")
     private Long id;
 
-    @Column(name = "page_number")
+    @Column(name = "page_number", nullable = false)
     private Integer pageNumber;
 
+    @Column(nullable = false)
     private String content;
 
-    @Column(name = "sentence_count")
+    @Column(name = "sentence_count", nullable = false)
     private Integer sentenceCount;
 
-    @Column(name = "word_count")
+    @Column(name = "word_count", nullable = false)
     private Integer wordCount;
 
     @Column(name = "image_url")
     private String imageUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fairytale_id")
+    @JoinColumn(name = "fairytale_id", nullable = false)
     private Fairytale fairytale;
 
     private FairytalePage(Integer pageNumber, String content, Integer sentenceCount, Integer wordCount, String imageUrl,

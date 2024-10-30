@@ -23,26 +23,32 @@ public class Fairytale {
     @Column(name = "fairytale_id")
     private Long id;
 
+    @Column(nullable = false)
     private String title;
 
+    @Column(nullable = false)
     private String author;
 
+    @Column(nullable = false)
     private String illustrator;
 
+    @Column(nullable = false)
     private String isbn;
 
     @Column(name = "image_url")
     private String imageUrl;
 
-    @Column(name = "published_year")
+    @Column(name = "published_year", nullable = false)
     private Integer publishedYear;
 
+    @Column(nullable = false)
     private String publisher;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private CATEGORY category;
 
-    @Column(name = "total_pages")
+    @Column(name = "total_pages", nullable = false)
     private Integer totalPages;
 
     @OneToMany(mappedBy = "fairytale", cascade = CascadeType.ALL, orphanRemoval = true)
