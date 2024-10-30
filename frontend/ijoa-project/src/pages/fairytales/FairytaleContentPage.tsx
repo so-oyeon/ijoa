@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import "./FairytaleContentPage.css";
+import "../../css/FairytaleContentPage.css"
 import ReadCompleteModal from "../../components/fairytales/ReadCompleteModal";
 import LevelUpModal from "../../components/fairytales/LevelUpModal";
 import TTSChoiceModal from "../../components/fairytales/TTSChoiceModal";
