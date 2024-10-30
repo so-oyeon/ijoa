@@ -30,7 +30,9 @@ const DateList = () => {
   }, [selectYear]);
 
   return (
-    <div className="w-1/4 py-10 max-h-[calc(100vh-210px)] overflow-y-auto">
+    <div className="max-h-[calc(100vh-250px)] overflow-y-auto">
+      <hr className="my-3 bg-[#9E9E9E]" />
+
       {yearList.map((year, index) => (
         <div key={index}>
           {/* 년도 */}
