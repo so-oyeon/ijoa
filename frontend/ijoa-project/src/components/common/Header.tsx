@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { IoSearchSharp } from "react-icons/io5";
 import SettingsModal from "../../components/fairytales/SettingsModal";
 import ParentSettingsModal from "../../components/parent/ParentSettingsModal";
@@ -8,6 +9,15 @@ const ParentHeader = () => {
   const path = window.location.pathname;
   const [isChildSettingsModalOpen, setIsChildSettingsModalOpen] = useState(false); // 자녀 헤더 설정 모달창 열림 여부 상태 변수
   const [isParentSettingsModalOpen, setIsParentSettingsModalOpen] = useState(false); // 부모 헤더 설정 모달창 열림 여부 상태 변수
+  const navigate = useNavigate();
+
+  const MyRoomClick = () => {
+    navigate(`/child/myroom`);
+  };
+
+  const LibraryClick = () => {
+    navigate(`/fairytale/list`);
+  };
 
   // 자녀 헤더 설정 모달창 열기
   const openSettingsModal = () => {
@@ -35,9 +45,9 @@ const ParentHeader = () => {
   ];
 
   const childMenu = [
-    { img: "library-icon", text: "도서관" },
+    { img: "library-icon", text: "도서관", action: LibraryClick },
     { img: "bookcase-icon", text: "내 책장" },
-    { img: "myroom-icon", text: "내 방" },
+    { img: "myroom-icon", text: "내 방", action: MyRoomClick },
     { img: "setting-icon", text: "설정", action: openSettingsModal },
     { img: "sampleProfileImg", text: "프로필" },
   ];

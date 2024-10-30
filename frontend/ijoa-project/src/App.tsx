@@ -6,6 +6,7 @@ import FairyTaleContentPage from "./pages/fairytales/FairytaleContentPage";
 import SplashScreen from "./pages/users/SplashScreen";
 import Login from "./pages/users/Login";
 import TTSList from "./pages/parent/TTSList";
+import MyRoom from "./pages/child/MyRoom";
 
 const App = () => {
   return (
@@ -26,6 +27,8 @@ const App = () => {
                     <Route path="/parent/tts/list" element={<TTSList />} />
                     {/* 동화 목록 */}
                     <Route path="/fairytale/list" element={<FairytaleListPage />} />
+                    {/* 내 방 */}
+                    <Route path="/child/myroom" element={<MyRoom />} />
                   </Route>
                 </Routes>
               </div>
