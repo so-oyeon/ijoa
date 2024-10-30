@@ -1,4 +1,5 @@
 import React from "react";
+import { motion } from "framer-motion"; // Framer Motion import
 import Attention from "/assets/fairytales/buttons/attention.png";
 import SideLion from "/assets/fairytales/images/side-lion.png";
 import SideFrog from "/assets/fairytales/images/side-frog.png";
@@ -18,12 +19,26 @@ const FocusAlertModal: React.FC<FocusAlertModalProps> = ({ isOpen, onClose }) =>
           <div className="flex justify-center items-center">
             <img src={Attention} alt="집중 아이콘" className="w-36 absolute top-2" />
           </div>
-          <div className="flex justify-between items-center mt-20">
-            <img src={SideLion} alt="사자" className="w-36 h-auto" />
+          <div className="flex px-1 justify-between items-center mt-20">
+            {/* 사자 이미지에 애니메이션 적용 */}
+            <motion.img
+              src={SideLion}
+              alt="사자"
+              className="w-36 h-auto"
+              animate={{ y: ["0%", "-10%", "0%"] }}
+              transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
+            />
             <p className="text-2xl font-semibold whitespace-pre-line">
               {"집중력이 떨어지고 있어요😅\n잠깐 스트레칭하고 올까요?"}
             </p>
-            <img src={SideFrog} alt="개구리" className="w-36 h-auto" />
+            {/* 개구리 이미지에 애니메이션 적용 */}
+            <motion.img
+              src={SideFrog}
+              alt="개구리"
+              className="w-36 h-auto"
+              animate={{ y: ["0%", "10%", "0%"] }}
+              transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
+            />
           </div>
           <button
             onClick={onClose}

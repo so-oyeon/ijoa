@@ -144,7 +144,7 @@ const FairyTaleContentPage: React.FC = () => {
       const timer = setTimeout(() => {
         setIsLevelUpModalOpen(false);
         setIsReadCompleteModalOpen(true); // 레벨업 모달 닫고 독서 완료 모달 열기
-      }, 3000);
+      }, 5000);
       return () => clearTimeout(timer);
     }
   }, [isLevelUpModalOpen]);
