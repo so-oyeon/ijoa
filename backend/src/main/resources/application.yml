@@ -70,3 +70,6 @@ logging:
       hibernate:
         SQL: debug
         type: trace
+
+cors:
+  url: ${CORS_URL}
