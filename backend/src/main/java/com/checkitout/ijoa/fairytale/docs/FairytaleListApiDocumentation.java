@@ -22,8 +22,7 @@ public interface FairytaleListApiDocumentation {
             @ApiResponse(responseCode = "400", description = "잘못된 요청"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    @GetMapping("/list")
-    public Page<FairytaleListResponseDto> fairytaleListAll(@RequestParam("page") int page);
+    public Page<FairytaleListResponseDto> fairytaleListAll(@RequestParam int page);
 
     @Operation(summary = "카테고리별 도서 목록 조회", description = "해당 카테고리별 도서 목록을 조회 할 수 있습니다. ")
     @ApiResponses(value = {
@@ -31,7 +30,6 @@ public interface FairytaleListApiDocumentation {
             @ApiResponse(responseCode = "400", description = "잘못된 요청"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    @GetMapping("/list/{categoryId}")
     public Page<FairytaleListResponseDto> categoryFairytale(@PathVariable("categoryId") int categoryId, @RequestParam("page")int page);
 
     @Operation(summary = "나이별 인기도서 ", description = "나이별 인기 도서 순위를 조회할 수 있습니다. ")
@@ -40,7 +38,6 @@ public interface FairytaleListApiDocumentation {
             @ApiResponse(responseCode = "400", description = "잘못된 요청"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    @GetMapping("/rank/{age}")
     public ResponseEntity<List<FairytaleListResponseDto>> fairytaleRankAge(@PathVariable("age")int age);
 
     @Operation(summary = "읽은 책과 읽고있는 책 목록 조회", description = "아이가 읽은 책과 읽고있는 책의 목록을 조회할 수 있습니다. ")
@@ -49,7 +46,6 @@ public interface FairytaleListApiDocumentation {
             @ApiResponse(responseCode = "400", description = "잘못된 요청"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    @GetMapping("/{childrenId}")
     public Page<FairytaleListResponseDto> readFairytaleList(@PathVariable("childrenId")int childrenId, @RequestParam("page") int page);
 
     @Operation(summary = "사용자 맞춤 책 추천 ", description = "아이 맞춤 책 추천 목록을 조회할 수 있습니다. ")
@@ -58,7 +54,6 @@ public interface FairytaleListApiDocumentation {
             @ApiResponse(responseCode = "400", description = "잘못된 요청"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    @GetMapping("/recommendations/{childrenId}")
     public ResponseEntity<List<FairytaleListResponseDto>> recommendFairytale(@PathVariable("childrenId")Long childrenId);
 
     @Operation(summary = "도서 검색 ", description = "키워드로 제목 검색을 할 수 있습니다. ")
@@ -67,7 +62,6 @@ public interface FairytaleListApiDocumentation {
             @ApiResponse(responseCode = "400", description = "잘못된 요청"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    @GetMapping("/search")
     public Page<FairytaleListResponseDto> searchFairytale(@RequestParam("word")String word,@RequestParam("page")int page);
 
 }
