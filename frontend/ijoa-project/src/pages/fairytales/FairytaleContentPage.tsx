@@ -4,6 +4,7 @@ import "./FairytaleContentPage.css";
 import ReadCompleteModal from "../../components/fairytales/ReadCompleteModal";
 import LevelUpModal from "../../components/fairytales/LevelUpModal";
 import TTSChoiceModal from "../../components/fairytales/TTSChoiceModal";
+import QuizModal from "../../components/fairytales/QuizModal";
 import MenuButton from "/assets/fairytales/buttons/menu-button.png";
 import SoundOnButton from "/assets/fairytales/buttons/sound-on-button.png";
 import LeftArrow from "/assets/fairytales/buttons/left-arrow.png";
@@ -35,6 +36,7 @@ const FairyTaleContentPage: React.FC = () => {
   const [isTTSChoiceModalOpen, setIsTTSChoiceModalOpen] = useState(true);
   const [isLevelUpModalOpen, setIsLevelUpModalOpen] = useState(false);
   const [isReadCompleteModalOpen, setIsReadCompleteModalOpen] = useState(false);
+  const [isQuizModalOpen, setIsQuizModalOpen] = useState(false);
 
   // 왼쪽 화살표 클릭 시 현재 페이지를 감소시키는 함수
   const handleLeftClick = () => {
@@ -48,7 +50,8 @@ const FairyTaleContentPage: React.FC = () => {
     if (fairytaleCurrentPage < fairyTales.length - 1) {
       setFairytaleCurrentPage(fairytaleCurrentPage + 1);
     } else {
-      // Fix: 레벨 업 요건 충족 시 켜지도록 추후 수정!
+      // 마지막 페이지에서 오른쪽 화살표 클릭 시 레벨업 모달 켜지도록
+      // Fix: 레벨 업 요건 충족 시 켜지도록 추후 수정
       setIsLevelUpModalOpen(true);
     }
   };
@@ -56,6 +59,14 @@ const FairyTaleContentPage: React.FC = () => {
   // TTS 선택 모달을 닫는 함수
   const handleCloseTTSChoiceModal = () => {
     setIsTTSChoiceModalOpen(false);
+  };
+
+  const handleOpenQuizModal = () => {
+    setIsQuizModalOpen(true);
+  };
+
+  const handleCloseQuizModal = () => {
+    setIsQuizModalOpen(false);
   };
 
   // 레벨 업 모달이 열릴 때 3초 후에 읽기 완료 모달을 여는 타이머 설정하는 useEffect
@@ -78,6 +89,14 @@ const FairyTaleContentPage: React.FC = () => {
         <button className="px-3 py-4 bg-gray-700 bg-opacity-50 rounded-2xl shadow-md">
           <img src={MenuButton} alt="메뉴 버튼" />
           <p className="text-xs text-white">메뉴</p>
+        </button>
+      </div>
+
+      {/* 임시 버튼 - 퀴즈 화면 조회용 */}
+      <div className="absolute top-[-12px] right-[150px]">
+        <button className="px-3 py-4 bg-gray-700 bg-opacity-50 rounded-2xl shadow-md" onClick={handleOpenQuizModal}>
+          <img src={MenuButton} alt="퀴즈 버튼" />
+          <p className="text-xs text-white">퀴즈</p>
         </button>
       </div>
 
@@ -104,13 +123,16 @@ const FairyTaleContentPage: React.FC = () => {
           <img src={RightArrow} alt="오른쪽 화살표" />
         </button>
       </div>
+
       {/* TTS 선택 모달 */}
-      {/* hasRead는 추후에 동적으로 수정 */}
-      <TTSChoiceModal isOpen={isTTSChoiceModalOpen} onClose={handleCloseTTSChoiceModal} hasRead={true} />
+      {/* Fix: hasRead => 처음 읽는건지 읽었던 건지 구분 */}
+      <TTSChoiceModal isOpen={isTTSChoiceModalOpen} onClose={handleCloseTTSChoiceModal} hasRead={false} />
       {/* 레벨업 모달 */}
       <LevelUpModal isOpen={isLevelUpModalOpen} />
       {/* 독서완료 모달 */}
       <ReadCompleteModal isOpen={isReadCompleteModalOpen} title={title} />
+      {/* 퀴즈 모달 */}
+      <QuizModal isOpen={isQuizModalOpen} onClose={handleCloseQuizModal} />
     </div>
   );
 };
