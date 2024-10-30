@@ -21,7 +21,6 @@ const BookCoverSwiper: React.FC<BookCoverSwiperProps> = ({
     <Swiper spaceBetween={spaceBetween} slidesPerView={slidesPerView} onSlideChange={() => {}} onSwiper={() => {}}>
       {bookCovers.map((cover, index) => (
         <SwiperSlide key={index}>
-          {/* SwiperSlide에서 onClick 핸들러 사용 */}
           <div
             onClick={() => onBookClick(index + 1)} // index + 1로 수정하여 정확한 경로로 내비게이션
             className="block text-center cursor-pointer"

@@ -5,6 +5,7 @@ import ReadCompleteModal from "../../components/fairytales/ReadCompleteModal";
 import LevelUpModal from "../../components/fairytales/LevelUpModal";
 import TTSChoiceModal from "../../components/fairytales/TTSChoiceModal";
 import QuizModal from "../../components/fairytales/QuizModal";
+import FairytaleMenu from "../../components/fairytales/FairytaleMenu";
 import MenuButton from "/assets/fairytales/buttons/menu-button.png";
 import SoundOnButton from "/assets/fairytales/buttons/sound-on-button.png";
 import LeftArrow from "/assets/fairytales/buttons/left-arrow.png";
@@ -12,20 +13,55 @@ import RightArrow from "/assets/fairytales/buttons/right-arrow.png";
 import dummy1 from "/assets/fairytales/images/dummy1.png";
 import dummy2 from "/assets/fairytales/images/dummy2.png";
 import dummy3 from "/assets/fairytales/images/dummy3.png";
+import dummy4 from "/assets/fairytales/images/dummy4.png";
+import dummy5 from "/assets/fairytales/images/dummy5.png";
+import dummy6 from "/assets/fairytales/images/dummy6.png";
+import dummy7 from "/assets/fairytales/images/dummy7.png";
+import dummy8 from "/assets/fairytales/images/dummy8.png";
+import dummy9 from "/assets/fairytales/images/dummy9.png";
+import dummy10 from "/assets/fairytales/images/dummy10.png";
 
 // 더미 데이터
 const fairyTales = [
   {
     image: dummy1,
-    text: "준비~ 땅! 토끼와 거북이의 달리기 대결이 시작됐어요.",
+    text: "거북아~ 나랑 달리기 내기 하지 않을래?",
   },
   {
     image: dummy2,
-    text: "느림보가 어디쯤 오나? 헤헤. 쫓아오려면 아직도 멀었네. 한숨 자야지.",
+    text: "준비~ 땅! 토끼는 시작과 함께 깡총~깡총 빠르게 뛰어갔어요.",
   },
   {
     image: dummy3,
-    text: "동물 친구들은 하하호호 웃으며 즐거워했어요.",
+    text: "어휴~ 지겨워! 거북이가 오려면 아직 멀었겠다. 여기서 낮잠이나 한숨 자야지.",
+  },
+  {
+    image: dummy4,
+    text: "토끼가 낮잠을 자는 사이, 거북이는 느리지만 열심히 기어갔어요.",
+  },
+  {
+    image: dummy5,
+    text: "잠에서 깬 토끼는 어느새 결승선에 먼저 도착한 거북이를 보고 깜짝! 놀랐어요.",
+  },
+  {
+    image: dummy6,
+    text: "동물 친구들은 내기에서 이긴 거북이를 축하해주며 함께 기뻐했어요.",
+  },
+  {
+    image: dummy7,
+    text: "거북아~ 정말 대단해! 사실 네가 이길 줄은 몰랐어.",
+  },
+  {
+    image: dummy8,
+    text: "헤헤... 아니야~ 난 그저 열심히 기어갔을 뿐인걸?",
+  },
+  {
+    image: dummy9,
+    text: "거북이 네가 어떻게 나보다 빨리 도착할 수가 있어? 이 내기는 무효야!",
+  },
+  {
+    image: dummy10,
+    text: "헤헤 토끼야, 그럼 바다에서 한 번 더 달리기 내기할까?",
   },
 ];
 
@@ -37,6 +73,11 @@ const FairyTaleContentPage: React.FC = () => {
   const [isLevelUpModalOpen, setIsLevelUpModalOpen] = useState(false);
   const [isReadCompleteModalOpen, setIsReadCompleteModalOpen] = useState(false);
   const [isQuizModalOpen, setIsQuizModalOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // 메뉴창 Swiper를 위한 props 설정
+  const bookPages = fairyTales.map((fairyTale) => fairyTale.image);
+  const pageNums = fairyTales.map((_, index) => `${index + 1} 페이지`);
 
   // 왼쪽 화살표 클릭 시 현재 페이지를 감소시키는 함수
   const handleLeftClick = () => {
@@ -69,6 +110,20 @@ const FairyTaleContentPage: React.FC = () => {
     setIsQuizModalOpen(false);
   };
 
+  const handleOpenMenu = () => {
+    setIsMenuOpen(true);
+  };
+
+  const handleCloseMenu = () => {
+    setIsMenuOpen(false);
+  };
+
+  // 메뉴창 전체 페이지 스와이퍼 함수
+  const handlePageClick = (index: number) => {
+    setFairytaleCurrentPage(index - 1);
+    setIsMenuOpen(false);
+  };
+
   // 레벨 업 모달이 열릴 때 3초 후에 읽기 완료 모달을 여는 타이머 설정하는 useEffect
   useEffect(() => {
     if (isLevelUpModalOpen) {
@@ -84,9 +139,9 @@ const FairyTaleContentPage: React.FC = () => {
   return (
     <div className="relative h-screen">
       <img src={fairyTales[fairytaleCurrentPage].image} alt="동화책 내용 사진" className="w-screen h-screen" />
-
+      {/* 메뉴 버튼 */}
       <div className="absolute top-[-12px] right-10">
-        <button className="px-3 py-4 bg-gray-700 bg-opacity-50 rounded-2xl shadow-md">
+        <button className="px-3 py-4 bg-gray-700 bg-opacity-50 rounded-2xl shadow-md" onClick={handleOpenMenu}>
           <img src={MenuButton} alt="메뉴 버튼" />
           <p className="text-xs text-white">메뉴</p>
         </button>
@@ -105,7 +160,7 @@ const FairyTaleContentPage: React.FC = () => {
           <img src={SoundOnButton} alt="다시 듣기 버튼" className="w-20 h-20" />
           <p className="text-sm text-[#565656] font-bold">다시 듣기</p>
         </button>
-        <p className="text-3xl font-bold text-center break-words flex-1 fairytale-font">
+        <p className=" max-w-full px-12 flex-1 text-3xl font-bold text-center fairytale-font whitespace-pre-line break-keep">
           {fairyTales[fairytaleCurrentPage].text}
         </p>
       </div>
@@ -133,6 +188,15 @@ const FairyTaleContentPage: React.FC = () => {
       <ReadCompleteModal isOpen={isReadCompleteModalOpen} title={title} />
       {/* 퀴즈 모달 */}
       <QuizModal isOpen={isQuizModalOpen} onClose={handleCloseQuizModal} />
+      {/* 메뉴창 */}
+      <FairytaleMenu
+        fairytaleCurrentPage={fairytaleCurrentPage}
+        isOpen={isMenuOpen}
+        onClose={handleCloseMenu}
+        bookPages={bookPages}
+        pageNums={pageNums}
+        onPageClick={handlePageClick}
+      />
     </div>
   );
 };

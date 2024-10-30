@@ -1,10 +1,13 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 import closebutton from "/assets/close-button.png";
 import SettingsIcon from "/assets/fairytales/buttons/settings-icon.png";
 import VerificationModal from "./VerificationModal";
 import InformationModal from "./InformationModal";
+import DeleteInformationModal from "./DeleteInformationModal";
 
-type ModalType = "verification" | "information" | null;
+type ModalType = "verification" | "information" | "deleteConfirmation" | null;
 
 interface ParentSettingsModalProps {
   isOpen: boolean;
@@ -13,6 +16,69 @@ interface ParentSettingsModalProps {
 
 const ParentSettingsModal: React.FC<ParentSettingsModalProps> = ({ isOpen, onClose }) => {
   const [modalType, setModalType] = useState<ModalType>(null);
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      // 서버에 로그아웃 요청 보내기 (api보고 나중에 연결)
+      await fetch("/api/logout", {
+        method: "POST",
+        credentials: "include", // 필요하면 쿠키를 포함하여 요청
+      });
+
+      // 클라이언트 측 세션 정보 삭제
+      localStorage.removeItem("authToken"); // localStorage에 저장된 토큰
+      sessionStorage.clear(); // sessionStorage에 저장된 모든 데이터 삭제
+
+      // 로그아웃 완료 알림
+      Swal.fire({
+        icon: "success",
+        title: "로그아웃이 완료되었습니다",
+        confirmButtonText: "확인",
+      }).then(() => {
+        navigate("/home");
+      });
+    } catch (error) {
+      console.error("로그아웃 실패:", error);
+      Swal.fire({
+        icon: "error",
+        title: "로그아웃 실패",
+        text: "다시 시도해 주세요.",
+        confirmButtonText: "확인",
+      });
+    }
+  };
+
+  const handleDeleteAccount = () => {
+    setModalType("deleteConfirmation");
+  };
+  // 회원탈퇴 통신 연결
+  const confirmDeleteAccount = async () => {
+    try {
+      await fetch("/api/delete-account", {
+        method: "DELETE",
+        credentials: "include",
+      });
+      localStorage.removeItem("authToken");
+      sessionStorage.clear();
+
+      Swal.fire({
+        icon: "success",
+        title: "회원 탈퇴가 완료되었습니다",
+        confirmButtonText: "확인",
+      }).then(() => {
+        navigate("/home");
+      });
+    } catch (error) {
+      console.error("회원 탈퇴 실패:", error);
+      Swal.fire({
+        icon: "error",
+        title: "회원 탈퇴 실패",
+        text: "다시 시도해 주세요.",
+        confirmButtonText: "확인",
+      });
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -43,9 +109,7 @@ const ParentSettingsModal: React.FC<ParentSettingsModalProps> = ({ isOpen, onClo
         {/* 로그아웃 버튼 */}
         <button
           className="w-3/4 mb-4 py-2 bg-blue-400 text-white font-bold rounded-full hover:bg-blue-500"
-          onClick={() => {
-            // 로그아웃 기능 추가
-          }}
+          onClick={handleLogout}
         >
           로그아웃
         </button>
@@ -53,9 +117,7 @@ const ParentSettingsModal: React.FC<ParentSettingsModalProps> = ({ isOpen, onClo
         {/* 회원 탈퇴 버튼 */}
         <button
           className="w-3/4 py-2 bg-red-300 text-white font-bold rounded-full hover:bg-red-400"
-          onClick={() => {
-            // 회원 탈퇴 기능 추가
-          }}
+          onClick={handleDeleteAccount}
         >
           회원 탈퇴
         </button>
@@ -69,6 +131,9 @@ const ParentSettingsModal: React.FC<ParentSettingsModalProps> = ({ isOpen, onClo
           />
         )}
         {modalType === "information" && <InformationModal isOpen={true} onClose={() => setModalType(null)} />}
+        {modalType === "deleteConfirmation" && (
+          <DeleteInformationModal isOpen={true} onClose={() => setModalType(null)} onConfirm={confirmDeleteAccount} />
+        )}
       </div>
     </div>
   );

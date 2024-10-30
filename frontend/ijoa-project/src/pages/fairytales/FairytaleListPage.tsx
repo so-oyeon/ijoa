@@ -21,7 +21,7 @@ const FairytaleListPage: React.FC = () => {
     BookCover,
     BookCover,
   ];
-  
+
   // 스와이퍼에 들어갈 제목 리스트
   const titles = [
     "동화책 1",
@@ -35,21 +35,20 @@ const FairytaleListPage: React.FC = () => {
     "동화책 9",
     "동화책 10",
   ];
-  
+
   // 선택탭 항목 리스트
   const tabItems = ["의사소통", "자연탐구", "사회관계", "예술경험", "신체운동 / 건강"];
 
   const handleBookClick = (index: number) => {
-    navigate(`/fairytale/content/${index}`, { state: { title: titles[index-1] } });
-};
-
+    navigate(`/fairytale/content/${index}`, { state: { title: titles[index - 1] } });
+  };
 
   return (
     <div>
       {/* 헤더 */}
       <ParentHeader />
       {/* 내용 */}
-      <div className="pt-24 pb-24 px-10">
+      <div className="pt-24 pb-24 px-10 text-xl">
         <div className="mb-10">
           <div className="mb-5 text-2xl font-bold">🏆 9살 인기 동화책</div>
           <Swiper bookCovers={bookCovers} titles={titles} onBookClick={handleBookClick} />
