@@ -1,4 +1,4 @@
-import { CiCamera } from "react-icons/ci";
+// import { CiCamera } from "react-icons/ci";
 
 interface Props {
   setIsCreateModal: (state: boolean) => void;
