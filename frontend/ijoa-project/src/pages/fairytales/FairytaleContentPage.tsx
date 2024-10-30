@@ -105,7 +105,8 @@ const FairyTaleContentPage: React.FC = () => {
         </button>
       </div>
       {/* TTS 선택 모달 */}
-      <TTSChoiceModal isOpen={isTTSChoiceModalOpen} onClose={handleCloseTTSChoiceModal} />
+      {/* hasRead는 추후에 동적으로 수정 */}
+      <TTSChoiceModal isOpen={isTTSChoiceModalOpen} onClose={handleCloseTTSChoiceModal} hasRead={true} />
       {/* 레벨업 모달 */}
       <LevelUpModal isOpen={isLevelUpModalOpen} />
       {/* 독서완료 모달 */}
