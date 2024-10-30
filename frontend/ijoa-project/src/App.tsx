@@ -7,6 +7,7 @@ import SplashScreen from "./pages/users/SplashScreen";
 import Login from "./pages/users/Login";
 import TTSList from "./pages/parent/TTSList";
 import MyRoom from "./pages/child/MyRoom";
+import VoiceAlbum from "./pages/parent/VoiceAlbum";
 
 const App = () => {
   return (
@@ -25,6 +26,8 @@ const App = () => {
                     <Route path="/parent/child/list" element={<CreateChildProfile />} />
                     {/* 부모의 TTS 목록 화면 */}
                     <Route path="/parent/tts/list" element={<TTSList />} />
+                    {/* 부모의 음성 앨범 화면 */}
+                    <Route path="/parent/voice/album" element={<VoiceAlbum />} />
                     {/* 동화 목록 */}
                     <Route path="/fairytale/list" element={<FairytaleListPage />} />
                     {/* 내 방 */}
@@ -41,7 +44,7 @@ const App = () => {
         {/* 홈 화면 */}
         <Route path="/home" element={<Login />} />
         {/* 동화 내용 */}
-        <Route path="/fairytale/content/:index" element={<FairyTaleContentPage />} />
+        <Route path="/fairytale/content" element={<FairyTaleContentPage />} />
       </Routes>
     </BrowserRouter>
   );

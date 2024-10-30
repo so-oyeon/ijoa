@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# TypeScript 빌드 캐시 파일 무시
+*.tsbuildinfo
+
+# production
+/build
