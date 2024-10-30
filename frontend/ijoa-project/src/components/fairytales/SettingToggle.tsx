@@ -11,7 +11,7 @@ const SettingToggles: React.FC<ToggleOptionsProps> = ({ options, onToggle }) => 
       <div className="space-y-3">
         {options.map((option, index) => (
           <label key={index} className="label cursor-pointer flex items-center gap-16">
-            <span className="text-lg flex-grow text-center">{option.label}</span>
+            <span className="text-lg flex-grow text-center font-bold">{option.label}</span>
             <input
               type="checkbox"
               className="toggle custom-toggle"

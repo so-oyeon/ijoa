@@ -23,8 +23,8 @@ const ChildProfileList = () => {
       <div className="px-40 py-10 grid gap-10">
         {/* 상단 타이틀 */}
         <div className="flex justify-center items-center space-x-3">
-          <img className="w-10 aspect-1" src="/assets/parent/childList/baby-icon.png" alt="" />
-          <p className="text-[30px] font-semibold">등록된 자녀 목록이에요</p>
+          <img className="w-10 aspect-1" src="/assets/header/parent/child-icon.png" alt="" />
+          <p className="text-[30px] font-semibold">자녀를 선택해주세요</p>
         </div>
 
         <div className="grid grid-cols-3 gap-y-12">

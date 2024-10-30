@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { IoSearchSharp } from "react-icons/io5";
 import SettingsModal from "../../components/fairytales/SettingsModal";
+import ParentSettingsModal from "../../components/parent/ParentSettingsModal";
 
 const ParentHeader = () => {
   const [type] = useState("child");
   const path = window.location.pathname;
   const [isChildSettingsModalOpen, setIsChildSettingsModalOpen] = useState(false); // 자녀 헤더 설정 모달창 열림 여부 상태 변수
+  const [isParentSettingsModalOpen, setIsParentSettingsModalOpen] = useState(false); // 부모 헤더 설정 모달창 열림 여부 상태 변수
 
   // 자녀 헤더 설정 모달창 열기
   const openSettingsModal = () => {
@@ -15,13 +17,21 @@ const ParentHeader = () => {
   const closeSettingsModal = () => {
     setIsChildSettingsModalOpen(false);
   };
+  // 부모 헤더 설정 모달창 열기
+  const openParentSettingsModal = () => {
+    setIsParentSettingsModalOpen(true);
+  };
+  // 부모 헤더 설정 모달창 닫기
+  const closeParentSettingsModal = () => {
+    setIsParentSettingsModalOpen(false);
+  };
 
   const parentMenu = [
     { img: "child-icon", text: "자녀" },
     { img: "tts-icon", text: "TTS" },
     { img: "stats-icon", text: "통계" },
     { img: "voice-album-icon", text: "음성앨범" },
-    { img: "setting-icon", text: "설정", action: openSettingsModal }, // 안 넣으면 오류나서 action 임의로 넣어둠. 추후에 부모 헤더 설정 모달 완성되면 수정할 것!
+    { img: "setting-icon", text: "설정", action: openParentSettingsModal },
   ];
 
   const childMenu = [
@@ -56,8 +66,7 @@ const ParentHeader = () => {
           <button
             className="w-14 flex flex-col justify-center items-center space-y-1"
             key={index}
-            onClick={menu.action}
-          >
+            onClick={menu.action}>
             <img
               className="w-12 aspect-1 p-2 bg-white rounded-full shadow-[0_3px_3px_1px_rgba(0,0,0,0.1)]"
               src={`/assets/header/${type}/${menu.img}.png`}
@@ -70,6 +79,9 @@ const ParentHeader = () => {
 
       {/* 자녀 헤더 설정 모달창 */}
       <SettingsModal isOpen={isChildSettingsModalOpen} onClose={closeSettingsModal} />
+
+      {/* 부모 헤더 설정 모달창 */}
+      <ParentSettingsModal isOpen={isParentSettingsModalOpen} onClose={closeParentSettingsModal} />
     </div>
   );
 };
