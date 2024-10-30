@@ -5,6 +5,7 @@ import ReadCompleteModal from "../../components/fairytales/ReadCompleteModal";
 import LevelUpModal from "../../components/fairytales/LevelUpModal";
 import TTSChoiceModal from "../../components/fairytales/TTSChoiceModal";
 import QuizModal from "../../components/fairytales/QuizModal";
+import FocusAlertModal from "../../components/fairytales/FocusAlertModal";
 import FairytaleMenu from "../../components/fairytales/FairytaleMenu";
 import MenuButton from "/assets/fairytales/buttons/menu-button.png";
 import SoundOnButton from "/assets/fairytales/buttons/sound-on-button.png";
@@ -74,10 +75,12 @@ const FairyTaleContentPage: React.FC = () => {
   const [isReadCompleteModalOpen, setIsReadCompleteModalOpen] = useState(false);
   const [isQuizModalOpen, setIsQuizModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isFocusAlertModalOpen, setIsFocusAlertModalOpen] = useState(false);
 
   // 메뉴창 Swiper를 위한 props 설정
   const bookPages = fairyTales.map((fairyTale) => fairyTale.image);
   const pageNums = fairyTales.map((_, index) => `${index + 1} 페이지`);
+  const halfwayPage = Math.floor(fairyTales.length / 2);
 
   // 왼쪽 화살표 클릭 시 현재 페이지를 감소시키는 함수
   const handleLeftClick = () => {
@@ -89,49 +92,59 @@ const FairyTaleContentPage: React.FC = () => {
   // 오른쪽 화살표 클릭 시 현재 페이지를 증가시키는 함수
   const handleRightClick = () => {
     if (fairytaleCurrentPage < fairyTales.length - 1) {
-      setFairytaleCurrentPage(fairytaleCurrentPage + 1);
+      const newPage = fairytaleCurrentPage + 1;
+      setFairytaleCurrentPage(newPage);
+      if (newPage === halfwayPage) {
+        setIsFocusAlertModalOpen(true);
+      }
     } else {
-      // 마지막 페이지에서 오른쪽 화살표 클릭 시 레벨업 모달 켜지도록
-      // Fix: 레벨 업 요건 충족 시 켜지도록 추후 수정
       setIsLevelUpModalOpen(true);
     }
   };
 
-  // TTS 선택 모달을 닫는 함수
+  // TTS 선택 모달 닫기 함수
   const handleCloseTTSChoiceModal = () => {
     setIsTTSChoiceModalOpen(false);
   };
 
+  // 퀴즈 모달 열기 함수
   const handleOpenQuizModal = () => {
     setIsQuizModalOpen(true);
   };
 
+  // 퀴즈 모달 닫기 함수
   const handleCloseQuizModal = () => {
     setIsQuizModalOpen(false);
   };
 
+  // 메뉴창 열기 함수
   const handleOpenMenu = () => {
     setIsMenuOpen(true);
   };
 
+  // 메뉴창 닫기 함수
   const handleCloseMenu = () => {
     setIsMenuOpen(false);
   };
 
-  // 메뉴창 전체 페이지 스와이퍼 함수
+  // 집중 알림 모달 닫기 함수
+  const handleCloseFocusAlertModal = () => {
+    setIsFocusAlertModalOpen(false);
+  };
+
+  // 메뉴창에서 페이지 선택 함수
   const handlePageClick = (index: number) => {
     setFairytaleCurrentPage(index - 1);
     setIsMenuOpen(false);
   };
 
-  // 레벨 업 모달이 열릴 때 3초 후에 읽기 완료 모달을 여는 타이머 설정하는 useEffect
+  // 레벨업 모달이 열릴 때 일정 시간 후에 독서 완료 모달 열기
   useEffect(() => {
     if (isLevelUpModalOpen) {
       const timer = setTimeout(() => {
         setIsLevelUpModalOpen(false);
-        setIsReadCompleteModalOpen(true);
+        setIsReadCompleteModalOpen(true); // 레벨업 모달 닫고 독서 완료 모달 열기
       }, 3000);
-
       return () => clearTimeout(timer);
     }
   }, [isLevelUpModalOpen]);
@@ -197,6 +210,8 @@ const FairyTaleContentPage: React.FC = () => {
         pageNums={pageNums}
         onPageClick={handlePageClick}
       />
+      {/* 집중 알람 모달 */}
+      <FocusAlertModal isOpen={isFocusAlertModalOpen} onClose={handleCloseFocusAlertModal} />
     </div>
   );
 };
