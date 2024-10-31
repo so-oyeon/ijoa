@@ -34,7 +34,7 @@ const fairyTales = [
   },
   {
     image: dummy3,
-    text: "어휴~ 지겨워! 거북이가 오려면 아직 멀었겠다. 여기서 낮잠이나 한숨 자야지.",
+    text: "마침내 태백산에 도착한 호랑이와 까막딱따구리는 신단수 아래로 달려갔어요. 그곳에는 아름다운 여인이 갓 태어난 아기에게 젖을 먹이고 있었지요. 호랑이와 까막딱따구리는 얼른 절을 했어요. “단군님이 태어나신 것을 축하드립니다.”",
   },
   {
     image: dummy4,
@@ -168,12 +168,12 @@ const FairyTaleContentPage: React.FC = () => {
         </button>
       </div>
 
-      <div className="w-3/4 h-[140px] p-4 flex absolute bottom-10 left-1/2 transform -translate-x-1/2 justify-between items-center bg-white bg-opacity-70 rounded-3xl shadow-lg">
+      <div className="w-[1100px] h-[160px] p-4 flex absolute bottom-10 left-1/2 transform -translate-x-1/2 justify-between items-center bg-white bg-opacity-70 rounded-3xl shadow-lg">
         <button className="items-center ml-5">
           <img src={SoundOnButton} alt="다시 듣기 버튼" className="w-20 h-20" />
           <p className="text-sm text-[#565656] font-bold">다시 듣기</p>
         </button>
-        <p className=" max-w-full px-12 flex-1 text-3xl font-bold text-center fairytale-font whitespace-pre-line break-keep">
+        <p className="px-12 flex-1 text-3xl font-bold text-center fairytale-font whitespace-pre-line break-keep">
           {fairyTales[fairytaleCurrentPage].text}
         </p>
       </div>
