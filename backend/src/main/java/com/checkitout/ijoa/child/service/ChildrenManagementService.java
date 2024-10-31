@@ -13,6 +13,7 @@ import com.checkitout.ijoa.user.domain.User;
 import com.checkitout.ijoa.util.SecurityUtil;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -68,6 +69,9 @@ public class ChildrenManagementService {
         return childMapper.toChildDto(child);
     }
 
+    /**
+     * 자녀 프로필 단건 조회
+     */
     @Transactional(readOnly = true)
     public ChildDto getChildProfile(Long childId) {
 
@@ -77,6 +81,18 @@ public class ChildrenManagementService {
         verifyChildParentRelationship(child);
 
         return childMapper.toChildDto(child);
+    }
+
+    /**
+     * 자녀 프로필 목록 조회
+     */
+    @Transactional(readOnly = true)
+    public List<ChildDto> getAllChildProfiles() {
+
+        User user = securityUtil.getUserByToken();
+        List<Child> children = user.getChildren();
+
+        return childMapper.toChildDtoList(children);
     }
 
 

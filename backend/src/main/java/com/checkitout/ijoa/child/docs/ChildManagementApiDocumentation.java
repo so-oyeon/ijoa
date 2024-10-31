@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.io.IOException;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,4 +34,12 @@ public interface ChildManagementApiDocumentation {
             @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
     })
     public ResponseEntity<ChildDto> getChildProfile(@PathVariable Long childId);
+
+    @Operation(summary = "자녀 프로필 목록 조회", description = "자녀 프로필 목록을 조회합니다")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "자녀 프로필 조회 성공", content = @Content(schema = @Schema(implementation = ChildDto.class))),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+    })
+    public ResponseEntity<List<ChildDto>> getAllChildProfiles();
 }

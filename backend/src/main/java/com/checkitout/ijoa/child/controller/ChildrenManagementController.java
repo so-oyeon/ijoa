@@ -6,6 +6,7 @@ import com.checkitout.ijoa.child.dto.response.ChildDto;
 import com.checkitout.ijoa.child.service.ChildrenManagementService;
 import jakarta.validation.Valid;
 import java.io.IOException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -37,6 +38,13 @@ public class ChildrenManagementController implements ChildManagementApiDocumenta
     public ResponseEntity<ChildDto> getChildProfile(@PathVariable Long childId) {
 
         ChildDto response = childrenManagementService.getChildProfile(childId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @GetMapping("/children")
+    public ResponseEntity<List<ChildDto>> getAllChildProfiles() {
+
+        List<ChildDto> response = childrenManagementService.getAllChildProfiles();
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }
