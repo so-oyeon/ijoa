@@ -70,3 +70,13 @@ logging:
       hibernate:
         SQL: debug
         type: trace
+
+# S3 설정
+cloud:
+  aws:
+    s3:
+      bucket: checkitout-bucket
+    stack:
+      auto: false
+    region:
+      static: ap-northeast-2
