@@ -19,6 +19,10 @@ const ParentHeader = () => {
     navigate(`/fairytale/list`);
   };
 
+  const MyRoomBookShelvesClick = () => {
+    navigate(`/child/mybookshelves`);
+  };
+
   // 자녀 헤더 설정 모달창 열기
   const openSettingsModal = () => {
     setIsChildSettingsModalOpen(true);
@@ -46,7 +50,7 @@ const ParentHeader = () => {
 
   const childMenu = [
     { img: "library-icon", text: "도서관", action: LibraryClick },
-    { img: "bookcase-icon", text: "내 책장" },
+    { img: "bookcase-icon", text: "내 책장", action: MyRoomBookShelvesClick },
     { img: "myroom-icon", text: "내 방", action: MyRoomClick },
     { img: "setting-icon", text: "설정", action: openSettingsModal },
     { img: "sampleProfileImg", text: "프로필" },
