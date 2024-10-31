@@ -14,7 +14,6 @@ import com.checkitout.ijoa.exception.ErrorCode;
 import com.checkitout.ijoa.user.domain.User;
 import com.checkitout.ijoa.user.repository.UserRepository;
 import com.checkitout.ijoa.user.service.EmailServie;
-import com.checkitout.ijoa.util.LogUtil;
 import com.checkitout.ijoa.util.PasswordEncoder;
 import com.checkitout.ijoa.util.SecurityUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -119,6 +118,7 @@ public class AuthService {
     public LoginResponseDto switchToChild(Long childId, HttpServletRequest request) {
 
         Long userId = securityUtil.getCurrentUserId();
+        verifyChildParentRelationship(userId, childId);
 
         // 새로운 토큰 발급
         LoginResponseDto response = tokenService.switchToChild(userId, childId);
@@ -140,17 +140,6 @@ public class AuthService {
     }
 
     /**
-     * Test용 - 현재 유저 조회
-     */
-    public ResponseDto getCurrentUser() {
-
-        LogUtil.info("userId", securityUtil.getCurrentUserId());
-        LogUtil.info("childId", securityUtil.getCurrentChildId());
-
-        return new ResponseDto();
-    }
-
-    /**
      * 비밀번호 검증 메서드
      */
     @Transactional(readOnly = true)
@@ -161,6 +150,21 @@ public class AuthService {
 
         if (!user.getPassword().equals(encryptedPw)) {
             throw new CustomException(ErrorCode.PASSWORD_MISMATCH);
+        }
+    }
+
+    /**
+     * 자녀 검증 메서드
+     */
+    public void verifyChildParentRelationship(Long userId, Long childId) {
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        boolean isChildValid = user.getChildren().stream()
+                .anyMatch(child -> child.getId().equals(childId));
+
+        if (!isChildValid) {
+            throw new CustomException(ErrorCode.CHILD_NOT_BELONG_TO_PARENT);
         }
     }
 }
