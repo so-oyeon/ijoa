@@ -15,7 +15,7 @@ const VoiceAlbumList = () => {
         {/* 화살표 및 쪽수 */}
         <div className="py-3 flex justify-between items-center space-x-3">
           <BiSolidLeftArrow className="text-2xl text-[#FF5B5B]" />
-          <p className="text-xl font-semibold">2 / 5</p>
+          <p className="text-xl font-semibold text-[#5E3200]">2 / 5</p>
           <BiSolidRightArrow className="text-2xl text-[#6E78FF]" />
         </div>
       </div>
