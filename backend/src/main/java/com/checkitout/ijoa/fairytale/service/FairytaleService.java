@@ -13,7 +13,6 @@ import com.checkitout.ijoa.util.SecurityUtil;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +23,6 @@ public class FairytaleService {
     private final SecurityUtil securityUtil;
 
     @Transactional(readOnly = true)
-    @Cacheable(value = "fairytalePages", key = "#fairytaleId  + 'pages'")
     public List<FairytalePageListResponse> getFairytalePageList(Long fairytaleId) {
         Fairytale fairytale = getFairytaleById(fairytaleId);
 
