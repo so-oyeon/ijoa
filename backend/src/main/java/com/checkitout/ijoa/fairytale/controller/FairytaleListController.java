@@ -76,8 +76,8 @@ public class FairytaleListController implements FairytaleListApiDocumentation {
 
     // 읽은 책 목록 조회
     @Override
-    @GetMapping("/{childrenId}")
-    public Page<FairytaleListResponseDto> readFairytaleList(@PathVariable("childrenId")int childrenId, @RequestParam("page") int page) {
+    @GetMapping("/children")
+    public Page<FairytaleListResponseDto> readFairytaleList( @RequestParam("page") int page) {
         List<FairytaleListResponseDto> fairytaleList = makeList();
 
         // 페이지 요청 객체 생성
@@ -89,8 +89,8 @@ public class FairytaleListController implements FairytaleListApiDocumentation {
 
     // 책 추천
     @Override
-    @GetMapping("/recommendations/{childrenId}")
-    public ResponseEntity<List<FairytaleListResponseDto>> recommendFairytale(@PathVariable("childrenId")Long childrenId) {
+    @GetMapping("/recommendations")
+    public ResponseEntity<List<FairytaleListResponseDto>> recommendFairytale() {
         List<FairytaleListResponseDto> fairytaleList = makeList();
 
         return new ResponseEntity<>(fairytaleList, HttpStatus.OK);

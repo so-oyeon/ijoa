@@ -7,9 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
@@ -46,7 +44,7 @@ public interface FairytaleListApiDocumentation {
             @ApiResponse(responseCode = "400", description = "잘못된 요청"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    public Page<FairytaleListResponseDto> readFairytaleList(@PathVariable("childrenId")int childrenId, @RequestParam("page") int page);
+    public Page<FairytaleListResponseDto> readFairytaleList(@RequestParam("page") int page);
 
     @Operation(summary = "사용자 맞춤 책 추천 ", description = "아이 맞춤 책 추천 목록을 조회할 수 있습니다. ")
     @ApiResponses(value = {
@@ -54,7 +52,7 @@ public interface FairytaleListApiDocumentation {
             @ApiResponse(responseCode = "400", description = "잘못된 요청"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    public ResponseEntity<List<FairytaleListResponseDto>> recommendFairytale(@PathVariable("childrenId")Long childrenId);
+    public ResponseEntity<List<FairytaleListResponseDto>> recommendFairytale();
 
     @Operation(summary = "도서 검색 ", description = "키워드로 제목 검색을 할 수 있습니다. ")
     @ApiResponses(value = {
