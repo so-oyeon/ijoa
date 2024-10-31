@@ -8,6 +8,7 @@ import Login from "./pages/users/Login";
 import TTSList from "./pages/parent/TTSList";
 import MyRoom from "./pages/child/MyRoom";
 import VoiceAlbum from "./pages/parent/VoiceAlbum";
+import VoiceAlbumDetail from "./pages/parent/VoiceAlbumDetail";
 
 const App = () => {
   return (
@@ -28,6 +29,8 @@ const App = () => {
                     <Route path="/parent/tts/list" element={<TTSList />} />
                     {/* 부모의 음성 앨범 화면 */}
                     <Route path="/parent/voice/album" element={<VoiceAlbum />} />
+                    {/* 부모의 음성 앨범 상세 화면 */}
+                    <Route path="/parent/voice/album/:id" element={<VoiceAlbumDetail />} />
                     {/* 동화 목록 */}
                     <Route path="/fairytale/list" element={<FairytaleListPage />} />
                     {/* 내 방 */}
