@@ -7,7 +7,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,11 +14,10 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "fairytale_page")
-public class FairytalePage {
+public class FairytalePageContent {
     @Id
     @GeneratedValue
-    @Column(name = "fairytale_page_id")
+    @Column(name = "fairytale_page_content_id")
     private Long id;
 
     @Column(name = "page_number", nullable = false)
@@ -34,25 +32,26 @@ public class FairytalePage {
     @Column(name = "word_count", nullable = false)
     private Integer wordCount;
 
-    @Column(name = "image_url")
-    private String imageUrl;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fairytale_page_image_id", nullable = false)
+    private FairytalePageImage fairytalePageImage;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fairytale_id", nullable = false)
     private Fairytale fairytale;
 
-    private FairytalePage(Integer pageNumber, String content, Integer sentenceCount, Integer wordCount, String imageUrl,
-                          Fairytale fairytale) {
+    private FairytalePageContent(Integer pageNumber, String content, Integer sentenceCount, Integer wordCount,
+                                 FairytalePageImage fairytalePageImage, Fairytale fairytale) {
         this.pageNumber = pageNumber;
         this.content = content;
         this.sentenceCount = sentenceCount;
         this.wordCount = wordCount;
-        this.imageUrl = imageUrl;
+        this.fairytalePageImage = fairytalePageImage;
         this.fairytale = fairytale;
     }
 
-    public static FairytalePage of(Integer pageNumber, String content, Integer sentenceCount, Integer wordCount,
-                                   String imageUrl, Fairytale fairytale) {
-        return new FairytalePage(pageNumber, content, sentenceCount, wordCount, imageUrl, fairytale);
+    public static FairytalePageContent of(Integer pageNumber, String content, Integer sentenceCount, Integer wordCount,
+                                          FairytalePageImage fairytalePageImage, Fairytale fairytale) {
+        return new FairytalePageContent(pageNumber, content, sentenceCount, wordCount, fairytalePageImage, fairytale);
     }
 }

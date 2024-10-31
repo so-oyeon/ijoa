@@ -35,7 +35,7 @@ public class Fairytale {
     @Column(nullable = false)
     private String isbn;
 
-    @Column(name = "image_url")
+    @Column(name = "image_url", nullable = false)
     private String imageUrl;
 
     @Column(name = "published_year", nullable = false)
@@ -52,7 +52,10 @@ public class Fairytale {
     private Integer totalPages;
 
     @OneToMany(mappedBy = "fairytale", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<FairytalePage> fairytalePages = new ArrayList<>();
+    private List<FairytalePageContent> fairytalePageContents = new ArrayList<>();
+
+    @OneToMany(mappedBy = "fairytale", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FairytalePageImage> fairytalePageImages = new ArrayList<>();
 
     private Fairytale(String title, String author, String illustrator, String isbn, String imageUrl,
                       Integer publishedYear, String publisher, CATEGORY category, Integer totalPages) {

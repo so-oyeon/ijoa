@@ -51,7 +51,7 @@ public class FairytaleService {
     }
 
     private List<FairytalePageListResponse> convertToFairytalePageListResponse(Fairytale fairytale) {
-        return fairytale.getFairytalePages().stream()
+        return fairytale.getFairytalePageImages().stream()
                 .map(FairytalePageListResponse::from)
                 .collect(Collectors.toList());
     }

@@ -22,6 +22,7 @@ public class PageHistory {
     @Column(name = "page_history_id")
     private Long id;
 
+    @Column(nullable = false)
     private LocalDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -29,16 +30,16 @@ public class PageHistory {
     private Child child;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fairytale_page_id", nullable = false)
-    private FairytalePage fairytalePage;
+    @JoinColumn(name = "fairytale_page_content_id", nullable = false)
+    private FairytalePageContent pageContent;
 
-    private PageHistory(LocalDateTime createdAt, Child child, FairytalePage fairytalePage) {
+    private PageHistory(LocalDateTime createdAt, Child child, FairytalePageContent pageContent) {
         this.createdAt = createdAt;
         this.child = child;
-        this.fairytalePage = fairytalePage;
+        this.pageContent = pageContent;
     }
 
-    public static PageHistory of(LocalDateTime createdAt, Child child, FairytalePage fairytalePage) {
-        return new PageHistory(createdAt, child, fairytalePage);
+    public static PageHistory of(LocalDateTime createdAt, Child child, FairytalePageContent pageContent) {
+        return new PageHistory(createdAt, child, pageContent);
     }
 }
