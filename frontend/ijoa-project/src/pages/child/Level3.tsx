@@ -45,14 +45,7 @@ const Level3: React.FC = () => {
           <img
             src={lock}
             alt="잠금 아이콘"
-            className="absolute"
-            style={{
-              width: "40%",
-              height: "auto",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-            }}
+            className="absolute w-2/5 h-auto top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
           />
         </div>
         <p className="mt-4 font-semilbold text-2xl">{unlockText}</p>
@@ -95,18 +88,18 @@ const Level3: React.FC = () => {
             <div className="flex items-center justify-center gap-x-8 mb-6">
               <button
                 onClick={goToPreviousModalLevel}
-                style={{ visibility: currentModalLevel !== 4 ? "visible" : "hidden" }}
+                className={`${currentModalLevel !== 4 ? "visible" : "invisible"} w-20 h-20`}
               >
-                <img src={left_arrow} alt="이전레벨" className="w-20 h-20" />
+                <img src={left_arrow} alt="이전레벨" className="w-full h-full" />
               </button>
 
               {renderModalContent()}
 
               <button
                 onClick={goToNextModalLevel}
-                style={{ visibility: currentModalLevel !== 4 ? "visible" : "hidden" }}
+                className={`${currentModalLevel !== 4 ? "visible" : "invisible"} w-20 h-20`}
               >
-                <img src={right_arrow} alt="다음레벨" className="w-20 h-20" />
+                <img src={right_arrow} alt="다음레벨" className="w-full h-full" />
               </button>
             </div>
           </div>
