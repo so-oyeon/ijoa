@@ -1,7 +1,9 @@
 package com.checkitout.ijoa.child.domain;
 
 import com.checkitout.ijoa.child.domain.Enum.Gender;
+import com.checkitout.ijoa.fairytale.domain.PageHistory;
 import com.checkitout.ijoa.user.domain.User;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -12,8 +14,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -47,6 +52,9 @@ public class Child {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User parent;
+
+    @OneToMany(mappedBy = "child", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PageHistory> pageHistories = new ArrayList<>();
 
     public static Child createChild(User parent, String name, LocalDate birth, Gender gender, LocalDateTime now) {
         Child child = new Child();
