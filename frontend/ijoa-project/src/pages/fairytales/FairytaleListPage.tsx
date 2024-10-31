@@ -5,6 +5,7 @@ import ChoiceTab from "../../components/fairytales/ChoiceTab"; // 선택탭 컴�
 import BookCover from "/assets/fairytales/images/bookcover.png";
 import ParentHeader from "../../components/common/Header"; // 헤더 컴포넌트 import
 
+
 const FairytaleListPage: React.FC = () => {
   const navigate = useNavigate();
 
