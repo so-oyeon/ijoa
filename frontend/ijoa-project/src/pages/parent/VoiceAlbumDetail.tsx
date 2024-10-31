@@ -2,8 +2,9 @@ import VoiceAlbumDetailCard from "../../components/parent/voiceAlbum/VoiceAlbumD
 import "../../css/VoiceAlbum.css";
 import { TbArrowBigLeftFilled, TbArrowBigRightFilled } from "react-icons/tb";
 
-import { Swiper, SwiperSlide } from "swiper/react";
+import { Swiper, SwiperClass, SwiperSlide } from "swiper/react";
 import "swiper/css";
+import { useState } from "react";
 
 const VoiceAlbumDetail = () => {
   const title = "이상한 나라의 앨리스";
@@ -34,6 +35,20 @@ const VoiceAlbumDetail = () => {
       answer: "",
     },
   ];
+  const [swiper, setSwiper] = useState<SwiperClass>();
+  const [isBeginning, setIsBeginning] = useState(true);
+  const [isEnd, setIsEnd] = useState(false);
+  const [currentSlideIdx, setCurrentSlideIdx] = useState(0);
+
+  const handlePrev = () => {
+    // 이전으로 이동
+    swiper?.slidePrev();
+  };
+
+  const handleNext = () => {
+    // 다음으로 이동
+    swiper?.slideNext();
+  };
 
   return (
     <div className="voice-album-font w-full min-h-screen px-10 pt-28 pb-5 flex flex-col space-y-3">
@@ -50,7 +65,25 @@ const VoiceAlbumDetail = () => {
 
         {/* 음성앨범 본문 */}
         <div className="w-full h-full p-5 bg-[#FFEAB5] rounded-tr-2xl rounded-b-2xl flex-grow flex">
-          <Swiper slidesPerView={3} spaceBetween={30} className="flex-grow">
+          <Swiper
+            className="flex-grow"
+            slidesPerView={3} // 보여질 슬라이더 수
+            spaceBetween={30} // 슬라이더 간격
+            centeredSlides={true} // 슬라이더의 center 유무
+            allowTouchMove={false} // 마우스로 슬라이더 이동 유무
+            // 슬라이더가 변경될 때
+            onSlideChange={(e) => {
+              // 현재 슬라이더 인덱스 접근
+              setCurrentSlideIdx(e.activeIndex);
+              // 시작 슬라이더인지 아닌지 boolean 반환
+              setIsBeginning(e.isBeginning);
+              // 마지막 슬라이더인지 아닌지 boolean 반환
+              setIsEnd(e.isEnd);
+            }}
+            // 슬라이더 변수화
+            onSwiper={(e) => {
+              setSwiper(e);
+            }}>
             {voiceList.map((voice, index) => (
               <SwiperSlide className="flex-grow" key={index}>
                 <VoiceAlbumDetailCard voiceInfo={voice} />
@@ -62,9 +95,17 @@ const VoiceAlbumDetail = () => {
 
       {/* 화살표 및 쪽수 */}
       <div className="flex justify-center items-center space-x-5">
-        <TbArrowBigLeftFilled className="text-6xl text-[#FBCA4E]" />
-        <p className="text-4xl font-semibold text-[#5E3200]">2 / 5</p>
-        <TbArrowBigRightFilled className="text-6xl text-[#FBCA4E]" />
+        <TbArrowBigLeftFilled
+          className={`text-6xl text-[#FBCA4E] ${isBeginning ? "opacity-50" : ""}`}
+          onClick={handlePrev}
+        />
+        <p className="w-20 text-4xl font-semibold text-[#5E3200]">
+          {currentSlideIdx + 1} / {voiceList.length}
+        </p>
+        <TbArrowBigRightFilled
+          className={`text-6xl text-[#FBCA4E] ${isEnd ? "opacity-50" : ""}`}
+          onClick={handleNext}
+        />
       </div>
     </div>
   );
