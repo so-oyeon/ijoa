@@ -142,7 +142,11 @@ public class ChildrenManagementService {
         User user = securityUtil.getUserByToken();
         List<Child> children = user.getChildren();
 
-        return childMapper.toChildDtoList(children);
+        List<Child> activeChildren = children.stream()
+                .filter(child -> !child.isDeleted())
+                .toList();
+
+        return childMapper.toChildDtoList(activeChildren);
     }
 
 
