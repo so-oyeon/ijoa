@@ -3,7 +3,7 @@ package com.checkitout.ijoa.child.service;
 import com.checkitout.ijoa.child.domain.Child;
 import com.checkitout.ijoa.child.domain.Enum.Gender;
 import com.checkitout.ijoa.child.dto.request.CreateChildRequestDto;
-import com.checkitout.ijoa.child.dto.response.CreateChildResponseDto;
+import com.checkitout.ijoa.child.dto.response.ChildDto;
 import com.checkitout.ijoa.child.mapper.ChildMapper;
 import com.checkitout.ijoa.child.repository.ChildRepository;
 import com.checkitout.ijoa.exception.CustomException;
@@ -37,7 +37,7 @@ public class ChildrenManagementService {
      * 자녀 프로필 추가
      */
     @Transactional
-    public CreateChildResponseDto createNewChildProfile(CreateChildRequestDto requestDto) throws IOException {
+    public ChildDto createNewChildProfile(CreateChildRequestDto requestDto) throws IOException {
 
         User user = securityUtil.getUserByToken();
 
@@ -65,6 +65,27 @@ public class ChildrenManagementService {
         );
 
         Child child = childRepository.save(createdChild);
-        return childMapper.toCreateChildResponseDto(child);
+        return childMapper.toChildDto(child);
+    }
+
+    @Transactional(readOnly = true)
+    public ChildDto getChildProfile(Long childId) {
+
+        Child child = childRepository.findById(childId)
+                .orElseThrow(() -> new CustomException(ErrorCode.CHILD_NOT_FOUND));
+
+        verifyChildParentRelationship(child);
+
+        return childMapper.toChildDto(child);
+    }
+
+
+    public void verifyChildParentRelationship(Child child) {
+
+        Long userId = securityUtil.getCurrentUserId();
+
+        if (child.getParent().getId() != userId) {
+            throw new CustomException(ErrorCode.CHILD_NOT_BELONG_TO_PARENT);
+        }
     }
 }

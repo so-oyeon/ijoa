@@ -4,7 +4,7 @@ import com.checkitout.ijoa.child.domain.Enum.Gender;
 import lombok.Data;
 
 @Data
-public class CreateChildResponseDto {
+public class ChildDto {
 
     private long childId;
 
