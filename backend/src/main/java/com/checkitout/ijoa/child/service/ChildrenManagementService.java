@@ -7,6 +7,7 @@ import com.checkitout.ijoa.child.dto.request.UpdateChildRequestDto;
 import com.checkitout.ijoa.child.dto.response.ChildDto;
 import com.checkitout.ijoa.child.mapper.ChildMapper;
 import com.checkitout.ijoa.child.repository.ChildRepository;
+import com.checkitout.ijoa.common.dto.ResponseDto;
 import com.checkitout.ijoa.exception.CustomException;
 import com.checkitout.ijoa.exception.ErrorCode;
 import com.checkitout.ijoa.file.service.FileService;
@@ -98,6 +99,24 @@ public class ChildrenManagementService {
         child.setUpdatedAt(LocalDateTime.now());
         Child updatedChild = childRepository.save(child);
         return childMapper.toChildDto(updatedChild);
+    }
+
+    /**
+     * 자녀 프로필 삭제
+     */
+    public ResponseDto deleteChildProfile(Long childId){
+
+        Child child = childRepository.findById(childId)
+                .orElseThrow(() -> new CustomException(ErrorCode.CHILD_NOT_FOUND));
+        verifyChildParentRelationship(child);
+
+        child.setBirth(null);
+        child.setGender(null);
+        child.setProfile(null);
+        child.setDeleted(true);
+        child.setUpdatedAt(LocalDateTime.now());
+
+        return new ResponseDto();
     }
 
     /**

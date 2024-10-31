@@ -5,6 +5,7 @@ import com.checkitout.ijoa.child.dto.request.CreateChildRequestDto;
 import com.checkitout.ijoa.child.dto.request.UpdateChildRequestDto;
 import com.checkitout.ijoa.child.dto.response.ChildDto;
 import com.checkitout.ijoa.child.service.ChildrenManagementService;
+import com.checkitout.ijoa.common.dto.ResponseDto;
 import jakarta.validation.Valid;
 import java.io.IOException;
 import java.util.List;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -42,6 +44,13 @@ public class ChildrenManagementController implements ChildManagementApiDocumenta
             throws IOException {
 
         ChildDto response = childrenManagementService.updateChildProfile(childId, requestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @DeleteMapping("/children/{childId}")
+    public ResponseEntity<ResponseDto> deleteChildProfile(@PathVariable Long childId){
+
+        ResponseDto response=childrenManagementService.deleteChildProfile(childId);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 

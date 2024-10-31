@@ -3,6 +3,7 @@ package com.checkitout.ijoa.child.docs;
 import com.checkitout.ijoa.child.dto.request.CreateChildRequestDto;
 import com.checkitout.ijoa.child.dto.request.UpdateChildRequestDto;
 import com.checkitout.ijoa.child.dto.response.ChildDto;
+import com.checkitout.ijoa.common.dto.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -41,6 +42,14 @@ public interface ChildManagementApiDocumentation {
             @ModelAttribute UpdateChildRequestDto requestDto)
             throws IOException;
 
+    @Operation(summary = "자녀 프로필 삭제", description = "자녀 프로필을 삭제합니다")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "자녀 프로필 삭제 성공", content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+    })
+    public ResponseEntity<ResponseDto> deleteChildProfile(@Parameter(description = "삭제할 자녀의 ID", example = "1") @PathVariable Long childId);
+    
     @Operation(summary = "자녀 프로필 단건 조회", description = "특정 자녀의 프로필을 조회합니다")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "자녀 프로필 조회 성공", content = @Content(schema = @Schema(implementation = ChildDto.class))),
