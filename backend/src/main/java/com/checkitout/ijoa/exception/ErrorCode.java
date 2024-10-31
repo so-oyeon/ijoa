@@ -22,8 +22,10 @@ public enum ErrorCode {
     INVALID_EMAIL_VERIFICATION_CODE(HttpStatus.BAD_REQUEST, "EMAIL-004", "유효하지 않은 인증 코드입니다."),
 
     //child
-    CHILD_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, "CHILD-001", "자녀 프로필은 최대 10명까지 생성할 수 있습니다.");
+    CHILD_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, "CHILD-001", "자녀 프로필은 최대 10명까지 생성할 수 있습니다."),
 
+    // fairytale
+    FAIRYTALE_NOT_FOUND(HttpStatus.NOT_FOUND, "FAIRYTALE-001", "존재하지 않는 동화책입니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
