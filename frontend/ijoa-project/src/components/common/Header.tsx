@@ -5,7 +5,7 @@ import SettingsModal from "../../components/fairytales/SettingsModal";
 import ParentSettingsModal from "../../components/parent/ParentSettingsModal";
 
 const ParentHeader = () => {
-  const [type] = useState("child");
+  const [type] = useState("parent");
   const path = window.location.pathname;
   const [isChildSettingsModalOpen, setIsChildSettingsModalOpen] = useState(false); // 자녀 헤더 설정 모달창 열림 여부 상태 변수
   const [isParentSettingsModalOpen, setIsParentSettingsModalOpen] = useState(false); // 부모 헤더 설정 모달창 열림 여부 상태 변수
@@ -17,6 +17,10 @@ const ParentHeader = () => {
 
   const LibraryClick = () => {
     navigate(`/fairytale/list`);
+  };
+
+  const MyRoomBookShelvesClick = () => {
+    navigate(`/child/mybookshelves`);
   };
 
   // 자녀 헤더 설정 모달창 열기
@@ -46,7 +50,7 @@ const ParentHeader = () => {
 
   const childMenu = [
     { img: "library-icon", text: "도서관", action: LibraryClick },
-    { img: "bookcase-icon", text: "내 책장" },
+    { img: "bookcase-icon", text: "내 책장", action: MyRoomBookShelvesClick },
     { img: "myroom-icon", text: "내 방", action: MyRoomClick },
     { img: "setting-icon", text: "설정", action: openSettingsModal },
     { img: "sampleProfileImg", text: "프로필" },

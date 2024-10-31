@@ -100,8 +100,8 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
     <div className="modal-container">
       <input
         type="email"
-        placeholder="* 이메일을 입력해주세요"
-        className="w-3/4 mb-1 px-4 py-3 rounded-full bg-gray-100 text-gray-500 placeholder-gray-400 focus:outline-none"
+        placeholder="이메일을 입력해주세요"
+        className="w-3/4 h-[60px] mt-6 mb-2 px-6 py-3 rounded-full bg-gray-100 text-gray-500 placeholder-gray-400 focus:outline-none"
         value={email}
         onChange={handleEmail}
       />
@@ -109,24 +109,24 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
 
       {!isVerificationRequested ? (
         <button
-          className="w-3/4 mb-4 py-3 rounded-xl font-bold bg-red-100 hover:bg-red-200"
+          className="w-3/4 h-[60px] mb-2 py-3 rounded-xl font-bold bg-[#FFE0C1] hover:bg-red-200"
           onClick={handleEmailVerificationRequest}
         >
           이메일 인증요청
         </button>
       ) : (
-        <div className="flex items-center w-full justify-center space-x-2 mb-4">
+        <div className="flex w-full items-center justify-center mb-2 gap-2">
           <input
             type="text"
             placeholder="인증번호를 입력해주세요"
-            className="flex-grow max-w-[60%] px-4 py-3 rounded-full bg-gray-100 text-gray-500 placeholder-gray-400 focus:outline-none"
+            className="w-[230px] h-[60px] px-6 py-3 rounded-full bg-gray-100 text-gray-500 placeholder-gray-400 focus:outline-none"
             value={verificationCode}
             onChange={(e) => setVerificationCode(e.target.value)}
             disabled={isVerified} // 인증 완료 시 입력 비활성화
           />
           <button
-            className={`px-4 py-3 rounded-full font-bold ${
-              isVerified ? "bg-red-300" : "bg-blue-100 hover:bg-blue-200"
+            className={`w-[80px] h-[60px] py-3 rounded-xl font-bold ${
+              isVerified ? "bg-red-300" : "bg-[#FFC890] hover:bg-red-200"
             }`}
             onClick={handleVerificationCodeConfirm}
             disabled={isVerified} // 인증 완료 시 버튼 비활성화
@@ -138,8 +138,8 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
 
       <input
         type="password"
-        placeholder="* 비밀번호를 입력해주세요"
-        className="w-3/4 mb-1 px-4 py-3 rounded-full bg-gray-100 border border-gray-300 text-gray-500 placeholder-gray-400 focus:outline-none"
+        placeholder="비밀번호를 입력해주세요"
+        className="w-3/4 h-[60px] mb-2 px-6 py-3 rounded-full bg-gray-100 border border-gray-300 text-gray-500 placeholder-gray-400 focus:outline-none"
         value={password}
         onChange={handlePassword}
       />
@@ -147,8 +147,8 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
 
       <input
         type="password"
-        placeholder="* 비밀번호를 다시 입력해주세요"
-        className="w-3/4 mb-1 px-4 py-3 rounded-full bg-gray-100 border border-gray-300 text-gray-500 placeholder-gray-400 focus:outline-none"
+        placeholder="비밀번호를 다시 입력해주세요"
+        className="w-3/4 h-[60px] mb-2 px-6 py-3 rounded-full bg-gray-100 border border-gray-300 text-gray-500 placeholder-gray-400 focus:outline-none"
         value={confirmPassword}
         onChange={handleConfirmPassword}
       />
@@ -156,8 +156,8 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
 
       <input
         type="text"
-        placeholder="* 닉네임을 입력해주세요"
-        className="w-3/4 mb-4 px-4 py-3 rounded-full bg-gray-100 border border-gray-300 text-gray-500 placeholder-gray-400 focus:outline-none"
+        placeholder="닉네임을 입력해주세요"
+        className="w-3/4 h-[60px] mb-2 px-6 py-3 rounded-full bg-gray-100 border border-gray-300 text-gray-500 placeholder-gray-400 focus:outline-none"
         value={nickname}
         onChange={handleNickname}
       />
@@ -166,7 +166,7 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
 
       <button
         onClick={handleSubmit}
-        className="w-3/4 py-3 mb-4 rounded-full font-bold bg-orange-400 hover:bg-orange-500"
+        className="w-3/4 h-[60px] py-3 mb-4 rounded-full font-bold text-lg bg-orange-400 hover:bg-orange-500"
       >
         회원가입
       </button>
