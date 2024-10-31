@@ -10,10 +10,16 @@
   font-family: "BMJUA";
 }
 
-/* 모달창 제목에 형광펜 효과 */
+/* 모달창 제목에 파랑 형광펜 효과 */
 .blue-highlight {
   display: inline;
   box-shadow: inset 0 -10px 0 #67ccff;
+}
+
+/* 모달창 제목에 빨강 형광펜 효과 */
+.red-highlight {
+  display: inline;
+  box-shadow: inset 0 -10px 0 #ff8067;
 }
 
 /* 토글 버튼 */
