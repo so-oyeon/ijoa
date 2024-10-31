@@ -9,6 +9,7 @@ import TTSList from "./pages/parent/TTSList";
 import MyRoom from "./pages/child/MyRoom";
 import MyBookShelves from "./pages/child/MyBookShelves";
 import VoiceAlbum from "./pages/parent/VoiceAlbum";
+import VoiceAlbumDetail from "./pages/parent/VoiceAlbumDetail";
 
 const App = () => {
   return (
@@ -34,7 +35,7 @@ const App = () => {
                     {/* 내 방 */}
                     <Route path="/child/myroom" element={<MyRoom />} />
                     {/* 내 책장 */}
-                    <Route path="/child/mybookshelves" element={<MyBookShelves/>} />
+                    <Route path="/child/mybookshelves" element={<MyBookShelves />} />
                   </Route>
                 </Routes>
               </div>
@@ -48,6 +49,8 @@ const App = () => {
         <Route path="/home" element={<Login />} />
         {/* 동화 내용 */}
         <Route path="/fairytale/content/:index" element={<FairyTaleContentPage />} />
+        {/* 부모의 음성 앨범 상세 화면 */}
+        <Route path="/parent/voice/album/:id" element={<VoiceAlbumDetail />} />
       </Routes>
     </BrowserRouter>
   );
