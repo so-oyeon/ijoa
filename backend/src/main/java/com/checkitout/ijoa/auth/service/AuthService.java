@@ -8,6 +8,8 @@ import com.checkitout.ijoa.auth.dto.request.TokenReissueRequestDto;
 import com.checkitout.ijoa.auth.dto.response.LoginResponseDto;
 import com.checkitout.ijoa.auth.dto.response.TokenReissueResponseDto;
 import com.checkitout.ijoa.auth.repository.redis.EmailRepository;
+import com.checkitout.ijoa.child.domain.Child;
+import com.checkitout.ijoa.child.repository.ChildRepository;
 import com.checkitout.ijoa.common.dto.ResponseDto;
 import com.checkitout.ijoa.exception.CustomException;
 import com.checkitout.ijoa.exception.ErrorCode;
@@ -33,6 +35,7 @@ public class AuthService {
     private final UserRepository userRepository;
 
     private final SecurityUtil securityUtil;
+    private final ChildRepository childRepository;
 
     /**
      * 이메일 인증코드 전송
@@ -122,6 +125,10 @@ public class AuthService {
 
         // 새로운 토큰 발급
         LoginResponseDto response = tokenService.switchToChild(userId, childId);
+        Child child = childRepository.findById(childId)
+                .orElseThrow(() -> new CustomException(ErrorCode.CHILD_NOT_FOUND));
+        response.setNickname(child.getName());
+        response.setUserId(child.getId());
 
         // 시큐리티에 추가
         securityUtil.setAuthentication(userId, childId, request);
