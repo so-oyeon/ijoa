@@ -79,4 +79,10 @@ public class QuizController implements QuizApiDocumentation {
         return new PageImpl<>(answerList, pageable, answerList.size());
     }
 
+    @Override
+    @DeleteMapping("/answer/{answerId}")
+    public void deleteAnswer(@PathVariable("answerId") Long answerId) {
+
+    }
+
 }

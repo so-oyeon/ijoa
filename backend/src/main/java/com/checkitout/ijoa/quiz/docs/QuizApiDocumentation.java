@@ -43,5 +43,12 @@ public interface QuizApiDocumentation {
     })
     public Page<AnswerResponseDto> getAnswerList(@PathVariable Long childrenId, @PathVariable Long fairytaleId, @RequestParam int page);
 
+    @Operation(summary = "답변 삭제", description = "답변을 삭제할 수 있습니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "답변 삭제 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청"),
+            @ApiResponse(responseCode = "500", description = "서버 오류")
+    })
+    public void deleteAnswer(@PathVariable Long answerId);
 
 }
