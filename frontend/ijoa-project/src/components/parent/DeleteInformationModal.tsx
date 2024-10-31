@@ -17,7 +17,7 @@ const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({ isOpe
     <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
       <div className="relative w-1/3 max-w-md p-8 bg-white rounded-lg shadow-lg">
         <h2 className="text-3xl font-bold text-center mb-4 red-highlight">탈퇴 안내</h2>
-        <div className=" whitespace-pre-line font-semibold text-gray-600 mt-4 mb-4">
+        <div className=" whitespace-pre-line font-semibold text-lg text-gray-600 mt-4 mb-4">
           {"회원 탈퇴를 진행하기 전 \n 아래 항목을 꼭 확인해 주세요"}.
         </div>
         <div className="flex flex-col justify-center items-center">
@@ -62,13 +62,13 @@ const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({ isOpe
         <div className="flex justify-center gap-4">
           <button
             onClick={onClose}
-            className="px-6 py-2 font-semibold bg-gray-300 text-gray-700 rounded-3xl hover:bg-gray-400"
+            className="h-[50px] px-8 font-semibold bg-gray-300 text-gray-700 rounded-full hover:bg-gray-400"
           >
             뒤로가기
           </button>
           <button
             onClick={onConfirm}
-            className={`px-6 py-2 bg-[#FF8067] font-semibold text-white rounded-3xl hover:bg-red-400 ${
+            className={`h-[50px] px-8 bg-[#FF8067] font-semibold text-white rounded-full hover:bg-red-400 ${
               !isChecked ? "opacity-50 cursor-not-allowed" : ""
             }`}
             disabled={!isChecked}

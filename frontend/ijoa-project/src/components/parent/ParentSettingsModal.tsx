@@ -91,36 +91,38 @@ const ParentSettingsModal: React.FC<ParentSettingsModalProps> = ({ isOpen, onClo
         </button>
 
         {/* 설정 아이콘 */}
-        <div className="flex justify-center items-center mb-6">
+        <div className="mt-4 flex justify-center items-center mb-6">
           <img src={SettingsIcon} alt="설정 아이콘" className="w-12 h-12" />
         </div>
 
         {/* 모달 제목 */}
         <p className="text-lg font-semibold text-gray-700 mb-6">설정을 선택해 주세요.</p>
 
-        {/* 회원 정보 수정 버튼 */}
-        <button
-          className="w-3/4 mb-4 py-2 text-blue-400 font-bold rounded-full border-2 border-blue-300 hover:bg-blue-50"
-          onClick={() => setModalType("verification")}
-        >
-          회원 정보 수정
-        </button>
+        <div className="flex flex-col justify-center items-center">
+          {/* 회원 정보 수정 버튼 */}
+          <button
+            className="w-1/2 h-[60px] mb-4 py-2 text-[#67CCFF] font-bold text-lg rounded-full border-2 border-[#67CCFF] hover:bg-blue-50"
+            onClick={() => setModalType("verification")}
+          >
+            회원 정보 수정
+          </button>
 
-        {/* 로그아웃 버튼 */}
-        <button
-          className="w-3/4 mb-4 py-2 bg-blue-400 text-white font-bold rounded-full hover:bg-blue-500"
-          onClick={handleLogout}
-        >
-          로그아웃
-        </button>
+          {/* 로그아웃 버튼 */}
+          <button
+            className="w-1/2 h-[60px] mb-4 py-2 bg-[#67CCFF] text-white text-lg font-bold rounded-full hover:bg-blue-500"
+            onClick={handleLogout}
+          >
+            로그아웃
+          </button>
 
-        {/* 회원 탈퇴 버튼 */}
-        <button
-          className="w-3/4 py-2 bg-red-300 text-white font-bold rounded-full hover:bg-red-400"
-          onClick={handleDeleteAccount}
-        >
-          회원 탈퇴
-        </button>
+          {/* 회원 탈퇴 버튼 */}
+          <button
+            className="w-1/2 h-[60px] py-2 bg-[#FF8067] text-white font-bold text-lg rounded-full hover:bg-red-400"
+            onClick={handleDeleteAccount}
+          >
+            회원 탈퇴
+          </button>
+        </div>
 
         {/* VerificationModal과 InformationModal의 상태 관리 */}
         {modalType === "verification" && (
