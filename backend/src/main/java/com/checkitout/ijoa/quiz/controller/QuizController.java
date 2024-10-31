@@ -6,9 +6,16 @@ import com.checkitout.ijoa.quiz.dto.response.AnswerResponseDto;
 import com.checkitout.ijoa.quiz.dto.response.AnswerUrlResponseDto;
 import com.checkitout.ijoa.quiz.dto.response.QuizResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -37,6 +44,39 @@ public class QuizController implements QuizApiDocumentation {
                 .build();
 
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
+    private List<AnswerResponseDto> makeList(){
+        List<AnswerResponseDto> list = new ArrayList<>();
+        AnswerResponseDto responseDto = AnswerResponseDto.builder()
+                .answerId(313232L)
+                .quizId(231312L)
+                .answerId(12313213L)
+                .text("질문질문")
+                .image("image urlurl")
+                .fairytaleId(13132L)
+                .answer("answer url")
+                .build();
+
+        for(int i =0;i<10;i++){
+            list.add(responseDto);
+        }
+        return list;
+
+    }
+
+    // 책 답변 목록
+    @Override
+    @GetMapping("/answer/{childrenId}/{fairytaleId}")
+    public Page<AnswerResponseDto> getAnswerList(Long childrenId, Long fairytaleId, int page) {
+
+        List<AnswerResponseDto> answerList = makeList();
+
+        // 페이지 요청 객체 생성
+        Pageable pageable = PageRequest.of(page, 3);
+
+        // Page 객체 생성하여 반환
+        return new PageImpl<>(answerList, pageable, answerList.size());
     }
 
 }
