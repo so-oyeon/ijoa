@@ -12,6 +12,7 @@ import org.mapstruct.Named;
 public interface ChildMapper {
 
     @Mapping(target = "childId", source = "id")
+    @Mapping(target = "profileUrl", source = "profile")
     @Mapping(target = "birth", source = "birth", qualifiedByName = "formatBirth")
     CreateChildResponseDto toCreateChildResponseDto(Child child);
 

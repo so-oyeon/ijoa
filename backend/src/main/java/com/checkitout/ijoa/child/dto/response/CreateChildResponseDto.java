@@ -13,4 +13,6 @@ public class CreateChildResponseDto {
     private Gender gender;
 
     private String birth;
+
+    private String profileUrl;
 }

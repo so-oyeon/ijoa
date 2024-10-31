@@ -48,10 +48,12 @@ public class Child {
     @JoinColumn(name = "user_id")
     private User parent;
 
-    public static Child createChild(User parent, String name, LocalDate birth, Gender gender, LocalDateTime now) {
+    public static Child createChild(User parent, String name, String profile, LocalDate birth, Gender gender,
+                                    LocalDateTime now) {
         Child child = new Child();
         child.parent = parent;
         child.name = name;
+        child.profile = profile;
         child.birth = birth;
         child.gender = gender;
         child.createdAt = now;
