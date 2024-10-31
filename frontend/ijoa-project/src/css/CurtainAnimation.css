@@ -32,7 +32,7 @@ body {
   width: 50%;
   height: 100%;
   /* 추후 빨간 커튼 이미지로 대체 */
-  background-image: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/950358/curtain.svg");
+  background-image: url("/assets/child/curtain.png");
   background-size: cover;
   background-repeat: no-repeat;
 }

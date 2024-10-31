@@ -1,29 +1,15 @@
-import React, { useEffect, useState, ReactNode } from "react";
+import React from "react";
 import "../../css/CurtainAnimation.css";
 
-interface CurtainAnimationProps {
-  children: ReactNode;
-}
-
-const CurtainAnimation: React.FC<CurtainAnimationProps> = ({ children }) => {
-  const [isOpen, setIsOpen] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsOpen(true);
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, []);
-
+const CurtainAnimation: React.FC = () => {
   return (
-    <div id="scene" className={isOpen ? "expand" : ""}>
-      <div id="curtain" className={isOpen ? "open" : ""}>
+
+    <div id="scene" className="expand">
+      <div id="curtain" className="open">
         <div className="left"></div>
         <div className="right"></div>
       </div>
       <div className="ground"></div>
-      {children}
     </div>
   );
 };

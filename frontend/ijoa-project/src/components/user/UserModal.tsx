@@ -27,8 +27,8 @@ const UserModal: React.FC<UserModalProps> = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">
-      <div className="relative w-1/3 py-8 text-center bg-white rounded-xl shadow-lg">
-        <button onClick={onClose} className="absolute top-2 right-2">
+      <div className="relative w-1/3 py-8 text-center bg-white rounded-3xl shadow-lg">
+        <button onClick={onClose} className="absolute top-3 right-4">
           <img src={closebutton} alt="Close" />
         </button>
 
