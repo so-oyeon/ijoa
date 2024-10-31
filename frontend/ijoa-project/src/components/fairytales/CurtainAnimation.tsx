@@ -1,11 +1,7 @@
-import React, { useEffect, useState, ReactNode } from "react";
+import React, { useEffect, useState } from "react";
 import "../../css/CurtainAnimation.css";
 
-interface CurtainAnimationProps {
-  children: ReactNode;
-}
-
-const CurtainAnimation: React.FC<CurtainAnimationProps> = ({ children }) => {
+const CurtainAnimation: React.FC = () => {
   const [isOpen, setIsOpen] = useState(true);
 
   useEffect(() => {
@@ -23,7 +19,6 @@ const CurtainAnimation: React.FC<CurtainAnimationProps> = ({ children }) => {
         <div className="right"></div>
       </div>
       <div className="ground"></div>
-      {children}
     </div>
   );
 };
