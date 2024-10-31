@@ -4,22 +4,40 @@ import { IoSearchSharp } from "react-icons/io5";
 import SettingsModal from "../../components/fairytales/SettingsModal";
 import ParentSettingsModal from "../../components/parent/ParentSettingsModal";
 
-const ParentHeader = () => {
+const Header = () => {
   const type = localStorage.getItem("userType");
   const path = window.location.pathname;
   const [isChildSettingsModalOpen, setIsChildSettingsModalOpen] = useState(false); // 자녀 헤더 설정 모달창 열림 여부 상태 변수
   const [isParentSettingsModalOpen, setIsParentSettingsModalOpen] = useState(false); // 부모 헤더 설정 모달창 열림 여부 상태 변수
   const navigate = useNavigate();
 
-  const MyRoomClick = () => {
+  // 부모 자녀 라우팅
+  const childClick = () => {
+    navigate(`/parent/child/list`);
+  };
+
+  // 부모 TTS 라우팅
+  const ttsClick = () => {
+    navigate(`/parent/tts/list`);
+  };
+
+  // 부모 음성앨범 라우팅
+  const voiceAlbumClick = () => {
+    navigate(`/parent/voice/album`);
+  };
+
+  // 자녀 내 방 라우팅
+  const myRoomClick = () => {
     navigate(`/child/myroom`);
   };
 
-  const LibraryClick = () => {
+  // 자녀 도서관 라우팅
+  const libraryClick = () => {
     navigate(`/fairytale/list`);
   };
 
-  const MyRoomBookShelvesClick = () => {
+  // 자녀 내 책장 라우팅
+  const myRoomBookShelvesClick = () => {
     navigate(`/child/mybookshelves`);
   };
 
@@ -27,31 +45,34 @@ const ParentHeader = () => {
   const openSettingsModal = () => {
     setIsChildSettingsModalOpen(true);
   };
+
   // 자녀 헤더 설정 모달창 닫기
   const closeSettingsModal = () => {
     setIsChildSettingsModalOpen(false);
   };
+
   // 부모 헤더 설정 모달창 열기
   const openParentSettingsModal = () => {
     setIsParentSettingsModalOpen(true);
   };
+
   // 부모 헤더 설정 모달창 닫기
   const closeParentSettingsModal = () => {
     setIsParentSettingsModalOpen(false);
   };
 
   const parentMenu = [
-    { img: "child-icon", text: "자녀" },
-    { img: "tts-icon", text: "TTS" },
+    { img: "child-icon", text: "자녀", action: childClick },
+    { img: "tts-icon", text: "TTS", action: ttsClick },
     { img: "stats-icon", text: "통계" },
-    { img: "voice-album-icon", text: "음성앨범" },
+    { img: "voice-album-icon", text: "음성앨범", action: voiceAlbumClick },
     { img: "setting-icon", text: "설정", action: openParentSettingsModal },
   ];
 
   const childMenu = [
-    { img: "library-icon", text: "도서관", action: LibraryClick },
-    { img: "bookcase-icon", text: "내 책장", action: MyRoomBookShelvesClick },
-    { img: "myroom-icon", text: "내 방", action: MyRoomClick },
+    { img: "library-icon", text: "도서관", action: libraryClick },
+    { img: "bookcase-icon", text: "내 책장", action: myRoomBookShelvesClick },
+    { img: "myroom-icon", text: "내 방", action: myRoomClick },
     { img: "setting-icon", text: "설정", action: openSettingsModal },
     { img: "sampleProfileImg", text: "프로필" },
   ];
@@ -100,4 +121,4 @@ const ParentHeader = () => {
   );
 };
 
-export default ParentHeader;
+export default Header;
