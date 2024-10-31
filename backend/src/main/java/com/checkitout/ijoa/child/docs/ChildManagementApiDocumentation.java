@@ -1,8 +1,10 @@
 package com.checkitout.ijoa.child.docs;
 
 import com.checkitout.ijoa.child.dto.request.CreateChildRequestDto;
+import com.checkitout.ijoa.child.dto.request.UpdateChildRequestDto;
 import com.checkitout.ijoa.child.dto.response.ChildDto;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -27,13 +29,26 @@ public interface ChildManagementApiDocumentation {
     public ResponseEntity<ChildDto> createNewChildProfile(
             @Valid @ModelAttribute CreateChildRequestDto requestDto) throws IOException;
 
+
+    @Operation(summary = "자녀 프로필 수정", description = "자녀 프로필을 수정합니다")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "자녀 프로필 수정 성공", content = @Content(schema = @Schema(implementation = ChildDto.class))),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+    })
+    public ResponseEntity<ChildDto> updateChildProfile(
+            @Parameter(description = "수정할 자녀의 ID", example = "1") @PathVariable Long childId,
+            @ModelAttribute UpdateChildRequestDto requestDto)
+            throws IOException;
+
     @Operation(summary = "자녀 프로필 단건 조회", description = "특정 자녀의 프로필을 조회합니다")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "자녀 프로필 조회 성공", content = @Content(schema = @Schema(implementation = ChildDto.class))),
             @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content),
             @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
     })
-    public ResponseEntity<ChildDto> getChildProfile(@PathVariable Long childId);
+    public ResponseEntity<ChildDto> getChildProfile(
+            @Parameter(description = "조회할 자녀의 ID", example = "1") @PathVariable Long childId);
 
     @Operation(summary = "자녀 프로필 목록 조회", description = "자녀 프로필 목록을 조회합니다")
     @ApiResponses(value = {
