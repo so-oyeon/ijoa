@@ -7,6 +7,7 @@ import SplashScreen from "./pages/users/SplashScreen";
 import Login from "./pages/users/Login";
 import TTSList from "./pages/parent/TTSList";
 import MyRoom from "./pages/child/MyRoom";
+import MyBookShelves from "./pages/child/MyBookShelves";
 import VoiceAlbum from "./pages/parent/VoiceAlbum";
 
 const App = () => {
@@ -32,6 +33,8 @@ const App = () => {
                     <Route path="/fairytale/list" element={<FairytaleListPage />} />
                     {/* 내 방 */}
                     <Route path="/child/myroom" element={<MyRoom />} />
+                    {/* 내 책장 */}
+                    <Route path="/child/mybookshelves" element={<MyBookShelves/>} />
                   </Route>
                 </Routes>
               </div>
