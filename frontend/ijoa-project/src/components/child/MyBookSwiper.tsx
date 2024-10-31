@@ -27,10 +27,10 @@ const MyBookSwiper = ({ direction }: Props) => {
   // 스와이퍼에 들어갈 제목 리스트
   const titles = [
     "동화책 1",
-    "동화책 2",
+    "동화책 제목이 매우 길어질 때아아이아이아오아우아오",
     "동화책 3",
     "동화책 4",
-    "동화책 5",
+    "동화책 제목이 굉장히 길어지는 경우에",
     "동화책 6",
     "동화책 7",
     "동화책 8",
@@ -47,7 +47,7 @@ const MyBookSwiper = ({ direction }: Props) => {
         delay: 1,
         disableOnInteraction: false,
       }}
-      speed={2000}
+      speed={4000}
       loop={true}
       freeMode={true}
       modules={[FreeMode, Autoplay]}
@@ -58,7 +58,7 @@ const MyBookSwiper = ({ direction }: Props) => {
           <div className="block text-center cursor-pointer">
             <img src={cover} alt={`동화책 ${index + 1}`} className="w-full" />
             <div className="mt-2 text-left">
-              <span className="text-xl text-white">{titles[index]}</span>
+              <span className="text-xl text-white line-clamp-1">{titles[index]}</span>
             </div>
           </div>
         </SwiperSlide>
