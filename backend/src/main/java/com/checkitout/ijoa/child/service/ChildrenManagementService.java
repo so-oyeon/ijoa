@@ -16,6 +16,7 @@ import com.checkitout.ijoa.util.SecurityUtil;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -104,7 +105,7 @@ public class ChildrenManagementService {
     /**
      * 자녀 프로필 삭제
      */
-    public ResponseDto deleteChildProfile(Long childId){
+    public ResponseDto deleteChildProfile(Long childId) {
 
         Child child = childRepository.findById(childId)
                 .orElseThrow(() -> new CustomException(ErrorCode.CHILD_NOT_FOUND));
@@ -140,11 +141,9 @@ public class ChildrenManagementService {
     public List<ChildDto> getAllChildProfiles() {
 
         User user = securityUtil.getUserByToken();
-        List<Child> children = user.getChildren();
 
-        List<Child> activeChildren = children.stream()
-                .filter(child -> !child.isDeleted())
-                .toList();
+        List<Child> activeChildren = childRepository.findByParentAndIsDeletedFalse(user)
+                .orElseGet(Collections::emptyList);
 
         return childMapper.toChildDtoList(activeChildren);
     }
