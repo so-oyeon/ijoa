@@ -30,14 +30,12 @@ const App = () => {
                     <Route path="/parent/tts/list" element={<TTSList />} />
                     {/* 부모의 음성 앨범 화면 */}
                     <Route path="/parent/voice/album" element={<VoiceAlbum />} />
-                    {/* 부모의 음성 앨범 상세 화면 */}
-                    <Route path="/parent/voice/album/:id" element={<VoiceAlbumDetail />} />
                     {/* 동화 목록 */}
                     <Route path="/fairytale/list" element={<FairytaleListPage />} />
                     {/* 내 방 */}
                     <Route path="/child/myroom" element={<MyRoom />} />
                     {/* 내 책장 */}
-                    <Route path="/child/mybookshelves" element={<MyBookShelves/>} />
+                    <Route path="/child/mybookshelves" element={<MyBookShelves />} />
                   </Route>
                 </Routes>
               </div>
@@ -51,6 +49,8 @@ const App = () => {
         <Route path="/home" element={<Login />} />
         {/* 동화 내용 */}
         <Route path="/fairytale/content/:index" element={<FairyTaleContentPage />} />
+        {/* 부모의 음성 앨범 상세 화면 */}
+        <Route path="/parent/voice/album/:id" element={<VoiceAlbumDetail />} />
       </Routes>
     </BrowserRouter>
   );

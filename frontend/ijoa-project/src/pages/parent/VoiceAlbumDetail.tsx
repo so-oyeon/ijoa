@@ -1,12 +1,15 @@
 import VoiceAlbumDetailCard from "../../components/parent/voiceAlbum/VoiceAlbumDetailCard";
 import "../../css/VoiceAlbum.css";
 import { TbArrowBigLeftFilled, TbArrowBigRightFilled } from "react-icons/tb";
+import { FaArrowLeft } from "react-icons/fa6";
 
 import { Swiper, SwiperClass, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const VoiceAlbumDetail = () => {
+  const navigate = useNavigate();
   const title = "이상한 나라의 앨리스";
   const voiceList = [
     {
@@ -50,17 +53,31 @@ const VoiceAlbumDetail = () => {
     swiper?.slideNext();
   };
 
+  const handleGoToList = () => {
+    navigate("/parent/voice/album");
+  };
+
   return (
-    <div className="voice-album-font w-full min-h-screen px-10 pt-28 pb-5 flex flex-col space-y-3">
+    <div className="voice-album-font w-full min-h-screen px-10 pt-10 pb-5 flex flex-col space-y-3">
       <div className="flex-grow flex flex-col">
-        {/* 파일 책갈피 */}
-        <div className="flex">
-          {/* 왼쪽 직사각형 */}
-          <div className="w-auto min-w-80 h-16 px-5 py-3 text-2xl text-[#583A17] bg-[#FFEAB5] rounded-tl-2xl flex items-center">
-            <p>{title}</p>
+        <div className="flex justify-between items-center">
+          {/* 파일 책갈피 */}
+          <div className="flex">
+            {/* 왼쪽 직사각형 */}
+            <div className="w-auto min-w-80 h-16 px-5 py-3 text-2xl text-[#583A17] bg-[#FFEAB5] rounded-tl-2xl flex items-center">
+              <p>{title}</p>
+            </div>
+            {/* 오른쪽 삼각형 */}
+            <div className="w-0 h-0 border-b-[32px] border-l-[32px] border-t-[32px] border-r-[32px] border-b-[#FFEAB5] border-l-[#FFEAB5] border-t-transparent border-r-transparent relative top-[1px] right-[1px]"></div>
           </div>
-          {/* 오른쪽 삼각형 */}
-          <div className="w-0 h-0 border-b-[32px] border-l-[32px] border-t-[32px] border-r-[32px] border-b-[#FFEAB5] border-l-[#FFEAB5] border-t-transparent border-r-transparent relative top-[1px] right-[1px]"></div>
+
+          {/* 목록으로 버튼 */}
+          <button
+            className="px-5 py-2 text-2xl text-white bg-[#FFA64A] rounded-full flex items-center space-x-3"
+            onClick={handleGoToList}>
+            <FaArrowLeft />
+            <span>목록으로</span>
+          </button>
         </div>
 
         {/* 음성앨범 본문 */}
