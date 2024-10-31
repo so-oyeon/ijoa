@@ -22,8 +22,10 @@ public enum ErrorCode {
     INVALID_EMAIL_VERIFICATION_CODE(HttpStatus.BAD_REQUEST, "EMAIL-004", "유효하지 않은 인증 코드입니다."),
 
     //child
-    CHILD_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, "CHILD-001", "자녀 프로필은 최대 10명까지 생성할 수 있습니다.");
+    CHILD_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, "CHILD-001", "자녀 프로필은 최대 10명까지 생성할 수 있습니다."),
 
+    //file
+    FILE_CONVERSION_ERROR(HttpStatus.BAD_REQUEST, "FILE-001", "파일 변환 에러가 발생했습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
