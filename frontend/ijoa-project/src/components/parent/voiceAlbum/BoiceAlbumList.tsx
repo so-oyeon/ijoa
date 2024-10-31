@@ -10,10 +10,11 @@ const BoiceAlbumList = ({ topSize, startIdx }: Props) => {
     <>
       {/* 책 리스트 */}
       <div
-        className={`w-full px-5 grid grid-cols-4 place-items-center absolute left-1/2 top-[${topSize}%] transform -translate-x-1/2 -translate-y-1/2 z-10`}>
+        className="w-full px-5 grid grid-cols-4 place-items-center absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10"
+        style={{ top: `${topSize}%` }}>
         {Array.from({ length: 4 }, (_, i) => i + startIdx).map((num, index) => (
-          <div className="w-40 h-48 p-3 relative">
-            <div className="w-full h-full rounded-2xl shadow-[0_5px_3px_1px_rgba(0,0,0,0.2)]" key={index}>
+          <div className="w-40 h-48 p-3 relative" key={index}>
+            <div className="w-full h-full rounded-2xl shadow-[0_5px_3px_1px_rgba(0,0,0,0.2)]">
               {/* 동화책 표지 */}
               <img
                 className="w-full h-3/5 rounded-t-2xl object-cover"
@@ -37,9 +38,8 @@ const BoiceAlbumList = ({ topSize, startIdx }: Props) => {
 
       {/* 책장 선반 */}
       <div
-        className={`w-full h-12 bg-[#FFA64A] rounded-lg shadow-[0_3px_3px_2px_rgba(0,0,0,0.2)] absolute left-1/2 top-[${
-          topSize + 15
-        }%] transform -translate-x-1/2 -translate-y-1/2`}></div>
+        className="w-full h-12 bg-[#FFA64A] rounded-lg shadow-[0_3px_3px_2px_rgba(0,0,0,0.2)] absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+        style={{ top: `${topSize + 15}%` }}></div>
     </>
   );
 };
