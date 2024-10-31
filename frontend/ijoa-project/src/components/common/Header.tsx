@@ -5,7 +5,7 @@ import SettingsModal from "../../components/fairytales/SettingsModal";
 import ParentSettingsModal from "../../components/parent/ParentSettingsModal";
 
 const ParentHeader = () => {
-  const [type] = useState("child");
+  const [type] = useState("parent");
   const path = window.location.pathname;
   const [isChildSettingsModalOpen, setIsChildSettingsModalOpen] = useState(false); // 자녀 헤더 설정 모달창 열림 여부 상태 변수
   const [isParentSettingsModalOpen, setIsParentSettingsModalOpen] = useState(false); // 부모 헤더 설정 모달창 열림 여부 상태 변수
