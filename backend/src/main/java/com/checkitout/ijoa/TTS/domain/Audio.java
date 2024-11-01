@@ -1,8 +1,6 @@
 package com.checkitout.ijoa.TTS.domain;
 
-import com.checkitout.ijoa.fairytale.domain.Fairytale;
-import com.checkitout.ijoa.fairytale.domain.FairytalePage;
-import com.checkitout.ijoa.user.domain.User;
+import com.checkitout.ijoa.fairytale.domain.FairytalePageContent;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,7 +24,7 @@ public class Audio {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fairytale_page_id")
-    private FairytalePage page;
+    private FairytalePageContent page;
 
     private String audio;
 

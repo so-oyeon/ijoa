@@ -1,7 +1,6 @@
 package com.checkitout.ijoa.TTS.domain;
 
 import com.checkitout.ijoa.fairytale.domain.Fairytale;
-import com.checkitout.ijoa.fairytale.domain.FairytalePage;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
