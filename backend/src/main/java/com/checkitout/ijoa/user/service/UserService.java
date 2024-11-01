@@ -4,9 +4,12 @@ import com.checkitout.ijoa.common.dto.ResponseDto;
 import com.checkitout.ijoa.exception.CustomException;
 import com.checkitout.ijoa.exception.ErrorCode;
 import com.checkitout.ijoa.user.domain.User;
+import com.checkitout.ijoa.user.dto.UserDto;
 import com.checkitout.ijoa.user.dto.UserSignupRequestDto;
+import com.checkitout.ijoa.user.mapper.UserMapper;
 import com.checkitout.ijoa.user.repository.UserRepository;
 import com.checkitout.ijoa.util.PasswordEncoder;
+import com.checkitout.ijoa.util.SecurityUtil;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final SecurityUtil securityUtil;
+
+    private final UserMapper userMapper;
 
     /**
      * 회원가입
@@ -49,4 +55,13 @@ public class UserService {
         }
     }
 
+    /**
+     * 회원 정보 조회
+     */
+    public UserDto getUser() {
+
+        User user = securityUtil.getUserByToken();
+
+        return userMapper.toUserDto(user);
+    }
 }

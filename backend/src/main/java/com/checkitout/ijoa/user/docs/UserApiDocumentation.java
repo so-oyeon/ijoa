@@ -1,6 +1,7 @@
 package com.checkitout.ijoa.user.docs;
 
 import com.checkitout.ijoa.common.dto.ResponseDto;
+import com.checkitout.ijoa.user.dto.UserDto;
 import com.checkitout.ijoa.user.dto.UserSignupRequestDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -36,4 +37,11 @@ public interface UserApiDocumentation {
             @Parameter(description = "중복 확인할 이메일 주소", example = "email@email.com") @PathVariable String email);
 
 
+    @Operation(summary = "회원 정보 조회", description = "사용자의 상세 정보 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "회원 정보 조회 성공 ", content = @Content(schema = @Schema(implementation = UserDto.class))),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+    })
+    public ResponseEntity<UserDto> getUser();
 }

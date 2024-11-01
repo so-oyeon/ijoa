@@ -2,6 +2,7 @@ package com.checkitout.ijoa.user.controller;
 
 import com.checkitout.ijoa.common.dto.ResponseDto;
 import com.checkitout.ijoa.user.docs.UserApiDocumentation;
+import com.checkitout.ijoa.user.dto.UserDto;
 import com.checkitout.ijoa.user.dto.UserSignupRequestDto;
 import com.checkitout.ijoa.user.service.UserService;
 import jakarta.validation.Valid;
@@ -34,6 +35,13 @@ public class UserController implements UserApiDocumentation {
     public ResponseEntity<ResponseDto> checkEmailDuplication(@PathVariable String email) {
 
         ResponseDto response = userService.checkEmailDuplication(email);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping
+    public ResponseEntity<UserDto> getUser() {
+
+        UserDto response = userService.getUser();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
