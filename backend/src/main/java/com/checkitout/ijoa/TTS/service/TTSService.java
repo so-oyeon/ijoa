@@ -1,13 +1,17 @@
 package com.checkitout.ijoa.TTS.service;
 
 
+import com.checkitout.ijoa.TTS.domain.Script;
 import com.checkitout.ijoa.TTS.domain.TTS;
+import com.checkitout.ijoa.TTS.dto.request.ScriptRepository;
 import com.checkitout.ijoa.TTS.dto.request.TTSProfileRequestDto;
+import com.checkitout.ijoa.TTS.dto.response.ScriptResponseDto;
 import com.checkitout.ijoa.TTS.dto.response.TTSProfileResponseDto;
 import com.checkitout.ijoa.TTS.repository.TTSRepository;
 import com.checkitout.ijoa.exception.CustomException;
 import com.checkitout.ijoa.exception.ErrorCode;
 import com.checkitout.ijoa.user.domain.User;
+import com.checkitout.ijoa.user.service.UserService;
 import com.checkitout.ijoa.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +27,7 @@ public class TTSService {
 
     private final SecurityUtil securityUtil;
     private final TTSRepository ttsRepository;
+    private final ScriptRepository scriptRepository;
 
     // TTS 프로필 생성
     public TTSProfileResponseDto createTTS(TTSProfileRequestDto requestDto){
@@ -61,14 +66,6 @@ public class TTSService {
         return TTSProfileResponseDto.fromTTS(updatedTTS);
     }
 
-
-    // 권한 확인
-    private void checkUser(TTS tts, Long userId) {
-        if(!tts.getUser().getId().equals(userId)){
-            throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
-        }
-    }
-
     public List<TTSProfileResponseDto> getTTSList() {
         List<TTSProfileResponseDto> responseDtos = new ArrayList<>();
 
@@ -82,4 +79,23 @@ public class TTSService {
 
         return responseDtos;
     }
+
+    public List<ScriptResponseDto> getSriptList() {
+        List<ScriptResponseDto> responseDtos = new ArrayList<>();
+        List<Script> scriptList = scriptRepository.findAll();
+        for(Script script : scriptList){
+            responseDtos.add(ScriptResponseDto.from(script));
+        }
+
+        return responseDtos;
+    }
+
+
+    // 권한 확인
+    private void checkUser(TTS tts, Long userId) {
+        if(!tts.getUser().getId().equals(userId)){
+            throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
+        }
+    }
+
 }

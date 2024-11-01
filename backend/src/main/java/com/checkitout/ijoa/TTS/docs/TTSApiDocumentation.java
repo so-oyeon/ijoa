@@ -59,4 +59,12 @@ public interface TTSApiDocumentation {
     })
     public ResponseEntity<?> ParentTTSList() throws IOException;
 
+    @Operation(summary = "TTS script 목록 조회", description = "TTS 녹음 시 사용할 스크립트 목록")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "script 목록 조회 성공", content = @Content),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+    })
+    public ResponseEntity<?> getScriptList() throws IOException;
+
 }

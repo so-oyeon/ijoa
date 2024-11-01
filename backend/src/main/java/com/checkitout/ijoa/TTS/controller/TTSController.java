@@ -2,6 +2,7 @@ package com.checkitout.ijoa.TTS.controller;
 
 import com.checkitout.ijoa.TTS.docs.TTSApiDocumentation;
 import com.checkitout.ijoa.TTS.dto.request.TTSProfileRequestDto;
+import com.checkitout.ijoa.TTS.dto.response.ScriptResponseDto;
 import com.checkitout.ijoa.TTS.dto.response.TTSProfileResponseDto;
 import com.checkitout.ijoa.TTS.service.TTSService;
 import jakarta.validation.Valid;
@@ -45,6 +46,14 @@ public class TTSController implements TTSApiDocumentation {
     @GetMapping("/profile")
     public ResponseEntity<?> ParentTTSList() throws IOException {
         List<TTSProfileResponseDto> responseDtoList = ttsService.getTTSList();
+
+        return new ResponseEntity<>(responseDtoList, HttpStatus.OK);
+    }
+
+    @Override
+    @GetMapping("/script")
+    public ResponseEntity<?> getScriptList() throws IOException {
+        List<ScriptResponseDto> responseDtoList = ttsService.getSriptList();
 
         return new ResponseEntity<>(responseDtoList, HttpStatus.OK);
     }
