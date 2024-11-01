@@ -4,8 +4,9 @@ import com.checkitout.ijoa.common.dto.ResponseDto;
 import com.checkitout.ijoa.exception.CustomException;
 import com.checkitout.ijoa.exception.ErrorCode;
 import com.checkitout.ijoa.user.domain.User;
-import com.checkitout.ijoa.user.dto.UserDto;
-import com.checkitout.ijoa.user.dto.UserSignupRequestDto;
+import com.checkitout.ijoa.user.dto.request.UserSignupRequestDto;
+import com.checkitout.ijoa.user.dto.request.UserUpdateRequestDto;
+import com.checkitout.ijoa.user.dto.response.UserDto;
 import com.checkitout.ijoa.user.mapper.UserMapper;
 import com.checkitout.ijoa.user.repository.UserRepository;
 import com.checkitout.ijoa.util.PasswordEncoder;
@@ -63,5 +64,29 @@ public class UserService {
         User user = securityUtil.getUserByToken();
 
         return userMapper.toUserDto(user);
+    }
+
+    /**
+     * 회원 정보 수정
+     */
+    public UserDto updateUser(UserUpdateRequestDto requestDto) {
+
+        User user = securityUtil.getUserByToken();
+
+        String nickname = requestDto.getNickname();
+        String password = requestDto.getPassword();
+
+        if (nickname != null && !nickname.isEmpty()) {
+            user.setNickname(nickname);
+        }
+
+        if (password != null && !password.isEmpty()) {
+            String encryptedPassword = PasswordEncoder.encrypt(user.getEmail(), password);
+            user.setPassword(encryptedPassword);
+        }
+
+        user.setUpdatedAt(LocalDateTime.now());
+        User updatedUser = userRepository.save(user);
+        return userMapper.toUserDto(updatedUser);
     }
 }

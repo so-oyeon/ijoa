@@ -1,8 +1,9 @@
 package com.checkitout.ijoa.user.docs;
 
 import com.checkitout.ijoa.common.dto.ResponseDto;
-import com.checkitout.ijoa.user.dto.UserDto;
-import com.checkitout.ijoa.user.dto.UserSignupRequestDto;
+import com.checkitout.ijoa.user.dto.request.UserSignupRequestDto;
+import com.checkitout.ijoa.user.dto.request.UserUpdateRequestDto;
+import com.checkitout.ijoa.user.dto.response.UserDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -44,4 +45,13 @@ public interface UserApiDocumentation {
             @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
     })
     public ResponseEntity<UserDto> getUser();
+
+
+    @Operation(summary = "회원 정보 수정", description = "사용자 정보 수정")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "회원 정보 수정 성공 ", content = @Content(schema = @Schema(implementation = UserDto.class))),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+    })
+    public ResponseEntity<UserDto> updateUser(@RequestBody UserUpdateRequestDto requestDto);
 }
