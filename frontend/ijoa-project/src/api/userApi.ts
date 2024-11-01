@@ -6,4 +6,9 @@ export const userApi = {
   login: (userInfo: LoginUserInfo) => {
     return api.post(`/auth/login`, userInfo);
   },
+
+  // 자녀 프로필로 전환
+  switchChild: (childId: number) => {
+    return api.patch(`/auth/switch-child/${childId}`);
+  },
 }
