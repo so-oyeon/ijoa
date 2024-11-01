@@ -25,5 +25,10 @@ export const userApi = {
   // 회원가입
   signup : (userInfo : SignupUserInfo) => {
     return api.post(`/user/signup`, userInfo);
-  }
+  },
+  
+  // 자녀 프로필로 전환
+  switchChild: (childId: number) => {
+    return api.patch(`/auth/switch-child/${childId}`);
+  },
 };
