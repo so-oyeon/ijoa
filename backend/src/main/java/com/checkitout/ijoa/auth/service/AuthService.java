@@ -8,13 +8,14 @@ import com.checkitout.ijoa.auth.dto.request.TokenReissueRequestDto;
 import com.checkitout.ijoa.auth.dto.response.LoginResponseDto;
 import com.checkitout.ijoa.auth.dto.response.TokenReissueResponseDto;
 import com.checkitout.ijoa.auth.repository.redis.EmailRepository;
+import com.checkitout.ijoa.child.domain.Child;
+import com.checkitout.ijoa.child.repository.ChildRepository;
 import com.checkitout.ijoa.common.dto.ResponseDto;
 import com.checkitout.ijoa.exception.CustomException;
 import com.checkitout.ijoa.exception.ErrorCode;
 import com.checkitout.ijoa.user.domain.User;
 import com.checkitout.ijoa.user.repository.UserRepository;
 import com.checkitout.ijoa.user.service.EmailServie;
-import com.checkitout.ijoa.util.LogUtil;
 import com.checkitout.ijoa.util.PasswordEncoder;
 import com.checkitout.ijoa.util.SecurityUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,6 +35,7 @@ public class AuthService {
     private final UserRepository userRepository;
 
     private final SecurityUtil securityUtil;
+    private final ChildRepository childRepository;
 
     /**
      * 이메일 인증코드 전송
@@ -119,9 +121,14 @@ public class AuthService {
     public LoginResponseDto switchToChild(Long childId, HttpServletRequest request) {
 
         Long userId = securityUtil.getCurrentUserId();
+        verifyChildParentRelationship(userId, childId);
 
         // 새로운 토큰 발급
         LoginResponseDto response = tokenService.switchToChild(userId, childId);
+        Child child = childRepository.findById(childId)
+                .orElseThrow(() -> new CustomException(ErrorCode.CHILD_NOT_FOUND));
+        response.setNickname(child.getName());
+        response.setUserId(child.getId());
 
         // 시큐리티에 추가
         securityUtil.setAuthentication(userId, childId, request);
@@ -140,17 +147,6 @@ public class AuthService {
     }
 
     /**
-     * Test용 - 현재 유저 조회
-     */
-    public ResponseDto getCurrentUser() {
-
-        LogUtil.info("userId", securityUtil.getCurrentUserId());
-        LogUtil.info("childId", securityUtil.getCurrentChildId());
-
-        return new ResponseDto();
-    }
-
-    /**
      * 비밀번호 검증 메서드
      */
     @Transactional(readOnly = true)
@@ -161,6 +157,21 @@ public class AuthService {
 
         if (!user.getPassword().equals(encryptedPw)) {
             throw new CustomException(ErrorCode.PASSWORD_MISMATCH);
+        }
+    }
+
+    /**
+     * 자녀 검증 메서드
+     */
+    public void verifyChildParentRelationship(Long userId, Long childId) {
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        boolean isChildValid = user.getChildren().stream()
+                .anyMatch(child -> child.getId().equals(childId));
+
+        if (!isChildValid) {
+            throw new CustomException(ErrorCode.CHILD_NOT_BELONG_TO_PARENT);
         }
     }
 }
