@@ -20,7 +20,8 @@ public class CorsConfig implements WebMvcConfigurer {
 
         corsRegistry.addMapping("/**")
                 .exposedHeaders("Set-Cookie")
-                .allowedOrigins(allowedOrigins);
+                .allowedOrigins(allowedOrigins)
+                .allowedMethods("GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS");
     }
 }
 
