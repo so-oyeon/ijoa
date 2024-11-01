@@ -2,7 +2,7 @@ import axios from "axios"
 
 // Axios 요청
 const api = axios.create({
-  baseURL: 'https://k11d105.p.ssafy.io',
+  baseURL: 'https://k11d105.p.ssafy.io/api/v1',
 });
 
 // 요청 인터셉터
