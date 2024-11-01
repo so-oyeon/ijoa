@@ -13,7 +13,7 @@ public enum ErrorCode {
 
     //auth
     INVALID_JWT_TOKEN(HttpStatus.UNAUTHORIZED, "AUTH-001", "유효하지 않은 JWT 토큰입니다."),
-    PASSWORD_MISMATCH(HttpStatus.UNAUTHORIZED, "AUTH-002", "비밀번호가 일치하지 않습니다."),
+    PASSWORD_MISMATCH(HttpStatus.BAD_REQUEST, "AUTH-002", "비밀번호가 일치하지 않습니다."),
 
     //email
     EMAIL_ALREADY_EXISTS(HttpStatus.CONFLICT, "EMAIL-001", "이미 사용 중인 이메일입니다."),
@@ -28,6 +28,7 @@ public enum ErrorCode {
 
     // fairytale
     FAIRYTALE_NOT_FOUND(HttpStatus.NOT_FOUND, "FAIRYTALE-001", "존재하지 않는 동화책입니다."),
+    FAIRYTALE_PAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "FAIRYTALE-002", "존재하지 않는 페이지입니다."),
 
     //file
     FILE_CONVERSION_ERROR(HttpStatus.BAD_REQUEST, "FILE-001", "파일 변환 에러가 발생했습니다.");
