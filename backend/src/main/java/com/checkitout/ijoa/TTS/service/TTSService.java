@@ -32,8 +32,12 @@ public class TTSService {
     // TTS 프로필 생성
     public TTSProfileResponseDto createTTS(TTSProfileRequestDto requestDto){
         User user = securityUtil.getUserByToken();
+        int num = ttsRepository.countByUserId(user.getId());
+        if(num==4){
+            throw new CustomException(ErrorCode.TTS_LIMIT_EXCEEDED);
+        }
 
-        TTS newTTS = TTSProfileRequestDto.from(requestDto,user);
+        TTS newTTS = TTSProfileRequestDto.of(requestDto,user);
 
         TTS savedTTS = ttsRepository.save(newTTS);
         return TTSProfileResponseDto.fromTTS(savedTTS);
@@ -66,12 +70,13 @@ public class TTSService {
         return TTSProfileResponseDto.fromTTS(updatedTTS);
     }
 
+    // 부모 tts 목록
     public List<TTSProfileResponseDto> getTTSList() {
         List<TTSProfileResponseDto> responseDtos = new ArrayList<>();
 
         User user = securityUtil.getUserByToken();
 
-        List<TTS> ttsList = ttsRepository.findByUserId(user.getId()).orElseThrow(()-> new CustomException(ErrorCode.TTS_NOT_FOUND));
+        List<TTS> ttsList = ttsRepository.findByUserId(user.getId()).orElseThrow(()-> new CustomException(ErrorCode.TTS_NO_CONTENT));
 
         for(TTS ts : ttsList){
             responseDtos.add(TTSProfileResponseDto.fromTTS(ts));
@@ -80,6 +85,7 @@ public class TTSService {
         return responseDtos;
     }
 
+    // 학습 시 녹음 스크립트 리스트
     public List<ScriptResponseDto> getSriptList() {
         List<ScriptResponseDto> responseDtos = new ArrayList<>();
         List<Script> scriptList = scriptRepository.findAll();

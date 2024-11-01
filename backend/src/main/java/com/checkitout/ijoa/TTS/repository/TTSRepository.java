@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface TTSRepository extends JpaRepository<TTS, Long> {
     Optional<List<TTS>> findByUserId(Long id);
+    int countByUserId(Long id);
 }
