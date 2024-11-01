@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import "../../css/FairytaleContentPage.css";
 import ReadCompleteModal from "../../components/fairytales/ReadCompleteModal";
@@ -17,7 +17,7 @@ import { FairyTaleContentResponse, FairyTalePageResponse } from "../../types/fai
 const FairyTaleContentPage: React.FC = () => {
   const { fairytaleId } = useParams<{ fairytaleId: string }>();
   const location = useLocation();
-  const title = location.state?.title
+  const title = location.state?.title;
   const [fairytaleCurrentPage, setFairytaleCurrentPage] = useState(0);
   const [fairytaleData, setFairytaleData] = useState<FairyTaleContentResponse>();
   const [bookPages, setBookPages] = useState<string[]>([]);
@@ -30,23 +30,23 @@ const FairyTaleContentPage: React.FC = () => {
   const [isFocusAlertModalOpen, setIsFocusAlertModalOpen] = useState(false);
 
   // 동화책 내용(이미지, 텍스트)을 가져오는 api 통신 함수
-  const getFairyTaleContent = async (page: number) => {
-    // 동화 ID가 정의되어 있는지 확인
-    if (!fairytaleId) {
-      console.error("Fairytale ID is undefined");
-      return;
-    }
-    // api 함수 호출
-    try {
-      const response = await fairyTaleApi.getFairyTaleContents(fairytaleId, String(page + 1));
-      if (response.status === 201) {
-        // 동화 페이지 가져오기 성공 시 (201)
-        setFairytaleData(response.data);
+  const getFairyTaleContent = useCallback(
+    async (page: number) => {
+      if (!fairytaleId) {
+        console.error("Fairytale ID is undefined");
+        return;
       }
-    } catch (error) {
-      console.log("fairyTaleApi의 getFairyTaleContents : ", error);
-    }
-  };
+      try {
+        const response = await fairyTaleApi.getFairyTaleContents(fairytaleId, String(page + 1));
+        if (response.status === 201) {
+          setFairytaleData(response.data);
+        }
+      } catch (error) {
+        console.log("fairyTaleApi의 getFairyTaleContents : ", error);
+      }
+    },
+    [fairytaleId]
+  );
 
   // 동화책 전체 페이지를 가져오는 api 통신 함수
   const getFairyTalePages = async () => {
@@ -144,7 +144,7 @@ const FairyTaleContentPage: React.FC = () => {
 
   useEffect(() => {
     getFairyTaleContent(fairytaleCurrentPage);
-  });
+  }, [fairytaleCurrentPage, getFairyTaleContent]); // fairytaleCurrentPage가 변경될 때만 호출
 
   return (
     <div className="relative h-screen">
