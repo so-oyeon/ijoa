@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import Swal from "sweetalert2";
+import { userApi } from "../../api/userApi";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   onClose: () => void;
@@ -16,6 +18,7 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
   const [isVerificationRequested, setIsVerificationRequested] = useState(false);
   const [verificationCode, setVerificationCode] = useState("");
   const [isVerified, setIsVerified] = useState(false);
+  const navigate = useNavigate();
 
   // 유효한 이메일인지 검사
   const validateEmail = (email: string) => {
@@ -34,21 +37,38 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
     }
   };
 
-  // 이메일 인증 요청 핸들러
-  const handleEmailVerificationRequest = () => {
-    setIsVerificationRequested(true);
-    // 이메일 인증 코드 발송 API 요청 추가.
+  // 이메일 전송 api 통신 함수
+  const handleEmailVerification = async () => {
+    // api 함수 호출
+    try {
+      const response = await userApi.sendVerificationCode(email);
+      // 이메일 인증 성공 시(201)
+      console.log(response);
+      if (response.status === 201) {
+        setIsVerificationRequested(true);
+      }
+    } catch (error) {
+      console.log("userApi의 sendVerificationCode : ", error);
+    }
   };
 
-  // 인증 코드 확인 핸들러
-  const handleVerificationCodeConfirm = () => {
-    // 입력한 인증 코드를 확인하는 로직을 추가할 수 있습니다.
-    if (verificationCode === "1234") {
-      // 예시 코드
-      Swal.fire("인증 성공", "이메일 인증이 완료되었습니다.", "success");
-      setIsVerified(true);
-    } else {
-      Swal.fire("인증 실패", "잘못된 인증번호입니다.", "error");
+  // 인증 코드 확인 api 통신 함수
+  const handleVerificationCodeConfirm = async () => {
+    // request 객체 선언
+    const data = {
+      email: email,
+      authCode: verificationCode,
+    };
+    //api함수 호출
+    try {
+      const response = await userApi.confirmVerificationCode(data);
+      // 인증코드 성공 시(200)
+      console.log(response);
+      if (response.status === 200) {
+        setIsVerified(true);
+      }
+    } catch (error) {
+      console.log("userApi의 VerificationCodeConfirm : ", error);
     }
   };
 
@@ -75,8 +95,9 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
     setNickname(e.target.value);
   };
 
-  // 필수 정보들이 다 입력 안 되어 있을 시 오류 반환, 성공 시 확인메세지 및 메인화면으로 렌더링
-  const handleSubmit = () => {
+  // 회원가입 api 통신 함수
+  const handleSubmit = async () => {
+    // 입력 필드 유효성 검사
     if (!email || !password || !confirmPassword || !nickname) {
       setGeneralError("필수 정보란을 다 입력해주세요!");
     } else if (!validateEmail(email)) {
@@ -85,14 +106,34 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
       setConfirmPasswordError("비밀번호가 일치하지 않습니다!");
     } else {
       setGeneralError("");
-      Swal.fire({
-        icon: "success",
-        title: "회원가입이 완료되었습니다.",
-        confirmButtonText: "확인",
-        confirmButtonColor: "#3085d6",
-      }).then(() => {
-        onClose();
-      });
+  
+      // 회원가입 요청 데이터 객체 생성
+      const data = {
+        email: email,
+        password: password,
+        nickname: nickname,
+      };
+  
+      // API 호출
+      try {
+        const response = await userApi.signup(data);
+  
+        // 회원가입 성공 시(201)
+        if (response.status === 201) {        
+          Swal.fire({
+            icon: "success",
+            title: "회원가입이 완료되었습니다.",
+            confirmButtonText: "확인",
+            confirmButtonColor: "#3085d6",
+          }).then(() => {
+            onClose();
+            navigate("/parent/child/list"); // 회원가입 후 이동할 페이지
+          });
+        }
+      } catch (error) {
+        console.log("userApi의 signup : ", error);
+        Swal.fire("회원가입 실패", "회원가입에 실패했습니다. 다시 시도해주세요.", "error");
+      }
     }
   };
 
@@ -110,7 +151,7 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
       {!isVerificationRequested ? (
         <button
           className="w-3/4 h-[60px] mb-2 py-3 rounded-xl font-bold bg-[#FFE0C1] hover:bg-red-200"
-          onClick={handleEmailVerificationRequest}
+          onClick={handleEmailVerification}
         >
           이메일 인증요청
         </button>
