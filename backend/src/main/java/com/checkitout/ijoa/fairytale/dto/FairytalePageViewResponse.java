@@ -1,6 +1,6 @@
 package com.checkitout.ijoa.fairytale.dto;
 
-import com.checkitout.ijoa.fairytale.domain.FairytalePage;
+import com.checkitout.ijoa.fairytale.domain.FairytalePageContent;
 import com.checkitout.ijoa.fairytale.domain.PageHistory;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
@@ -26,12 +26,12 @@ public class FairytalePageViewResponse {
     @Schema(description = "페이지 기록 ID", example = "1")
     private final Long pageHistoryId;
 
-    public static FairytalePageViewResponse of(FairytalePage fairytalePage, PageHistory pageHistory) {
+    public static FairytalePageViewResponse of(FairytalePageContent fairytalePageContent, PageHistory pageHistory) {
         return FairytalePageViewResponse.builder()
-                .pageNumber(fairytalePage.getPageNumber())
-                .content(fairytalePage.getContent())
-                .image(fairytalePage.getImageUrl())
-                .totalPages(fairytalePage.getFairytale().getTotalPages())
+                .pageNumber(fairytalePageContent.getPageNumber())
+                .content(fairytalePageContent.getContent())
+                .image(fairytalePageContent.getFairytalePageImage().getImageUrl())
+                .totalPages(fairytalePageContent.getFairytale().getTotalPages())
                 .pageHistoryId(pageHistory.getId())
                 .build();
     }

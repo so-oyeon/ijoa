@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { VoiceAlbumDetailCardInfo } from "../../../types/voiceAlbum";
+import { VoiceAlbumDetailCardInfo } from "../../../types/voiceAlbumTypes";
 import { BiSolidRightArrow } from "react-icons/bi";
 
 interface Props {
