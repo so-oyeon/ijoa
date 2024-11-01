@@ -1,5 +1,5 @@
 import api from "../lib/axios";
-import { LoginUserInfo, VerifyCode, SignupUserInfo  } from "../types/userTypes";
+import { LoginUserInfo, VerifyCode, SignupUserInfo } from "../types/userTypes";
 
 export const userApi = {
   // 로그인
@@ -10,6 +10,16 @@ export const userApi = {
   // 로그아웃
   logout: () => {
     return api.post(`/auth/logout`);
+  },
+
+  // 비밀번호 검증
+  verifyPassword: (password: string) => {
+    return api.post(`/auth/verify-password`, { password });
+  },
+
+  // 비밀번호 초기화
+  resetPassword: (email: string) => {
+    return api.patch(`/user/reset-password/${email}`);
   },
 
   // 이메일 인증 코드 전송
@@ -23,10 +33,10 @@ export const userApi = {
   },
 
   // 회원가입
-  signup : (userInfo : SignupUserInfo) => {
+  signup: (userInfo: SignupUserInfo) => {
     return api.post(`/user/signup`, userInfo);
   },
-  
+
   // 자녀 프로필로 전환
   switchChild: (childId: number) => {
     return api.patch(`/auth/switch-child/${childId}`);

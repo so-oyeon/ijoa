@@ -3,6 +3,8 @@ import React from "react";
 const ConfirmationModal: React.FC = () => {
   // 임시 빈 함수 (나중에 로그인 함수로 대체)
   const handleLogin = () => {
+    window.location.href = "/home"; // 로그인 페이지로 리다이렉트
+
     console.log("로그인 함수가 호출될 예정입니다."); // 디버그용 메시지
   };
 
@@ -17,7 +19,7 @@ const ConfirmationModal: React.FC = () => {
       </div>
       <p className="font-semibold">고객님의 메일로</p>
       <p className="font-semibold mb-6">비밀번호가 발송되었습니다.</p>
-      
+
       <button onClick={handleLogin} className="w-3/5 py-3 font-bold bg-yellow-400 rounded-full hover:bg-yellow-500">
         로그인
       </button>
