@@ -34,10 +34,11 @@ public class SecurityUtil {
     public Long getCurrentChildId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication instanceof CustomAuthentication) {
-            return ((CustomAuthentication) authentication).getChildId();
+            Long childId = ((CustomAuthentication) authentication).getChildId();
+            return childId == null ? -1 : childId;
         }
 
-        return null;
+        return -1L;
     }
 
     public void setAuthentication(Long userId, Long childId, HttpServletRequest request) {

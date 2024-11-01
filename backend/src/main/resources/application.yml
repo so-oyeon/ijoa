@@ -113,3 +113,8 @@ management:
   endpoint:
     health:
       show-details: always     # health 엔드포인트에서 세부 정보 표시
+
+springdoc:
+  swagger-ui:
+    persist-authorization: true
+
