@@ -42,4 +42,12 @@ public interface TTSApiDocumentation {
     })
     public ResponseEntity<?> deleteTTSProfile(@PathVariable Long ttsId) throws IOException;
 
+    @Operation(summary = "TTS 프로필 수정", description = "TTS 프로필을 수정합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "TTS 수정 성공", content = @Content),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+    })
+    public ResponseEntity<?> updateTTSProfile(@PathVariable Long ttsId, @RequestBody TTSProfileRequestDto requestDto) throws IOException;
+
 }

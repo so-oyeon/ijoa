@@ -44,9 +44,23 @@ public class TTSService {
         ttsRepository.delete(deleteTTS);
     }
 
+    // TTS 수정
+    public TTSProfileResponseDto updateTTS(Long ttsId,TTSProfileRequestDto requestDto) {
+        User user = securityUtil.getUserByToken();
 
+        TTS updateTTS = ttsRepository.findById(ttsId).orElseThrow(()-> new CustomException(ErrorCode.TTS_NOT_FOUND));
+        checkUser(updateTTS,user.getId());
+
+        updateTTS.updateTTS(requestDto);
+
+        TTS updatedTTS = ttsRepository.save(updateTTS);
+
+        return TTSProfileResponseDto.fromTTS(updatedTTS);
+    }
+
+
+    // 권한 확인
     private void checkUser(TTS tts, Long userId) {
-        // 권한 확인
         if(!tts.getUser().getId().equals(userId)){
             throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
         }

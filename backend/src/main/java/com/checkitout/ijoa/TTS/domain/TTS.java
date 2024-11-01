@@ -46,6 +46,11 @@ public class TTS {
         this.updatedAt = updatedAt;
     }
 
+    public void updateTTS(TTSProfileRequestDto requestDto){
+        this.name = requestDto.getName();
+        this.image = requestDto.getImage();
+    }
+
     public static TTS of(User user, String name, String tts, String image, LocalDateTime createdAt, LocalDateTime updatedAt) {
         return new TTS(user, name, tts, image, createdAt, updatedAt);
     }

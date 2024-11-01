@@ -22,10 +22,10 @@ public class TTSProfileRequestDto {
     private String name;
 
     @Schema(description = "TTS 프로필 이미지", example = "url")
-    private String profileImg;
+    private String image;
 
     public static TTS from(TTSProfileRequestDto request, User user){
-        TTS tts = TTS.of(user, request.getName(), null, request.getProfileImg(), LocalDateTime.now(),LocalDateTime.now());
+        TTS tts = TTS.of(user, request.getName(), null, request.getImage(), LocalDateTime.now(),LocalDateTime.now());
         return tts;
     }
 }

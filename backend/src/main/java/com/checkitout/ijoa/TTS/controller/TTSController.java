@@ -33,4 +33,11 @@ public class TTSController implements TTSApiDocumentation {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @Override
+    @PatchMapping("/{ttsId}")
+    public ResponseEntity<?> updateTTSProfile(@PathVariable("ttsId") Long ttsId, @RequestBody TTSProfileRequestDto requestDto) throws IOException {
+        TTSProfileResponseDto responseDto = ttsService.updateTTS(ttsId,requestDto);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
 }
