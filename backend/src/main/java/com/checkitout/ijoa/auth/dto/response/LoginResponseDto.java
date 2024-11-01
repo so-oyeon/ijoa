@@ -6,10 +6,10 @@ import lombok.Data;
 @Data
 public class LoginResponseDto {
 
-    @Schema(description = "사용자의 ID", example = "1")
+    @Schema(description = "사용자 Id(자녀 프로필인 경우, 자녀 Id)", example = "1")
     private Long userId;
 
-    @Schema(description = "사용자의 닉네임", example = "아이조아")
+    @Schema(description = "사용자의 이름(자녀 프로필인 경우, 자녀 이름)", example = "아이조아")
     private String nickname;
 
     @Schema(description = "인증에 사용되는 액세스 토큰", example = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...")

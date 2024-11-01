@@ -1,6 +1,8 @@
 package com.checkitout.ijoa.util;
 
 import com.checkitout.ijoa.auth.authentication.CustomAuthentication;
+import com.checkitout.ijoa.child.domain.Child;
+import com.checkitout.ijoa.child.repository.ChildRepository;
 import com.checkitout.ijoa.exception.CustomException;
 import com.checkitout.ijoa.exception.ErrorCode;
 import com.checkitout.ijoa.user.domain.User;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Component;
 public class SecurityUtil {
 
     private final UserRepository userRepository;
+    private final ChildRepository childRepository;
 
     public Long getCurrentUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -53,5 +56,14 @@ public class SecurityUtil {
     public User getUserByToken() {
         Long userId = getCurrentUserId();
         return userRepository.findById(userId).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+    }
+
+    /*
+     * 자녀 엔티티 반환
+     */
+    public Child getChildByToken() {
+        Long childId = getCurrentChildId();
+        return childRepository.findById(childId)
+                .orElseThrow(() -> new CustomException(ErrorCode.CHILD_NOT_FOUND));
     }
 }
