@@ -22,6 +22,11 @@ const Header = () => {
     navigate(`/parent/tts/list`);
   };
 
+  // 부모 통계 라우팅
+  const statsClick = () => {
+    navigate(`/parent/reading/stats`);
+  };
+
   // 부모 음성앨범 라우팅
   const voiceAlbumClick = () => {
     navigate(`/parent/voice/album`);
@@ -65,7 +70,7 @@ const Header = () => {
   const parentMenu = [
     { img: "child-icon", text: "자녀", action: childClick },
     { img: "tts-icon", text: "TTS", action: ttsClick },
-    { img: "stats-icon", text: "통계" },
+    { img: "stats-icon", text: "통계", action: statsClick },
     { img: "voice-album-icon", text: "음성앨범", action: voiceAlbumClick },
     { img: "setting-icon", text: "설정", action: openParentSettingsModal },
   ];
