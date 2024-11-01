@@ -13,7 +13,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,7 +32,7 @@ public class AuthController implements AuthApiDocumentation {
     public ResponseEntity<ResponseDto> sendEmailVerificationCode(@RequestParam String email) {
 
         ResponseDto response = authService.sendEmailVerificationCode(email);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PostMapping("/email/verify-code/confirm")
@@ -69,20 +68,13 @@ public class AuthController implements AuthApiDocumentation {
     public ResponseEntity<LoginResponseDto> switchToChild(@PathVariable Long childId, HttpServletRequest request) {
 
         LoginResponseDto response = authService.switchToChild(childId, request);
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/user-test")
-    public ResponseEntity<ResponseDto> getCurrentUser() {
-
-        ResponseDto response = authService.getCurrentUser();
-        return ResponseEntity.ok(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PostMapping("/logout")
     public ResponseEntity<ResponseDto> logout() {
 
         ResponseDto response = authService.logout();
-        return ResponseEntity.ok(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

@@ -23,9 +23,14 @@ public enum ErrorCode {
 
     //child
     CHILD_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, "CHILD-001", "자녀 프로필은 최대 10명까지 생성할 수 있습니다."),
+    CHILD_NOT_FOUND(HttpStatus.NOT_FOUND, "CHILD-002", "자녀를 찾을 수 없습니다."),
+    CHILD_NOT_BELONG_TO_PARENT(HttpStatus.FORBIDDEN, "CHILD-003", "자녀가 현재 로그인한 부모의 자녀가 아닙니다."),
 
     // fairytale
-    FAIRYTALE_NOT_FOUND(HttpStatus.NOT_FOUND, "FAIRYTALE-001", "존재하지 않는 동화책입니다.");
+    FAIRYTALE_NOT_FOUND(HttpStatus.NOT_FOUND, "FAIRYTALE-001", "존재하지 않는 동화책입니다."),
+
+    //file
+    FILE_CONVERSION_ERROR(HttpStatus.BAD_REQUEST, "FILE-001", "파일 변환 에러가 발생했습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
