@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -38,6 +39,14 @@ public class TTSController implements TTSApiDocumentation {
     public ResponseEntity<?> updateTTSProfile(@PathVariable("ttsId") Long ttsId, @RequestBody TTSProfileRequestDto requestDto) throws IOException {
         TTSProfileResponseDto responseDto = ttsService.updateTTS(ttsId,requestDto);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
+    @Override
+    @GetMapping("/profile")
+    public ResponseEntity<?> ParentTTSList() throws IOException {
+        List<TTSProfileResponseDto> responseDtoList = ttsService.getTTSList();
+
+        return new ResponseEntity<>(responseDtoList, HttpStatus.OK);
     }
 
 }

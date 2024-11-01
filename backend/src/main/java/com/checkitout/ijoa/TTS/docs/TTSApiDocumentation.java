@@ -50,4 +50,13 @@ public interface TTSApiDocumentation {
     })
     public ResponseEntity<?> updateTTSProfile(@PathVariable Long ttsId, @RequestBody TTSProfileRequestDto requestDto) throws IOException;
 
+
+    @Operation(summary = "TTS 목록 조회(부모페이지)", description = "부모가 자신이 생성한 TTS 목록을 조회할 수 있습니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "TTS 목록 조회 성공", content = @Content),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+    })
+    public ResponseEntity<?> ParentTTSList() throws IOException;
+
 }

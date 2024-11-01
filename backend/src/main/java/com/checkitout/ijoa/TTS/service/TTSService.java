@@ -13,6 +13,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -64,5 +67,19 @@ public class TTSService {
         if(!tts.getUser().getId().equals(userId)){
             throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
         }
+    }
+
+    public List<TTSProfileResponseDto> getTTSList() {
+        List<TTSProfileResponseDto> responseDtos = new ArrayList<>();
+
+        User user = securityUtil.getUserByToken();
+
+        List<TTS> ttsList = ttsRepository.findByUserId(user.getId()).orElseThrow(()-> new CustomException(ErrorCode.TTS_NOT_FOUND));
+
+        for(TTS ts : ttsList){
+            responseDtos.add(TTSProfileResponseDto.fromTTS(ts));
+        }
+
+        return responseDtos;
     }
 }
