@@ -5,13 +5,12 @@ import baby1 from "/assets/child/baby1.png";
 import profile from "/assets/child/profile.png";
 
 const Level1: React.FC = () => {
-  // 10초간 좌우로 움직이는 애니메이션
   const sideToSideAnimation = {
     initial: { x: 0 },
     animate: {
-      x: [0, 50, -50, 0], // 왼쪽에서 오른쪽으로 이동
+      x: [0, 50, -50, 0],
       transition: {
-        duration: 10, // 10초 동안 진행
+        duration: 10,
         ease: "easeInOut",
       },
     },
@@ -26,8 +25,8 @@ const Level1: React.FC = () => {
       babyCss="bottom-5 left-[calc(50%-100px)] transform -translate-x-1/2 w-1/6"
       minLevel={2}
       maxLevel={4}
-      profileAnimation={sideToSideAnimation} // profileAnimation 설정
-      babyAnimation={sideToSideAnimation} // babyAnimation 설정
+      profileAnimation={sideToSideAnimation}
+      babyAnimation={sideToSideAnimation}
     />
   );
 };

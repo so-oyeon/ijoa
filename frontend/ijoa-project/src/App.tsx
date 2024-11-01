@@ -51,7 +51,7 @@ const App = () => {
         {/* 홈 화면 */}
         <Route path="/home" element={<Login />} />
         {/* 동화 내용 */}
-        <Route path="/fairytale/content/:index" element={<FairyTaleContentPage />} />
+        <Route path="/fairytale/content/:fairytaleId" element={<FairyTaleContentPage />} />
         {/* 부모의 음성 앨범 상세 화면 */}
         <Route path="/parent/voice/album/:id" element={<VoiceAlbumDetail />} />
       </Routes>
