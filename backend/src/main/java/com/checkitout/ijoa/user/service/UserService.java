@@ -15,6 +15,7 @@ import com.checkitout.ijoa.util.PasswordEncoder;
 import com.checkitout.ijoa.util.SecurityUtil;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +27,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final ChildrenManagementService childrenManagementService;
+    private final EmailServie emailServie;
 
     private final SecurityUtil securityUtil;
     private final UserMapper userMapper;
@@ -117,5 +119,40 @@ public class UserService {
         }
 
         return new ResponseDto();
+    }
+
+    /**
+     * 비밀번호 재설정
+     */
+    @Transactional
+    public ResponseDto resetUserPassword(String email) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.EMAIL_VERIFICATION_NOT_FOUND));
+
+        String password = generateResetPassword();
+        user.setPassword(PasswordEncoder.encrypt(user.getEmail(), password));
+
+        emailServie.sendPasswordResetEmail(email, password);
+        return new ResponseDto();
+    }
+
+    /**
+     * 초기화된 비밀번호 생성
+     */
+    public String generateResetPassword() {
+        Random random = new Random();
+        StringBuilder password = new StringBuilder();
+
+        for (int i = 0; i < 10; i++) {
+            int index = random.nextInt(3);
+
+            switch (index) {
+                case 0 -> password.append((char) (random.nextInt(26) + 65)); // 대문자 A-Z
+                case 1 -> password.append((char) (random.nextInt(26) + 97)); // 소문자 a-z
+                case 2 -> password.append(random.nextInt(10)); // 숫자 0-9
+            }
+        }
+        return password.toString();
     }
 }

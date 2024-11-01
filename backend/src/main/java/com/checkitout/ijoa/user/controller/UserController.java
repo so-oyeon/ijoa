@@ -61,4 +61,11 @@ public class UserController implements UserApiDocumentation {
         ResponseDto response = userService.signOut();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+    @PatchMapping("/reset-password/{email}")
+    public ResponseEntity<ResponseDto> resetUserPassword(@PathVariable String email) {
+
+        ResponseDto response = userService.resetUserPassword(email);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 }

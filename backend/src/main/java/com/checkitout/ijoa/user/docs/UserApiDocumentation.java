@@ -62,4 +62,12 @@ public interface UserApiDocumentation {
             @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
     })
     public ResponseEntity<ResponseDto> signOut();
+
+    @Operation(summary = "비밀번호 초기화", description = "비밀번호 초기화를 요청합니다. 새로운 비밀번호가 이메일로 전송됩니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "비밀번호 초기화 성공 ", content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+    })
+    public ResponseEntity<ResponseDto> resetUserPassword(@PathVariable String email);
 }
