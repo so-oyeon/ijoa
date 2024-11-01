@@ -10,6 +10,7 @@ import MyRoom from "./pages/child/MyRoom";
 import MyBookShelves from "./pages/child/MyBookShelves";
 import VoiceAlbum from "./pages/parent/VoiceAlbum";
 import VoiceAlbumDetail from "./pages/parent/VoiceAlbumDetail";
+import ReadingStatistics from "./pages/parent/ReadingStats";
 
 const App = () => {
   return (
@@ -28,6 +29,7 @@ const App = () => {
                     <Route path="/parent/child/list" element={<CreateChildProfile />} />
                     {/* 부모의 TTS 목록 화면 */}
                     <Route path="/parent/tts/list" element={<TTSList />} />
+                    <Route path="/parent/reading/statistics" element={<ReadingStatistics />} />
                     {/* 부모의 음성 앨범 화면 */}
                     <Route path="/parent/voice/album" element={<VoiceAlbum />} />
                     {/* 동화 목록 */}

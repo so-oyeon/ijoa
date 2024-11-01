@@ -2,8 +2,10 @@ import { useState } from "react";
 import { TbPencilMinus } from "react-icons/tb";
 import { IoIosAdd } from "react-icons/io";
 import ChildProfileCreateModal from "../../components/parent/ChildProfileCreateModal";
+import { useNavigate } from "react-router-dom";
 
 const ChildProfileList = () => {
+  const navigate = useNavigate();
   const [isCreateModal, setIsCreateModal] = useState(false);
   const childList = [
     {
@@ -17,6 +19,11 @@ const ChildProfileList = () => {
       age: 7,
     },
   ];
+
+  const handleGoToChildAccount = () => {
+    localStorage.setItem("userType", "child");
+    navigate("/fairytale/list");
+  };
 
   return (
     <div className="min-h-screen pt-24 bg-[#EAF8FF] relative">
@@ -36,6 +43,7 @@ const ChildProfileList = () => {
                   className="w-full aspect-1 bg-white rounded-full border object-cover"
                   src={`/assets/header/child/${child.img}.png`}
                   alt=""
+                  onClick={handleGoToChildAccount}
                 />
                 <div className="w-12 aspect-1 bg-white rounded-full bg-opacity-50 shadow-[1px_3px_2px_0_rgba(0,0,0,0.2)] flex justify-center items-center absolute top-0 right-0">
                   <TbPencilMinus className="text-2xl" />
