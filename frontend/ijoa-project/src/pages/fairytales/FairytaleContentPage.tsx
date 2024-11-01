@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import "../../css/FairytaleContentPage.css";
 import ReadCompleteModal from "../../components/fairytales/ReadCompleteModal";
 import LevelUpModal from "../../components/fairytales/LevelUpModal";
@@ -11,65 +11,14 @@ import MenuButton from "/assets/fairytales/buttons/menu-button.png";
 import SoundOnButton from "/assets/fairytales/buttons/sound-on-button.png";
 import LeftArrow from "/assets/fairytales/buttons/left-arrow.png";
 import RightArrow from "/assets/fairytales/buttons/right-arrow.png";
-import dummy1 from "/assets/fairytales/images/dummy1.png";
-import dummy2 from "/assets/fairytales/images/dummy2.png";
-import dummy3 from "/assets/fairytales/images/dummy3.png";
-import dummy4 from "/assets/fairytales/images/dummy4.png";
-import dummy5 from "/assets/fairytales/images/dummy5.png";
-import dummy6 from "/assets/fairytales/images/dummy6.png";
-import dummy7 from "/assets/fairytales/images/dummy7.png";
-import dummy8 from "/assets/fairytales/images/dummy8.png";
-import dummy9 from "/assets/fairytales/images/dummy9.png";
-import dummy10 from "/assets/fairytales/images/dummy10.png";
-
-// 더미 데이터
-const fairyTales = [
-  {
-    image: dummy1,
-    text: "거북아~ 나랑 달리기 내기 하지 않을래?",
-  },
-  {
-    image: dummy2,
-    text: "준비~ 땅! 토끼는 시작과 함께 깡총~깡총 빠르게 뛰어갔어요.",
-  },
-  {
-    image: dummy3,
-    text: "마침내 태백산에 도착한 호랑이와 까막딱따구리는 신단수 아래로 달려갔어요. 그곳에는 아름다운 여인이 갓 태어난 아기에게 젖을 먹이고 있었지요. 호랑이와 까막딱따구리는 얼른 절을 했어요. “단군님이 태어나신 것을 축하드립니다.”",
-  },
-  {
-    image: dummy4,
-    text: "토끼가 낮잠을 자는 사이, 거북이는 느리지만 열심히 기어갔어요.",
-  },
-  {
-    image: dummy5,
-    text: "잠에서 깬 토끼는 어느새 결승선에 먼저 도착한 거북이를 보고 깜짝! 놀랐어요.",
-  },
-  {
-    image: dummy6,
-    text: "동물 친구들은 내기에서 이긴 거북이를 축하해주며 함께 기뻐했어요.",
-  },
-  {
-    image: dummy7,
-    text: "거북아~ 정말 대단해! 사실 네가 이길 줄은 몰랐어.",
-  },
-  {
-    image: dummy8,
-    text: "헤헤... 아니야~ 난 그저 열심히 기어갔을 뿐인걸?",
-  },
-  {
-    image: dummy9,
-    text: "거북이 네가 어떻게 나보다 빨리 도착할 수가 있어? 이 내기는 무효야!",
-  },
-  {
-    image: dummy10,
-    text: "헤헤 토끼야, 그럼 바다에서 한 번 더 달리기 내기할까?",
-  },
-];
+import { fairyTaleApi } from "../../api/fairytaleApi";
+import { FairyTalePageResponse } from "../../types/fairytaleTypes";
 
 const FairyTaleContentPage: React.FC = () => {
-  const location = useLocation();
-  const { title } = location.state || { title: "제목 없음" };
+  const { title } = { title: "제목 없음" };
+  const { fairytaleId } = useParams<{ fairytaleId: string }>();
   const [fairytaleCurrentPage, setFairytaleCurrentPage] = useState(0);
+  const [fairytaleData, setFairytaleData] = useState<FairyTalePageResponse>();
   const [isTTSChoiceModalOpen, setIsTTSChoiceModalOpen] = useState(true);
   const [isLevelUpModalOpen, setIsLevelUpModalOpen] = useState(false);
   const [isReadCompleteModalOpen, setIsReadCompleteModalOpen] = useState(false);
@@ -77,28 +26,56 @@ const FairyTaleContentPage: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isFocusAlertModalOpen, setIsFocusAlertModalOpen] = useState(false);
 
-  // 메뉴창 Swiper를 위한 props 설정
-  const bookPages = fairyTales.map((fairyTale) => fairyTale.image);
-  const pageNums = fairyTales.map((_, index) => `${index + 1} 페이지`);
-  const halfwayPage = Math.floor(fairyTales.length / 2);
+  // 동화 페이지를 가져오는 api 통신 함수
+  const fetchFairyTalePage = async (page: number) => {
+    // 동화 ID가 정의되어 있는지 확인
+    if (!fairytaleId) {
+      console.error("Fairytale ID is undefined");
+      return;
+    }
+    // api 함수 호출
+    try {
+      const response = await fairyTaleApi.getFairyTalePages(fairytaleId, String(page + 1));
+      if (response.status === 201) {
+        // 동화 페이지 가져오기 성공 시 (201)
+        setFairytaleData(response.data);
+      }
+    } catch (error) {
+      console.log("fairyTaleApi의 getFairyTalePages : ", error);
+    }
+  };
+
+  const bookPages: string[] = [];
+  const pageNums: string[] = [];
+
+  if (fairytaleData) {
+    for (let i = 0; i < fairytaleData.totalPages; i++) {
+      bookPages.push(fairytaleData.image);
+      pageNums.push(`${i + 1} 페이지`);
+    }
+  }
 
   // 왼쪽 화살표 클릭 시 현재 페이지를 감소시키는 함수
   const handleLeftClick = () => {
     if (fairytaleCurrentPage > 0) {
-      setFairytaleCurrentPage(fairytaleCurrentPage - 1);
+      const newPage = fairytaleCurrentPage - 1;
+      setFairytaleCurrentPage(newPage);
+      fetchFairyTalePage(newPage); // 새로운 페이지 요청
     }
   };
 
   // 오른쪽 화살표 클릭 시 현재 페이지를 증가시키는 함수
   const handleRightClick = () => {
-    if (fairytaleCurrentPage < fairyTales.length - 1) {
+    if (fairytaleData && fairytaleCurrentPage < fairytaleData.totalPages - 1) {
       const newPage = fairytaleCurrentPage + 1;
       setFairytaleCurrentPage(newPage);
-      if (newPage === halfwayPage) {
+      fetchFairyTalePage(newPage); // 새로운 페이지 요청
+
+      if (newPage === Math.floor(fairytaleData.totalPages / 2)) {
         setIsFocusAlertModalOpen(true);
+      } else if (newPage === fairytaleData.totalPages - 1) {
+        setIsLevelUpModalOpen(true);
       }
-    } else {
-      setIsLevelUpModalOpen(true);
     }
   };
 
@@ -149,48 +126,65 @@ const FairyTaleContentPage: React.FC = () => {
     }
   }, [isLevelUpModalOpen]);
 
+  useEffect(() => {
+    fetchFairyTalePage(fairytaleCurrentPage);
+  });
+
+  useEffect(() => {
+    if (fairytaleCurrentPage > 0) {
+      fetchFairyTalePage(fairytaleCurrentPage);
+    }
+  });
+
   return (
     <div className="relative h-screen">
-      <img src={fairyTales[fairytaleCurrentPage].image} alt="동화책 내용 사진" className="w-screen h-screen" />
-      {/* 메뉴 버튼 */}
-      <div className="absolute top-[-12px] right-10">
-        <button className="px-3 py-4 bg-gray-700 bg-opacity-50 rounded-2xl shadow-md" onClick={handleOpenMenu}>
-          <img src={MenuButton} alt="메뉴 버튼" />
-          <p className="text-xs text-white">메뉴</p>
-        </button>
-      </div>
+      {fairytaleData ? (
+        <>
+          <img src={fairytaleData.image} alt="동화책 내용 사진" className="w-screen h-screen object-cover" />
+          <div className="w-[1100px] h-[160px] p-4 flex absolute bottom-10 left-1/2 transform -translate-x-1/2 justify-between items-center bg-white bg-opacity-70 rounded-3xl shadow-lg">
+            <button className="items-center ml-5">
+              <img src={SoundOnButton} alt="다시 듣기 버튼" className="w-20 h-20" />
+              <p className="text-sm text-[#565656] font-bold">다시 듣기</p>
+            </button>
+            <div className="px-12 flex-1 text-3xl font-bold text-center fairytale-font whitespace-pre-line break-keep">
+              <p className="px-12 flex-1 text-3xl font-bold text-center fairytale-font whitespace-pre-line break-keep">
+                {fairytaleData.content}
+              </p>
+            </div>
+          </div>
+          {fairytaleCurrentPage > 0 && (
+            <div className="absolute left-10 top-1/2 transform -translate-y-1/2">
+              <button className="bg-transparent border-none" onClick={handleLeftClick}>
+                <img src={LeftArrow} alt="왼쪽 화살표" />
+              </button>
+            </div>
+          )}
+          <div className="absolute right-10 top-1/2 transform -translate-y-1/2">
+            <button className="bg-transparent border-none" onClick={handleRightClick}>
+              <img src={RightArrow} alt="오른쪽 화살표" />
+            </button>
+          </div>
 
-      {/* 임시 버튼 - 퀴즈 화면 조회용 */}
-      <div className="absolute top-[-12px] right-[150px]">
-        <button className="px-3 py-4 bg-gray-700 bg-opacity-50 rounded-2xl shadow-md" onClick={handleOpenQuizModal}>
-          <img src={MenuButton} alt="퀴즈 버튼" />
-          <p className="text-xs text-white">퀴즈</p>
-        </button>
-      </div>
+          {/* 메뉴 버튼 */}
+          <div className="absolute top-[-12px] right-10">
+            <button className="px-3 py-4 bg-gray-700 bg-opacity-50 rounded-2xl shadow-md" onClick={handleOpenMenu}>
+              <img src={MenuButton} alt="메뉴 버튼" />
+              <p className="text-xs text-white">메뉴</p>
+            </button>
+          </div>
 
-      <div className="w-[1100px] h-[160px] p-4 flex absolute bottom-10 left-1/2 transform -translate-x-1/2 justify-between items-center bg-white bg-opacity-70 rounded-3xl shadow-lg">
-        <button className="items-center ml-5">
-          <img src={SoundOnButton} alt="다시 듣기 버튼" className="w-20 h-20" />
-          <p className="text-sm text-[#565656] font-bold">다시 듣기</p>
-        </button>
-        <p className="px-12 flex-1 text-3xl font-bold text-center fairytale-font whitespace-pre-line break-keep">
-          {fairyTales[fairytaleCurrentPage].text}
-        </p>
-      </div>
-
-      {fairytaleCurrentPage > 0 && (
-        <div className="absolute left-10 top-1/2 transform -translate-y-1/2">
-          <button className="bg-transparent border-none" onClick={handleLeftClick}>
-            <img src={LeftArrow} alt="왼쪽 화살표" />
-          </button>
+          <div className="absolute top-[-12px] right-[150px]">
+            <button className="px-3 py-4 bg-gray-700 bg-opacity-50 rounded-2xl shadow-md" onClick={handleOpenQuizModal}>
+              <img src={MenuButton} alt="퀴즈 버튼" />
+              <p className="text-xs text-white">퀴즈</p>
+            </button>
+          </div>
+        </>
+      ) : (
+        <div className="flex items-center justify-center h-full">
+          <p className="text-xl">Loading...</p>
         </div>
       )}
-
-      <div className="absolute right-10 top-1/2 transform -translate-y-1/2">
-        <button className="bg-transparent border-none" onClick={handleRightClick}>
-          <img src={RightArrow} alt="오른쪽 화살표" />
-        </button>
-      </div>
 
       {/* TTS 선택 모달 */}
       {/* Fix: hasRead => 처음 읽는건지 읽었던 건지 구분 */}
