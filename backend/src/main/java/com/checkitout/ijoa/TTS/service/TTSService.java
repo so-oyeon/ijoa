@@ -5,6 +5,8 @@ import com.checkitout.ijoa.TTS.domain.TTS;
 import com.checkitout.ijoa.TTS.dto.request.TTSProfileRequestDto;
 import com.checkitout.ijoa.TTS.dto.response.TTSProfileResponseDto;
 import com.checkitout.ijoa.TTS.repository.TTSRepository;
+import com.checkitout.ijoa.exception.CustomException;
+import com.checkitout.ijoa.exception.ErrorCode;
 import com.checkitout.ijoa.user.domain.User;
 import com.checkitout.ijoa.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
@@ -29,4 +31,12 @@ public class TTSService {
         return TTSProfileResponseDto.fromTTS(savedTTS);
     }
 
+    // TTS 삭제
+    public void deleteTTS(Long ttsId) {
+        User user = securityUtil.getUserByToken();
+        // TTS 생성자가 삭제할 수 있게
+        TTS deleteTTS = ttsRepository.findById(ttsId).orElseThrow(()-> new CustomException(ErrorCode.UNAUTHORIZED_USER));
+
+        ttsRepository.delete(deleteTTS);
+    }
 }

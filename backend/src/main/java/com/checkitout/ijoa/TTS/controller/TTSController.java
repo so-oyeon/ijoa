@@ -8,10 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
@@ -27,6 +24,13 @@ public class TTSController implements TTSApiDocumentation {
     public ResponseEntity<TTSProfileResponseDto> createTTSProfile(@Valid @RequestBody TTSProfileRequestDto requestDto) throws IOException {
         TTSProfileResponseDto responseDto = ttsService.createTTS(requestDto);
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
+    }
+
+    @Override
+    @DeleteMapping("/{ttsId}")
+    public ResponseEntity<?> deleteTTSProfile(@PathVariable("ttsId") Long ttsId) throws IOException {
+        ttsService.deleteTTS(ttsId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

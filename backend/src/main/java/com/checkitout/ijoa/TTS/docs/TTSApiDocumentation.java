@@ -27,11 +27,19 @@ public interface TTSApiDocumentation {
 
     @Operation(summary = "TTS 프로필 생성", description = "새로운 TTS를 등록합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "TTS 등록 성공", content = @Content(schema = @Schema(implementation = ChildDto.class))),
+            @ApiResponse(responseCode = "201", description = "TTS 등록 성공", content = @Content(schema = @Schema(implementation = TTSProfileResponseDto.class))),
             @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content),
             @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
     })
-    public ResponseEntity<TTSProfileResponseDto> createTTSProfile(
+    public ResponseEntity<?> createTTSProfile(
             @Valid @RequestBody TTSProfileRequestDto requestDto) throws IOException;
+
+    @Operation(summary = "TTS 프로필 삭제", description = "TTS 프로필을 삭제합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "TTS 삭제 성공", content = @Content),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+    })
+    public ResponseEntity<?> deleteTTSProfile(@PathVariable Long ttsId) throws IOException;
 
 }
