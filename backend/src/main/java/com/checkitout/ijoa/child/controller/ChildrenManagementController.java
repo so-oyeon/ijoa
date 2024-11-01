@@ -44,21 +44,21 @@ public class ChildrenManagementController implements ChildManagementApiDocumenta
             throws IOException {
 
         ChildDto response = childrenManagementService.updateChildProfile(childId, requestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @DeleteMapping("/children/{childId}")
-    public ResponseEntity<ResponseDto> deleteChildProfile(@PathVariable Long childId){
+    public ResponseEntity<ResponseDto> deleteChildProfile(@PathVariable Long childId) {
 
-        ResponseDto response=childrenManagementService.deleteChildProfile(childId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        ResponseDto response = childrenManagementService.deleteChildProfile(childId);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @GetMapping("/children/{childId}")
     public ResponseEntity<ChildDto> getChildProfile(@PathVariable Long childId) {
 
         ChildDto response = childrenManagementService.getChildProfile(childId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 
@@ -66,6 +66,6 @@ public class ChildrenManagementController implements ChildManagementApiDocumenta
     public ResponseEntity<List<ChildDto>> getAllChildProfiles() {
 
         List<ChildDto> response = childrenManagementService.getAllChildProfiles();
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

@@ -33,7 +33,7 @@ public interface FairytaleApiDocumentation {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "동화책 특정 페이지 조회 성공"),
             @ApiResponse(responseCode = "401", description = "로그인 안함", content = @Content),
-            @ApiResponse(responseCode = "404", description = "존재하지 않는 동화책 ID / 존재하지 않는 동화책 페이지", content = @Content),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 동화책 ID / 존재하지 않는 동화책 페이지 / 존재하지 않는 아이 ID", content = @Content),
             @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
     })
     public ResponseEntity<FairytalePageViewResponse> getFairytalePage(
