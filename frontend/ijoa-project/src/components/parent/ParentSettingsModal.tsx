@@ -6,6 +6,7 @@ import SettingsIcon from "/assets/fairytales/buttons/settings-icon.png";
 import VerificationModal from "./VerificationModal";
 import InformationModal from "./InformationModal";
 import DeleteInformationModal from "./DeleteInformationModal";
+import { userApi } from "../../api/userApi";
 
 type ModalType = "verification" | "information" | "deleteConfirmation" | null;
 
@@ -18,19 +19,14 @@ const ParentSettingsModal: React.FC<ParentSettingsModalProps> = ({ isOpen, onClo
   const [modalType, setModalType] = useState<ModalType>(null);
   const navigate = useNavigate();
 
+  // 로그아웃 api 통신 함수
   const handleLogout = async () => {
     try {
-      // 서버에 로그아웃 요청 보내기 (api보고 나중에 연결)
-      await fetch("/api/logout", {
-        method: "POST",
-        credentials: "include", // 필요하면 쿠키를 포함하여 요청
-      });
-
-      // 클라이언트 측 세션 정보 삭제
-      localStorage.removeItem("authToken"); // localStorage에 저장된 토큰
-      sessionStorage.clear(); // sessionStorage에 저장된 모든 데이터 삭제
-
-      // 로그아웃 완료 알림
+      const response = await userApi.logout();
+      // 로그아웃 성공 시(200)
+      if (response.status === 200) {
+        localStorage.clear(); // sessionStorage에 저장된 모든 데이터 삭제
+      }
       Swal.fire({
         icon: "success",
         title: "로그아웃이 완료되었습니다",
@@ -39,7 +35,7 @@ const ParentSettingsModal: React.FC<ParentSettingsModalProps> = ({ isOpen, onClo
         navigate("/home");
       });
     } catch (error) {
-      console.error("로그아웃 실패:", error);
+      console.log("userApi의 logout : ", error);
       Swal.fire({
         icon: "error",
         title: "로그아웃 실패",
@@ -48,7 +44,7 @@ const ParentSettingsModal: React.FC<ParentSettingsModalProps> = ({ isOpen, onClo
       });
     }
   };
-
+  // 회원탈퇴 모달
   const handleDeleteAccount = () => {
     setModalType("deleteConfirmation");
   };
