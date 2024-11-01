@@ -5,7 +5,6 @@ import baby4 from "/assets/child/baby4.png";
 import profile from "/assets/child/profile.png";
 
 const Level4: React.FC = () => {
-  // 화면 전체를 누비는 애니메이션 설정
   const dynamicAnimation = {
     initial: { x: 0, y: 0 },
     animate: {

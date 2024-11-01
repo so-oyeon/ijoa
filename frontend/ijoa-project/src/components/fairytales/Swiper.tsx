@@ -25,7 +25,7 @@ const BookCoverSwiper: React.FC<BookCoverSwiperProps> = ({
             onClick={() => onBookClick(index + 1)} // index + 1로 수정하여 정확한 경로로 내비게이션
             className="block text-center cursor-pointer"
           >
-            <img src={cover} alt={`동화책 ${index + 1}`} className="w-full" />
+            <img src={cover} alt="동화책 표지 사진" className="w-full" />
             <div className="mt-2 text-left">
               <span className="text-xl">{titles[index]}</span>
             </div>
