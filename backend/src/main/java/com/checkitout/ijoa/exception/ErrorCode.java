@@ -35,6 +35,8 @@ public enum ErrorCode {
 
     //TTS
     TTS_NOT_FOUND(HttpStatus.NOT_FOUND,"TTS-001","TTS를 찾을 수 없습니다."),
+    TTS_NO_CONTENT(HttpStatus.NO_CONTENT,"TTS-002", "TTS가 없습니다. "),
+    TTS_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, "TTS-003","TTS는 4개까지 생성할 수 있습니다."),
     UNAUTHORIZED_USER(HttpStatus.FORBIDDEN, "UU-001", "권한이 없습니다.");
 
     private final HttpStatus httpStatus;
