@@ -29,7 +29,8 @@ const App = () => {
                     <Route path="/parent/child/list" element={<CreateChildProfile />} />
                     {/* 부모의 TTS 목록 화면 */}
                     <Route path="/parent/tts/list" element={<TTSList />} />
-                    <Route path="/parent/reading/statistics" element={<ReadingStatistics />} />
+                    {/* 부모의 통계 화면 */}
+                    <Route path="/parent/reading/stats" element={<ReadingStatistics />} />
                     {/* 부모의 음성 앨범 화면 */}
                     <Route path="/parent/voice/album" element={<VoiceAlbum />} />
                     {/* 동화 목록 */}
