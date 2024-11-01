@@ -16,3 +16,14 @@ export interface SignupUserInfo {
   password : string;
   nickname : string;
 }
+
+// 회원 정보 수정
+export interface PatchUserInfo {
+  nickname : string;
+  password : string;
+}
+  // 사용자 정보 가져오기
+export interface UserInfo {
+  email: string;
+  nickname: string;
+}

@@ -1,5 +1,5 @@
 import api from "../lib/axios";
-import { LoginUserInfo, VerifyCode, SignupUserInfo } from "../types/userTypes";
+import { LoginUserInfo, VerifyCode, SignupUserInfo, PatchUserInfo, UserInfo } from "../types/userTypes";
 
 export const userApi = {
   // 로그인
@@ -41,4 +41,15 @@ export const userApi = {
   switchChild: (childId: number) => {
     return api.patch(`/auth/switch-child/${childId}`);
   },
+
+  // 회원 정보 수정
+  patchUserInfo: (userInfo: PatchUserInfo) => {
+    return api.patch(`/user`, userInfo);
+  },
+
+  // 사용자 정보 가져오기
+  getUserInfo: () => {
+    return api.get<UserInfo>(`/user`);
+  }
 };
+
