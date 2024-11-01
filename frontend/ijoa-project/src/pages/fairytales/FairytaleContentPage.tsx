@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import "../../css/FairytaleContentPage.css";
 import ReadCompleteModal from "../../components/fairytales/ReadCompleteModal";
 import LevelUpModal from "../../components/fairytales/LevelUpModal";
@@ -12,13 +12,16 @@ import SoundOnButton from "/assets/fairytales/buttons/sound-on-button.png";
 import LeftArrow from "/assets/fairytales/buttons/left-arrow.png";
 import RightArrow from "/assets/fairytales/buttons/right-arrow.png";
 import { fairyTaleApi } from "../../api/fairytaleApi";
-import { FairyTalePageResponse } from "../../types/fairytaleTypes";
+import { FairyTaleContentResponse, FairyTalePageResponse } from "../../types/fairytaleTypes";
 
 const FairyTaleContentPage: React.FC = () => {
-  const { title } = { title: "제목 없음" };
   const { fairytaleId } = useParams<{ fairytaleId: string }>();
+  const location = useLocation();
+  const title = location.state?.title
   const [fairytaleCurrentPage, setFairytaleCurrentPage] = useState(0);
-  const [fairytaleData, setFairytaleData] = useState<FairyTalePageResponse>();
+  const [fairytaleData, setFairytaleData] = useState<FairyTaleContentResponse>();
+  const [bookPages, setBookPages] = useState<string[]>([]);
+  const [pageNums, setPageNums] = useState<string[]>([]);
   const [isTTSChoiceModalOpen, setIsTTSChoiceModalOpen] = useState(true);
   const [isLevelUpModalOpen, setIsLevelUpModalOpen] = useState(false);
   const [isReadCompleteModalOpen, setIsReadCompleteModalOpen] = useState(false);
@@ -26,8 +29,8 @@ const FairyTaleContentPage: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isFocusAlertModalOpen, setIsFocusAlertModalOpen] = useState(false);
 
-  // 동화 페이지를 가져오는 api 통신 함수
-  const fetchFairyTalePage = async (page: number) => {
+  // 동화책 내용(이미지, 텍스트)을 가져오는 api 통신 함수
+  const getFairyTaleContent = async (page: number) => {
     // 동화 ID가 정의되어 있는지 확인
     if (!fairytaleId) {
       console.error("Fairytale ID is undefined");
@@ -35,46 +38,58 @@ const FairyTaleContentPage: React.FC = () => {
     }
     // api 함수 호출
     try {
-      const response = await fairyTaleApi.getFairyTalePages(fairytaleId, String(page + 1));
+      const response = await fairyTaleApi.getFairyTaleContents(fairytaleId, String(page + 1));
       if (response.status === 201) {
         // 동화 페이지 가져오기 성공 시 (201)
         setFairytaleData(response.data);
       }
     } catch (error) {
-      console.log("fairyTaleApi의 getFairyTalePages : ", error);
+      console.log("fairyTaleApi의 getFairyTaleContents : ", error);
     }
   };
 
-  const bookPages: string[] = [];
-  const pageNums: string[] = [];
-
-  if (fairytaleData) {
-    for (let i = 0; i < fairytaleData.totalPages; i++) {
-      bookPages.push(fairytaleData.image);
-      pageNums.push(`${i + 1} 페이지`);
+  // 동화책 전체 페이지를 가져오는 api 통신 함수
+  const getFairyTalePages = async () => {
+    if (!fairytaleId) {
+      console.error("Fairytale ID is undefined");
+      return;
     }
-  }
+    try {
+      const response = await fairyTaleApi.getFairyTalePages(fairytaleId);
+      if (response.status === 200 && Array.isArray(response.data)) {
+        const images = response.data.map((page: FairyTalePageResponse) => page.image);
+        setBookPages(images);
+        setPageNums(images.map((_, index) => `${index + 1} 페이지`));
+      }
+    } catch (error) {
+      console.error("fairyTaleApi의 getFairyTalePages :", error);
+    }
+  };
 
   // 왼쪽 화살표 클릭 시 현재 페이지를 감소시키는 함수
   const handleLeftClick = () => {
     if (fairytaleCurrentPage > 0) {
       const newPage = fairytaleCurrentPage - 1;
       setFairytaleCurrentPage(newPage);
-      fetchFairyTalePage(newPage); // 새로운 페이지 요청
+      getFairyTaleContent(newPage); // 새로운 페이지 요청
     }
   };
 
   // 오른쪽 화살표 클릭 시 현재 페이지를 증가시키는 함수
   const handleRightClick = () => {
-    if (fairytaleData && fairytaleCurrentPage < fairytaleData.totalPages - 1) {
-      const newPage = fairytaleCurrentPage + 1;
-      setFairytaleCurrentPage(newPage);
-      fetchFairyTalePage(newPage); // 새로운 페이지 요청
+    if (fairytaleData) {
+      const isLastPage = fairytaleCurrentPage === fairytaleData.totalPages - 1;
 
-      if (newPage === Math.floor(fairytaleData.totalPages / 2)) {
-        setIsFocusAlertModalOpen(true);
-      } else if (newPage === fairytaleData.totalPages - 1) {
+      if (isLastPage) {
         setIsLevelUpModalOpen(true);
+      } else if (fairytaleCurrentPage < fairytaleData.totalPages - 1) {
+        const newPage = fairytaleCurrentPage + 1;
+        setFairytaleCurrentPage(newPage);
+        getFairyTaleContent(newPage);
+
+        if (newPage === Math.floor(fairytaleData.totalPages / 2)) {
+          setIsFocusAlertModalOpen(true);
+        }
       }
     }
   };
@@ -96,6 +111,7 @@ const FairyTaleContentPage: React.FC = () => {
 
   // 메뉴창 열기 함수
   const handleOpenMenu = () => {
+    getFairyTalePages();
     setIsMenuOpen(true);
   };
 
@@ -121,19 +137,13 @@ const FairyTaleContentPage: React.FC = () => {
       const timer = setTimeout(() => {
         setIsLevelUpModalOpen(false);
         setIsReadCompleteModalOpen(true); // 레벨업 모달 닫고 독서 완료 모달 열기
-      }, 5000);
+      }, 3000);
       return () => clearTimeout(timer);
     }
   }, [isLevelUpModalOpen]);
 
   useEffect(() => {
-    fetchFairyTalePage(fairytaleCurrentPage);
-  });
-
-  useEffect(() => {
-    if (fairytaleCurrentPage > 0) {
-      fetchFairyTalePage(fairytaleCurrentPage);
-    }
+    getFairyTaleContent(fairytaleCurrentPage);
   });
 
   return (

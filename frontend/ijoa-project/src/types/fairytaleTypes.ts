@@ -63,11 +63,17 @@ export interface FairyTaleByCategoryListResponse {
   empty: boolean;
 }
 
-// 동화 페이지 조회 (POST)
+// 동화 내용 조회 (POST)
+export interface FairyTaleContentResponse {
+  pageNumber: number;
+  content: string;
+  image: string;
+  totalPages: number;
+  pageHistoryId: number;
+}
+
+// 동화 전체 페이지 조회
 export interface FairyTalePageResponse {
-    pageNumber: number;
-    content: string;
-    image: string;
-    totalPages: number;
-    pageHistoryId: number;
-  }
+  pageNumber: number;
+  image: string;
+}
