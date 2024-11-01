@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { motion, MotionProps } from "framer-motion";
 import LevelInfoModal from "../../components/child/LevelInfoModal";
 
 interface LevelTemplateProps {
@@ -9,24 +10,61 @@ interface LevelTemplateProps {
   profileCss: string;
   minLevel?: number;
   maxLevel?: number;
+  babyAnimation?: MotionProps;
+  profileAnimation?: MotionProps;
 }
 
 const LevelTemplate: React.FC<LevelTemplateProps> = ({
   bgImage,
   profileImage,
   babyImage,
-  babyCss: babyPosition,
-  profileCss: profilePosition,
+  babyCss,
+  profileCss,
   minLevel,
   maxLevel,
+  babyAnimation,
+  profileAnimation,
 }) => {
   const [isInfoVisible, setIsInfoVisible] = useState(false);
+  const [loopAnimation, setLoopAnimation] = useState(false);
+
+  // 무한 반복 애니메이션
+  const infiniteVerticalAnimation = {
+    y: [0, -10, 0],
+    transition: {
+      duration: 1,
+      ease: "easeInOut",
+      repeat: Infinity,
+    },
+  };
+
+  // 초기 애니메이션이 끝난 후 무한 애니메이션 시작
+  useEffect(() => {
+    const timer = setTimeout(() => setLoopAnimation(true), 10000); // 초기 애니메이션이 10초 동안 진행됨
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <div className="relative w-full h-screen overflow-hidden">
       <img src={bgImage} alt="배경화면" className="w-full h-screen object-cover" />
-      <img src={profileImage} alt="프로필이미지" className={`absolute ${profilePosition}`} />
-      <img src={babyImage} alt="애기 이미지" className={`absolute ${babyPosition}`} />
+
+      {/* 프로필 이미지 애니메이션 */}
+      <motion.div
+        initial="initial"
+        animate={loopAnimation ? infiniteVerticalAnimation : profileAnimation?.animate}
+        className={`absolute ${profileCss}`}
+      >
+        <img src={profileImage} alt="프로필 이미지" className="w-full h-full" />
+      </motion.div>
+
+      {/* 아기 이미지 애니메이션 */}
+      <motion.div
+        initial="initial"
+        animate={loopAnimation ? infiniteVerticalAnimation : babyAnimation?.animate}
+        className={`absolute ${babyCss}`}
+      >
+        <img src={babyImage} alt="아기 이미지" className="w-full h-full" />
+      </motion.div>
 
       {/* 정보 버튼 */}
       {minLevel && maxLevel && (
