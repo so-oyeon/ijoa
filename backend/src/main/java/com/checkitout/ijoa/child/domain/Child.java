@@ -21,10 +21,12 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @ToString
 public class Child {
@@ -56,10 +58,12 @@ public class Child {
     @OneToMany(mappedBy = "child", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PageHistory> pageHistories = new ArrayList<>();
 
-    public static Child createChild(User parent, String name, LocalDate birth, Gender gender, LocalDateTime now) {
+    public static Child createChild(User parent, String name, String profile, LocalDate birth, Gender gender,
+                                    LocalDateTime now) {
         Child child = new Child();
         child.parent = parent;
         child.name = name;
+        child.profile = profile;
         child.birth = birth;
         child.gender = gender;
         child.createdAt = now;
