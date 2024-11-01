@@ -25,8 +25,7 @@ const ParentSettingsModal: React.FC<ParentSettingsModalProps> = ({ isOpen, onClo
       const response = await userApi.logout();
       // 로그아웃 성공 시(200)
       if (response.status === 200) {
-        localStorage.removeItem("accessToken"); // localStorage에 저장된 토큰
-        sessionStorage.clear(); // sessionStorage에 저장된 모든 데이터 삭제
+        localStorage.clear(); // sessionStorage에 저장된 모든 데이터 삭제
       }
       Swal.fire({
         icon: "success",
