@@ -67,6 +67,15 @@ const Header = () => {
     setIsParentSettingsModalOpen(false);
   };
 
+  // 로고 클릭 시, 사용자 타입에 맞게 메인으로 리다이렉트
+  const handleGoToMain = () => {
+    if (type === "parent") {
+      childClick();
+    } else {
+      libraryClick();
+    }
+  };
+
   const parentMenu = [
     { img: "child-icon", text: "자녀", action: childClick },
     { img: "tts-icon", text: "TTS", action: ttsClick },
@@ -88,7 +97,7 @@ const Header = () => {
     <div className="w-full h-24 px-10 py-3 bg-gradient-to-b from-white flex justify-between items-center fixed top-0 z-50">
       <div className="w-2/3 h-full flex items-center space-x-5">
         {/* 로고 */}
-        <img className="h-full" src="/assets/logo.png" alt="" />
+        <img className="h-full" src="/assets/logo.png" alt="" onClick={handleGoToMain} />
 
         {/* 검색바 */}
         {path === "/fairytale/list" ? <SearchBar /> : <></>}
