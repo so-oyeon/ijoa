@@ -17,9 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class EmailServie {
 
-    private static final String EMAIL_SUBJECT = "아이조아 이메일 인증번호";
-    private static final String EMAIL_CONTENT = "아이조아를 방문해주셔서 감사합니다😊<br><br>인증 번호는 [ %s ] 입니다.<br>인증번호를 홈페이지에서 입력해주세요😊";
-
+    private static final String EMAIL_SUBJECT_VERIFICATION = "아이조아 이메일 인증번호";
+    private static final String EMAIL_CONTENT_VERIFICATION = "아이조아를 방문해주셔서 감사합니다😊<br><br>인증 번호는 [ %s ] 입니다.<br>인증번호를 홈페이지에서 입력해주세요😊";
+    private static final String EMAIL_SUBJECT_PASSWORD_RESET = "아이조아 비밀번호 초기화 안내";
+    private static final String EMAIL_CONTENT_PASSWORD_RESET = "아이조아 회원님의 초기화된 비밀번호는<br>[ %s ] 입니다.<br>로그인 후 반드시 비밀번호를 변경해 주세요😊";
     private final JavaMailSender mailSender;
 
 
@@ -29,34 +30,44 @@ public class EmailServie {
     /**
      * 이메일 전송
      */
-    public String sendEmail(String email) {
-
-        String authCode = generateVerificationCode();
-
+    private void sendEmail(String email, String subject, String content) {
         MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = null;
+        MimeMessageHelper helper;
 
         try {
-
             helper = new MimeMessageHelper(message, true, "utf-8");
             helper.setFrom(SENDER_EMAIL);
             helper.setTo(email);
-            helper.setSubject(EMAIL_SUBJECT);
-            helper.setText(String.format(EMAIL_CONTENT, authCode), true);
+            helper.setSubject(subject);
+            helper.setText(content, true);
             mailSender.send(message);
-
         } catch (MessagingException e) {
             throw new CustomException(ErrorCode.EMAIL_VERIFICATION_SEND_FAILED);
         }
+    }
 
+    /**
+     * 이메일 인증번호 전송
+     */
+    public String sendVerificationEmail(String email) {
+        String authCode = generateVerificationCode();
+        String content = String.format(EMAIL_CONTENT_VERIFICATION, authCode);
+        sendEmail(email, EMAIL_SUBJECT_VERIFICATION, content);
         return authCode;
+    }
+
+    /**
+     * 비밀번호 초기화 이메일 전송
+     */
+    public void sendPasswordResetEmail(String email, String newPassword) {
+        String content = String.format(EMAIL_CONTENT_PASSWORD_RESET, newPassword);
+        sendEmail(email, EMAIL_SUBJECT_PASSWORD_RESET, content);
     }
 
     /**
      * 인증번호 생성
      */
     public String generateVerificationCode() {
-
         Random random = new Random();
         StringBuilder key = new StringBuilder();
 

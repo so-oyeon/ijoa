@@ -83,3 +83,7 @@ cloud:
 
 cors:
   url: ${CORS_URL}
+
+springdoc:
+  swagger-ui:
+    persist-authorization: true

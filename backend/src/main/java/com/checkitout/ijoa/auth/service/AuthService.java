@@ -43,7 +43,7 @@ public class AuthService {
     @Transactional
     public ResponseDto sendEmailVerificationCode(String email) {
 
-        String authCode = emailServie.sendEmail(email);
+        String authCode = emailServie.sendVerificationEmail(email);
         emailRepository.save(new RedisEmail(email, authCode));
 
         return new ResponseDto();
