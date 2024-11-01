@@ -63,14 +63,20 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({ isOpen, onClose, hasRea
           {hasRead ? (
             <div className="flex gap-4 justify-center items-center">
               <button
-                className="w-36 py-2 text-[#67CCFF] text-lg font-bold bg-white rounded-3xl border-2 border-[#67CCFF]"
+                className={`w-36 py-2 text-[#67CCFF] text-lg font-bold bg-white rounded-3xl border-2 border-[#67CCFF] ${
+                  selectedIndex === null ? "opacity-50 cursor-not-allowed" : ""
+                }`}
                 onClick={onClose}
+                disabled={selectedIndex === null}
               >
                 이어서 읽기
               </button>
               <button
-                className="w-36 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-3xl border-2 border-[#67CCFF]"
+                className={`w-36 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-3xl border-2 border-[#67CCFF] ${
+                  selectedIndex === null ? "opacity-50 cursor-not-allowed" : ""
+                }`}
                 onClick={onClose}
+                disabled={selectedIndex === null}
               >
                 처음부터 읽기
               </button>
@@ -78,8 +84,11 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({ isOpen, onClose, hasRea
           ) : (
             <div className="mt-8 text-lg">
               <button
-                className="w-36 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-3xl border-2 border-[#67CCFF]"
+                className={`w-36 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-3xl border-2 border-[#67CCFF] ${
+                  selectedIndex === null ? "opacity-50 cursor-not-allowed" : ""
+                }`}
                 onClick={onClose}
+                disabled={selectedIndex === null}
               >
                 동화책 읽기
               </button>
