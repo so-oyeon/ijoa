@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion"; // Framer Motion import
 import Bat from "/assets/user/bat.png";
 import Bear from "/assets/user/bear.png";
@@ -8,10 +8,12 @@ import Monkey from "/assets/user/monkey.png";
 import LoginPicture2 from "/assets/user/login2.png";
 import "../../css/Login.css";
 import UserModal from "../../components/user/UserModal";
+import { useNavigate } from "react-router-dom";
 
 type ModalType = "login" | "signup" | "forgotPassword" | "confirmation" | "notFound" | null;
 
 const Login: React.FC = () => {
+  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState<ModalType>(null);
 
@@ -24,6 +26,14 @@ const Login: React.FC = () => {
     setIsModalOpen(false);
     setModalType(null);
   };
+
+  // 페이지 로딩 시 토큰 확인 후 부모 메인으로 이동
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      navigate("/parent/child/list");
+    }
+  }, []);
 
   return (
     <div className="relative w-screen h-screen overflow-hidden">
@@ -92,14 +102,12 @@ const Login: React.FC = () => {
         <div className="w-full flex flex-col items-center space-y-3">
           <button
             onClick={() => openModal("login")}
-            className="w-1/3 h-20 bg-yellow-400 text-black text-2xl font-bold rounded-full shadow-md border-4 border-white hover:shadow-lg transition-shadow duration-200"
-          >
+            className="w-1/3 h-20 bg-yellow-400 text-black text-2xl font-bold rounded-full shadow-md border-4 border-white hover:shadow-lg transition-shadow duration-200">
             로그인
           </button>
           <button
             onClick={() => openModal("signup")}
-            className="w-1/3 h-20 bg-orange-500 text-black text-2xl font-bold rounded-full shadow-md border-4 border-white hover:shadow-lg transition-shadow duration-200"
-          >
+            className="w-1/3 h-20 bg-orange-500 text-black text-2xl font-bold rounded-full shadow-md border-4 border-white hover:shadow-lg transition-shadow duration-200">
             회원가입
           </button>
         </div>
