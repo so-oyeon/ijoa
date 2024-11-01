@@ -34,9 +34,21 @@ public class TTSService {
     // TTS 삭제
     public void deleteTTS(Long ttsId) {
         User user = securityUtil.getUserByToken();
-        // TTS 생성자가 삭제할 수 있게
-        TTS deleteTTS = ttsRepository.findById(ttsId).orElseThrow(()-> new CustomException(ErrorCode.UNAUTHORIZED_USER));
+
+        // TTS 있는지 확인
+        TTS deleteTTS = ttsRepository.findById(ttsId).orElseThrow(()-> new CustomException(ErrorCode.TTS_NOT_FOUND));
+
+        // 생성자인지 확인
+        checkUser(deleteTTS,user.getId());
 
         ttsRepository.delete(deleteTTS);
+    }
+
+
+    private void checkUser(TTS tts, Long userId) {
+        // 권한 확인
+        if(!tts.getUser().getId().equals(userId)){
+            throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
+        }
     }
 }
