@@ -9,8 +9,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.checkitout.ijoa.BackendApplication;
 import com.checkitout.ijoa.fairytale.domain.Fairytale;
-import com.checkitout.ijoa.fairytale.domain.FairytalePage;
-import com.checkitout.ijoa.fairytale.repository.FairytalePageRepository;
+import com.checkitout.ijoa.fairytale.domain.FairytalePageContent;
+import com.checkitout.ijoa.fairytale.domain.FairytalePageImage;
+import com.checkitout.ijoa.fairytale.repository.FairytalePageContentRepository;
+import com.checkitout.ijoa.fairytale.repository.FairytalePageImageRepository;
 import com.checkitout.ijoa.fairytale.repository.FairytaleRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
@@ -38,7 +40,8 @@ import org.springframework.web.context.WebApplicationContext;
 public class GetFairytalePageListTest {
 
     private final FairytaleRepository fairytaleRepository;
-    private final FairytalePageRepository fairytalePageRepository;
+    private final FairytalePageImageRepository fairytalePageImageRepository;
+    private final FairytalePageContentRepository fairytalePageContentRepository;
     private final WebApplicationContext context;
     protected MockMvc mockMvc;
     protected ObjectMapper objectMapper;
@@ -51,12 +54,15 @@ public class GetFairytalePageListTest {
     @Autowired
     public GetFairytalePageListTest(MockMvc mockMvc, ObjectMapper objectMapper, WebApplicationContext context,
                                     FairytaleRepository fairytaleRepository,
-                                    FairytalePageRepository fairytalePageRepository, EntityManager entityManager) {
+                                    FairytalePageImageRepository fairytalePageImageRepository,
+                                    FairytalePageContentRepository fairytalePageContentRepository,
+                                    EntityManager entityManager) {
         this.mockMvc = mockMvc;
         this.objectMapper = objectMapper;
         this.context = context;
         this.fairytaleRepository = fairytaleRepository;
-        this.fairytalePageRepository = fairytalePageRepository;
+        this.fairytalePageImageRepository = fairytalePageImageRepository;
+        this.fairytalePageContentRepository = fairytalePageContentRepository;
         this.entityManager = entityManager;
     }
 
@@ -73,15 +79,18 @@ public class GetFairytalePageListTest {
                 TOTAL_PAGES);
         fairytaleRepository.save(fairytale);
 
-        List<FairytalePage> fairytalePages = new ArrayList<>();
+        List<FairytalePageContent> fairytalePages = new ArrayList<>();
         for (int i = 1; i <= TOTAL_PAGES; i++) {
             final Integer pageNumber = i;
             final String content = "Content" + i;
             final Integer sentenceCount = 1;
             final Integer wordCount = 1;
             final String imageUrl = "imageUrl" + i;
-            fairytalePages.add(fairytalePageRepository.save(
-                    FairytalePage.of(pageNumber, content, sentenceCount, wordCount, imageUrl, fairytale)));
+            FairytalePageImage fairytalePageImage = FairytalePageImage.of(imageUrl, fairytale);
+            fairytalePageImageRepository.save(fairytalePageImage);
+            fairytalePages.add(fairytalePageContentRepository.save(
+                    FairytalePageContent.of(pageNumber, content, sentenceCount, wordCount, fairytalePageImage,
+                            fairytale)));
         }
 
         entityManager.flush();
@@ -92,13 +101,13 @@ public class GetFairytalePageListTest {
 
         // then
         resultActions.andExpect(status().isOk())
-                .andExpect(jsonPath("$.result.length()").value(TOTAL_PAGES));
+                .andExpect(jsonPath("$.length()").value(TOTAL_PAGES));
 
         for (int i = 0; i < TOTAL_PAGES; i++) {
-            FairytalePage page = fairytalePages.get(i);
+            FairytalePageContent page = fairytalePages.get(i);
             resultActions.andExpect(
-                            jsonPath("$.result[" + i + "].pageNumber").value(page.getPageNumber()))
-                    .andExpect(jsonPath("$.result[" + i + "].image").value(page.getImageUrl()));
+                            jsonPath("$.[" + i + "].pageNumber").value(page.getPageNumber()))
+                    .andExpect(jsonPath("$.[" + i + "].image").value(page.getFairytalePageImage().getImageUrl()));
         }
     }
 
