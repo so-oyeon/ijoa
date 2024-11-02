@@ -33,6 +33,9 @@ public enum ErrorCode {
     //file
     FILE_CONVERSION_ERROR(HttpStatus.BAD_REQUEST, "FILE-001", "파일 변환 에러가 발생했습니다."),
 
+    //script
+    SCRIPT_NOT_FOUND(HttpStatus.NOT_FOUND,"SCRIPT-001","SCRIPT를 찾을 수 없습니다."),
+
     //TTS
     TTS_NOT_FOUND(HttpStatus.NOT_FOUND,"TTS-001","TTS를 찾을 수 없습니다."),
     TTS_NO_CONTENT(HttpStatus.NO_CONTENT,"TTS-002", "TTS가 없습니다. "),

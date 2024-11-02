@@ -1,15 +1,22 @@
 package com.checkitout.ijoa.file.service;
 
+import com.amazonaws.HttpMethod;
+import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.Headers;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.checkitout.ijoa.exception.CustomException;
 import com.checkitout.ijoa.exception.ErrorCode;
 import com.checkitout.ijoa.util.LogUtil;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -73,4 +80,64 @@ public class FileService {
         }
         LogUtil.error("File delete fail");
     }
+
+    // post 용 url반환
+    public String getPostS3Url(String key) {
+
+        // url 유효기간 설정하기(1시간)
+        Date expiration = getExpiration();
+
+        // presigned url 생성하기
+        GeneratePresignedUrlRequest generatePresignedUrlRequest =
+                getPostGeneratePresignedUrlRequest(key, expiration);
+
+        URL url = s3Client.generatePresignedUrl(generatePresignedUrlRequest);
+
+        // return
+        return url.toExternalForm();
+    }
+
+    // get용 url반환
+    public String getGetS3Url(String key) {
+        // url 유효기간 설정하기(1시간)
+        Date expiration = getExpiration();
+
+        // presigned url 생성하기
+        GeneratePresignedUrlRequest generatePresignedUrlRequest =
+                getGetGeneratePresignedUrlRequest(key, expiration);
+
+        URL url = s3Client.generatePresignedUrl(generatePresignedUrlRequest);
+
+        // return
+        return url.toExternalForm();
+    }
+
+    /* post 용 URL 생성하는 메소드 */
+    private GeneratePresignedUrlRequest getPostGeneratePresignedUrlRequest(String fileName, Date expiration) {
+        GeneratePresignedUrlRequest generatePresignedUrlRequest
+                = new GeneratePresignedUrlRequest(bucket, fileName)
+                .withMethod(HttpMethod.PUT)
+                .withKey(fileName)
+                .withExpiration(expiration);
+        generatePresignedUrlRequest.addRequestParameter(
+                Headers.S3_CANNED_ACL,
+                CannedAccessControlList.PublicRead.toString());
+        return generatePresignedUrlRequest;
+    }
+
+    /* get 용 URL 생성하는 메소드 */
+    private GeneratePresignedUrlRequest getGetGeneratePresignedUrlRequest(String key, Date expiration) {
+        return new GeneratePresignedUrlRequest(bucket, key)
+                .withMethod(HttpMethod.GET)
+                .withExpiration(expiration);
+    }
+
+    private static Date getExpiration() {
+        Date expiration = new Date();
+        long expTimeMillis = expiration.getTime();
+        expTimeMillis += 1000 * 60; // 1시간으로 설정하기
+        expiration.setTime(expTimeMillis);
+        return expiration;
+    }
+
 }

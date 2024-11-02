@@ -1,6 +1,7 @@
 package com.checkitout.ijoa.TTS.docs;
 
 import com.checkitout.ijoa.TTS.dto.request.TTSProfileRequestDto;
+import com.checkitout.ijoa.TTS.dto.request.TTSTrainRequestDto;
 import com.checkitout.ijoa.TTS.dto.response.TTSProfileResponseDto;
 import com.checkitout.ijoa.child.dto.request.CreateChildRequestDto;
 import com.checkitout.ijoa.child.dto.request.UpdateChildRequestDto;
@@ -63,5 +64,15 @@ public interface TTSApiDocumentation {
             @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
     })
     public ResponseEntity<?> getScriptList() throws IOException;
+
+    @Operation(summary = "TTS 학습용 음성 파일 저장", description = "TTS 생성 시 녹음한 음성 파일을 저장할 수 있는 presigned url을 반환합니다. ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "저장 성공", content = @Content(schema = @Schema(implementation = TTSProfileResponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+    })
+    public ResponseEntity<?> saveTrainData(
+            @PathVariable Long ttsId,
+            @Valid @RequestBody TTSTrainRequestDto requestDto) throws IOException;
 
 }

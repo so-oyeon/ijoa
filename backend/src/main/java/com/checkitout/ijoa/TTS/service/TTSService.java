@@ -3,15 +3,20 @@ package com.checkitout.ijoa.TTS.service;
 
 import com.checkitout.ijoa.TTS.domain.Script;
 import com.checkitout.ijoa.TTS.domain.TTS;
-import com.checkitout.ijoa.TTS.dto.request.ScriptRepository;
+import com.checkitout.ijoa.TTS.domain.TrainAudio;
+import com.checkitout.ijoa.TTS.dto.request.FileScriptPair;
+import com.checkitout.ijoa.TTS.repository.ScriptRepository;
 import com.checkitout.ijoa.TTS.dto.request.TTSProfileRequestDto;
+import com.checkitout.ijoa.TTS.dto.request.TTSTrainRequestDto;
 import com.checkitout.ijoa.TTS.dto.response.ScriptResponseDto;
 import com.checkitout.ijoa.TTS.dto.response.TTSProfileResponseDto;
+import com.checkitout.ijoa.TTS.dto.response.TTSTrainResponseDto;
 import com.checkitout.ijoa.TTS.repository.TTSRepository;
+import com.checkitout.ijoa.TTS.repository.TrainAudioRepository;
 import com.checkitout.ijoa.exception.CustomException;
 import com.checkitout.ijoa.exception.ErrorCode;
+import com.checkitout.ijoa.file.service.FileService;
 import com.checkitout.ijoa.user.domain.User;
-import com.checkitout.ijoa.user.service.UserService;
 import com.checkitout.ijoa.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -26,8 +32,11 @@ import java.util.List;
 public class TTSService {
 
     private final SecurityUtil securityUtil;
+    private final FileService fileService;
+
     private final TTSRepository ttsRepository;
     private final ScriptRepository scriptRepository;
+    private final TrainAudioRepository trainAudioRepository;
 
     // TTS 프로필 생성
     public TTSProfileResponseDto createTTS(TTSProfileRequestDto requestDto){
@@ -96,6 +105,28 @@ public class TTSService {
         return responseDtos;
     }
 
+    // 학습 데이터 저장
+    public List<TTSTrainResponseDto> saveTrainData(Long ttsId, TTSTrainRequestDto requestDto) {
+        List<TTSTrainResponseDto> responseDtos = new ArrayList<>();
+        TTS tts = ttsRepository.findById(ttsId).orElseThrow(()-> new CustomException(ErrorCode.TTS_NOT_FOUND));
+
+        for(FileScriptPair pair: requestDto.getFileScriptPairs()){
+            Script script= scriptRepository.findById(pair.getScriptId()).orElseThrow(()-> new CustomException( ErrorCode.SCRIPT_NOT_FOUND));
+            // filename 설정하기(profile 경로 + 멤버ID + 랜덤 값)
+            String key = "train/" + ttsId + "/" + UUID.randomUUID() + "/" + pair.getFileName();
+            //url 발급
+            String url = fileService.getPostS3Url(key);
+
+            // db저장
+            TrainAudio trainAudio = TrainAudio.of(tts,script,key);
+            trainAudioRepository.save(trainAudio);
+
+            responseDtos.add(TTSTrainResponseDto.builder().key(key).url(url).build());
+        }
+
+        return responseDtos;
+
+    }
 
     // 권한 확인
     private void checkUser(TTS tts, Long userId) {
