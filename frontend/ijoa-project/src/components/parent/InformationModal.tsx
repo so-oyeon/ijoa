@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import Swal from "sweetalert2";
 import { TbPencilMinus } from "react-icons/tb";
 import back from "/assets/back.png";
+import { userApi } from "../../api/userApi";
 
 interface InformationModalProps {
   isOpen: boolean;
@@ -10,11 +10,29 @@ interface InformationModalProps {
 }
 
 const InformationModal: React.FC<InformationModalProps> = ({ isOpen, onClose }) => {
-  const [email] = useState<string>("email@email.com"); // 예시 이메일
+  const [email, setEmail] = useState<string>("");
   const [nickname, setNickname] = useState<string>("");
   const [newPassword, setNewPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
+
+  // 모달이 열릴 때 사용자 정보를 가져옴
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      // 사용자 정보 가져오는 API 호출
+      try {
+        const response = await userApi.getUserInfo();
+        setEmail(response.data.email);
+        setNickname(response.data.nickname);
+      } catch (error) {
+        console.error("사용자 정보 불러오기 실패:", error);
+      }
+    };
+
+    if (isOpen) {
+      fetchUserInfo(); // 모달이 열릴 때만 사용자 정보를 가져옴
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     if (newPassword && confirmPassword && newPassword !== confirmPassword) {
@@ -37,28 +55,31 @@ const InformationModal: React.FC<InformationModalProps> = ({ isOpen, onClose }) 
     }
 
     try {
-      // 서버로 정보 업데이트 요청(**api 수정 필요)
-      await axios.post("/api/update-user", {
-        email,
+      // 회원 정보 수정 요청
+      const data = {
         nickname,
-        newPassword,
-      });
-      Swal.fire({
-        icon: "success",
-        title: "완료되었습니다",
-        text: "정보가 성공적으로 변경되었습니다.",
-        confirmButtonText: "확인",
-      }).then(() => {
-        onClose();
-      });
+        password: newPassword,
+      };
+      const response = await userApi.patchUserInfo(data);
+
+      if (response.status === 200) {
+        Swal.fire({
+          icon: "success",
+          title: "완료되었습니다",
+          text: "정보가 성공적으로 변경되었습니다.",
+          confirmButtonText: "확인",
+        }).then(() => {
+          onClose();
+        });
+      }
     } catch (error) {
+      console.error("정보 변경 오류:", error);
       Swal.fire({
         icon: "error",
         title: "오류 발생",
         text: "정보 변경에 실패했습니다. 다시 시도해 주세요.",
         confirmButtonText: "확인",
       });
-      console.error("정보 변경 오류:", error);
     }
   };
 

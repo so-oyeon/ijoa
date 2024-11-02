@@ -7,6 +7,7 @@ const ProfileDropDown = () => {
 
   const handleChangeToParent = () => {
     localStorage.setItem("userType", "parent");
+    localStorage.removeItem("childId");
     navigate("/parent/child/list");
   };
 

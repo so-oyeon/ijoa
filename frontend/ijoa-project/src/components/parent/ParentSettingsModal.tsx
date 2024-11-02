@@ -8,7 +8,7 @@ import InformationModal from "./InformationModal";
 import DeleteInformationModal from "./DeleteInformationModal";
 import { userApi } from "../../api/userApi";
 
-type ModalType = "verification" | "information" | "deleteConfirmation" | null;
+type ModalType = "main" | "verification" | "information" | "deleteConfirmation";
 
 interface ParentSettingsModalProps {
   isOpen: boolean;
@@ -16,17 +16,14 @@ interface ParentSettingsModalProps {
 }
 
 const ParentSettingsModal: React.FC<ParentSettingsModalProps> = ({ isOpen, onClose }) => {
-  const [modalType, setModalType] = useState<ModalType>(null);
+  const [modalType, setModalType] = useState<ModalType>("main");
   const navigate = useNavigate();
 
-  // 로그아웃 api 통신 함수
   const handleLogout = async () => {
     try {
       const response = await userApi.logout();
-      // 로그아웃 성공 시(200)
       if (response.status === 200) {
-        localStorage.removeItem("accessToken"); // localStorage에 저장된 토큰
-        sessionStorage.clear(); // sessionStorage에 저장된 모든 데이터 삭제
+        localStorage.clear();
       }
       Swal.fire({
         icon: "success",
@@ -40,37 +37,6 @@ const ParentSettingsModal: React.FC<ParentSettingsModalProps> = ({ isOpen, onClo
       Swal.fire({
         icon: "error",
         title: "로그아웃 실패",
-        text: "다시 시도해 주세요.",
-        confirmButtonText: "확인",
-      });
-    }
-  };
-  // 회원탈퇴 모달
-  const handleDeleteAccount = () => {
-    setModalType("deleteConfirmation");
-  };
-  // 회원탈퇴 통신 연결
-  const confirmDeleteAccount = async () => {
-    try {
-      await fetch("/api/delete-account", {
-        method: "DELETE",
-        credentials: "include",
-      });
-      localStorage.removeItem("authToken");
-      sessionStorage.clear();
-
-      Swal.fire({
-        icon: "success",
-        title: "회원 탈퇴가 완료되었습니다",
-        confirmButtonText: "확인",
-      }).then(() => {
-        navigate("/home");
-      });
-    } catch (error) {
-      console.error("회원 탈퇴 실패:", error);
-      Swal.fire({
-        icon: "error",
-        title: "회원 탈퇴 실패",
         text: "다시 시도해 주세요.",
         confirmButtonText: "확인",
       });
@@ -92,46 +58,50 @@ const ParentSettingsModal: React.FC<ParentSettingsModalProps> = ({ isOpen, onClo
           <img src={SettingsIcon} alt="설정 아이콘" className="w-12 h-12" />
         </div>
 
-        {/* 모달 제목 */}
-        <p className="text-lg font-semibold text-gray-700 mb-6">설정을 선택해 주세요.</p>
+        {/* 모달 내용 전환 */}
+        {modalType === "main" && (
+          <>
+            <p className="text-lg font-semibold text-gray-700 mb-6">설정을 선택해 주세요.</p>
+            <div className="flex flex-col justify-center items-center">
+              {/* 회원 정보 수정 버튼 */}
+              <button
+                className="w-1/2 h-[60px] mb-4 py-2 text-[#67CCFF] font-bold text-lg rounded-full border-2 border-[#67CCFF] hover:bg-blue-50"
+                onClick={() => setModalType("verification")}
+              >
+                회원 정보 수정
+              </button>
+              {/* 로그아웃 버튼 */}
+              <button
+                className="w-1/2 h-[60px] mb-4 py-2 bg-[#67CCFF] text-white text-lg font-bold rounded-full hover:bg-blue-500"
+                onClick={handleLogout}
+              >
+                로그아웃
+              </button>
+              <button
+                className="w-1/2 h-[60px] py-2 bg-[#FF8067] text-white font-bold text-lg rounded-full hover:bg-red-400"
+                onClick={() => setModalType("deleteConfirmation")}
+              >
+                회원 탈퇴
+              </button>
+            </div>
+          </>
+        )}
 
-        <div className="flex flex-col justify-center items-center">
-          {/* 회원 정보 수정 버튼 */}
-          <button
-            className="w-1/2 h-[60px] mb-4 py-2 text-[#67CCFF] font-bold text-lg rounded-full border-2 border-[#67CCFF] hover:bg-blue-50"
-            onClick={() => setModalType("verification")}
-          >
-            회원 정보 수정
-          </button>
-
-          {/* 로그아웃 버튼 */}
-          <button
-            className="w-1/2 h-[60px] mb-4 py-2 bg-[#67CCFF] text-white text-lg font-bold rounded-full hover:bg-blue-500"
-            onClick={handleLogout}
-          >
-            로그아웃
-          </button>
-
-          {/* 회원 탈퇴 버튼 */}
-          <button
-            className="w-1/2 h-[60px] py-2 bg-[#FF8067] text-white font-bold text-lg rounded-full hover:bg-red-400"
-            onClick={handleDeleteAccount}
-          >
-            회원 탈퇴
-          </button>
-        </div>
-
-        {/* VerificationModal과 InformationModal의 상태 관리 */}
+        {/* VerificationModal 표시 */}
         {modalType === "verification" && (
           <VerificationModal
             isOpen={true}
-            onClose={() => setModalType(null)}
+            onClose={() => setModalType("main")}
             onNext={() => setModalType("information")}
           />
         )}
-        {modalType === "information" && <InformationModal isOpen={true} onClose={() => setModalType(null)} />}
+
+        {/* InformationModal 표시 */}
+        {modalType === "information" && <InformationModal isOpen={true} onClose={() => setModalType("main")} />}
+
+        {/* DeleteInformationModal 호출 */}
         {modalType === "deleteConfirmation" && (
-          <DeleteInformationModal isOpen={true} onClose={() => setModalType(null)} onConfirm={confirmDeleteAccount} />
+          <DeleteInformationModal isOpen={true} onClose={() => setModalType("main")} />
         )}
       </div>
     </div>

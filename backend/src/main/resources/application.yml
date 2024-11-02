@@ -83,3 +83,38 @@ cloud:
 
 cors:
   url: ${CORS_URL}
+
+
+# Blue 서버 프로파일
+---
+spring:
+  config:
+    activate:
+      on-profile: blue
+
+server:
+  port: 8080  # Blue 인스턴스의 포트
+
+# Green 서버 프로파일
+---
+spring:
+  config:
+    activate:
+      on-profile: green
+
+server:
+  port: 8081  # Green 인스턴스의 포트
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info  # 헬스체크와 정보 엔드포인트를 노출
+  endpoint:
+    health:
+      show-details: always     # health 엔드포인트에서 세부 정보 표시
+
+springdoc:
+  swagger-ui:
+    persist-authorization: true
+

@@ -3,6 +3,7 @@ import { TbPencilMinus } from "react-icons/tb";
 import { IoIosAdd } from "react-icons/io";
 import ChildProfileCreateModal from "../../components/parent/ChildProfileCreateModal";
 import { useNavigate } from "react-router-dom";
+import { userApi } from "../../api/userApi";
 
 const ChildProfileList = () => {
   const navigate = useNavigate();
@@ -20,9 +21,20 @@ const ChildProfileList = () => {
     },
   ];
 
-  const handleGoToChildAccount = () => {
-    localStorage.setItem("userType", "child");
-    navigate("/fairytale/list");
+  // 자녀 계정으로 전환
+  const handleGoToChildAccount = async (childId: number) => {
+    try {
+      const response = await userApi.switchChild(childId);
+      if (response.status === 200) {
+        localStorage.setItem("accessToken", response.data.accessToken);
+        localStorage.setItem("refreshToken", response.data.refreshToken);
+        localStorage.setItem("childId", response.data.userId);
+        localStorage.setItem("userType", "child");
+        navigate("/fairytale/list");
+      }
+    } catch (error) {
+      console.log("userApi의 switchChild : ", error);
+    }
   };
 
   return (
@@ -43,7 +55,7 @@ const ChildProfileList = () => {
                   className="w-full aspect-1 bg-white rounded-full border object-cover"
                   src={`/assets/header/child/${child.img}.png`}
                   alt=""
-                  onClick={handleGoToChildAccount}
+                  onClick={() => handleGoToChildAccount(1)}
                 />
                 <div className="w-12 aspect-1 bg-white rounded-full bg-opacity-50 shadow-[1px_3px_2px_0_rgba(0,0,0,0.2)] flex justify-center items-center absolute top-0 right-0">
                   <TbPencilMinus className="text-2xl" />
