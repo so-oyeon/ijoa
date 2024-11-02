@@ -37,7 +37,6 @@ public interface TTSApiDocumentation {
     @Operation(summary = "TTS 프로필 삭제", description = "TTS 프로필을 삭제합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "TTS 삭제 성공", content = @Content),
-            @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content),
             @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
     })
     public ResponseEntity<?> deleteTTSProfile(@PathVariable Long ttsId) throws IOException;
@@ -54,7 +53,6 @@ public interface TTSApiDocumentation {
     @Operation(summary = "TTS 목록 조회(부모페이지)", description = "부모가 자신이 생성한 TTS 목록을 조회할 수 있습니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "TTS 목록 조회 성공", content = @Content),
-            @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content),
             @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
     })
     public ResponseEntity<?> ParentTTSList() throws IOException;
@@ -62,7 +60,6 @@ public interface TTSApiDocumentation {
     @Operation(summary = "TTS script 목록 조회", description = "TTS 녹음 시 사용할 스크립트 목록")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "script 목록 조회 성공", content = @Content),
-            @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content),
             @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
     })
     public ResponseEntity<?> getScriptList() throws IOException;
