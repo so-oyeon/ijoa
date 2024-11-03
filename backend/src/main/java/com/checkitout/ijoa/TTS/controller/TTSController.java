@@ -67,4 +67,11 @@ public class TTSController implements TTSApiDocumentation {
         return new ResponseEntity<>(savedTrainData, HttpStatus.OK);
     }
 
+    @Override
+    @GetMapping("/audio-book/{bookId}/{TTSId}")
+    public ResponseEntity<?> createAudioBook(@PathVariable("bookId") Long bookId,@PathVariable("TTSId") Long ttsId) throws IOException {
+        ttsService.createAudioBook(bookId,ttsId);
+        return new ResponseEntity<>( HttpStatus.OK);
+    }
+
 }

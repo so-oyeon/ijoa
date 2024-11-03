@@ -75,4 +75,13 @@ public interface TTSApiDocumentation {
             @PathVariable Long ttsId,
             @Valid @RequestBody TTSTrainRequestDto requestDto) throws IOException;
 
+    @Operation(summary = "동화책 TTS 음성 파일 생성", description = "TTS로 동화책 오디오 파일을 생성합니다. ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "생성 성공", content = @Content(schema = @Schema(implementation = TTSProfileResponseDto.class))),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+    })
+    public ResponseEntity<?> createAudioBook(
+            @PathVariable Long ttsId,
+            @PathVariable Long bookId) throws IOException;
+
 }
