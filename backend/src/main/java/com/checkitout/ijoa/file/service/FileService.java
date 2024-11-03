@@ -114,15 +114,9 @@ public class FileService {
 
     /* post 용 URL 생성하는 메소드 */
     private GeneratePresignedUrlRequest getPostGeneratePresignedUrlRequest(String fileName, Date expiration) {
-        GeneratePresignedUrlRequest generatePresignedUrlRequest
-                = new GeneratePresignedUrlRequest(bucket, fileName)
+        return new GeneratePresignedUrlRequest(bucket, fileName)
                 .withMethod(HttpMethod.PUT)
-                .withKey(fileName)
                 .withExpiration(expiration);
-        generatePresignedUrlRequest.addRequestParameter(
-                Headers.S3_CANNED_ACL,
-                CannedAccessControlList.PublicRead.toString());
-        return generatePresignedUrlRequest;
     }
 
     /* get 용 URL 생성하는 메소드 */
@@ -135,7 +129,7 @@ public class FileService {
     private static Date getExpiration() {
         Date expiration = new Date();
         long expTimeMillis = expiration.getTime();
-        expTimeMillis += 1000 * 60; // 1시간으로 설정하기
+        expTimeMillis += 1000 * 60 * 60; // 1시간으로 설정하기
         expiration.setTime(expTimeMillis);
         return expiration;
     }
