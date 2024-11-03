@@ -117,8 +117,13 @@ public class TTSService {
             //url 발급
             String url = fileService.getPostS3Url(key);
 
-            // db저장
-            TrainAudio trainAudio = TrainAudio.of(tts,script,key);
+            TrainAudio trainAudio = trainAudioRepository.findByTtsIdAndScriptId(ttsId, pair.getScriptId());
+            // trainAudio가 존재하면 업데이트, 존재하지 않으면 새로운 객체 생성 후 저장
+            if (trainAudio != null) {
+                trainAudio.update(key);
+            } else {
+                trainAudio = TrainAudio.of(tts, script, key);
+            }
             trainAudioRepository.save(trainAudio);
 
             responseDtos.add(TTSTrainResponseDto.builder().key(key).url(url).build());

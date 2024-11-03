@@ -1,6 +1,5 @@
 package com.checkitout.ijoa.TTS.domain;
 
-import com.checkitout.ijoa.fairytale.domain.Fairytale;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,5 +36,9 @@ public class TrainAudio {
 
     public static TrainAudio of (TTS tts, Script script, String file_path) {
         return new TrainAudio(tts, script, file_path);
+    }
+
+    public void update(String key) {
+        this.file_path = key;
     }
 }
