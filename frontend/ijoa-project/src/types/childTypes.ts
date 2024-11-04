@@ -3,6 +3,7 @@ export interface ChildInfo {
   childId: number;
   name: string;
   gender: string;
+  age: number;
   birth: string;
   profileUrl: string;
 }
