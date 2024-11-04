@@ -84,4 +84,11 @@ public interface TTSApiDocumentation {
             @PathVariable Long ttsId,
             @PathVariable Long bookId) throws IOException;
 
+    @Operation(summary = "TTS 학습 시작", description = "녹음한 음성파일로 TTS 학습 시작합니다. ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "생성 성공", content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+    })
+    public ResponseEntity<?> trainTTS(@PathVariable Long ttsId) throws IOException;
+
 }

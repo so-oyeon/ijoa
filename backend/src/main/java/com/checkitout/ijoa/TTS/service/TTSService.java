@@ -3,13 +3,10 @@ package com.checkitout.ijoa.TTS.service;
 
 import com.checkitout.ijoa.TTS.domain.*;
 import com.checkitout.ijoa.TTS.dto.request.FileScriptPair;
-import com.checkitout.ijoa.TTS.dto.response.AudioBookRequestDto;
+import com.checkitout.ijoa.TTS.dto.response.*;
 import com.checkitout.ijoa.TTS.repository.*;
 import com.checkitout.ijoa.TTS.dto.request.TTSProfileRequestDto;
 import com.checkitout.ijoa.TTS.dto.request.TTSTrainRequestDto;
-import com.checkitout.ijoa.TTS.dto.response.ScriptResponseDto;
-import com.checkitout.ijoa.TTS.dto.response.TTSProfileResponseDto;
-import com.checkitout.ijoa.TTS.dto.response.TTSTrainResponseDto;
 import com.checkitout.ijoa.exception.CustomException;
 import com.checkitout.ijoa.exception.ErrorCode;
 import com.checkitout.ijoa.fairytale.domain.Fairytale;
@@ -35,9 +32,11 @@ import java.util.*;
 @Transactional
 public class TTSService {
 
-    private final KafkaTemplate<String, AudioBookRequestDto> kafkaTemplate;
+    private final KafkaTemplate<String, AudioBookRequestDto> audioBookKafkaTemplate;
+    private final KafkaTemplate<String, TrainAudioResponseDto> trainAudioKafkaTemplate;
     private static final String REQUEST_TOPIC = "tts_create_audio";
     private static final String RESPONSE_TOPIC = "tts_save_audio";
+    private static final String TTS_CREATE_TOPIC = "create_tts";
 
     private final SecurityUtil securityUtil;
     private final FileService fileService;
@@ -166,7 +165,7 @@ public class TTSService {
 
         LogUtil.info("create");
         // Kafka로 메시지 전송
-        kafkaTemplate.send(REQUEST_TOPIC, audioBookRequest);
+        audioBookKafkaTemplate.send(REQUEST_TOPIC, audioBookRequest);
     }
 
 
@@ -203,10 +202,27 @@ public class TTSService {
         }
     }
 
+    // tts 학습 시작
+    public void startTrain(Long ttsId) {
+        List<TrainAudio> trainAudios = trainAudioRepository.findByTtsId(ttsId).orElseThrow(()-> new CustomException(ErrorCode.TRAINAUDIO_NOT_FOUND));
+        List<String> paths = new ArrayList<>();
+        List<String> scripts = new ArrayList<>();
+
+        for(TrainAudio trainAudio : trainAudios){
+            paths.add(trainAudio.getFile_path());
+            scripts.add(trainAudio.getScript().getScript());
+        }
+
+        TrainAudioResponseDto responseDto = TrainAudioResponseDto.from(ttsId, paths, scripts);
+        trainAudioKafkaTemplate.send(TTS_CREATE_TOPIC, responseDto);
+    }
+
+
     // 권한 확인
     private void checkUser(TTS tts, Long userId) {
         if(!tts.getUser().getId().equals(userId)){
             throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
         }
     }
+
 }

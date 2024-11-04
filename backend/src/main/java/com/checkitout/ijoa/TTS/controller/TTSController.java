@@ -74,4 +74,11 @@ public class TTSController implements TTSApiDocumentation {
         return new ResponseEntity<>( HttpStatus.OK);
     }
 
+    @Override
+    @GetMapping("/train/{ttsId}")
+    public ResponseEntity<?> trainTTS(Long ttsId) throws IOException {
+        ttsService.startTrain(ttsId);
+        return new ResponseEntity<>( HttpStatus.OK);
+    }
+
 }

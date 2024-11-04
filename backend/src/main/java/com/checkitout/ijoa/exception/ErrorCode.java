@@ -33,6 +33,9 @@ public enum ErrorCode {
     //file
     FILE_CONVERSION_ERROR(HttpStatus.BAD_REQUEST, "FILE-001", "파일 변환 에러가 발생했습니다."),
 
+    // TrainAudio
+    TRAINAUDIO_NOT_FOUND(HttpStatus.NOT_FOUND,"TRAIN-001","TRIANDATA를 찾을 수 없습니다."),
+
     //script
     SCRIPT_NOT_FOUND(HttpStatus.NOT_FOUND,"SCRIPT-001","SCRIPT를 찾을 수 없습니다."),
 
