@@ -63,7 +63,8 @@ public class FairytaleController implements FairytaleApiDocumentation {
      * 동화책 특정 페이지 시선추적 데이터 저장
      *
      * @param pageHistoryId 페이지 기록 ID
-     * @param request       title,
+     * @param request       trackedAt, isFaceMissing, isGazeOutOfScreen, gazeX, gazeY, pupilSize, attentionRate, word,
+     *                      isImage
      * @return 입력받은 시선추적 데이터 정보를 포함하는 ResponseEntity 객체를 반환합니다. 동화책 특정 페이지 시선추적 데이터 저장에 실패하면 에러 코드를 담은 ResponseEntity를
      * 반환합니다.
      */
