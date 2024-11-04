@@ -12,7 +12,7 @@ import SoundOnButton from "/assets/fairytales/buttons/sound-on-button.png";
 import LeftArrow from "/assets/fairytales/buttons/left-arrow.png";
 import RightArrow from "/assets/fairytales/buttons/right-arrow.png";
 import { fairyTaleApi } from "../../api/fairytaleApi";
-import { FairyTaleContentResponse, FairyTalePageResponse } from "../../types/fairytaleTypes";
+import { FairyTaleContentResponse, FairyTalePageResponse, QuizQuestionResponse } from "../../types/fairytaleTypes";
 
 const FairyTaleContentPage: React.FC = () => {
   const { fairytaleId } = useParams<{ fairytaleId: string }>();
@@ -20,6 +20,7 @@ const FairyTaleContentPage: React.FC = () => {
   const title = location.state?.title;
   const [fairytaleCurrentPage, setFairytaleCurrentPage] = useState(0);
   const [fairytaleData, setFairytaleData] = useState<FairyTaleContentResponse>();
+  const [quizData, setQuizData] = useState<QuizQuestionResponse>();
   const [bookPages, setBookPages] = useState<string[]>([]);
   const [pageNums, setPageNums] = useState<string[]>([]);
   const [isTTSChoiceModalOpen, setIsTTSChoiceModalOpen] = useState(true);
@@ -66,6 +67,18 @@ const FairyTaleContentPage: React.FC = () => {
     }
   };
 
+  // 동화책 퀴즈 가져오는 api 통신 함수
+  const getQuizData = useCallback(async () => {
+    try {
+      const response = await fairyTaleApi.getQuizQuestion(fairytaleCurrentPage);
+      if (response.status === 200) {
+        setQuizData(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching quiz data:", error);
+    }
+  }, [fairytaleCurrentPage]);
+
   // 왼쪽 화살표 클릭 시 현재 페이지를 감소시키는 함수
   const handleLeftClick = () => {
     if (fairytaleCurrentPage > 0) {
@@ -87,7 +100,10 @@ const FairyTaleContentPage: React.FC = () => {
         setFairytaleCurrentPage(newPage);
         getFairyTaleContent(newPage);
 
-        if (newPage === Math.floor(fairytaleData.totalPages / 2)) {
+        if ((newPage + 1) % 5 === 0) {
+          setIsQuizModalOpen(true);
+          getQuizData();
+        } else if (newPage === Math.floor(fairytaleData.totalPages / 2)) {
           setIsFocusAlertModalOpen(true);
         }
       }
@@ -97,11 +113,6 @@ const FairyTaleContentPage: React.FC = () => {
   // TTS 선택 모달 닫기 함수
   const handleCloseTTSChoiceModal = () => {
     setIsTTSChoiceModalOpen(false);
-  };
-
-  // 퀴즈 모달 열기 함수
-  const handleOpenQuizModal = () => {
-    setIsQuizModalOpen(true);
   };
 
   // 퀴즈 모달 닫기 함수
@@ -182,13 +193,6 @@ const FairyTaleContentPage: React.FC = () => {
               <p className="text-xs text-white">메뉴</p>
             </button>
           </div>
-
-          <div className="absolute top-[-12px] right-[150px]">
-            <button className="px-3 py-4 bg-gray-700 bg-opacity-50 rounded-2xl shadow-md" onClick={handleOpenQuizModal}>
-              <img src={MenuButton} alt="퀴즈 버튼" />
-              <p className="text-xs text-white">퀴즈</p>
-            </button>
-          </div>
         </>
       ) : (
         <div className="flex items-center justify-center h-full">
@@ -204,7 +208,7 @@ const FairyTaleContentPage: React.FC = () => {
       {/* 독서완료 모달 */}
       <ReadCompleteModal isOpen={isReadCompleteModalOpen} title={title} />
       {/* 퀴즈 모달 */}
-      <QuizModal isOpen={isQuizModalOpen} onClose={handleCloseQuizModal} />
+      <QuizModal isOpen={isQuizModalOpen} onClose={handleCloseQuizModal} quizData={quizData?.text} />
       {/* 메뉴창 */}
       <FairytaleMenu
         fairytaleCurrentPage={fairytaleCurrentPage}
