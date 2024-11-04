@@ -10,4 +10,9 @@ export const childApi = {
   createChildProfile: (formData: FormData) => {
     return api.post(`/parent/children`, formData)
   },
+
+  // 자녀 프로필 수정
+  updateChildProfile: (childId: number, formData: FormData) => {
+    return api.patch(`/parent/children/${childId}`, formData)
+  },
 }
