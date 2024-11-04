@@ -1,11 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { userApi } from "../../api/userApi";
 import { useNavigate } from "react-router-dom";
+import Lottie from "react-lottie-player";
+import loadinganimation from "../../lottie/loadinganimation.json";
 
 interface Props {
   onClose: () => void;
 }
+
+const guideText = ["인증번호를 생성하고 있어요", "이메일을 전송하고 있어요", "거의 다 됐어요"];
+
 const SignupModal: React.FC<Props> = ({ onClose }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -18,7 +23,11 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
   const [isVerificationRequested, setIsVerificationRequested] = useState(false);
   const [verificationCode, setVerificationCode] = useState("");
   const [isVerified, setIsVerified] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [guideIdx, setGuideIdx] = useState(0);
   const navigate = useNavigate();
+  const isFormValid =
+    email && password && confirmPassword && nickname && !emailError && !confirmPasswordError && isVerified;
 
   // 유효한 이메일인지 검사
   const validateEmail = (email: string) => {
@@ -39,6 +48,7 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
 
   // 이메일 전송 api 통신 함수
   const handleEmailVerification = async () => {
+    setIsLoading(true);
     // api 함수 호출
     try {
       const response = await userApi.sendVerificationCode(email);
@@ -49,6 +59,8 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
       }
     } catch (error) {
       console.log("userApi의 sendVerificationCode : ", error);
+    } finally {
+      setIsLoading(false); // 로딩 종료
     }
   };
 
@@ -72,13 +84,6 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
     }
   };
 
-  // 비밀번호 입력
-  const handlePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newPassword = e.target.value;
-    setPassword(newPassword);
-    setPasswordError("");
-  };
-
   // 비밀번호 확인 및 불일치 시 오류 반환
   const handleConfirmPassword = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newConfirmPassword = e.target.value;
@@ -87,6 +92,25 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
 
     if (newConfirmPassword && newConfirmPassword !== password) {
       setConfirmPasswordError("비밀번호가 일치하지 않습니다!");
+    }
+  };
+
+  // 비밀번호 유효성 검사 함수
+  const validatePassword = (password: string) => {
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+    return passwordRegex.test(password);
+  };
+
+  // 비밀번호 입력 및 유효성 검사
+  const handlePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newPassword = e.target.value;
+    setPassword(newPassword);
+    setPasswordError("");
+
+    if (newPassword && !validatePassword(newPassword)) {
+      setPasswordError("최소 8자 이상, 영문 및 숫자를 포함");
+    } else {
+      setPasswordError(""); // 유효할 경우 에러 메시지 초기화
     }
   };
 
@@ -136,9 +160,29 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
       }
     }
   };
+  useEffect(() => {
+    if (isLoading) {
+      const interval = setInterval(() => {
+        setGuideIdx((prev) => (prev + 1) % guideText.length);
+      }, 2000);
+
+      // 컴포넌트 언마운트 시 인터벌 정리
+      return () => clearInterval(interval);
+    }
+  }, [isLoading]);
+
+  if (isLoading) {
+    return (
+      <div className="py-10 flex flex-col justify-center items-center space-y-5">
+        <Lottie className="w-40 aspect-1" loop play animationData={loadinganimation} />
+        <p className="font-semibold">{guideText[guideIdx]}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="modal-container">
+      {/* 이메일 입력 필드 및 오류 표시 */}
       <input
         type="email"
         placeholder="이메일을 입력해주세요"
@@ -148,12 +192,20 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
       />
       {emailError && <p className="text-red-500 text-sm mb-4">{emailError}</p>}
 
+      {/* 이메일 인증 버튼 */}
       {!isVerificationRequested ? (
         <button
           className="w-3/4 h-[60px] mb-2 py-3 rounded-xl font-bold bg-[#FFE0C1] hover:bg-red-200"
           onClick={handleEmailVerification}
+          disabled={isLoading}
         >
-          이메일 인증요청
+          {isLoading ? (
+            <div className="flex justify-center">
+              <div className="loader"></div>
+            </div>
+          ) : (
+            "이메일 인증요청"
+          )}
         </button>
       ) : (
         <div className="flex w-full items-center justify-center mb-2 gap-2">
@@ -176,6 +228,8 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
           </button>
         </div>
       )}
+
+      {/* 비밀번호 입력 및 오류 표시 */}
 
       <input
         type="password"
@@ -207,7 +261,10 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
 
       <button
         onClick={handleSubmit}
-        className="w-3/4 h-[60px] py-3 mb-4 rounded-full font-bold text-lg bg-orange-400 hover:bg-orange-500"
+        className={`w-3/4 h-[60px] py-3 mb-4 rounded-full font-bold text-lg ${
+          isFormValid ? "bg-orange-400 hover:bg-orange-500" : "bg-orange-200 opacity-70"
+        }`}
+        disabled={!isFormValid} // 이메일 인증 완료 전까지 비활성화
       >
         회원가입
       </button>
