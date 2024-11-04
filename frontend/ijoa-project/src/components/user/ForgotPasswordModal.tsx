@@ -37,7 +37,7 @@ const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({ openConfirmat
     if (isLoading) {
       const interval = setInterval(() => {
         setGuideIdx((prev) => (prev + 1) % guideText.length);
-      }, 1000);
+      }, 2000);
 
       // 컴포넌트 언마운트 시 인터벌 정리
       return () => clearInterval(interval);
