@@ -5,6 +5,8 @@ import {
   FairyTaleByCategoryListResponse,
   FairyTaleContentResponse,
   FairyTalePageResponse,
+  QuizQuestionResponse,
+  FairyTaleSearchResponse
 } from "../types/fairytaleTypes";
 
 export const fairyTaleApi = {
@@ -31,5 +33,17 @@ export const fairyTaleApi = {
   // 동화책 전체 페이지 조회
   getFairyTalePages: (fairytaleId: string) => {
     return api.get<FairyTalePageResponse>(`/fairytales/${fairytaleId}/pages`);
+  },
+
+  // 동화책 질문 조회
+  getQuizQuestion: (pageId: number) => {
+    return api.get<QuizQuestionResponse>(`/quiz/question/${pageId}`);
+  },
+
+  // 동화 제목 검색 조회
+  getFairyTalesBySearch: (word: string, page: number) => {
+    return api.get<FairyTaleSearchResponse>(`/fairytales/search`, {
+      params: { word, page },
+    });
   },
 };
