@@ -83,3 +83,42 @@ export interface QuizQuestionResponse {
   quizId: number;
   text: string;
 }
+
+// 동화 제목 검색 조회
+export interface FairyTaleSearchItem {
+  fairytaleId: number;
+  title: string;
+  image: string;
+  total_pages: number;
+  current_page: number;
+  is_completed: boolean;
+}
+
+export interface FairyTaleSearchResponse {
+  totalPages: number;
+  totalElements: number;
+  size: number;
+  content: FairyTaleSearchItem[];
+  number: number;
+  sort: {
+    empty: boolean;
+    sorted: boolean;
+    unsorted: boolean;
+  };
+  pageable: {
+    offset: number;
+    sort: {
+      empty: boolean;
+      sorted: boolean;
+      unsorted: boolean;
+    };
+    paged: boolean;
+    pageNumber: number;
+    pageSize: number;
+    unpaged: boolean;
+  };
+  first: boolean;
+  last: boolean;
+  numberOfElements: number;
+  empty: boolean;
+}
