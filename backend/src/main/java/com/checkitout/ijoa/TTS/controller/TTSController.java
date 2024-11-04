@@ -64,7 +64,7 @@ public class TTSController implements TTSApiDocumentation {
     @PostMapping("/train/{ttsId}")
     public ResponseEntity<?> saveTrainData(@PathVariable("ttsId") Long ttsId,@RequestBody TTSTrainRequestDto requestDto) throws IOException {
         List<TTSTrainResponseDto> savedTrainData = ttsService.saveTrainData(ttsId, requestDto);
-        return new ResponseEntity<>(savedTrainData, HttpStatus.OK);
+        return new ResponseEntity<>(savedTrainData, HttpStatus.CREATED);
     }
 
     @Override
