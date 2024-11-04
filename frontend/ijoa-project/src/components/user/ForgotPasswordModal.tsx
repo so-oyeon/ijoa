@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import { userApi } from "../../api/userApi";
 
 interface ForgotPasswordModalProps {
   openConfirmationModal: () => void;
@@ -9,24 +9,18 @@ interface ForgotPasswordModalProps {
 const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({ openConfirmationModal, openNotFoundModal }) => {
   const [email, setEmail] = useState("");
 
+  // 비밀번호 초기화 api 통신
   const handleEmailSubmit = async () => {
+    // api 함수 호출
     try {
-      const response = await axios.get(`http://k11d105.p.ssafy.io:8080/api/v1/user/check-email/${email}`);
-
+      const response = await userApi.resetPassword(email);
+      // 이메일 전송 성공 시(200)
       if (response.status === 200) {
-        openNotFoundModal(); // DB에 없는 이메일일 경우
+        openConfirmationModal();
       }
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        if (error.response?.status === 409) {
-          openConfirmationModal(); // DB에 있는 이메일일 경우
-        } else {
-          console.error("서버 요청 오류:", error);
-          openNotFoundModal();
-        }
-      } else {
-        console.error("알 수 없는 오류:", error);
-      }
+      openNotFoundModal();
+      console.log("userApi의 resetPassword : ", error);
     }
   };
 
