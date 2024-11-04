@@ -75,103 +75,108 @@ const ChildProfileCreateModal = ({ updateChildInfo, setIsUpdateModal, getChildIn
 
   return (
     <div className="py-8 bg-black bg-opacity-60 flex justify-center items-center fixed inset-0 z-50">
-      <div className="px-16 py-10 bg-white rounded-3xl shadow-lg flex flex-col items-center space-y-8">
-        {/* 타이틀 텍스트 */}
-        <div className="text-xl font-bold">
-          <span className="underline underline-offset-[-3px] decoration-8 decoration-[#67CCFF]">자녀 정보</span>
-          <span>를 등록해주세요</span>
+      <div className="p-10 bg-white rounded-3xl shadow-lg">
+        {/* 닫기 버튼 */}
+        <div className="w-full flex justify-end">
+          <img className="w-10 h-10" src="/assets/close-button.png" alt="" onClick={() => setIsUpdateModal(false)} />
         </div>
 
-        {/* 프로필 사진 선택 */}
-        <div
-          className="w-20 h-20 border-4 border-[#9E9E9E] rounded-full flex justify-center items-center relative"
-          onClick={handleUploadClick}>
-          {childProfileImgString ? (
-            <img className="w-full aspect-1 rounded-full object-cover" src={`${childProfileImgString}`} alt="" />
-          ) : (
-            <CiCamera className="text-[50px]" />
-          )}
-          <div className="w-8 aspect-1 bg-white rounded-full bg-opacity-50 shadow-[1px_3px_2px_0_rgba(0,0,0,0.2)] flex justify-center items-center absolute -top-3 -right-3">
-            <TbPencilMinus className="text-xl" />
-          </div>
-          <input className="hidden" type="file" ref={childProfileImgRef} onChange={handleFileChange} />
-        </div>
-
-        {/* 입력필드 */}
-        <div className="grid grid-rows-3 gap-5">
-          {/* 이름 입력 */}
-          <div className={`${divStyle}`}>
-            <label className={`${labelStyle}`} htmlFor="name">
-              이름
-            </label>
-            <input
-              className={`${inputStyle}`}
-              type="text"
-              id="name"
-              value={childName ? childName : ""}
-              onChange={(e) => setChildName(e.target.value)}
-            />
+        <div className="flex flex-col items-center space-y-8">
+          {/* 타이틀 텍스트 */}
+          <div className="text-xl font-bold">
+            <span className="underline underline-offset-[-3px] decoration-8 decoration-[#67CCFF]">자녀 정보</span>
+            <span>를 등록해주세요</span>
           </div>
 
-          {/* 생년월일 입력 */}
-          <div className={`${divStyle}`}>
-            <label className={`${labelStyle}`} htmlFor="birth">
-              생년월일
-            </label>
-            <input
-              className={`${inputStyle}`}
-              type="text"
-              id="birth"
-              value={childBirth ? childBirth : ""}
-              onChange={(e) => setChildBirth(e.target.value)}
-            />
+          {/* 프로필 사진 선택 */}
+          <div
+            className="w-20 h-20 border-4 border-[#9E9E9E] rounded-full flex justify-center items-center relative"
+            onClick={handleUploadClick}>
+            {childProfileImgString ? (
+              <img className="w-full aspect-1 rounded-full object-cover" src={`${childProfileImgString}`} alt="" />
+            ) : (
+              <CiCamera className="text-[50px]" />
+            )}
+            <div className="w-8 aspect-1 bg-white rounded-full bg-opacity-50 shadow-[1px_3px_2px_0_rgba(0,0,0,0.2)] flex justify-center items-center absolute -top-3 -right-3">
+              <TbPencilMinus className="text-xl" />
+            </div>
+            <input className="hidden" type="file" ref={childProfileImgRef} onChange={handleFileChange} />
           </div>
 
-          {/* 성별 입력 */}
-          <div className="flex justify-start items-center space-x-5">
-            <p className={`${labelStyle}`}>성별</p>
+          {/* 입력필드 */}
+          <div className="grid grid-rows-3 gap-5">
+            {/* 이름 입력 */}
+            <div className={`${divStyle}`}>
+              <label className={`${labelStyle}`} htmlFor="name">
+                이름
+              </label>
+              <input
+                className={`${inputStyle}`}
+                type="text"
+                id="name"
+                value={childName ? childName : ""}
+                onChange={(e) => setChildName(e.target.value)}
+              />
+            </div>
 
-            <div className="flex space-x-5">
-              <div className="flex space-x-2">
-                <input
-                  className="w-8 border-[#C7C7C7]"
-                  type="radio"
-                  name="gender"
-                  id="male"
-                  value="MALE"
-                  checked={childGender === "MALE"}
-                  onChange={(e) => setChildGender(e.target.value)}
-                />
-                <label htmlFor="male">남자</label>
-              </div>
-              <div className="flex space-x-2">
-                <input
-                  className="w-8 border-[#C7C7C7]"
-                  type="radio"
-                  name="gender"
-                  id="female"
-                  value="FEMALE"
-                  checked={childGender === "FEMALE"}
-                  onChange={(e) => setChildGender(e.target.value)}
-                />
-                <label htmlFor="female">여자</label>
+            {/* 생년월일 입력 */}
+            <div className={`${divStyle}`}>
+              <label className={`${labelStyle}`} htmlFor="birth">
+                생년월일
+              </label>
+              <input
+                className={`${inputStyle}`}
+                type="text"
+                id="birth"
+                value={childBirth ? childBirth : ""}
+                onChange={(e) => setChildBirth(e.target.value)}
+              />
+            </div>
+
+            {/* 성별 입력 */}
+            <div className="flex justify-start items-center space-x-5">
+              <p className={`${labelStyle}`}>성별</p>
+
+              <div className="flex space-x-5">
+                <div className="flex space-x-2">
+                  <input
+                    className="w-8 border-[#C7C7C7]"
+                    type="radio"
+                    name="gender"
+                    id="male"
+                    value="MALE"
+                    checked={childGender === "MALE"}
+                    onChange={(e) => setChildGender(e.target.value)}
+                  />
+                  <label htmlFor="male">남자</label>
+                </div>
+                <div className="flex space-x-2">
+                  <input
+                    className="w-8 border-[#C7C7C7]"
+                    type="radio"
+                    name="gender"
+                    id="female"
+                    value="FEMALE"
+                    checked={childGender === "FEMALE"}
+                    onChange={(e) => setChildGender(e.target.value)}
+                  />
+                  <label htmlFor="female">여자</label>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* 버튼 */}
-        <div className="flex gap-4 justify-center items-center">
-          <button
-            className="px-8 py-2 text-[#67CCFF] text-lg font-bold bg-white rounded-3xl border-2 border-[#67CCFF]"
-            onClick={() => setIsUpdateModal(false)}>
-            취소
-          </button>
-          <button
-            className="px-8 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-3xl border-2 border-[#67CCFF]"
-            onClick={handleUpdateChild}>
-            수정
-          </button>
+          {/* 버튼 */}
+          <div className="flex gap-4 justify-center items-center">
+            <button className="px-8 py-2 text-[#FF8067] text-lg font-bold bg-white rounded-3xl border-2 border-[#FF8067]">
+              삭제
+            </button>
+            <button
+              className="px-8 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-3xl border-2 border-[#67CCFF]"
+              onClick={handleUpdateChild}>
+              수정
+            </button>
+          </div>
         </div>
       </div>
     </div>
