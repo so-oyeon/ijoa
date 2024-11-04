@@ -1,25 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TbPencilMinus } from "react-icons/tb";
 import { IoIosAdd } from "react-icons/io";
 import ChildProfileCreateModal from "../../components/parent/ChildProfileCreateModal";
 import { useNavigate } from "react-router-dom";
 import { userApi } from "../../api/userApi";
+import { childApi } from "../../api/childApi";
+import { ChildInfo } from "../../types/childTypes";
 
 const ChildProfileList = () => {
   const navigate = useNavigate();
   const [isCreateModal, setIsCreateModal] = useState(false);
-  const childList = [
-    {
-      img: "sampleProfileImg",
-      name: "다솔이",
-      age: 5,
-    },
-    {
-      img: "sampleProfileImg",
-      name: "다울이",
-      age: 7,
-    },
-  ];
+  const [childList, setChildList] = useState<ChildInfo[] | null>(null);
 
   // 자녀 계정으로 전환
   const handleGoToChildAccount = async (childId: number) => {
@@ -37,6 +28,27 @@ const ChildProfileList = () => {
     }
   };
 
+  // 자녀 목록 조회 API 통신 함수
+  const getChildInfoList = async () => {
+    try {
+      const response = await childApi.getChildList();
+      if (response.status === 200) {
+        setChildList(response.data);
+      }
+    } catch (error) {
+      console.log("childApi의 getChildList : ", error);
+    }
+  };
+
+  useEffect(() => {
+    getChildInfoList();
+  }, []);
+
+  // childList가 null이면 loading 화면 출력
+  if (!childList) {
+    return <div>loading...</div>;
+  }
+
   return (
     <div className="min-h-screen pt-24 bg-[#EAF8FF] relative">
       <div className="px-40 py-10 grid gap-10">
@@ -53,9 +65,9 @@ const ChildProfileList = () => {
               <div className="w-52 aspect-1 relative">
                 <img
                   className="w-full aspect-1 bg-white rounded-full border object-cover"
-                  src={`/assets/header/child/${child.img}.png`}
+                  src={child.profileUrl}
                   alt=""
-                  onClick={() => handleGoToChildAccount(1)}
+                  onClick={() => handleGoToChildAccount(child.childId)}
                 />
                 <div className="w-12 aspect-1 bg-white rounded-full bg-opacity-50 shadow-[1px_3px_2px_0_rgba(0,0,0,0.2)] flex justify-center items-center absolute top-0 right-0">
                   <TbPencilMinus className="text-2xl" />
@@ -63,7 +75,7 @@ const ChildProfileList = () => {
               </div>
 
               <p className="text-2xl font-bold">
-                {child.name} / {child.age}세
+                {child.name} / 만 {child.birth}세
               </p>
             </div>
           ))}
