@@ -77,3 +77,9 @@ export interface FairyTalePageResponse {
   pageNumber: number;
   image: string;
 }
+
+// 동화 질문 조회
+export interface QuizQuestionResponse {
+  quizId: number;
+  text: string;
+}
