@@ -35,7 +35,7 @@ const ReadingStats = () => {
           </div>
 
           {/* 히스토그램 */}
-          <Histogram />
+          <Histogram filter={selectHistogramFilter} />
         </div>
 
         {/* 도넛형 차트 */}

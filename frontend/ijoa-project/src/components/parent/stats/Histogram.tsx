@@ -1,7 +1,12 @@
+import { useEffect, useState } from "react";
 import Chart from "react-apexcharts";
 
-const HistogramChart = () => {
-  const data = [
+interface Props {
+  filter: string;
+}
+
+const HistogramChart = ({ filter }: Props) => {
+  const montlyData = [
     { time: "1", value: 42 },
     { time: "2", value: 23 },
     { time: "3", value: 13 },
@@ -34,6 +39,45 @@ const HistogramChart = () => {
     { time: "30", value: 30 },
     { time: "31", value: 30 },
   ];
+
+  const weeklyData = [
+    { time: "월", value: 42 },
+    { time: "화", value: 23 },
+    { time: "수", value: 13 },
+    { time: "목", value: 13 },
+    { time: "금", value: 33 },
+    { time: "토", value: 13 },
+    { time: "일", value: 32 },
+  ];
+
+  const dayData = [
+    { time: "1", value: 42 },
+    { time: "2", value: 23 },
+    { time: "3", value: 13 },
+    { time: "4", value: 13 },
+    { time: "5", value: 33 },
+    { time: "6", value: 13 },
+    { time: "7", value: 32 },
+    { time: "8", value: 94 },
+    { time: "9", value: 67 },
+    { time: "10", value: 30 },
+    { time: "11", value: 30 },
+    { time: "12", value: 110 },
+    { time: "13", value: 62 },
+    { time: "14", value: 35 },
+    { time: "15", value: 30 },
+    { time: "16", value: 77 },
+    { time: "17", value: 61 },
+    { time: "18", value: 34 },
+    { time: "19", value: 35 },
+    { time: "20", value: 53 },
+    { time: "21", value: 32 },
+    { time: "22", value: 34 },
+    { time: "23", value: 22 },
+    { time: "24", value: 30 },
+  ];
+
+  const [data, setData] = useState(montlyData);
 
   const categories = data.map((item) => item.time);
   const seriesData = data.map((item) => item.value);
@@ -111,6 +155,20 @@ const HistogramChart = () => {
       data: seriesData,
     },
   ];
+
+  useEffect(() => {
+    switch (filter) {
+      case "일자":
+        setData(montlyData);
+        break;
+      case "요일":
+        setData(weeklyData);
+        break;
+      case "시간":
+        setData(dayData);
+        break;
+    }
+  }, [filter]);
 
   return (
     <div className="grow border-4 border-[#F5F5F5] rounded-2xl">
