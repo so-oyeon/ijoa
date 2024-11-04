@@ -182,8 +182,8 @@ public class TTSService {
         TTS tts = ttsRepository.findById(ttsId).orElseThrow(()-> new CustomException(ErrorCode.TTS_NOT_FOUND));
 
         // 동화책 tts
-        // TODO 이미 있으면 update
-        FairytaleTTS fairytaleTTS = FairytaleTTS.of(fairytale,tts);
+        FairytaleTTS fairytaleTTS = fairytaleTTSRepository.findByFairytaleAndTts(fairytale, tts)
+                .orElse(FairytaleTTS.of(fairytale, tts));
         fairytaleTTS = fairytaleTTSRepository.save(fairytaleTTS);
 
         // 각 오디오 파일의 경로를 DB에 저장
@@ -192,9 +192,13 @@ public class TTSService {
                     .orElseThrow(()-> new CustomException(ErrorCode.FAIRYTALE_PAGE_NOT_FOUND));
             String s3Path = s3Info.get("s3_key");
 
-            // TODO 있으면 update
             // DB에 S3 파일 경로 업데이트
-            Audio audio = Audio.of(fairytaleTTS, pageContent, s3Path);
+            Audio audio = audioRepository.findByFairytaleTTSAndPage(fairytaleTTS, pageContent)
+                    .map(existingAudio -> {
+                        existingAudio.setAudio(s3Path); // 경로 업데이트
+                        return existingAudio;
+                    })
+                    .orElse(Audio.of(fairytaleTTS, pageContent, s3Path));
             audioRepository.save(audio);
         }
     }
