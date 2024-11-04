@@ -18,6 +18,9 @@ public class ChildDto {
 
     @Schema(description = "자녀 생일", example = "2018-01-01")
     private String birth;
+    
+    @Schema(description = "자녀 만나이", example = "6")
+    private int age;
 
     @Schema(description = "자녀 프로필 url", example = "https://checkitout-bucket.s3.ap-northeast-2.amazonaws.com/profile/50d87979-ccf5-495b-ac6b-62900d7c957e")
     private String profileUrl;
