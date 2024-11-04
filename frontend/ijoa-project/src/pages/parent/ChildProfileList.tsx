@@ -91,7 +91,11 @@ const ChildProfileList = () => {
         </div>
       </div>
 
-      {isCreateModal ? <ChildProfileCreateModal setIsCreateModal={setIsCreateModal} /> : <></>}
+      {isCreateModal ? (
+        <ChildProfileCreateModal setIsCreateModal={setIsCreateModal} getChildInfoList={getChildInfoList} />
+      ) : (
+        <></>
+      )}
     </div>
   );
 };
