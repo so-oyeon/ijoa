@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { TbPencilMinus } from "react-icons/tb";
 import { IoIosAdd } from "react-icons/io";
-import ChildProfileCreateModal from "../../components/parent/ChildProfileCreateModal";
+import ChildProfileCreateModal from "../../components/parent/childProfile/ChildProfileCreateModal";
+import ChildProfileUpdateModal from "../../components/parent/childProfile/ChildProfileUpdateModal";
 import { useNavigate } from "react-router-dom";
 import { userApi } from "../../api/userApi";
 import { childApi } from "../../api/childApi";
@@ -10,7 +11,9 @@ import { ChildInfo } from "../../types/childTypes";
 const ChildProfileList = () => {
   const navigate = useNavigate();
   const [isCreateModal, setIsCreateModal] = useState(false);
+  const [isUpdateModal, setIsUpdateModal] = useState(false);
   const [childList, setChildList] = useState<ChildInfo[] | null>(null);
+  const [updateChildInfo, setUpdateChildInfo] = useState<ChildInfo | null>(null);
 
   // 자녀 계정으로 전환
   const handleGoToChildAccount = async (childId: number) => {
@@ -28,7 +31,12 @@ const ChildProfileList = () => {
     }
   };
 
-  // 자녀 목록 조회 API 통신 함수
+  // 자녀 프로필 수정 모달 열기
+  const handleUpdateChild = (childInfo: ChildInfo) => {
+    setUpdateChildInfo(childInfo);
+  };
+
+  // 자녀 프로필 목록 조회 API 통신 함수
   const getChildInfoList = async () => {
     try {
       const response = await childApi.getChildList();
@@ -40,6 +48,12 @@ const ChildProfileList = () => {
     }
   };
 
+  // 수정할 자식 프로필 데이터가 state에 저장되면 모달 열기
+  useEffect(() => {
+    setIsUpdateModal(true);
+  }, [updateChildInfo]);
+
+  // 렌더링 시, 자식 프로필 목록 조회 통신 함수 호출
   useEffect(() => {
     getChildInfoList();
   }, []);
@@ -69,13 +83,15 @@ const ChildProfileList = () => {
                   alt=""
                   onClick={() => handleGoToChildAccount(child.childId)}
                 />
-                <div className="w-12 aspect-1 bg-white rounded-full bg-opacity-50 shadow-[1px_3px_2px_0_rgba(0,0,0,0.2)] flex justify-center items-center absolute top-0 right-0">
+                <div
+                  className="w-12 aspect-1 bg-white rounded-full bg-opacity-50 shadow-[1px_3px_2px_0_rgba(0,0,0,0.2)] flex justify-center items-center absolute top-0 right-0"
+                  onClick={() => handleUpdateChild(child)}>
                   <TbPencilMinus className="text-2xl" />
                 </div>
               </div>
 
               <p className="text-2xl font-bold">
-                {child.name} / 만 {child.birth}세
+                {child.name} / 만 {child.age}세
               </p>
             </div>
           ))}
@@ -91,10 +107,15 @@ const ChildProfileList = () => {
         </div>
       </div>
 
-      {isCreateModal ? (
+      {isCreateModal && (
         <ChildProfileCreateModal setIsCreateModal={setIsCreateModal} getChildInfoList={getChildInfoList} />
-      ) : (
-        <></>
+      )}
+      {isUpdateModal && updateChildInfo && (
+        <ChildProfileUpdateModal
+          updateChildInfo={updateChildInfo}
+          setIsUpdateModal={setIsUpdateModal}
+          getChildInfoList={getChildInfoList}
+        />
       )}
     </div>
   );

@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { CiCamera } from "react-icons/ci";
-import { childApi } from "../../api/childApi";
+import { childApi } from "../../../api/childApi";
 import { TbPencilMinus } from "react-icons/tb";
 
 interface Props {
