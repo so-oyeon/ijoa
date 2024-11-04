@@ -45,7 +45,8 @@ public interface FairytaleApiDocumentation {
             @ApiResponse(responseCode = "201", description = "동화책 특정 페이지 시선추적 데이터 저장 성공"),
             @ApiResponse(responseCode = "400", description = "잘못된 입력", content = @Content),
             @ApiResponse(responseCode = "401", description = "로그인 안함", content = @Content),
-            @ApiResponse(responseCode = "404", description = "존재하지 않는 페이지 기록 ID", content = @Content),
+            @ApiResponse(responseCode = "403", description = "페이지 기록 ID와 연결되지 않은 아이 ID", content = @Content),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 페이지 기록 ID / 존재하지 않는 아이 ID", content = @Content),
             @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
     })
     public ResponseEntity<PageHistoryCreationResponse> createPageHistory(

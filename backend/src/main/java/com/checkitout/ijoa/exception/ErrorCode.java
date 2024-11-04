@@ -29,14 +29,16 @@ public enum ErrorCode {
     // fairytale
     FAIRYTALE_NOT_FOUND(HttpStatus.NOT_FOUND, "FAIRYTALE-001", "존재하지 않는 동화책입니다."),
     FAIRYTALE_PAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "FAIRYTALE-002", "존재하지 않는 페이지입니다."),
+    PAGE_HISTORY_NOT_FOUND(HttpStatus.NOT_FOUND, "FAIRYTALE-003", "존재하지 않는 페이지 기록입니다."),
+    PAGE_HISTORY_ACCESS_DENIED(HttpStatus.FORBIDDEN, "FAIRYTALE-004", "접근 불가능한 페이지 기록입니다."),
 
     //file
     FILE_CONVERSION_ERROR(HttpStatus.BAD_REQUEST, "FILE-001", "파일 변환 에러가 발생했습니다."),
 
     //TTS
-    TTS_NOT_FOUND(HttpStatus.NOT_FOUND,"TTS-001","TTS를 찾을 수 없습니다."),
-    TTS_NO_CONTENT(HttpStatus.NO_CONTENT,"TTS-002", "TTS가 없습니다. "),
-    TTS_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, "TTS-003","TTS는 4개까지 생성할 수 있습니다."),
+    TTS_NOT_FOUND(HttpStatus.NOT_FOUND, "TTS-001", "TTS를 찾을 수 없습니다."),
+    TTS_NO_CONTENT(HttpStatus.NO_CONTENT, "TTS-002", "TTS가 없습니다. "),
+    TTS_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, "TTS-003", "TTS는 4개까지 생성할 수 있습니다."),
     UNAUTHORIZED_USER(HttpStatus.FORBIDDEN, "UU-001", "권한이 없습니다.");
 
     private final HttpStatus httpStatus;
