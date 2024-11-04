@@ -18,7 +18,7 @@ const InformationModal: React.FC<InformationModalProps> = ({ isOpen, onClose }) 
 
   // 비밀번호 유효성 검사 함수
   const validatePassword = (password: string) => {
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#$%^&*]{8,}$/;
     return passwordRegex.test(password);
   };
   // 모든 필드 유효성 검사 함수
