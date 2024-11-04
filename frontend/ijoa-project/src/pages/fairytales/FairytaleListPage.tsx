@@ -78,12 +78,6 @@ const FairytaleListPage: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    getPopularFairyTalesByAge(); // 인기 동화책 데이터 가져오기
-    getRecommendedFairyTales(); // 사용자 맞춤 추천 데이터 가져오기
-    getFairyTalesByCategory(selectedCategory); // 선택된 카테고리 동화책 데이터 가져오기
-  }, [selectedCategory]); // categoryId가 변경될 때마다 호출
-
   const handlePopularBookClick = (index: number) => {
     navigate(`/fairytale/content/${popularFairyTales[index].fairytaleId}`, { state: { title: titles[index] } });
   };
@@ -104,6 +98,12 @@ const FairytaleListPage: React.FC = () => {
   const handleCategoryChange = (categoryId: number) => {
     setSelectedCategory(categoryId);
   };
+
+  useEffect(() => {
+    getPopularFairyTalesByAge(); // 인기 동화책 데이터 가져오기
+    getRecommendedFairyTales(); // 사용자 맞춤 추천 데이터 가져오기
+    getFairyTalesByCategory(selectedCategory); // 선택된 카테고리 동화책 데이터 가져오기
+  }, [selectedCategory]); // categoryId가 변경될 때마다 호출
 
   return (
     <div>

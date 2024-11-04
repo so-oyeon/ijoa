@@ -106,20 +106,20 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
       setConfirmPasswordError("비밀번호가 일치하지 않습니다!");
     } else {
       setGeneralError("");
-  
+
       // 회원가입 요청 데이터 객체 생성
       const data = {
         email: email,
         password: password,
         nickname: nickname,
       };
-  
+
       // API 호출
       try {
         const response = await userApi.signup(data);
-  
+
         // 회원가입 성공 시(201)
-        if (response.status === 201) {        
+        if (response.status === 201) {
           Swal.fire({
             icon: "success",
             title: "회원가입이 완료되었습니다.",
@@ -127,7 +127,7 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
             confirmButtonColor: "#3085d6",
           }).then(() => {
             onClose();
-            navigate("/parent/child/list"); // 회원가입 후 이동할 페이지
+            navigate("/home"); // 회원가입 후 이동할 페이지
           });
         }
       } catch (error) {

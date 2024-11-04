@@ -39,7 +39,7 @@ const PageSwiper: React.FC<PageSwiperProps> = ({
                     activeIndex === index ? "border-8 border-[#67CCFF] rounded-3xl" : "grayscale-[80%]"
                   }`}
                 />
-                <div className="mt-2 text-center pr-7">
+                <div className="mt-2 text-center pr-10">
                   <span className="text-2xl font-semibold">{pageNums[index]}</span>
                 </div>
               </div>
