@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { userApi } from "../../api/userApi";
 import { childApi } from "../../api/childApi";
 import { ChildInfo } from "../../types/childTypes";
+import LoadingAnimation from "../../components/common/LoadingAnimation";
 
 const ChildProfileList = () => {
   const navigate = useNavigate();
@@ -60,7 +61,7 @@ const ChildProfileList = () => {
 
   // childList가 null이면 loading 화면 출력
   if (!childList) {
-    return <div>loading...</div>;
+    return <LoadingAnimation />;
   }
 
   return (

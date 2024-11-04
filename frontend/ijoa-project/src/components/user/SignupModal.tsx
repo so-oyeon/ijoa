@@ -3,7 +3,7 @@ import Swal from "sweetalert2";
 import { userApi } from "../../api/userApi";
 import { useNavigate } from "react-router-dom";
 import Lottie from "react-lottie-player";
-import loadinganimation from "../../lottie/loadinganimation.json";
+import loadingAnimation from "../../lottie/airplane-loadingAnimation.json";
 
 interface Props {
   onClose: () => void;
@@ -174,7 +174,7 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
   if (isLoading) {
     return (
       <div className="py-10 flex flex-col justify-center items-center space-y-5">
-        <Lottie className="w-40 aspect-1" loop play animationData={loadinganimation} />
+        <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
         <p className="font-semibold">{guideText[guideIdx]}</p>
       </div>
     );
@@ -197,8 +197,7 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
         <button
           className="w-3/4 h-[60px] mb-2 py-3 rounded-xl font-bold bg-[#FFE0C1] hover:bg-red-200"
           onClick={handleEmailVerification}
-          disabled={isLoading}
-        >
+          disabled={isLoading}>
           {isLoading ? (
             <div className="flex justify-center">
               <div className="loader"></div>
