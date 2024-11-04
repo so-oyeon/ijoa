@@ -19,6 +19,7 @@ import com.checkitout.ijoa.fairytale.repository.FairytalePageContentRepository;
 import com.checkitout.ijoa.fairytale.repository.FairytaleRepository;
 import com.checkitout.ijoa.file.service.FileService;
 import com.checkitout.ijoa.user.domain.User;
+import com.checkitout.ijoa.util.LogUtil;
 import com.checkitout.ijoa.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -149,10 +150,11 @@ public class TTSService {
         //TODO tts id로 modelpath 찾기
         String modelPath = "/home/j-k11d105/ijoa/app/run/training/GPT_XTTS_v2.0-October-29-2024_02+49PM-0000000/";
 
-        // TODO bookId로 content 찾기
+        List<FairytalePageContent> contents = fairytalePageContentRepository.findByfairytaleId(bookId).orElseThrow(()-> new CustomException(ErrorCode.FAIRYTALE_NOT_FOUND));
         List<FairytalePageResponseDto> pages = new ArrayList<>();
-        pages.add(FairytalePageResponseDto.builder().pageId(1L).text("노마가 장난감 친구들을 찾아 나섰어요. 로켓을 타고 우주로 슈웅! 노마는 망원경으로 여기저기 살펴보았어요.").build());
-        pages.add(FairytalePageResponseDto.builder().pageId(2L).text("밍밍이에게 고민이 생겼어요. 친구들과 놀고 싶지 않았어요. 사탕과 과자도 먹고 싶지 않았어요. 방에 쪼그리고 앉아서 한숨만 휴우. 도대체 무슨 일일까요?").build());
+        for(FairytalePageContent content : contents){
+            pages.add(FairytalePageResponseDto.from(content));
+        }
 
         AudioBookRequestDto audioBookRequest = AudioBookRequestDto.builder()
                 .bookId(bookId)
@@ -162,6 +164,7 @@ public class TTSService {
                 .build();
 
 
+        LogUtil.info("create");
         // Kafka로 메시지 전송
         kafkaTemplate.send(REQUEST_TOPIC, audioBookRequest);
     }
@@ -170,6 +173,7 @@ public class TTSService {
     // 생성된 audio파일 정보 db 저장
     @KafkaListener(topics = RESPONSE_TOPIC, groupId = "tts_group")
     public void consumeResponse(Map<String, Object> message) {
+        LogUtil.info("save");
         Long bookId = Long.valueOf(message.get("book_id").toString());
         Long ttsId = Long.valueOf(message.get("tts_id").toString());
         List<Map<String, String>> s3Keys = (List<Map<String, String>>) message.get("s3_keys");
@@ -177,6 +181,7 @@ public class TTSService {
         Fairytale fairytale = fairytaleRepository.findById(bookId).orElseThrow(()-> new CustomException(ErrorCode.FAIRYTALE_NOT_FOUND));
         TTS tts = ttsRepository.findById(ttsId).orElseThrow(()-> new CustomException(ErrorCode.TTS_NOT_FOUND));
 
+        // 동화책 tts
         // TODO 이미 있으면 update
         FairytaleTTS fairytaleTTS = FairytaleTTS.of(fairytale,tts);
         fairytaleTTS = fairytaleTTSRepository.save(fairytaleTTS);
