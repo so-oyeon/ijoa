@@ -15,4 +15,9 @@ export const childApi = {
   updateChildProfile: (childId: number, formData: FormData) => {
     return api.patch(`/parent/children/${childId}`, formData)
   },
+
+  // 자녀 프로필 삭제
+  deleteChildProfile: (childId: number) => {
+    return api.delete(`/parent/children/${childId}`);
+  },
 }
