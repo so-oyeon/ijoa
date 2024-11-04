@@ -73,6 +73,22 @@ const ChildProfileCreateModal = ({ updateChildInfo, setIsUpdateModal, getChildIn
     }
   };
 
+  // 자녀 프로필 삭제 API 함수 호출
+  const handleDeleteChild = async () => {
+    try {
+      const response = await childApi.deleteChildProfile(childId);
+      if (response.status === 200) {
+        const confirmFlag = confirm("정말 자녀 프로필을 삭제할까요?");
+        if (confirmFlag) {
+          setIsUpdateModal(false);
+          getChildInfoList();
+        }
+      }
+    } catch (error) {
+      console.log("childApi의 deleteChildProfile : ", error);
+    }
+  };
+
   return (
     <div className="py-8 bg-black bg-opacity-60 flex justify-center items-center fixed inset-0 z-50">
       <div className="p-10 bg-white rounded-3xl shadow-lg">
@@ -168,7 +184,9 @@ const ChildProfileCreateModal = ({ updateChildInfo, setIsUpdateModal, getChildIn
 
           {/* 버튼 */}
           <div className="flex gap-4 justify-center items-center">
-            <button className="px-8 py-2 text-[#FF8067] text-lg font-bold bg-white rounded-3xl border-2 border-[#FF8067]">
+            <button
+              className="px-8 py-2 text-[#FF8067] text-lg font-bold bg-white rounded-3xl border-2 border-[#FF8067]"
+              onClick={handleDeleteChild}>
               삭제
             </button>
             <button
