@@ -1,5 +1,6 @@
 package com.checkitout.ijoa.fairytale.dto;
 
+import com.checkitout.ijoa.fairytale.domain.EyeTrackingData;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,9 +13,9 @@ public class PageHistoryCreationResponse {
     @Schema(description = "시선추적 데이터 ID", example = "1")
     private final Long eyeTrackingDataId;
 
-    public static PageHistoryCreationResponse test() {
+    public static PageHistoryCreationResponse from(EyeTrackingData eyeTrackingData) {
         return PageHistoryCreationResponse.builder()
-                .eyeTrackingDataId(1L)
+                .eyeTrackingDataId(eyeTrackingData.getId())
                 .build();
     }
 }

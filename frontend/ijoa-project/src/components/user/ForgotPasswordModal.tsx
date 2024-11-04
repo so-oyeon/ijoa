@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { userApi } from "../../api/userApi";
 import Lottie from "react-lottie-player";
-import loadinganimation from "../../lottie/loadinganimation.json";
+import loadingAnimation from "../../lottie/airplane-loadingAnimation.json";
 
 interface ForgotPasswordModalProps {
   openConfirmationModal: () => void;
@@ -47,7 +47,7 @@ const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({ openConfirmat
   if (isLoading) {
     return (
       <div className="py-10 flex flex-col justify-center items-center space-y-5">
-        <Lottie className="w-40 aspect-1" loop play animationData={loadinganimation} />
+        <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
         <p className="font-semibold">{guideText[guideIdx]}</p>
       </div>
     );
@@ -68,8 +68,7 @@ const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({ openConfirmat
       <button
         onClick={handleEmailSubmit}
         className="w-3/5 py-3 mb-4 font-bold bg-[#F7EAFF] rounded-full hover:bg-[#f0d9ff]"
-        disabled={isLoading}
-      >
+        disabled={isLoading}>
         비밀번호 변경 이메일 전송
       </button>
     </>
