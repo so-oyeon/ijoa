@@ -3,13 +3,10 @@ package com.checkitout.ijoa.TTS.service;
 
 import com.checkitout.ijoa.TTS.domain.*;
 import com.checkitout.ijoa.TTS.dto.request.FileScriptPair;
-import com.checkitout.ijoa.TTS.dto.response.AudioBookRequestDto;
+import com.checkitout.ijoa.TTS.dto.response.*;
 import com.checkitout.ijoa.TTS.repository.*;
 import com.checkitout.ijoa.TTS.dto.request.TTSProfileRequestDto;
 import com.checkitout.ijoa.TTS.dto.request.TTSTrainRequestDto;
-import com.checkitout.ijoa.TTS.dto.response.ScriptResponseDto;
-import com.checkitout.ijoa.TTS.dto.response.TTSProfileResponseDto;
-import com.checkitout.ijoa.TTS.dto.response.TTSTrainResponseDto;
 import com.checkitout.ijoa.exception.CustomException;
 import com.checkitout.ijoa.exception.ErrorCode;
 import com.checkitout.ijoa.fairytale.domain.Fairytale;
@@ -19,6 +16,7 @@ import com.checkitout.ijoa.fairytale.repository.FairytalePageContentRepository;
 import com.checkitout.ijoa.fairytale.repository.FairytaleRepository;
 import com.checkitout.ijoa.file.service.FileService;
 import com.checkitout.ijoa.user.domain.User;
+import com.checkitout.ijoa.util.LogUtil;
 import com.checkitout.ijoa.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -34,9 +32,12 @@ import java.util.*;
 @Transactional
 public class TTSService {
 
-    private final KafkaTemplate<String, AudioBookRequestDto> kafkaTemplate;
+    private final KafkaTemplate<String, AudioBookRequestDto> audioBookKafkaTemplate;
+    private final KafkaTemplate<String, TrainAudioResponseDto> trainAudioKafkaTemplate;
     private static final String REQUEST_TOPIC = "tts_create_audio";
     private static final String RESPONSE_TOPIC = "tts_save_audio";
+    private static final String TTS_CREATE_TOPIC = "create_tts";
+//    private static final String TTS_MODEL_TOPIC =  "tts_model_path";
 
     private final SecurityUtil securityUtil;
     private final FileService fileService;
@@ -57,10 +58,15 @@ public class TTSService {
             throw new CustomException(ErrorCode.TTS_LIMIT_EXCEEDED);
         }
 
+        String key = "ttsprofile/" + user.getId() + "/" + UUID.randomUUID() + "/" + requestDto.getImage();
+
+        //url 발급
+        String url = fileService.getPostS3Url(key);
+
         TTS newTTS = TTSProfileRequestDto.of(requestDto,user);
 
         TTS savedTTS = ttsRepository.save(newTTS);
-        return TTSProfileResponseDto.fromTTS(savedTTS);
+        return TTSProfileResponseDto.fromTTS(savedTTS,url);
     }
 
     // TTS 삭제
@@ -83,11 +89,17 @@ public class TTSService {
         TTS updateTTS = ttsRepository.findById(ttsId).orElseThrow(()-> new CustomException(ErrorCode.TTS_NOT_FOUND));
         checkUser(updateTTS,user.getId());
 
+        String key = "ttsprofile/" + user.getId() + "/" + UUID.randomUUID() + "/" + requestDto.getImage();
+
+        //url 발급
+        String url = fileService.getPostS3Url(key);
+        requestDto.setImage(key);
+
         updateTTS.updateTTS(requestDto);
 
         TTS updatedTTS = ttsRepository.save(updateTTS);
 
-        return TTSProfileResponseDto.fromTTS(updatedTTS);
+        return TTSProfileResponseDto.fromTTS(updatedTTS,url);
     }
 
     // 부모 tts 목록
@@ -99,7 +111,8 @@ public class TTSService {
         List<TTS> ttsList = ttsRepository.findByUserId(user.getId()).orElseThrow(()-> new CustomException(ErrorCode.TTS_NO_CONTENT));
 
         for(TTS ts : ttsList){
-            responseDtos.add(TTSProfileResponseDto.fromTTS(ts));
+            String url = fileService.getGetS3Url(ts.getImage());
+            responseDtos.add(TTSProfileResponseDto.fromTTS(ts,url));
         }
 
         return responseDtos;
@@ -149,10 +162,11 @@ public class TTSService {
         //TODO tts id로 modelpath 찾기
         String modelPath = "/home/j-k11d105/ijoa/app/run/training/GPT_XTTS_v2.0-October-29-2024_02+49PM-0000000/";
 
-        // TODO bookId로 content 찾기
+        List<FairytalePageContent> contents = fairytalePageContentRepository.findByfairytaleId(bookId).orElseThrow(()-> new CustomException(ErrorCode.FAIRYTALE_NOT_FOUND));
         List<FairytalePageResponseDto> pages = new ArrayList<>();
-        pages.add(FairytalePageResponseDto.builder().pageId(1L).text("노마가 장난감 친구들을 찾아 나섰어요. 로켓을 타고 우주로 슈웅! 노마는 망원경으로 여기저기 살펴보았어요.").build());
-        pages.add(FairytalePageResponseDto.builder().pageId(2L).text("밍밍이에게 고민이 생겼어요. 친구들과 놀고 싶지 않았어요. 사탕과 과자도 먹고 싶지 않았어요. 방에 쪼그리고 앉아서 한숨만 휴우. 도대체 무슨 일일까요?").build());
+        for(FairytalePageContent content : contents){
+            pages.add(FairytalePageResponseDto.from(content));
+        }
 
         AudioBookRequestDto audioBookRequest = AudioBookRequestDto.builder()
                 .bookId(bookId)
@@ -162,23 +176,31 @@ public class TTSService {
                 .build();
 
 
+        LogUtil.info("create");
         // Kafka로 메시지 전송
-        kafkaTemplate.send(REQUEST_TOPIC, audioBookRequest);
+        audioBookKafkaTemplate.send(REQUEST_TOPIC, audioBookRequest);
     }
 
-
+/////////////////////////////////////////임시
     // 생성된 audio파일 정보 db 저장
-    @KafkaListener(topics = RESPONSE_TOPIC, groupId = "tts_group")
-    public void consumeResponse(Map<String, Object> message) {
-        Long bookId = Long.valueOf(message.get("book_id").toString());
-        Long ttsId = Long.valueOf(message.get("tts_id").toString());
-        List<Map<String, String>> s3Keys = (List<Map<String, String>>) message.get("s3_keys");
+//    @KafkaListener(topics = RESPONSE_TOPIC, groupId = "tts_group")
+//    public void consumeResponse(Map<String, Object> message) {
+    public void consumeResponse(temp message) {
+        LogUtil.info("save");
+        Long ttsId = message.getTtsId();
+        Long bookId = message.getBookId();
+        List<Map<String, String>> s3Keys = message.getS3Keys();
+//        Long bookId = Long.valueOf(message.get("book_id").toString());
+//        Long ttsId = Long.valueOf(message.get("tts_id").toString());
+//        List<Map<String, String>> s3Keys = (List<Map<String, String>>) message.get("s3_keys");
 
         Fairytale fairytale = fairytaleRepository.findById(bookId).orElseThrow(()-> new CustomException(ErrorCode.FAIRYTALE_NOT_FOUND));
         TTS tts = ttsRepository.findById(ttsId).orElseThrow(()-> new CustomException(ErrorCode.TTS_NOT_FOUND));
 
-        // TODO 이미 있으면 update
-        FairytaleTTS fairytaleTTS = FairytaleTTS.of(fairytale,tts);
+        // 동화책 tts
+        //있으면 업데이트 없으면 새로 만들기
+        FairytaleTTS fairytaleTTS = fairytaleTTSRepository.findByFairytaleAndTts(fairytale, tts)
+                .orElse(FairytaleTTS.of(fairytale, tts));
         fairytaleTTS = fairytaleTTSRepository.save(fairytaleTTS);
 
         // 각 오디오 파일의 경로를 DB에 저장
@@ -187,11 +209,58 @@ public class TTSService {
                     .orElseThrow(()-> new CustomException(ErrorCode.FAIRYTALE_PAGE_NOT_FOUND));
             String s3Path = s3Info.get("s3_key");
 
-            // TODO 있으면 update
             // DB에 S3 파일 경로 업데이트
-            Audio audio = Audio.of(fairytaleTTS, pageContent, s3Path);
+            Audio audio = audioRepository.findByFairytaleTTSAndPage(fairytaleTTS, pageContent)
+                    .map(existingAudio -> {
+                        existingAudio.setAudio(s3Path); // 경로 업데이트
+                        return existingAudio;
+                    })
+                    .orElse(Audio.of(fairytaleTTS, pageContent, s3Path));
             audioRepository.save(audio);
         }
+    }
+
+    // tts모델 학습 시작
+    public void startTrain(Long ttsId) {
+        // 학습데이터
+        List<TrainAudio> trainAudios = trainAudioRepository.findByTtsIdOrderByScriptId(ttsId).orElseThrow(()-> new CustomException(ErrorCode.TRAINAUDIO_NOT_FOUND));
+        //s3경로
+        List<String> paths = new ArrayList<>();
+        // 굳이?
+        // script
+        List<String> scripts = new ArrayList<>();
+
+        for(TrainAudio trainAudio : trainAudios){
+            paths.add(trainAudio.getFile_path());
+            scripts.add(trainAudio.getScript().getScript());
+        }
+
+        TrainAudioResponseDto responseDto = TrainAudioResponseDto.from(ttsId, paths, scripts);
+        trainAudioKafkaTemplate.send(TTS_CREATE_TOPIC, responseDto);
+    }
+
+    // 해당 페이지 음성 반환
+    public PageAudioDto findPageAudio(Long ttsId, Long pageId) {
+        TTS tts = ttsRepository.findById(ttsId).orElseThrow(()-> new CustomException(ErrorCode.TTS_NOT_FOUND));
+        FairytalePageContent page = fairytalePageContentRepository.findById(pageId).orElseThrow(()-> new CustomException(ErrorCode.FAIRYTALE_PAGE_NOT_FOUND));
+        FairytaleTTS fairytaleTTS = fairytaleTTSRepository.findByFairytaleAndTts(page.getFairytale(), tts).orElseThrow(()-> new CustomException(ErrorCode.TTS_NOT_FOUND));
+        Audio audio = audioRepository.findByFairytaleTTSAndPage(fairytaleTTS, page).orElseThrow(()-> new CustomException(ErrorCode.FAIRYTALE_PAGE_NOT_FOUND));
+        String url = fileService.getGetS3Url(audio.getAudio());
+        return PageAudioDto.from(url);
+    }
+
+    // 자녀페이지 TTS리스트
+    public List<ChildTTSListDto> childTTSList(Long bookId) {
+        User user = securityUtil.getUserByToken();
+        List<TTS> ttsList = ttsRepository.findByUserId(user.getId()).orElseThrow(()-> new CustomException(ErrorCode.TTS_NO_CONTENT) );
+        Fairytale fairytale = fairytaleRepository.findById(bookId).orElseThrow(()-> new CustomException(ErrorCode.FAIRYTALE_NOT_FOUND));
+        List<ChildTTSListDto> childTTSListDtos = new ArrayList<>();
+        for(TTS tts : ttsList){
+            boolean audio_created = fairytaleTTSRepository.existsByFairytaleAndTts(fairytale, tts);
+            childTTSListDtos.add(ChildTTSListDto.from(tts, audio_created));
+        }
+        return childTTSListDtos;
+
     }
 
     // 권한 확인
@@ -200,4 +269,5 @@ public class TTSService {
             throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
         }
     }
+
 }

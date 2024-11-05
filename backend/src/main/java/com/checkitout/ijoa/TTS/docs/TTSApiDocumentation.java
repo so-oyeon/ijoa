@@ -3,6 +3,7 @@ package com.checkitout.ijoa.TTS.docs;
 import com.checkitout.ijoa.TTS.dto.request.TTSProfileRequestDto;
 import com.checkitout.ijoa.TTS.dto.request.TTSTrainRequestDto;
 import com.checkitout.ijoa.TTS.dto.response.TTSProfileResponseDto;
+import com.checkitout.ijoa.TTS.dto.response.temp;
 import com.checkitout.ijoa.child.dto.request.CreateChildRequestDto;
 import com.checkitout.ijoa.child.dto.request.UpdateChildRequestDto;
 import com.checkitout.ijoa.child.dto.response.ChildDto;
@@ -83,5 +84,35 @@ public interface TTSApiDocumentation {
     public ResponseEntity<?> createAudioBook(
             @PathVariable Long ttsId,
             @PathVariable Long bookId) throws IOException;
+
+    @Operation(summary = "TTS 학습 시작", description = "녹음한 음성파일로 TTS 학습 시작합니다. ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "생성 성공", content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+    })
+    public ResponseEntity<?> trainTTS(@PathVariable Long ttsId) throws IOException;
+
+    @Operation(summary = "TTS 낭독", description = "현재 페이지의 tts 음성반환")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "조회", content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+    })
+    public ResponseEntity<?> pageAudio(@PathVariable Long ttsId,@PathVariable Long pageId ) throws IOException;
+
+    /////////////임시 ///////////////////
+    @Operation(summary = "추론 결과 저장 ", description = "결과 저장 ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "조회", content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+    })
+    public ResponseEntity<?> tempSaveResult(@RequestBody temp temp) throws IOException;
+
+    @Operation(summary = "TTS 목록 조회(자녀 페이지)", description = "책읽기 시작 시 TTS 선택하는 페이지")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "조회", content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+    })
+    public ResponseEntity<?> childTTSList(@PathVariable Long bookId ) throws IOException;
+
 
 }

@@ -23,7 +23,7 @@ public class TTSProfileRequestDto {
     @Schema(description = "TTS 이름", example = "엄마")
     private String name;
 
-    @Schema(description = "TTS 프로필 이미지", example = "url")
+    @Schema(description = "TTS 프로필 이미지 파일 이름", example = "filename.jpg")
     private String image;
 
     public static TTS of(TTSProfileRequestDto request, User user){
