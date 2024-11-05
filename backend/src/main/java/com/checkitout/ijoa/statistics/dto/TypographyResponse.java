@@ -13,9 +13,9 @@ public class TypographyResponse {
     private final String word;
 
     @Schema(description = "횟수", example = "5")
-    private final Integer focusCount;
+    private final Long focusCount;
 
-    public static TypographyResponse test(String word, Integer focusCount) {
+    public static TypographyResponse of(String word, Long focusCount) {
         return TypographyResponse.builder()
                 .word(word)
                 .focusCount(focusCount)
