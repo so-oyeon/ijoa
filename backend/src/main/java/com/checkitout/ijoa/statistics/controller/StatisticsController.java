@@ -39,7 +39,9 @@ public class StatisticsController implements StatisticsApiDocumentation {
         List<FocusTimeResponse> result = statisticsService.getFocusTime(childId, request.getPeriod(),
                 request.getStartDate());
 
-        return ResponseEntity.status(HttpStatus.OK).body(result);
+        HttpStatus status = result.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK;
+
+        return ResponseEntity.status(status).body(result);
     }
 
     /**
