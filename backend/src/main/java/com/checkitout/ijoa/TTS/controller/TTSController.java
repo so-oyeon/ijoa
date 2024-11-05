@@ -3,6 +3,7 @@ package com.checkitout.ijoa.TTS.controller;
 import com.checkitout.ijoa.TTS.docs.TTSApiDocumentation;
 import com.checkitout.ijoa.TTS.dto.request.TTSProfileRequestDto;
 import com.checkitout.ijoa.TTS.dto.request.TTSTrainRequestDto;
+import com.checkitout.ijoa.TTS.dto.response.PageAudioDto;
 import com.checkitout.ijoa.TTS.dto.response.ScriptResponseDto;
 import com.checkitout.ijoa.TTS.dto.response.TTSProfileResponseDto;
 import com.checkitout.ijoa.TTS.dto.response.TTSTrainResponseDto;
@@ -76,9 +77,16 @@ public class TTSController implements TTSApiDocumentation {
 
     @Override
     @GetMapping("/train/{ttsId}")
-    public ResponseEntity<?> trainTTS(Long ttsId) throws IOException {
+    public ResponseEntity<?> trainTTS(@PathVariable("ttsId") Long ttsId) throws IOException {
         ttsService.startTrain(ttsId);
         return new ResponseEntity<>( HttpStatus.OK);
+    }
+
+    @Override
+    @GetMapping("/audios/{ttsId}/{pageId}")
+    public ResponseEntity<?> pageAudio(@PathVariable("ttsId")Long ttsId,@PathVariable("pageId") Long pageId) throws IOException {
+        PageAudioDto responseDto = ttsService.findPageAudio(ttsId,pageId);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
 }

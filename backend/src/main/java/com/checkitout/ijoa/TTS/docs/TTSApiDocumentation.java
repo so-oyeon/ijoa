@@ -91,4 +91,11 @@ public interface TTSApiDocumentation {
     })
     public ResponseEntity<?> trainTTS(@PathVariable Long ttsId) throws IOException;
 
+    @Operation(summary = "TTS 낭독", description = "현재 페이지의 tts 음성반환")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "조회", content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+    })
+    public ResponseEntity<?> pageAudio(@PathVariable Long ttsId,@PathVariable Long pageId ) throws IOException;
+
 }

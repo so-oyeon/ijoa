@@ -182,6 +182,7 @@ public class TTSService {
         TTS tts = ttsRepository.findById(ttsId).orElseThrow(()-> new CustomException(ErrorCode.TTS_NOT_FOUND));
 
         // 동화책 tts
+        //있으면 업데이트 없으면 새로 만들기
         FairytaleTTS fairytaleTTS = fairytaleTTSRepository.findByFairytaleAndTts(fairytale, tts)
                 .orElse(FairytaleTTS.of(fairytale, tts));
         fairytaleTTS = fairytaleTTSRepository.save(fairytaleTTS);
@@ -203,7 +204,7 @@ public class TTSService {
         }
     }
 
-    // tts 학습 시작
+    // tts모델 학습 시작
     public void startTrain(Long ttsId) {
         // 학습데이터
         List<TrainAudio> trainAudios = trainAudioRepository.findByTtsIdOrderByScriptId(ttsId).orElseThrow(()-> new CustomException(ErrorCode.TRAINAUDIO_NOT_FOUND));
@@ -222,6 +223,13 @@ public class TTSService {
         trainAudioKafkaTemplate.send(TTS_CREATE_TOPIC, responseDto);
     }
 
+    public PageAudioDto findPageAudio(Long ttsId, Long pageId) {
+        TTS tts = ttsRepository.findById(ttsId).orElseThrow(()-> new CustomException(ErrorCode.TTS_NOT_FOUND));
+        FairytalePageContent page = fairytalePageContentRepository.findById(pageId).orElseThrow(()-> new CustomException(ErrorCode.FAIRYTALE_PAGE_NOT_FOUND));
+        FairytaleTTS fairytaleTTS = fairytaleTTSRepository.findByFairytaleAndTts(page.getFairytale(), tts).orElseThrow(()-> new CustomException(ErrorCode.TTS_NOT_FOUND));
+        Audio audio = audioRepository.findByFairytaleTTSAndPage(fairytaleTTS, page).orElseThrow(()-> new CustomException(ErrorCode.FAIRYTALE_PAGE_NOT_FOUND));
+        return PageAudioDto.from(audio.getAudio());
+    }
 
     // 권한 확인
     private void checkUser(TTS tts, Long userId) {
