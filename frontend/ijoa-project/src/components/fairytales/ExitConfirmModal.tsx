@@ -12,12 +12,12 @@ const ExitConfirmModal: React.FC<ExitConfirmModalProps> = ({ isOpen, onClose }) 
 
   // 취소 버튼 클릭 핸들러
   const closeExitConfirmModal = () => {
-    onClose(); 
-  }
+    onClose();
+  };
 
   // 나가기 버튼 클릭 핸들러
   const handleExitClick = () => {
-    navigate("/fairytale/list");
+    navigate("/child/fairytale/list");
   };
 
   return (

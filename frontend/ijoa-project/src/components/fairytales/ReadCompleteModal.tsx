@@ -27,7 +27,7 @@ const ReadCompleteModal: React.FC<ReadCompleteModalProps> = ({ isOpen, title }) 
 
   // 홈으로 렌더링하는 함수
   const toHome = () => {
-    navigate("/fairytale/list");
+    navigate("/child/fairytale/list");
   };
 
   return (

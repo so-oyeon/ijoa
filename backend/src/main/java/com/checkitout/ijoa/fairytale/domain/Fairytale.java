@@ -57,6 +57,9 @@ public class Fairytale {
     @OneToMany(mappedBy = "fairytale", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FairytalePageImage> fairytalePageImages = new ArrayList<>();
 
+    @OneToMany(mappedBy = "fairytale", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ChildReadBooks> childReadBooks = new ArrayList<>();
+
     private Fairytale(String title, String author, String illustrator, String isbn, String imageUrl,
                       Integer publishedYear, String publisher, CATEGORY category, Integer totalPages) {
         this.title = title;

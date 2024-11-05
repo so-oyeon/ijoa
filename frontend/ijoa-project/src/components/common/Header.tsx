@@ -40,13 +40,13 @@ const Header = () => {
 
   // 자녀 도서관 라우팅
   const libraryClick = () => {
-    navigate(`/fairytale/search`);
+    navigate(`/child/fairytale/search`);
   };
 
   // 자녀 메인 라우팅
   const fairytalelistClick = () => {
-    navigate(`/fairytale/list`)
-  }
+    navigate(`/child/fairytale/list`);
+  };
 
   // 자녀 내 책장 라우팅
   const myRoomBookShelvesClick = () => {
@@ -122,7 +122,6 @@ const Header = () => {
       <div className="w-2/3 h-full flex items-center space-x-5">
         {/* 로고 */}
         <img className="h-full" src="/assets/logo.png" alt="" onClick={handleGoToMain} />
-
       </div>
 
       <div className="grid grid-cols-5 gap-3">
