@@ -53,7 +53,7 @@ const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, quizData="" }) =
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center h-screen z-50">
-      <div className="w-[700px] h-[450px] bg-white px-10 pb-10 rounded-3xl shadow-lg flex flex-col justify-center items-center relative">
+      <div className="w-[700px] h-[450px] bg-white px-10 pb-10 rounded-2xl shadow-lg flex flex-col justify-center items-center relative">
         <div className="flex items-center gap-8">
           <img src={animalImage} alt="Animal Character" className="w-[300px] h-auto mt-10" />
           <div className="relative w-full text-center">

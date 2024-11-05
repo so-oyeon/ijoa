@@ -14,7 +14,7 @@ const FocusAlertModal: React.FC<FocusAlertModalProps> = ({ isOpen, onClose }) =>
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
-      <div className="relative w-1/2 text-center bg-white rounded-3xl shadow-lg">
+      <div className="relative w-1/2 text-center bg-white rounded-2xl shadow-lg">
         <div className="pt-3 pb-16">
           <div className="flex justify-center items-center">
             <img src={Attention} alt="집중 아이콘" className="w-36 absolute top-2" />

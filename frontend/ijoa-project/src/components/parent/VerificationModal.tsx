@@ -32,7 +32,7 @@ const VerificationModal: React.FC<VerificationModalProps> = ({ isOpen, onClose, 
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="relative w-1/3 py-16 bg-white rounded-lg p-6">
+      <div className="relative w-1/3 py-16 bg-white rounded-2xl p-6">
         <button className="absolute w-[50px] top-4 right-4 text-red-500" onClick={onClose}>
           <img src={back} alt="뒤로가기" />
         </button>
