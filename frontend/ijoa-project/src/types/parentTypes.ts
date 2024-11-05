@@ -15,3 +15,9 @@ export interface ChildCreateInfo {
   gender: string;
   profileImg: string;
 }
+
+// 히스토그램 집중한 시간 응답 데이터
+export interface FocusTimeUnitInfo {
+  unit: string;
+  avgAttentionRate: number;
+}

@@ -5,8 +5,8 @@ import ChildProfileCreateModal from "../../components/parent/childProfile/ChildP
 import ChildProfileUpdateModal from "../../components/parent/childProfile/ChildProfileUpdateModal";
 import { useNavigate } from "react-router-dom";
 import { userApi } from "../../api/userApi";
-import { childApi } from "../../api/childApi";
-import { ChildInfo } from "../../types/childTypes";
+import { parentApi } from "../../api/parentApi";
+import { ChildInfo } from "../../types/parentTypes";
 import LoadingAnimation from "../../components/common/LoadingAnimation";
 
 const ChildProfileList = () => {
@@ -40,12 +40,12 @@ const ChildProfileList = () => {
   // 자녀 프로필 목록 조회 API 통신 함수
   const getChildInfoList = async () => {
     try {
-      const response = await childApi.getChildList();
+      const response = await parentApi.getChildList();
       if (response.status === 200) {
         setChildList(response.data);
       }
     } catch (error) {
-      console.log("childApi의 getChildList : ", error);
+      console.log("parentApi의 getChildList : ", error);
     }
   };
 
