@@ -18,7 +18,7 @@ const DeleteInformationModal: React.FC<DeleteInformationModalProps> = ({ isOpen,
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
-      <div className="relative w-1/3 max-w-md p-8 bg-white rounded-lg shadow-lg">
+      <div className="relative w-1/3 max-w-md p-8 bg-white rounded-2xl shadow-lg">
         <h2 className="text-3xl font-bold text-center mb-4 red-highlight">탈퇴 안내</h2>
         <div className=" whitespace-pre-line font-semibold text-lg text-gray-600 mt-4 mb-4">
           {"회원 탈퇴를 진행하기 전 \n 아래 항목을 꼭 확인해 주세요"}.
