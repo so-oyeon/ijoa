@@ -1,6 +1,7 @@
 package com.checkitout.ijoa.child.domain;
 
 import com.checkitout.ijoa.child.domain.Enum.Gender;
+import com.checkitout.ijoa.fairytale.domain.ChildReadBooks;
 import com.checkitout.ijoa.fairytale.domain.PageHistory;
 import com.checkitout.ijoa.user.domain.User;
 import jakarta.persistence.CascadeType;
@@ -57,6 +58,9 @@ public class Child {
 
     @OneToMany(mappedBy = "child", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PageHistory> pageHistories = new ArrayList<>();
+
+    @OneToMany(mappedBy = "child", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ChildReadBooks> childReadBooks = new ArrayList<>();
 
     public static Child createChild(User parent, String name, String profile, LocalDate birth, Gender gender,
                                     LocalDateTime now) {

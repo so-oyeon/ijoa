@@ -9,6 +9,7 @@ import com.checkitout.ijoa.child.repository.ChildRepository;
 import com.checkitout.ijoa.exception.CustomException;
 import com.checkitout.ijoa.fairytale.domain.CATEGORY;
 import com.checkitout.ijoa.fairytale.domain.EyeTrackingData;
+import com.checkitout.ijoa.fairytale.repository.ChildReadBooksRepository;
 import com.checkitout.ijoa.fairytale.repository.EyeTrackingDataRepository;
 import com.checkitout.ijoa.statistics.dto.CategoryStatisticsResponse;
 import com.checkitout.ijoa.statistics.dto.FocusTimeResponse;
@@ -40,6 +41,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class StatisticsService {
     private final ChildRepository childRepository;
     private final EyeTrackingDataRepository eyeTrackingDataRepository;
+    private final ChildReadBooksRepository childReadBooksRepository;
     private final SecurityUtil securityUtil;
 
     /**
@@ -83,15 +85,15 @@ public class StatisticsService {
      * 분류별 독서 통계 조회
      */
     public List<CategoryStatisticsResponse> getCategoryStatistics(Long childId) {
+        User user = securityUtil.getUserByToken();
+        Child child = getChildById(childId);
+        validateChildAccess(user, child);
 
-        List<CategoryStatisticsResponse> data = new ArrayList<>();
+        List<Object[]> results = childReadBooksRepository.countByCategoryAndChild(child);
 
-        int count = 10;
-        for (CATEGORY category : CATEGORY.values()) {
-            data.add(CategoryStatisticsResponse.test(category.getDisplayName(), count--));
-        }
-
-        return data;
+        return results.stream()
+                .map(result -> CategoryStatisticsResponse.of((CATEGORY) result[0], (Long) result[1]))
+                .collect(Collectors.toList());
     }
 
 
@@ -111,7 +113,7 @@ public class StatisticsService {
     private List<FocusTimeResponse> generateFocusTimeResponses(List<EyeTrackingData> dataList, String interval) {
         Map<String, List<Float>> attentionRatesByUnit = new LinkedHashMap<>();
         getAllUnits(interval).forEach(unit -> attentionRatesByUnit.put(unit, new ArrayList<>()));
-        
+
         for (EyeTrackingData data : dataList) {
             String unit = getUnit(data.getTrackedAt(), interval);
             float attentionRate = data.getIsGazeOutOfScreen() ? 0f : data.getAttentionRate();
