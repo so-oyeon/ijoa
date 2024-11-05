@@ -1,6 +1,8 @@
 import { MdLogout, MdChildCare } from "react-icons/md";
 import { PiUserSwitch } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
+import { userApi } from "../../api/userApi";
+import Swal from "sweetalert2";
 
 const ProfileDropDown = () => {
   const navigate = useNavigate();
@@ -11,8 +13,28 @@ const ProfileDropDown = () => {
     navigate("/parent/child/list");
   };
 
-  const handleLogout = () => {
-    navigate("/home");
+  const handleLogout = async () => {
+    try {
+      const response = await userApi.logout();
+      if (response.status === 200) {
+        localStorage.clear();
+      }
+      Swal.fire({
+        icon: "success",
+        title: "로그아웃이 완료되었습니다",
+        confirmButtonText: "확인",
+      }).then(() => {
+        navigate("/home");
+      });
+    } catch (error) {
+      console.log("userApi의 logout : ", error);
+      Swal.fire({
+        icon: "error",
+        title: "로그아웃 실패",
+        text: "다시 시도해 주세요.",
+        confirmButtonText: "확인",
+      });
+    }
   };
 
   return (
@@ -28,7 +50,8 @@ const ProfileDropDown = () => {
 
       <ul
         tabIndex={0}
-        className="menu menu-sm dropdown-content w-60 p-2 mt-3 bg-base-100 rounded-box border-2 shadow-lg z-[1] grid gap-1">
+        className="menu menu-sm dropdown-content w-60 p-2 mt-3 bg-base-100 rounded-box border-2 shadow-lg z-[1] grid gap-1"
+      >
         <li className="h-14">
           <div className="w-full h-full flex items-center space-x-3 hover:bg-white">
             <MdChildCare className="text-2xl" />
