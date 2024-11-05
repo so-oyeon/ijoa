@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -33,6 +34,7 @@ public class Answer {
     @Column(length = 512)
     private String answer;
 
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
     public Answer(String answer, Child child, Quiz quiz) {
