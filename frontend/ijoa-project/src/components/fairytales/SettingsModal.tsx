@@ -32,8 +32,10 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
     const bgmOption = toggleOptions.find((option) => option.label === "bgm");
     if (bgmOption?.checked) {
       MusicManager.playChildBgm();
+      localStorage.setItem("bgm", "true");
     } else {
       MusicManager.stopBgm();
+      localStorage.setItem("bgm", "false");
     }
   }, [toggleOptions]);
 
