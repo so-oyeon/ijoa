@@ -71,7 +71,9 @@ public class StatisticsController implements StatisticsApiDocumentation {
             @Valid @ModelAttribute TypographyRequest request) {
         List<TypographyResponse> result = statisticsService.getTypography(childId, request.getCount());
 
-        return ResponseEntity.status(HttpStatus.OK).body(result);
+        HttpStatus status = result.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK;
+
+        return ResponseEntity.status(status).body(result);
     }
 
     /**

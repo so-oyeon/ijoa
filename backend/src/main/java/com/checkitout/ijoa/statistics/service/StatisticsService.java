@@ -16,6 +16,7 @@ import com.checkitout.ijoa.statistics.dto.ReadingReportResponse;
 import com.checkitout.ijoa.statistics.dto.TypographyResponse;
 import com.checkitout.ijoa.user.domain.User;
 import com.checkitout.ijoa.util.SecurityUtil;
+import jakarta.persistence.Tuple;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -67,14 +68,23 @@ public class StatisticsService {
         return ReadingReportResponse.test();
     }
 
+    /**
+     * 집중한 단어 타이포그래피 조회
+     */
     public List<TypographyResponse> getTypography(Long childId, Integer count) {
+        User user = securityUtil.getUserByToken();
 
-        List<TypographyResponse> data = new ArrayList<>();
-        for (int i = 0; i < count; i++) {
-            data.add(TypographyResponse.test("사과" + i, count - i));
-        }
+        Child child = getChildById(childId);
 
-        return data;
+        validateChildAccess(user, child);
+
+        // 시선 추적 데이터 조회 및 단어별 집중 횟수 계산
+        List<Tuple> wordFocusCount = eyeTrackingDataRepository.findWordFocusCount(child, count);
+
+        // 응답 객체로 변환
+        return wordFocusCount.stream()
+                .map(tuple -> TypographyResponse.of(tuple.get(0, String.class), tuple.get(1, Long.class)))
+                .collect(Collectors.toList());
     }
 
     public List<CategoryStatisticsResponse> getCategoryStatistics(Long childId) {
