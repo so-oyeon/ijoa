@@ -55,7 +55,7 @@ const HistogramChart = ({ childId, filter }: Props) => {
   if (!data || isLoading) {
     return (
       <div className="grow border-4 border-[#F5F5F5] rounded-2xl flex justify-center items-center">
-        <Lottie className="w-40 aspect-1" animationData={loadingAnimation} />
+        <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
       </div>
     );
   }
