@@ -37,6 +37,7 @@ public class TTSService {
     private static final String REQUEST_TOPIC = "tts_create_audio";
     private static final String RESPONSE_TOPIC = "tts_save_audio";
     private static final String TTS_CREATE_TOPIC = "create_tts";
+//    private static final String TTS_MODEL_TOPIC =  "tts_model_path";
 
     private final SecurityUtil securityUtil;
     private final FileService fileService;
@@ -204,8 +205,12 @@ public class TTSService {
 
     // tts 학습 시작
     public void startTrain(Long ttsId) {
-        List<TrainAudio> trainAudios = trainAudioRepository.findByTtsId(ttsId).orElseThrow(()-> new CustomException(ErrorCode.TRAINAUDIO_NOT_FOUND));
+        // 학습데이터
+        List<TrainAudio> trainAudios = trainAudioRepository.findByTtsIdOrderByScriptId(ttsId).orElseThrow(()-> new CustomException(ErrorCode.TRAINAUDIO_NOT_FOUND));
+        //s3경로
         List<String> paths = new ArrayList<>();
+        // 굳이?
+        // script
         List<String> scripts = new ArrayList<>();
 
         for(TrainAudio trainAudio : trainAudios){

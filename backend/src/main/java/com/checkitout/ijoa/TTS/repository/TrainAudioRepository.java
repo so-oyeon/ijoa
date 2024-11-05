@@ -7,5 +7,5 @@ import java.util.Optional;
 import java.util.List;
 public interface TrainAudioRepository extends JpaRepository<TrainAudio,Long> {
     TrainAudio findByTtsIdAndScriptId(Long ttsId, Long scriptId);
-    Optional<List<TrainAudio>> findByTtsId(Long ttsId);
+    Optional<List<TrainAudio>> findByTtsIdOrderByScriptId(Long ttsId);
 }
