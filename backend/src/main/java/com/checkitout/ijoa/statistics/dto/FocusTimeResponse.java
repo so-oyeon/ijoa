@@ -12,13 +12,13 @@ public class FocusTimeResponse {
     @Schema(description = "단위", example = "2024-10-25")
     private final String unit;
 
-    @Schema(description = "평균 집중도", example = "평균 집중도")
+    @Schema(description = "평균 집중도", example = "5.8")
     private final Float avgAttentionRate;
 
-    public static FocusTimeResponse test(String date) {
+    public static FocusTimeResponse of(String unit, Float avgAttentionRate) {
         return FocusTimeResponse.builder()
-                .unit(date)
-                .avgAttentionRate(10.5f)
+                .unit(unit)
+                .avgAttentionRate(avgAttentionRate)
                 .build();
     }
 }
