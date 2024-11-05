@@ -2,8 +2,10 @@ package com.checkitout.ijoa.TTS.controller;
 
 import com.checkitout.ijoa.TTS.docs.TTSApiDocumentation;
 import com.checkitout.ijoa.TTS.dto.request.TTSProfileRequestDto;
+import com.checkitout.ijoa.TTS.dto.request.TTSTrainRequestDto;
 import com.checkitout.ijoa.TTS.dto.response.ScriptResponseDto;
 import com.checkitout.ijoa.TTS.dto.response.TTSProfileResponseDto;
+import com.checkitout.ijoa.TTS.dto.response.TTSTrainResponseDto;
 import com.checkitout.ijoa.TTS.service.TTSService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -56,6 +58,20 @@ public class TTSController implements TTSApiDocumentation {
         List<ScriptResponseDto> responseDtoList = ttsService.getSriptList();
 
         return new ResponseEntity<>(responseDtoList, HttpStatus.OK);
+    }
+
+    @Override
+    @PostMapping("/train/{ttsId}")
+    public ResponseEntity<?> saveTrainData(@PathVariable("ttsId") Long ttsId,@RequestBody TTSTrainRequestDto requestDto) throws IOException {
+        List<TTSTrainResponseDto> savedTrainData = ttsService.saveTrainData(ttsId, requestDto);
+        return new ResponseEntity<>(savedTrainData, HttpStatus.OK);
+    }
+
+    @Override
+    @GetMapping("/audio-book/{bookId}/{TTSId}")
+    public ResponseEntity<?> createAudioBook(@PathVariable("bookId") Long bookId,@PathVariable("TTSId") Long ttsId) throws IOException {
+        ttsService.createAudioBook(bookId,ttsId);
+        return new ResponseEntity<>( HttpStatus.OK);
     }
 
 }
