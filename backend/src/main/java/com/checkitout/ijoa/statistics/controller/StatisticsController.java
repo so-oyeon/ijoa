@@ -30,16 +30,17 @@ public class StatisticsController implements StatisticsApiDocumentation {
      * 집중한 시간 그래프 조회
      *
      * @param childId 아이 ID
-     * @param request period, startDate
-     * @return 기간에 맞는 집중한 시간 그래프 목록을 포함하는 ResponseEntity 객체를 반환합니다. 집중한 시간 그래프 조회에 실패하면 에러 코드를 담은 ResponseEntity를 반환합니다.
+     * @param request interval
+     * @return 주기에 맞는 집중한 시간 그래프 목록을 포함하는 ResponseEntity 객체를 반환합니다. 집중한 시간 그래프 조회에 실패하면 에러 코드를 담은 ResponseEntity를 반환합니다.
      */
     @GetMapping("/focus-time")
     public ResponseEntity<List<FocusTimeResponse>> getFocusTime(@PathVariable Long childId,
                                                                 @Valid @ModelAttribute FocusTimeRequest request) {
-        List<FocusTimeResponse> result = statisticsService.getFocusTime(childId, request.getPeriod(),
-                request.getStartDate());
+        List<FocusTimeResponse> result = statisticsService.getFocusTime(childId, request.getInterval());
 
-        return ResponseEntity.status(HttpStatus.OK).body(result);
+        HttpStatus status = result.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK;
+
+        return ResponseEntity.status(status).body(result);
     }
 
     /**
@@ -69,7 +70,9 @@ public class StatisticsController implements StatisticsApiDocumentation {
             @Valid @ModelAttribute TypographyRequest request) {
         List<TypographyResponse> result = statisticsService.getTypography(childId, request.getCount());
 
-        return ResponseEntity.status(HttpStatus.OK).body(result);
+        HttpStatus status = result.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK;
+
+        return ResponseEntity.status(status).body(result);
     }
 
     /**
@@ -82,6 +85,8 @@ public class StatisticsController implements StatisticsApiDocumentation {
     public ResponseEntity<List<CategoryStatisticsResponse>> getCategoryStatistics(@PathVariable Long childId) {
         List<CategoryStatisticsResponse> result = statisticsService.getCategoryStatistics(childId);
 
-        return ResponseEntity.status(HttpStatus.OK).body(result);
+        HttpStatus status = result.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK;
+
+        return ResponseEntity.status(status).body(result);
     }
 }

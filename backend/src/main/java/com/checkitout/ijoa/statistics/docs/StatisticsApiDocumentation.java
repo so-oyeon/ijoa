@@ -21,14 +21,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 @Tag(name = "Statistics", description = "통계 관련 API")
 public interface StatisticsApiDocumentation {
 
-    @Operation(summary = "집중한 시간 그래프 조회", description = "아이가 집중한 시간 그래프를 조회합니다.<br>기간에 맞는 집중한 시간 그래프 목록을 포함하는 ResponseEntity 객체를 반환합니다. 집중한 시간 그래프 조회에 실패하면 에러 코드를 담은 ResponseEntity를 반환합니다.")
+    @Operation(summary = "집중한 시간 그래프 조회", description = "아이가 집중한 시간 그래프를 조회합니다.<br>주기에 맞는 집중한 시간 그래프 목록을 포함하는 ResponseEntity 객체를 반환합니다. 집중한 시간 그래프 조회에 실패하면 에러 코드를 담은 ResponseEntity를 반환합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "동화책의 전체 페이지 목록 조회 성공"),
             @ApiResponse(responseCode = "204", description = "동화책의 전체 페이지 목록 조회 성공 - 시선추적 데이터가 없는 경우", content = @Content),
             @ApiResponse(responseCode = "400", description = "잘못된 입력", content = @Content),
             @ApiResponse(responseCode = "401", description = "로그인 안함", content = @Content),
             @ApiResponse(responseCode = "403", description = "부모 ID와 연결되지 않은 아이 ID", content = @Content),
-            @ApiResponse(responseCode = "404", description = "존재하지 않는 아이 ID", content = @Content),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 부모 ID / 존재하지 않는 아이 ID", content = @Content),
             @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
     })
     public ResponseEntity<List<FocusTimeResponse>> getFocusTime(
@@ -54,7 +54,7 @@ public interface StatisticsApiDocumentation {
             @ApiResponse(responseCode = "400", description = "잘못된 입력", content = @Content),
             @ApiResponse(responseCode = "401", description = "로그인 안함", content = @Content),
             @ApiResponse(responseCode = "403", description = "부모 ID와 연결되지 않은 아이 ID", content = @Content),
-            @ApiResponse(responseCode = "404", description = "존재하지 않는 아이 ID", content = @Content),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 부모 ID / 존재하지 않는 아이 ID", content = @Content),
             @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
     })
     public ResponseEntity<List<TypographyResponse>> getTypography(
@@ -67,7 +67,7 @@ public interface StatisticsApiDocumentation {
             @ApiResponse(responseCode = "204", description = "분류별 독서 통계 조회 성공 - 독서 기록이 없는 경우", content = @Content),
             @ApiResponse(responseCode = "401", description = "로그인 안함", content = @Content),
             @ApiResponse(responseCode = "403", description = "부모 ID와 연결되지 않은 아이 ID", content = @Content),
-            @ApiResponse(responseCode = "404", description = "존재하지 않는 아이 ID", content = @Content),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 부모 ID / 존재하지 않는 아이 ID", content = @Content),
             @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
     })
     public ResponseEntity<List<CategoryStatisticsResponse>> getCategoryStatistics(

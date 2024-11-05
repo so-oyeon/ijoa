@@ -25,7 +25,7 @@ const ChildProfileList = () => {
         localStorage.setItem("refreshToken", response.data.refreshToken);
         localStorage.setItem("childId", response.data.userId);
         localStorage.setItem("userType", "child");
-        navigate("/fairytale/list");
+        navigate("/child/fairytale/list");
       }
     } catch (error) {
       console.log("userApi의 switchChild : ", error);
@@ -86,7 +86,8 @@ const ChildProfileList = () => {
                 />
                 <div
                   className="w-12 aspect-1 bg-white rounded-full bg-opacity-50 shadow-[1px_3px_2px_0_rgba(0,0,0,0.2)] flex justify-center items-center absolute top-0 right-0"
-                  onClick={() => handleUpdateChild(child)}>
+                  onClick={() => handleUpdateChild(child)}
+                >
                   <TbPencilMinus className="text-2xl" />
                 </div>
               </div>

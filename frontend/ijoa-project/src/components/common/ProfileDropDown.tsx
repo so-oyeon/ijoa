@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { ChildInfo } from "../../types/parentTypes";
 import { parentApi } from "../../api/parentApi";
 import { useEffect, useState } from "react";
+import { userApi } from "../../api/userApi";
+import Swal from "sweetalert2";
 
 const ProfileDropDown = () => {
   const navigate = useNavigate();
@@ -15,8 +17,28 @@ const ProfileDropDown = () => {
     navigate("/parent/child/list");
   };
 
-  const handleLogout = () => {
-    navigate("/home");
+  const handleLogout = async () => {
+    try {
+      const response = await userApi.logout();
+      if (response.status === 200) {
+        localStorage.clear();
+      }
+      Swal.fire({
+        icon: "success",
+        title: "로그아웃이 완료되었습니다",
+        confirmButtonText: "확인",
+      }).then(() => {
+        navigate("/home");
+      });
+    } catch (error) {
+      console.log("userApi의 logout : ", error);
+      Swal.fire({
+        icon: "error",
+        title: "로그아웃 실패",
+        text: "다시 시도해 주세요.",
+        confirmButtonText: "확인",
+      });
+    }
   };
 
   // 자녀 프로필을 가져오는 api 통신 함수

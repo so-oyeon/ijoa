@@ -3,13 +3,14 @@ package com.checkitout.ijoa.statistics.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 @Getter
-@Setter
-@NoArgsConstructor
 @Schema(description = "집중한 단어 타이포그래피 요청")
 public class TypographyRequest {
 

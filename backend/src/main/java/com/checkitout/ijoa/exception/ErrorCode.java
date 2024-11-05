@@ -35,6 +35,10 @@ public enum ErrorCode {
     //file
     FILE_CONVERSION_ERROR(HttpStatus.BAD_REQUEST, "FILE-001", "파일 변환 에러가 발생했습니다."),
 
+    // TrainAudio
+    TRAINAUDIO_NOT_FOUND(HttpStatus.NOT_FOUND,"TRAIN-001","TRIANDATA를 찾을 수 없습니다."),
+    AUDIO_NOT_FOUND(HttpStatus.NOT_FOUND,"AUDIO-001","AUDIO를 찾을 수 없습니다."),
+
     //script
     SCRIPT_NOT_FOUND(HttpStatus.NOT_FOUND,"SCRIPT-001","SCRIPT를 찾을 수 없습니다."),
 
@@ -42,7 +46,10 @@ public enum ErrorCode {
     TTS_NOT_FOUND(HttpStatus.NOT_FOUND, "TTS-001", "TTS를 찾을 수 없습니다."),
     TTS_NO_CONTENT(HttpStatus.NO_CONTENT, "TTS-002", "TTS가 없습니다. "),
     TTS_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, "TTS-003", "TTS는 4개까지 생성할 수 있습니다."),
-    UNAUTHORIZED_USER(HttpStatus.FORBIDDEN, "UU-001", "권한이 없습니다.");
+    UNAUTHORIZED_USER(HttpStatus.FORBIDDEN, "UU-001", "권한이 없습니다."),
+
+    // statistics
+    INVALID_INTERVAL(HttpStatus.BAD_REQUEST, "STATISTICS-001", "주기는 date, day, hour 중 하나여야 합니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
