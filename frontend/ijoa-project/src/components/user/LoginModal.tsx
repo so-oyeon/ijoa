@@ -45,7 +45,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ openForgotPasswordModal }) => {
             icon: "error",
             title: "로그인 실패",
             text: "비밀번호가 잘못되었습니다.",
-            confirmButtonColor: "#3085d6",
+            confirmButtonColor: "#67CCFF",
           });
         } else if (error.response?.status === 404) {
           Swal.fire({
@@ -58,7 +58,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ openForgotPasswordModal }) => {
           Swal.fire({
             icon: "error",
             title: "로그인 실패",
-            text: "로그인에 실패했습니다. 다시 시도해주세요.",
+            text: "다시 시도해주세요.",
             confirmButtonColor: "#3085d6",
           });
         }
@@ -101,7 +101,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ openForgotPasswordModal }) => {
         로그인
       </button>
       <div className="text-right mr-8">
-        <button onClick={openForgotPasswordModal} className="text-sm text-gray-500 text-[#565656]">
+        <button onClick={openForgotPasswordModal} className="text-sm text-[#565656]">
           비밀번호 찾기
         </button>
       </div>

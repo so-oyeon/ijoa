@@ -62,7 +62,7 @@ const FairytaleSearchPage: React.FC = () => {
   };
 
   const handleGoToMain = () => {
-    navigate(`/fairytale/list`);
+    navigate(`/child/fairytale/list`);
   };
 
   return (

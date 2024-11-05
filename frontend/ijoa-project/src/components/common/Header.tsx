@@ -40,7 +40,7 @@ const Header = () => {
 
   // 자녀 도서관 라우팅
   const libraryClick = () => {
-    navigate(`/fairytale/search`);
+    navigate(`/child/fairytale/list`);
   };
 
   // 자녀 메인 라우팅
