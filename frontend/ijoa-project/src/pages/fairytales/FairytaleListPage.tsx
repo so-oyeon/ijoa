@@ -10,6 +10,8 @@ import {
   FairyTaleByCategoryListResponse,
 } from "../../types/fairytaleTypes";
 import { ChildInfo } from "../../types/childTypes";
+import Lottie from "react-lottie-player";
+import loadingAnimation from "../../lottie/footPrint-loadingAnimation.json";
 
 const FairytaleListPage: React.FC = () => {
   const navigate = useNavigate();
@@ -131,7 +133,7 @@ const FairytaleListPage: React.FC = () => {
           {popularFairyTales.length > 0 ? (
             <Swiper bookCovers={bookCovers} titles={titles} onBookClick={handlePopularBookClick} />
           ) : (
-            <div>Loading...</div>
+            <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
           )}
         </div>
         <div className="mb-10">
@@ -143,7 +145,7 @@ const FairytaleListPage: React.FC = () => {
               onBookClick={handleRecommendedBookClick}
             />
           ) : (
-            <div>Loading...</div>
+            <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
           )}
         </div>
         <div>
@@ -158,7 +160,7 @@ const FairytaleListPage: React.FC = () => {
               onBookClick={handleCategoryBookClick}
             />
           ) : (
-            <div>Loading...</div>
+            <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
           )}
         </div>
       </div>
