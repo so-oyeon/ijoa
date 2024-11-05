@@ -10,12 +10,14 @@ import com.checkitout.ijoa.fairytale.repository.FairytaleRepository;
 import com.checkitout.ijoa.file.service.FileService;
 import com.checkitout.ijoa.quiz.domain.Answer;
 import com.checkitout.ijoa.quiz.domain.Quiz;
+import com.checkitout.ijoa.quiz.domain.QuizBook;
 import com.checkitout.ijoa.quiz.dto.request.AnswerRequestDto;
 import com.checkitout.ijoa.quiz.dto.request.ChatGPTRequest;
 import com.checkitout.ijoa.quiz.dto.request.ChatGPTResponse;
 import com.checkitout.ijoa.quiz.dto.response.AnswerUrlResponseDto;
 import com.checkitout.ijoa.quiz.dto.response.QuizResponseDto;
 import com.checkitout.ijoa.quiz.repository.AnswerRepository;
+import com.checkitout.ijoa.quiz.repository.QuizBookRepository;
 import com.checkitout.ijoa.quiz.repository.QuizRepository;
 import com.checkitout.ijoa.util.SecurityUtil;
 import jakarta.transaction.Transactional;
@@ -42,6 +44,7 @@ public class QuizService {
     private final FairytaleRepository fairytaleRepository;
     private final FairytalePageContentRepository fairytalePageContentRepository;
     private final AnswerRepository answerRepository;
+    private final QuizBookRepository quizBookRepository;
 
     private final FileService fileService;
 
@@ -82,7 +85,10 @@ public class QuizService {
         Quiz quiz = quizRepository.findById(requestDto.getQuizId()).orElseThrow(() -> new CustomException(ErrorCode.QUIZ_NOT_FOUND));
         Child child = securityUtil.getChildByToken();
 
-        Answer answer = Answer.of(key,child,quiz);
+        QuizBook quizBook = QuizBook.of(child,quiz.getFairytale());
+        quizBook = quizBookRepository.save(quizBook);
+
+        Answer answer = Answer.of(key,quiz,quizBook);
 
         answer =answerRepository.save(answer);
 

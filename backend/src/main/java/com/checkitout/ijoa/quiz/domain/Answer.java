@@ -31,19 +31,24 @@ public class Answer {
     @JoinColumn(name = "child_id")
     private Child child;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "quiz_book_id")
+    private QuizBook quizBook;
+
     @Column(length = 512)
     private String answer;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    public Answer(String answer, Child child, Quiz quiz) {
+    public Answer(String answer, Child child, Quiz quiz , QuizBook quizBook) {
         this.answer = answer;
         this.child = child;
         this.quiz = quiz;
+        this.quizBook = quizBook;
     }
 
-    public static Answer of(String answer, Child child, Quiz quiz) {
-        return new Answer(answer, child, quiz);
+    public static Answer of(String answer, Quiz quiz,QuizBook quizBook) {
+        return new Answer(answer, quizBook.getChild(), quiz,quizBook);
     }
 }
