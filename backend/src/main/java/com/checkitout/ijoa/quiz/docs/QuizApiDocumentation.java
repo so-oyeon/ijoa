@@ -1,8 +1,10 @@
 package com.checkitout.ijoa.quiz.docs;
 
 import com.checkitout.ijoa.quiz.dto.request.AnswerRequestDto;
+import com.checkitout.ijoa.quiz.dto.request.QuizBookRequestDto;
 import com.checkitout.ijoa.quiz.dto.response.AnswerResponseDto;
 import com.checkitout.ijoa.quiz.dto.response.AnswerUrlResponseDto;
+import com.checkitout.ijoa.quiz.dto.response.QuizBookResponseDto;
 import com.checkitout.ijoa.quiz.dto.response.QuizResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -32,6 +34,13 @@ public interface QuizApiDocumentation {
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
     public ResponseEntity<AnswerUrlResponseDto> getAnswerUrl(@RequestBody AnswerRequestDto requestDto);
+
+    @Operation(summary = "답변한 책 목록 조회", description = "퀴즈 답변한 책의 목록입니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "답변 조회 성공"),
+            @ApiResponse(responseCode = "500", description = "서버 오류")
+    })
+    public Page<QuizBookResponseDto> getQuizBookList(@PathVariable Long childId ,@RequestParam int page,  @RequestBody QuizBookRequestDto requestDto);
 
 
     @Operation(summary = "특정 책 질문 답변 조회", description = "특정 책의 답변목록입니다.")

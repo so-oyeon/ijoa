@@ -2,8 +2,10 @@ package com.checkitout.ijoa.quiz.controller;
 
 import com.checkitout.ijoa.quiz.docs.QuizApiDocumentation;
 import com.checkitout.ijoa.quiz.dto.request.AnswerRequestDto;
+import com.checkitout.ijoa.quiz.dto.request.QuizBookRequestDto;
 import com.checkitout.ijoa.quiz.dto.response.AnswerResponseDto;
 import com.checkitout.ijoa.quiz.dto.response.AnswerUrlResponseDto;
+import com.checkitout.ijoa.quiz.dto.response.QuizBookResponseDto;
 import com.checkitout.ijoa.quiz.dto.response.QuizResponseDto;
 import com.checkitout.ijoa.quiz.service.QuizService;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +41,15 @@ public class QuizController implements QuizApiDocumentation {
     public ResponseEntity<AnswerUrlResponseDto> getAnswerUrl(AnswerRequestDto requestDto) {
         AnswerUrlResponseDto responseDto = quizService.getAnswerUrl(requestDto);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
+    @Override
+    @PostMapping("/answer/list/{childId}")
+    public Page<QuizBookResponseDto> getQuizBookList(@PathVariable("childId") Long childId,@RequestParam("page") int page, @RequestBody QuizBookRequestDto requestDto ) {
+        List<QuizBookResponseDto> responseDtos = quizService.getQuizBookList(requestDto, childId);
+
+        Pageable pageable = PageRequest.of(page, 8);
+        return new PageImpl<>(responseDtos, pageable, responseDtos.size());
     }
 
     private List<AnswerResponseDto> makeList(){

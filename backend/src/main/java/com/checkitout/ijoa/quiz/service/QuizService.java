@@ -14,7 +14,9 @@ import com.checkitout.ijoa.quiz.domain.QuizBook;
 import com.checkitout.ijoa.quiz.dto.request.AnswerRequestDto;
 import com.checkitout.ijoa.quiz.dto.request.ChatGPTRequest;
 import com.checkitout.ijoa.quiz.dto.request.ChatGPTResponse;
+import com.checkitout.ijoa.quiz.dto.request.QuizBookRequestDto;
 import com.checkitout.ijoa.quiz.dto.response.AnswerUrlResponseDto;
+import com.checkitout.ijoa.quiz.dto.response.QuizBookResponseDto;
 import com.checkitout.ijoa.quiz.dto.response.QuizResponseDto;
 import com.checkitout.ijoa.quiz.repository.AnswerRepository;
 import com.checkitout.ijoa.quiz.repository.QuizBookRepository;
@@ -26,6 +28,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -93,6 +100,24 @@ public class QuizService {
         answer =answerRepository.save(answer);
 
         return AnswerUrlResponseDto.builder().answerId(answer.getId()).answerUrl(url).build();
+
+    }
+
+    public List<QuizBookResponseDto> getQuizBookList(QuizBookRequestDto requestDto, Long childId) {
+
+        // LocalDate로 파싱
+        LocalDate start = LocalDate.parse(requestDto.getStartDate());
+        LocalDate end = LocalDate.parse(requestDto.getEndDate());
+
+        List<QuizBook> quizBooks =  quizBookRepository.findByChildIdAndCreatedAtBetween(childId, start, end)
+                .orElseThrow(() -> new CustomException(ErrorCode.FAIRYTALE_NO_CONTENT));
+        List<QuizBookResponseDto> responseDtos = new ArrayList<>();
+
+        for(QuizBook quizBook : quizBooks){
+            responseDtos.add(QuizBookResponseDto.from(quizBook));
+        }
+
+        return responseDtos;
 
     }
 }

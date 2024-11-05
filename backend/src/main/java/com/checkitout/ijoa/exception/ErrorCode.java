@@ -31,6 +31,7 @@ public enum ErrorCode {
     FAIRYTALE_PAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "FAIRYTALE-002", "존재하지 않는 페이지입니다."),
     PAGE_HISTORY_NOT_FOUND(HttpStatus.NOT_FOUND, "FAIRYTALE-003", "존재하지 않는 페이지 기록입니다."),
     PAGE_HISTORY_ACCESS_DENIED(HttpStatus.FORBIDDEN, "FAIRYTALE-004", "접근 불가능한 페이지 기록입니다."),
+    FAIRYTALE_NO_CONTENT(HttpStatus.NO_CONTENT, "FAIRYTALE-005", "동화책이 없습니다. "),
 
     //file
     FILE_CONVERSION_ERROR(HttpStatus.BAD_REQUEST, "FILE-001", "파일 변환 에러가 발생했습니다."),
