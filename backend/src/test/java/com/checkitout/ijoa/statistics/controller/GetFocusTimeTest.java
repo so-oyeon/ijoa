@@ -169,12 +169,12 @@ public class GetFocusTimeTest {
     @DisplayName("[NoContent] getFocusTime : 집중한 시간 그래프 조회 성공 - 데이터가 없는 경우")
     void getFocusTime_Success_NoContent() throws Exception {
         // given
-        Child child = Child.createChild(user, "testChild2", "", LocalDate.now(), Gender.MALE, now());
-        childRepository.save(child);
+        Child newChild = Child.createChild(user, "testChild2", "", LocalDate.now(), Gender.MALE, now());
+        childRepository.save(newChild);
 
         SecurityTestUtil.setUpSecurityContext(user.getId(), null);
 
-        Long childId = child.getId();
+        Long childId = newChild.getId();
 
         // when
         ResultActions result = mockMvc.perform(get(BASE_URL, childId)
@@ -206,7 +206,7 @@ public class GetFocusTimeTest {
     }
 
     @Test
-    @DisplayName("[NotFound] getFocusTime : 존재하지 않는 아이 조회로 인한 실패")
+    @DisplayName("[NotFound] getFocusTime : 존재하지 않는 아이 ID로 인한 실패")
     void getFocusTime_Fail_ChildNotFound() throws Exception {
         // given
         SecurityTestUtil.setUpSecurityContext(user.getId(), null);
@@ -245,15 +245,15 @@ public class GetFocusTimeTest {
     @DisplayName("[Forbidden] getFocusTime : 부모 ID와 연결되지 않은 아이 조회로 인한 실패")
     void getFocusTime_Fail_Forbidden() throws Exception {
         // given
-        User user2 = User.createUser("test2@test.com", "password", "test", now());
-        userRepository.save(user2);
+        User otherUser = User.createUser("test2@test.com", "password", "test", now());
+        userRepository.save(otherUser);
 
-        Child child2 = Child.createChild(user2, "testChild2", "", LocalDate.now(), Gender.MALE, now());
-        childRepository.save(child2);
+        Child otherChild = Child.createChild(otherUser, "testChild2", "", LocalDate.now(), Gender.MALE, now());
+        childRepository.save(otherChild);
 
         SecurityTestUtil.setUpSecurityContext(user.getId(), null);
 
-        Long childId = child2.getId();
+        Long childId = otherChild.getId();
 
         // when
         ResultActions result = mockMvc.perform(get(BASE_URL, childId)
