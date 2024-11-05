@@ -1,17 +1,55 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Histogram from "../../components/parent/stats/Histogram";
 import PieChart from "../../components/parent/stats/PieChart";
 import { GoDotFill } from "react-icons/go";
+import { childApi } from "../../api/childApi";
+import { ChildInfo } from "../../types/childTypes";
+import LoadingAnimation from "../../components/common/LoadingAnimation";
 
 const ReadingStats = () => {
   const filterText = ["일자", "요일", "시간"];
   const [selectHistogramFilter, setSelectHistogramFilter] = useState("시간");
+  const [childList, setChildList] = useState<ChildInfo[] | null>(null);
+  const [selectChild, setSelectChild] = useState<ChildInfo | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const analysisText = [
     "긴 문장이 많거나 텍스트가 복잡한 경우 집중도가 떨어집니다.",
     "평균 7분을 넘기면 집중력 저하가 두드러집니다.",
     "대답하는 것을 좋아하고, 대답 내용이 매우 구체적입니다.",
   ];
+
+  // 자녀 프로필 목록 조회 API 통신 함수
+  const getChildInfoList = async () => {
+    try {
+      setIsLoading(true);
+      const response = await childApi.getChildList();
+      if (response.status === 200) {
+        setChildList(response.data);
+        setSelectChild(response.data[0]);
+      }
+    } catch (error) {
+      console.log("childApi의 getChildList : ", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getChildInfoList();
+  }, []);
+
+  if (isLoading) {
+    return <LoadingAnimation />;
+  }
+
+  if (!selectChild || !childList || childList?.length === 0) {
+    return (
+      <div className="h-screen px-20 pt-28 pb-10 flex justify-center items-center">
+        <p>먼저 자녀 프로필을 만들어 주세요!</p>
+      </div>
+    );
+  }
 
   return (
     <div className="h-screen px-20 pt-28 pb-10 grid grid-rows-2 gap-3">
@@ -24,7 +62,24 @@ const ReadingStats = () => {
             alt=""
           />
 
-          <p className="text-lg font-bold">다솔이 / 만 6세</p>
+          <p className="text-lg font-bold">
+            {selectChild.name} / 만 {selectChild.age}세
+          </p>
+
+          <div className="dropdown">
+            <div tabIndex={0} role="button" className="btn m-1">
+              자녀 선택
+            </div>
+            <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
+              {childList?.map((child, index) => (
+                <li key={index} onClick={() => setSelectChild(child)}>
+                  <a>
+                    {child.name} / 만 {child.age}세
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
 
         {/* 히스토그램 차트 */}
