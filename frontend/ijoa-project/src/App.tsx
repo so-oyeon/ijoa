@@ -52,6 +52,8 @@ const App = () => {
                 <Route path="/child/myroom" element={<MyRoom />} />
                 {/* 내 책장 */}
                 <Route path="/child/mybookshelves" element={<MyBookShelves />} />
+                {/* 동화책 제목 검색 화면 */}
+                <Route path="/child/fairytale/search" element={<FairytaleSearchPage />} />
               </Route>
             </Routes>
           </>
@@ -65,8 +67,6 @@ const App = () => {
 
       {/* 동화 내용 */}
       <Route path="/fairytale/content/:fairytaleId" element={<FairyTaleContentPage />} />
-      {/* 동화책 제목 검색 화면 */}
-      <Route path="/child/fairytale/search" element={<FairytaleSearchPage />} />
 
       {/* 부모의 음성 앨범 상세 화면 */}
       <Route path="/parent/voice/album/:id" element={<VoiceAlbumDetail />} />
