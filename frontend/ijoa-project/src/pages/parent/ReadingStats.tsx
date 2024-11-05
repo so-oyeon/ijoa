@@ -59,7 +59,7 @@ const ReadingStats = () => {
         <div className="flex flex-col justify-center items-center space-y-3">
           <img
             className="w-3/4 aspect-1 bg-white rounded-full border object-cover"
-            src="/assets/profile-img-girl.png"
+            src={selectChild.profileUrl}
             alt=""
           />
 
