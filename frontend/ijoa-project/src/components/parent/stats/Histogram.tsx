@@ -22,8 +22,7 @@ const HistogramChart = ({ childId, filter }: Props) => {
       setIsLoading(true);
       const response = await parentApi.getFocusTimeData(childId, dataType);
       if (response.status === 200) {
-        setData(response.data.result);
-        console.log(response);
+        setData(response.data);
       }
     } catch (error) {
       console.log("parentApi의 getFocusTimeData : ", error);

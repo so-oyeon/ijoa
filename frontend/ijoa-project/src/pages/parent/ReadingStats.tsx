@@ -83,7 +83,7 @@ const ReadingStats = () => {
           <div className="flex justify-between">
             {/* 읽은 책 수 */}
             <p className="text-xl font-semibold">
-              지금까지 <span className="text-3xl text-[#24A994] font-semibold">13권</span> 읽었어요!
+              이때 <span className="text-3xl text-[#24A994] font-semibold">집중</span>이 잘 돼요!
             </p>
 
             {/* 기간 버튼바 */}
