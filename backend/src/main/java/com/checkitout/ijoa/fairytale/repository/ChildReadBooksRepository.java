@@ -11,11 +11,14 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ChildReadBooksRepository extends JpaRepository<ChildReadBooks, Long> {
 
-    @Query("SELECT f.category, COUNT(crb) " +
-            "FROM ChildReadBooks crb " +
-            "JOIN crb.fairytale f " +
-            "WHERE crb.child = :child " +
-            "AND crb.isCompleted = true " +
-            "GROUP BY f.category")
+    @Query("""
+            SELECT f.category, COUNT(crb)
+            FROM ChildReadBooks crb
+            JOIN crb.fairytale f
+            WHERE crb.child = :child
+            AND crb.isCompleted = true
+            GROUP BY f.category
+            ORDER BY COUNT(crb) DESC
+            """)
     List<Object[]> countByCategoryAndChild(@Param("child") Child child);
 }
