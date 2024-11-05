@@ -5,6 +5,7 @@ import com.checkitout.ijoa.quiz.dto.request.AnswerRequestDto;
 import com.checkitout.ijoa.quiz.dto.response.AnswerResponseDto;
 import com.checkitout.ijoa.quiz.dto.response.AnswerUrlResponseDto;
 import com.checkitout.ijoa.quiz.dto.response.QuizResponseDto;
+import com.checkitout.ijoa.quiz.service.QuizService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -22,15 +23,13 @@ import java.util.List;
 @RequestMapping("/quiz")
 public class QuizController implements QuizApiDocumentation {
 
+    private final QuizService quizService;
+
     // 질문 조회
     @Override
     @GetMapping("/question/{pageId}")
     public ResponseEntity<QuizResponseDto> getQuiz(@PathVariable Long pageId) {
-        QuizResponseDto responseDto = QuizResponseDto.builder()
-                .quizId(123412L)
-                .text("질문질문")
-                .build();
-
+        QuizResponseDto responseDto = quizService.fairytaleQuiz(pageId);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 

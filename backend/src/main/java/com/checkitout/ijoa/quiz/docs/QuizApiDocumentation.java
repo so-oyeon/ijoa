@@ -20,7 +20,6 @@ public interface QuizApiDocumentation {
     @Operation(summary = "퀴즈 질문 조회", description = "페이지에 해당하는 질문입니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "질문 조회 성공"),
-            @ApiResponse(responseCode = "400", description = "잘못된 요청"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
     public ResponseEntity<QuizResponseDto> getQuiz(@PathVariable Long pageId);
@@ -38,7 +37,6 @@ public interface QuizApiDocumentation {
     @Operation(summary = "특정 책 질문 답변 조회", description = "특정 책의 답변목록입니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "답변 조회 성공"),
-            @ApiResponse(responseCode = "400", description = "잘못된 요청"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
     public Page<AnswerResponseDto> getAnswerList(@PathVariable Long childrenId, @PathVariable Long fairytaleId, @RequestParam int page);
@@ -46,7 +44,6 @@ public interface QuizApiDocumentation {
     @Operation(summary = "답변 삭제", description = "답변을 삭제할 수 있습니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "답변 삭제 성공"),
-            @ApiResponse(responseCode = "400", description = "잘못된 요청"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
     public void deleteAnswer(@PathVariable Long answerId);
