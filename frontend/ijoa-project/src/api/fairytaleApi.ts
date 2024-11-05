@@ -6,7 +6,7 @@ import {
   FairyTaleContentResponse,
   FairyTalePageResponse,
   QuizQuestionResponse,
-  FairyTaleSearchResponse
+  FairyTaleSearchResponse,
 } from "../types/fairytaleTypes";
 
 export const fairyTaleApi = {

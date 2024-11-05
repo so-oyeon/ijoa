@@ -30,7 +30,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
-      <div className="w-1/3 py-8 text-center bg-white rounded-xl shadow-lg">
+      <div className="w-1/3 py-8 text-center bg-white rounded-2xl shadow-lg">
         <div className="flex justify-center items-center mb-6">
           <img src={SettingsIcon} alt="설정 아이콘" className="w-12 h-12" />
         </div>

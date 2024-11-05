@@ -77,7 +77,7 @@ const LevelModal: React.FC<LevelModalProps> = ({ minLevel, maxLevel, onClose }) 
 
   return (
     <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20">
-      <div className="relative bg-[#FCFFEA] p-10 rounded-lg shadow-lg w-1/2 max-w-2xl text-center">
+      <div className="relative bg-[#FCFFEA] p-10 rounded-2xl shadow-lg w-1/2 max-w-2xl text-center">
         <h2 className="text-2xl font-semibold mb-10 blue-highlight">단계 정보</h2>
         <button onClick={onClose} className="absolute top-4 right-4">
           <img src={closebutton} alt="Close" />

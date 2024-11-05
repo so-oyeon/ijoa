@@ -23,7 +23,7 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({ isOpen, onClose, hasRea
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
-      <div className="w-1/3 text-center bg-white rounded-3xl shadow-lg">
+      <div className="w-1/3 text-center bg-white rounded-2xl shadow-lg">
         <div className="px-4 py-8">
           <div className="text-xl font-bold">
             <span className="blue-highlight">누구 목소리</span>로 책을 읽어줄까요?

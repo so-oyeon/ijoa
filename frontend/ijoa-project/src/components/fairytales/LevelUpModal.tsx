@@ -48,7 +48,7 @@ const LevelUpModal: React.FC<LevelUpModalProps> = ({ isOpen }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
-      <div className="w-1/3 text-center bg-white rounded-3xl shadow-lg">
+      <div className="w-1/3 text-center bg-white rounded-2xl shadow-lg">
         <div className="px-4 py-8">
           <div className="mb-8 text-2xl font-bold text-center fairytale-font whitespace-pre-line">
             {"와~ 한 단계 성장했어요!\n나는야 책아장 🙌"}

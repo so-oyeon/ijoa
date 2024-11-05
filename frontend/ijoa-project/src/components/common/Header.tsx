@@ -4,12 +4,15 @@ import SettingsModal from "../../components/fairytales/SettingsModal";
 import ParentSettingsModal from "../../components/parent/ParentSettingsModal";
 import ProfileDropDown from "./ProfileDropDown";
 import SearchBar from "./SearchBar";
+import { childApi } from "../../api/childApi";
+import { ChildInfo } from "../../types/childTypes";
 
 const Header = () => {
   const type = localStorage.getItem("userType");
   const path = window.location.pathname;
   const [isChildSettingsModalOpen, setIsChildSettingsModalOpen] = useState(false); // 자녀 헤더 설정 모달창 열림 여부 상태 변수
   const [isParentSettingsModalOpen, setIsParentSettingsModalOpen] = useState(false); // 부모 헤더 설정 모달창 열림 여부 상태 변수
+  const [childInfo, setChildInfo] = useState<ChildInfo | null>(null);
   const navigate = useNavigate();
 
   // 부모 자녀 라우팅
@@ -76,6 +79,24 @@ const Header = () => {
     }
   };
 
+  // 자녀 프로필을 가져오는 api 통신 함수
+  const getChildProfile = async () => {
+    const childId = parseInt(localStorage.getItem("childId") || "0", 10);
+    if (!childId) {
+      console.error("Child ID is undefined");
+      return;
+    }
+
+    try {
+      const response = await childApi.getChildProfile(childId);
+      if (response.status === 200 && response.data) {
+        setChildInfo(response.data);
+      }
+    } catch (error) {
+      console.error("childApi의 getChildProfile:", error);
+    }
+  };
+
   const parentMenu = [
     { img: "child-icon", text: "자녀", action: childClick },
     { img: "tts-icon", text: "TTS", action: ttsClick },
@@ -121,7 +142,7 @@ const Header = () => {
         ))}
 
         {/* 프로필 모달 */}
-        {type === "child" ? <ProfileDropDown /> : <></>}
+        {type === "child" && <ProfileDropDown childInfo={childInfo} onProfileClick={getChildProfile} />}
       </div>
 
       {/* 자녀 헤더 설정 모달창 */}

@@ -28,4 +28,13 @@ public class Audio {
 
     private String audio;
 
+    public Audio(FairytaleTTS fairytaleTTS, FairytalePageContent page, String audio) {
+        this.fairytaleTTS = fairytaleTTS;
+        this.page = page;
+        this.audio = audio;
+    }
+
+    public static Audio of(FairytaleTTS fairytaleTTS, FairytalePageContent page, String audio) {
+        return new Audio(fairytaleTTS, page, audio);
+    }
 }

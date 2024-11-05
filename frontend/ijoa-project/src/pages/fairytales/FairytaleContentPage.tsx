@@ -162,7 +162,7 @@ const FairyTaleContentPage: React.FC = () => {
       {fairytaleData ? (
         <>
           <img src={fairytaleData.image} alt="동화책 내용 사진" className="w-screen h-screen object-cover" />
-          <div className="w-[1100px] h-[160px] p-4 flex absolute bottom-10 left-1/2 transform -translate-x-1/2 justify-between items-center bg-white bg-opacity-70 rounded-3xl shadow-lg">
+          <div className="w-[1100px] h-[160px] p-4 flex absolute bottom-10 left-1/2 transform -translate-x-1/2 justify-between items-center bg-white bg-opacity-70 rounded-2xl shadow-lg">
             <button className="items-center ml-5">
               <img src={SoundOnButton} alt="다시 듣기 버튼" className="w-20 h-20" />
               <p className="text-sm text-[#565656] font-bold">다시 듣기</p>
