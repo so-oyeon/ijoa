@@ -2,7 +2,7 @@ package com.checkitout.ijoa.statistics.service;
 
 import static com.checkitout.ijoa.exception.ErrorCode.CHILD_NOT_BELONG_TO_PARENT;
 import static com.checkitout.ijoa.exception.ErrorCode.CHILD_NOT_FOUND;
-import static com.checkitout.ijoa.exception.ErrorCode.INVALID_PERIOD;
+import static com.checkitout.ijoa.exception.ErrorCode.INVALID_INTERVAL;
 
 import com.checkitout.ijoa.child.domain.Child;
 import com.checkitout.ijoa.child.repository.ChildRepository;
@@ -17,15 +17,19 @@ import com.checkitout.ijoa.statistics.dto.TypographyResponse;
 import com.checkitout.ijoa.user.domain.User;
 import com.checkitout.ijoa.util.SecurityUtil;
 import jakarta.persistence.Tuple;
-import java.time.LocalDate;
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
-import java.util.TreeMap;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,26 +45,18 @@ public class StatisticsService {
     /**
      * 집중한 시간 그래프 조회
      */
-    public List<FocusTimeResponse> getFocusTime(Long childId, String period, LocalDate startDate) {
+    public List<FocusTimeResponse> getFocusTime(Long childId, String interval) {
         User user = securityUtil.getUserByToken();
-
         Child child = getChildById(childId);
-
         validateChildAccess(user, child);
 
-        LocalDateTime startDateTime = startDate.atStartOfDay();
-
-        LocalDateTime endDateTime = getEndDateTime(startDate, period);
-
-        // 해당 기간의 시선추적 데이터 조회
-        List<EyeTrackingData> eyeTrackingDataList = eyeTrackingDataRepository
-                .findTrackedDataByChildAndDateRange(child, startDateTime, endDateTime);
+        List<EyeTrackingData> eyeTrackingDataList = eyeTrackingDataRepository.findTrackedDataByChild(child);
 
         if (eyeTrackingDataList.isEmpty()) {
             return Collections.emptyList();
         }
 
-        return generateFocusTimeResponses(eyeTrackingDataList, startDateTime, endDateTime, period);
+        return generateFocusTimeResponses(eyeTrackingDataList, interval);
     }
 
     public ReadingReportResponse getReadingReport(Long childId) {
@@ -73,9 +69,7 @@ public class StatisticsService {
      */
     public List<TypographyResponse> getTypography(Long childId, Integer count) {
         User user = securityUtil.getUserByToken();
-
         Child child = getChildById(childId);
-
         validateChildAccess(user, child);
 
         List<Tuple> wordFocusCount = eyeTrackingDataRepository.findWordFocusCount(child, count);
@@ -85,6 +79,9 @@ public class StatisticsService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * 분류별 독서 통계 조회
+     */
     public List<CategoryStatisticsResponse> getCategoryStatistics(Long childId) {
 
         List<CategoryStatisticsResponse> data = new ArrayList<>();
@@ -110,56 +107,48 @@ public class StatisticsService {
         }
     }
 
-    // 기간에 따른 종료 시간 계산
-    private LocalDateTime getEndDateTime(LocalDate startDate, String period) {
-        return switch (period) {
-            case "daily" -> startDate.plusDays(1).atStartOfDay();
-            case "weekly" -> startDate.plusWeeks(1).atStartOfDay();
-            case "monthly" -> startDate.plusMonths(1).atStartOfDay();
-            default -> throw new CustomException(INVALID_PERIOD);
-        };
-    }
-
     // 데이터 처리
-    private List<FocusTimeResponse> generateFocusTimeResponses(List<EyeTrackingData> dataList,
-                                                               LocalDateTime start, LocalDateTime end, String period) {
-        Map<String, List<Float>> groupedData = initializeTimeSlots(start, end, period);
+    private List<FocusTimeResponse> generateFocusTimeResponses(List<EyeTrackingData> dataList, String interval) {
+        Map<String, List<Float>> attentionRatesByUnit = new LinkedHashMap<>();
+        getAllUnits(interval).forEach(unit -> attentionRatesByUnit.put(unit, new ArrayList<>()));
 
-        // 데이터 그룹핑
+        // 데이터 그루핑
         for (EyeTrackingData data : dataList) {
-            String timeKey = getTimeKey(data.getTrackedAt(), period);
+            String unit = getUnit(data.getTrackedAt(), interval);
             float attentionRate = data.getIsGazeOutOfScreen() ? 0f : data.getAttentionRate();
-            groupedData.get(timeKey).add(attentionRate);
+            attentionRatesByUnit.get(unit).add(attentionRate);
         }
 
         // 평균 계산 및 응답 생성
-        return groupedData.entrySet().stream()
+        return attentionRatesByUnit.entrySet().stream()
                 .map(entry -> FocusTimeResponse.of(entry.getKey(), calculateAverage(entry.getValue())))
                 .collect(Collectors.toList());
     }
 
-    // 기간에 따른 슬롯 초기화
-    private Map<String, List<Float>> initializeTimeSlots(LocalDateTime start, LocalDateTime end, String period) {
-        Map<String, List<Float>> groupedData = new TreeMap<>();
-
-        LocalDateTime current = start;
-        while (current.isBefore(end)) {
-            groupedData.put(getTimeKey(current, period), new ArrayList<>());
-            current = switch (period) {
-                case "daily" -> current.plusHours(1);
-                case "weekly", "monthly" -> current.plusDays(1);
-                default -> throw new CustomException(INVALID_PERIOD);
-            };
-        }
-
-        return groupedData;
+    private String getUnit(LocalDateTime dateTime, String interval) {
+        return switch (interval) {
+            case "hour" -> String.format("%02d", dateTime.getHour());
+            case "day" -> dateTime.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.KOREAN);
+            case "date" -> String.valueOf(dateTime.getDayOfMonth());
+            default -> throw new CustomException(INVALID_INTERVAL);
+        };
     }
 
-    private String getTimeKey(LocalDateTime dateTime, String period) {
-        return switch (period) {
-            case "daily" -> String.format("%02d:00", dateTime.getHour());
-            case "weekly", "monthly" -> dateTime.toLocalDate().toString();
-            default -> throw new CustomException(INVALID_PERIOD);
+    private List<String> getAllUnits(String interval) {
+        return switch (interval) {
+            case "hour" -> IntStream.range(0, 24)
+                    .mapToObj(hour -> String.format("%02d", hour))
+                    .collect(Collectors.toList());
+
+            case "day" -> Arrays.stream(DayOfWeek.values())
+                    .map(day -> day.getDisplayName(TextStyle.SHORT, Locale.KOREAN))
+                    .collect(Collectors.toList());
+
+            case "date" -> IntStream.rangeClosed(1, 31)
+                    .mapToObj(String::valueOf)
+                    .collect(Collectors.toList());
+
+            default -> throw new CustomException(INVALID_INTERVAL);
         };
     }
 

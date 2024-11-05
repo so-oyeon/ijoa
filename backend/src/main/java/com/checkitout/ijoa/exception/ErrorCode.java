@@ -49,7 +49,7 @@ public enum ErrorCode {
     UNAUTHORIZED_USER(HttpStatus.FORBIDDEN, "UU-001", "권한이 없습니다."),
 
     // statistics
-    INVALID_PERIOD(HttpStatus.BAD_REQUEST, "STATISTICS-001", "기간은 daily, weekly, monthly 중 하나여야 합니다.");
+    INVALID_INTERVAL(HttpStatus.BAD_REQUEST, "STATISTICS-001", "주기는 date, day, hour 중 하나여야 합니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
