@@ -1,8 +1,8 @@
 import { MdLogout, MdChildCare } from "react-icons/md";
 import { PiUserSwitch } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
-import { ChildInfo } from "../../types/childTypes";
-import { childApi } from "../../api/childApi";
+import { ChildInfo } from "../../types/parentTypes";
+import { parentApi } from "../../api/parentApi";
 import { useEffect, useState } from "react";
 
 const ProfileDropDown = () => {
@@ -28,12 +28,12 @@ const ProfileDropDown = () => {
     }
 
     try {
-      const response = await childApi.getChildProfile(childId);
+      const response = await parentApi.getChildProfile(childId);
       if (response.status === 200 && response.data) {
         setChildInfo(response.data);
       }
     } catch (error) {
-      console.error("childApi의 getChildProfile:", error);
+      console.error("parentApi의 getChildProfile:", error);
     }
   };
 

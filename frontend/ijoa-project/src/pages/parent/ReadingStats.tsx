@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import Histogram from "../../components/parent/stats/Histogram";
 import PieChart from "../../components/parent/stats/PieChart";
 import { GoDotFill } from "react-icons/go";
-import { childApi } from "../../api/childApi";
-import { ChildInfo } from "../../types/childTypes";
+import { parentApi } from "../../api/parentApi";
+import { ChildInfo } from "../../types/parentTypes";
 import LoadingAnimation from "../../components/common/LoadingAnimation";
 
 const ReadingStats = () => {
@@ -23,13 +23,13 @@ const ReadingStats = () => {
   const getChildInfoList = async () => {
     try {
       setIsLoading(true);
-      const response = await childApi.getChildList();
+      const response = await parentApi.getChildList();
       if (response.status === 200) {
         setChildList(response.data);
         setSelectChild(response.data[0]);
       }
     } catch (error) {
-      console.log("childApi의 getChildList : ", error);
+      console.log("parentApi의 getChildList : ", error);
     } finally {
       setIsLoading(false);
     }
@@ -106,7 +106,7 @@ const ReadingStats = () => {
           </div>
 
           {/* 히스토그램 */}
-          <Histogram filter={selectHistogramFilter} />
+          <Histogram childId={selectChild.childId} filter={selectHistogramFilter} />
         </div>
 
         {/* 도넛형 차트 */}
