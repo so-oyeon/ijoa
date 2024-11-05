@@ -161,3 +161,43 @@ export interface FairytaleQuizAnswerResponse {
   last: boolean;
   empty: boolean;
 }
+
+// 전체 동화책 목록 조회
+export interface FairyTaleListItem {
+  fairytaleId: number;
+  title: string;
+  image: string;
+  total_pages: number;
+  current_page: number;
+  is_completed: boolean;
+}
+
+export interface FairyTaleListResponse {
+  totalPages: number;
+  totalElements: number;
+  size: number;
+  content: FairyTaleListItem[];
+  number: number;
+  sort: {
+    empty: boolean;
+    sorted: boolean;
+    unsorted: boolean;
+  };
+  pageable: {
+    offset: number;
+    sort: {
+      empty: boolean;
+      sorted: boolean;
+      unsorted: boolean;
+    };
+    paged: boolean;
+    pageNumber: number;
+    pageSize: number;
+    unpaged: boolean;
+  };
+  numberOfElements: number;
+  first: boolean;
+  last: boolean;
+  empty: boolean;
+}
+

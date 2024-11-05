@@ -71,12 +71,12 @@ const FairytaleListPage: React.FC = () => {
   // 카테고리 동화책 api 통신 함수
   const getFairyTalesByCategory = async (categoryId: number) => {
     try {
-      const response = await fairyTaleApi.getFairyTalesList(categoryId, 0);
+      const response = await fairyTaleApi.getFairyTalesListByCategory(categoryId, 0);
       if (response.status === 200) {
         setCategoryFairyTales(response.data);
       }
     } catch (error) {
-      console.error("fairytaleApi의 getFairyTalesList :", error);
+      console.error("fairytaleApi의 getFairyTalesListByCategory :", error);
     }
   };
 
