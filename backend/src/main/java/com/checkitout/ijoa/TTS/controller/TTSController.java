@@ -3,9 +3,7 @@ package com.checkitout.ijoa.TTS.controller;
 import com.checkitout.ijoa.TTS.docs.TTSApiDocumentation;
 import com.checkitout.ijoa.TTS.dto.request.TTSProfileRequestDto;
 import com.checkitout.ijoa.TTS.dto.request.TTSTrainRequestDto;
-import com.checkitout.ijoa.TTS.dto.response.ScriptResponseDto;
-import com.checkitout.ijoa.TTS.dto.response.TTSProfileResponseDto;
-import com.checkitout.ijoa.TTS.dto.response.TTSTrainResponseDto;
+import com.checkitout.ijoa.TTS.dto.response.*;
 import com.checkitout.ijoa.TTS.service.TTSService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -64,7 +62,7 @@ public class TTSController implements TTSApiDocumentation {
     @PostMapping("/train/{ttsId}")
     public ResponseEntity<?> saveTrainData(@PathVariable("ttsId") Long ttsId,@RequestBody TTSTrainRequestDto requestDto) throws IOException {
         List<TTSTrainResponseDto> savedTrainData = ttsService.saveTrainData(ttsId, requestDto);
-        return new ResponseEntity<>(savedTrainData, HttpStatus.OK);
+        return new ResponseEntity<>(savedTrainData, HttpStatus.CREATED);
     }
 
     @Override
@@ -72,6 +70,34 @@ public class TTSController implements TTSApiDocumentation {
     public ResponseEntity<?> createAudioBook(@PathVariable("bookId") Long bookId,@PathVariable("TTSId") Long ttsId) throws IOException {
         ttsService.createAudioBook(bookId,ttsId);
         return new ResponseEntity<>( HttpStatus.OK);
+    }
+
+    @Override
+    @GetMapping("/train/{ttsId}")
+    public ResponseEntity<?> trainTTS(@PathVariable("ttsId") Long ttsId) throws IOException {
+        ttsService.startTrain(ttsId);
+        return new ResponseEntity<>( HttpStatus.OK);
+    }
+
+    @Override
+    @GetMapping("/audios/{ttsId}/{pageId}")
+    public ResponseEntity<?> pageAudio(@PathVariable("ttsId")Long ttsId,@PathVariable("pageId") Long pageId) throws IOException {
+        PageAudioDto responseDto = ttsService.findPageAudio(ttsId,pageId);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
+    @Override
+    @PostMapping("/result")
+    public ResponseEntity<?> tempSaveResult(@RequestBody temp temp) throws IOException {
+        ttsService.consumeResponse(temp);
+        return null;
+    }
+
+    @Override
+    @GetMapping("/audios/{bookId}")
+    public ResponseEntity<?> childTTSList(@PathVariable("bookId") Long bookId) throws IOException {
+        List<ChildTTSListDto> responseDto = ttsService.childTTSList(bookId);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
 }
