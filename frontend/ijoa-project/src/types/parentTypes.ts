@@ -21,3 +21,9 @@ export interface FocusTimeUnitInfo {
   unit: string;
   avgAttentionRate: number;
 }
+
+// 도넛형 차트 분류별 독서 통계 조회 응답 데이터
+export interface CategoriesUnitInfo {
+  category: string;
+  count: number;
+}

@@ -12,6 +12,7 @@ const ReadingStats = () => {
   const [childList, setChildList] = useState<ChildInfo[] | null>(null);
   const [selectChild, setSelectChild] = useState<ChildInfo | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [maxCategory, setMaxCategory] = useState<string | null>(null);
 
   const analysisText = [
     "긴 문장이 많거나 텍스트가 복잡한 경우 집중도가 떨어집니다.",
@@ -112,9 +113,9 @@ const ReadingStats = () => {
         {/* 도넛형 차트 */}
         <div className="flex flex-col space-y-3">
           <p className="text-xl font-semibold">
-            <span className="text-3xl text-[#F26172] font-semibold">자연탐구</span> 유형이 좋아요!
+            <span className="text-3xl text-[#F26172] font-semibold">{maxCategory}</span> 유형이 좋아요!
           </p>
-          <PieChart />
+          <PieChart childId={selectChild.childId} setMaxCategory={setMaxCategory} />
         </div>
       </div>
 

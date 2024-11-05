@@ -31,4 +31,9 @@ export const parentApi = {
   getFocusTimeData: (childId: number, interval: string) => {
     return api.get(`/children/${childId}/statistics/focus-time`, { params: { interval } });
   },
+
+  // 도넛형 차트 분류별 독서 통계 조회
+  getCategoriesData: (childId: number) => {
+    return api.get(`/children/${childId}/statistics/categories`);
+  },
 };
