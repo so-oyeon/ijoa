@@ -22,7 +22,7 @@ public interface QuizApiDocumentation {
             @ApiResponse(responseCode = "200", description = "질문 조회 성공"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    public ResponseEntity<QuizResponseDto> getQuiz(@PathVariable Long pageId);
+    public ResponseEntity<QuizResponseDto> getQuiz(@PathVariable Long bookId, @PathVariable Integer pageNum);
 
 
     @Operation(summary = "퀴즈 답변 저장", description = "답변을 저장할 수 있는 url을 반환합니다.")

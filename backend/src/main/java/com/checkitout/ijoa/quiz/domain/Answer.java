@@ -30,6 +30,7 @@ public class Answer {
     @JoinColumn(name = "child_id")
     private Child child;
 
+    @Column(length = 512)
     private String answer;
 
     private LocalDateTime createdAt;

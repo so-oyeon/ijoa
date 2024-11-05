@@ -27,9 +27,9 @@ public class QuizController implements QuizApiDocumentation {
 
     // 질문 조회
     @Override
-    @GetMapping("/question/{pageId}")
-    public ResponseEntity<QuizResponseDto> getQuiz(@PathVariable Long pageId) {
-        QuizResponseDto responseDto = quizService.fairytaleQuiz(pageId);
+    @GetMapping("/question/{bookId}/{pageNum}")
+    public ResponseEntity<QuizResponseDto> getQuiz(@PathVariable("bookId") Long bookId, @PathVariable("pageNum") Integer pageNum) {
+        QuizResponseDto responseDto = quizService.fairytaleQuiz(bookId, pageNum);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 

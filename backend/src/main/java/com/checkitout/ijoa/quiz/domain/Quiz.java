@@ -30,6 +30,7 @@ public class Quiz {
     @JoinColumn(name = "fairytale_page_content_id")
     private FairytalePageContent page;
 
+    @Column(length = 512)
     private String question;
 
     private LocalDateTime createdAt;
