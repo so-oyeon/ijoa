@@ -36,4 +36,9 @@ export const parentApi = {
   getCategoriesData: (childId: number) => {
     return api.get(`/children/${childId}/statistics/categories`);
   },
+
+  // 독서 분석 보고서 조회
+  getReadingReport: (childId: number) => {
+    return api.get(`/children/${childId}/statistics/reading-report`);
+  },
 };
