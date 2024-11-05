@@ -1,4 +1,3 @@
-// FairytaleSearchPage.tsx
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { fairyTaleApi } from "../../api/fairytaleApi";
@@ -61,21 +60,14 @@ const FairytaleSearchPage: React.FC = () => {
     }
   };
 
-  const handleGoToMain = () => {
-    navigate(`/child/fairytale/list`);
-  };
-
   return (
     <div>
-      <div className="w-full h-screen overflow-y-auto px-10 py-3 bg-gradient-to-b from-white justify-between items-center fixed top-0 z-50">
-        <div className="flex items-center space-x-5 gap-10">
-          <img className="h-[72px] cursor-pointer" src="/assets/logo.png" alt="로고" onClick={handleGoToMain} />
-          <div className="flex w-full">
-            <SearchBar onInputChange={handleInputChange} />
-          </div>
+      <div className="relative w-full h-screen overflow-y-auto bg-gradient-to-b from-white">
+        <div className="absolute top-6 left-[350px] w-[800px] z-50">
+          <SearchBar onInputChange={handleInputChange} />
         </div>
 
-        <div className="mt-3 mb-6">
+        <div className="pt-24 px-10 mb-6">
           {query && (
             <>
               <div className="text-2xl font-bold mb-8">🔎 검색 결과 ...</div>
