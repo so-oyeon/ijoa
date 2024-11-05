@@ -22,7 +22,7 @@ const PieChart = ({ childId, setMaxCategory }: Props) => {
       setIsLoading(true);
       const response = await parentApi.getCategoriesData(childId);
       if (response.status === 200) {
-        setData(response.data.result);
+        setData(response.data);
       }
     } catch (error) {
       console.log("parentApi의 getCategoriesData : ", error);
@@ -41,6 +41,7 @@ const PieChart = ({ childId, setMaxCategory }: Props) => {
 
     // 각 데이터의 값
     setSeries(data.map((item) => item.count));
+    console.log(data.map((item) => item.count));
   }, [data]);
 
   useEffect(() => {
@@ -50,7 +51,7 @@ const PieChart = ({ childId, setMaxCategory }: Props) => {
     setMaxCategory(categories[series.indexOf(Math.max(...series))]);
   }, [series]);
 
-  if (!data || isLoading) {
+  if (!series || isLoading) {
     return (
       <div className="grow border-4 border-[#F5F5F5] rounded-2xl flex justify-center items-center">
         <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />

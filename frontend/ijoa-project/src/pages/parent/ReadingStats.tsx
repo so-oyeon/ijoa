@@ -108,7 +108,7 @@ const ReadingStats = () => {
         {/* 도넛형 차트 */}
         <div className="flex flex-col space-y-3">
           <p className="text-xl font-semibold">
-            <span className="text-3xl text-[#F26172] font-semibold">{maxCategory}</span> 유형이 좋아요!
+            <span className="text-xl text-[#F26172] font-semibold">{maxCategory}</span> 유형이 좋아요!
           </p>
           <PieChart childId={selectChild.childId} setMaxCategory={setMaxCategory} />
         </div>
