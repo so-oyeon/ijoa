@@ -36,7 +36,6 @@ const ReadingReport = ({ childId }: Props) => {
     if (!reportData) return;
 
     setReportDataList(reportData.split("- ").filter((item) => item !== ""));
-    console.log(reportData.split("- ").filter((item) => item !== ""));
   }, [reportData]);
 
   if (!reportDataList || isLoading) {
