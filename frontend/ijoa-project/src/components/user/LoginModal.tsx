@@ -58,7 +58,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ openForgotPasswordModal }) => {
           Swal.fire({
             icon: "error",
             title: "로그인 실패",
-            text: "로그인에 실패했습니다. 다시 시도해주세요.",
+            text: "다시 시도해주세요.",
             confirmButtonColor: "#3085d6",
           });
         }

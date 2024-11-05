@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SettingToggle from "../../components/fairytales/SettingToggle";
 import SettingsIcon from "/assets/fairytales/buttons/settings-icon.png";
+import MusicManager from "../../MusicManager";
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -8,25 +9,46 @@ interface SettingsModalProps {
 }
 
 const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
+  const [isLoaded, setIsLoaded] = useState(false); 
   // 토글 옵션들
   const [toggleOptions, setToggleOptions] = useState([
     { label: "책 읽어주기", checked: true },
     { label: "퀴즈", checked: true },
-    { label: "bgm", checked: true },
+    { label: "bgm", checked: false }, 
   ]);
 
-  // 토글 on/off 함수
+  useEffect(() => {
+    // 모달이 열릴 때 localStorage에서 현재 childBgm 상태를 가져와 토글 초기화
+    if (isOpen) {
+      const isChildBgmPlaying = localStorage.getItem("childBgm") === "true";
+      setToggleOptions((prevOptions) =>
+        prevOptions.map((option) =>
+          option.label === "bgm" ? { ...option, checked: isChildBgmPlaying } : option
+        )
+      );
+      setIsLoaded(true);
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    const bgmOption = toggleOptions.find((option) => option.label === "bgm");
+    if (bgmOption?.checked) {
+      MusicManager.playChildBgm();
+    } else {
+      MusicManager.stopBgm();
+    }
+  }, [toggleOptions]);
+
   const handleToggle = (index: number) => {
     const newOptions = [...toggleOptions];
     newOptions[index].checked = !newOptions[index].checked;
     setToggleOptions(newOptions);
   };
 
-  if (!isOpen) return null;
-
   const handleClose = () => {
     onClose();
   };
+  if (!isOpen || !isLoaded) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
