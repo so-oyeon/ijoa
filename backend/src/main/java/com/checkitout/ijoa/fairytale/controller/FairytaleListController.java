@@ -78,12 +78,57 @@ public class FairytaleListController implements FairytaleListApiDocumentation {
 
         return new ResponseEntity<>(fairytaleList, HttpStatus.OK);
     }
+    // Page로 만드는 함수 API 만들면 지워질 예정
+    private List<FairytaleListResponseDto> makeReadFairytaleList(){
+        FairytaleListResponseDto fairytale = FairytaleListResponseDto.builder()
+                .fairytaleId(1)
+                .image("url")
+                .title("제목")
+                .is_completed(true)
+                .current_page(5)
+                .total_pages(5)
+                .build();
+        FairytaleListResponseDto fairytale1 = FairytaleListResponseDto.builder()
+                .fairytaleId(1)
+                .image("url")
+                .title("제목")
+                .is_completed(false)
+                .current_page(3)
+                .total_pages(5)
+                .build();
+        FairytaleListResponseDto fairytale2 = FairytaleListResponseDto.builder()
+                .fairytaleId(1)
+                .image("url")
+                .title("제목")
+                .is_completed(true)
+                .current_page(5)
+                .total_pages(5)
+                .build();
+        FairytaleListResponseDto fairytale3 = FairytaleListResponseDto.builder()
+                .fairytaleId(1)
+                .image("url")
+                .title("제목")
+                .is_completed(false)
+                .current_page(1)
+                .total_pages(5)
+                .build();
+
+
+        List<FairytaleListResponseDto> fairytaleList = new ArrayList<>();
+
+        fairytaleList.add(fairytale);
+        fairytaleList.add(fairytale1);
+        fairytaleList.add(fairytale2);
+        fairytaleList.add(fairytale3);
+
+        return fairytaleList;
+    }
 
     // 읽은 책 목록 조회
     @Override
     @GetMapping("/children")
-    public Page<FairytaleListResponseDto> readFairytaleList(@RequestParam("page") int page) {
-        List<FairytaleListResponseDto> fairytaleList = makeList();
+    public Page<FairytaleListResponseDto> readFairytaleList( @RequestParam("page") int page) {
+        List<FairytaleListResponseDto> fairytaleList = makeReadFairytaleList();
 
         // 페이지 요청 객체 생성
         Pageable pageable = PageRequest.of(page, 8);
