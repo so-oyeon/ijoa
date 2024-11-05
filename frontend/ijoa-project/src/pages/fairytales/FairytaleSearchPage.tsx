@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { fairyTaleApi } from "../../api/fairytaleApi";
-import { FairyTaleSearchResponse, FairyTaleByCategoryListResponse } from "../../types/fairytaleTypes";
+import { FairyTaleSearchResponse, FairyTaleListResponse } from "../../types/fairytaleTypes";
 import BookCoverGrid from "../../components/fairytales/BookCoverGrid";
 import SearchBar from "../../components/common/SearchBar";
 
 const FairytaleSearchPage: React.FC = () => {
   const navigate = useNavigate();
   const [searchResults, setSearchResults] = useState<FairyTaleSearchResponse | null>(null);
-  const [allFairyTales, setAllFairyTales] = useState<FairyTaleByCategoryListResponse | null>(null);
+  const [allFairyTales, setAllFairyTales] = useState<FairyTaleListResponse | null>(null);
   const [query, setQuery] = useState<string>("");
 
   useEffect(() => {
     const getAllFairyTales = async () => {
       try {
-        const response = await fairyTaleApi.getFairytalesList(0);
+        const response = await fairyTaleApi.getFairyTalesList(1, 2);
         if (response.status === 200) {
           setAllFairyTales(response.data);
         } else {
@@ -63,38 +63,30 @@ const FairytaleSearchPage: React.FC = () => {
   return (
     <div>
       <div className="relative w-full h-screen overflow-y-auto bg-gradient-to-b from-white">
-        <div className="absolute top-6 left-[350px] w-[800px] z-50">
+        <div className="pt-[96px] px-10 flex justify-between items-center mb-6">
+          <div className="text-2xl font-bold flex items-center">
+            {query ? "🔎 검색 결과 ..." : "📚 전체 동화 목록"}
+          </div>
           <SearchBar onInputChange={handleInputChange} />
         </div>
 
-        <div className="pt-24 px-10 mb-6">
-          {query && (
-            <>
-              <div className="text-2xl font-bold mb-8">🔎 검색 결과 ...</div>
-              {searchResults && searchResults.content.length > 0 ? (
-                <BookCoverGrid
-                  bookCovers={searchResults.content.map((item) => item.image)}
-                  titles={searchResults.content.map((item) => item.title)}
-                  onBookClick={handleBookClick}
-                />
-              ) : (
-                <p className="p-4 text-gray-500">검색 결과가 없습니다.</p>
-              )}
-            </>
-          )}
-          {!query && allFairyTales && (
-            <>
-              <div className="text-2xl font-bold mb-8">📚 전체 동화 목록</div>
-              {allFairyTales.content.length > 0 ? (
-                <BookCoverGrid
-                  bookCovers={allFairyTales.content.map((item) => item.image)}
-                  titles={allFairyTales.content.map((item) => item.title)}
-                  onBookClick={handleBookClick}
-                />
-              ) : (
-                <p className="p-4 text-gray-500">전체 동화 목록이 없습니다.</p>
-              )}
-            </>
+        <div className="px-10 mb-6">
+          {query && searchResults && searchResults.content.length > 0 ? (
+            <BookCoverGrid
+              bookCovers={searchResults.content.map((item) => item.image)}
+              titles={searchResults.content.map((item) => item.title)}
+              onBookClick={handleBookClick}
+            />
+          ) : query ? (
+            <p className="p-4 text-gray-500">검색 결과가 없습니다.</p>
+          ) : allFairyTales && allFairyTales.content.length > 0 ? (
+            <BookCoverGrid
+              bookCovers={allFairyTales.content.map((item) => item.image)}
+              titles={allFairyTales.content.map((item) => item.title)}
+              onBookClick={handleBookClick}
+            />
+          ) : (
+            <p className="p-4 text-gray-500">전체 동화 목록이 없습니다.</p>
           )}
         </div>
       </div>
