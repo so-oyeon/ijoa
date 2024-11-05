@@ -43,7 +43,7 @@ const FairytaleSearchPage: React.FC = () => {
   const handleBookClick = (index: number) => {
     const selectedFairytaleId = searchResults?.content[index].fairytaleId;
     if (selectedFairytaleId) {
-      navigate(`/fairytale/detail/${selectedFairytaleId}`);
+      navigate(`/fairytale/content/${selectedFairytaleId}`);
     }
   };
 

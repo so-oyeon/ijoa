@@ -91,7 +91,7 @@ const ChildProfileCreateModal = ({ updateChildInfo, setIsUpdateModal, getChildIn
 
   return (
     <div className="py-8 bg-black bg-opacity-60 flex justify-center items-center fixed inset-0 z-50">
-      <div className="p-10 bg-white rounded-3xl shadow-lg">
+      <div className="p-10 bg-white rounded-2xl shadow-lg">
         {/* 닫기 버튼 */}
         <div className="w-full flex justify-end">
           <img className="w-10 h-10" src="/assets/close-button.png" alt="" onClick={() => setIsUpdateModal(false)} />

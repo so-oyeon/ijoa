@@ -2,13 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swiper from "../../components/fairytales/Swiper"; // 스와이퍼 컴포넌트 import
 import ChoiceTab from "../../components/fairytales/ChoiceTab"; // 선택탭 컴포넌트 import
-import ParentHeader from "../../components/common/Header"; // 헤더 컴포넌트 import
 import { fairyTaleApi } from "../../api/fairytaleApi";
+import { childApi } from "../../api/childApi";
 import {
   FairyTaleRankByAgeItem,
   FairyTaleRecommendationItem,
   FairyTaleByCategoryListResponse,
 } from "../../types/fairytaleTypes";
+import { ChildInfo } from "../../types/childTypes";
 
 const FairytaleListPage: React.FC = () => {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ const FairytaleListPage: React.FC = () => {
   const [recommendedFairyTales, setRecommendedFairyTales] = useState<FairyTaleRecommendationItem[]>([]);
   const [categoryFairyTales, setCategoryFairyTales] = useState<FairyTaleByCategoryListResponse | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<number>(1);
+  const [childInfo, setChildInfo] = useState<ChildInfo | null>(null);
 
   const bookCovers = popularFairyTales.map((fairyTale) => fairyTale.image);
   const titles = popularFairyTales.map((fairyTale) => fairyTale.title);
@@ -78,6 +80,21 @@ const FairytaleListPage: React.FC = () => {
     }
   };
 
+  // 자녀 프로필을 가져오는 api 통신 함수
+  const getChildProfile = async () => {
+    const childId = parseInt(localStorage.getItem("childId") || "0", 10);
+    if (!childId) return;
+
+    try {
+      const response = await childApi.getChildProfile(childId);
+      if (response.status === 200 && response.data) {
+        setChildInfo(response.data);
+      }
+    } catch (error) {
+      console.error("childApi의 getChildProfile:", error);
+    }
+  };
+
   const handlePopularBookClick = (index: number) => {
     navigate(`/fairytale/content/${popularFairyTales[index].fairytaleId}`, { state: { title: titles[index] } });
   };
@@ -100,6 +117,7 @@ const FairytaleListPage: React.FC = () => {
   };
 
   useEffect(() => {
+    getChildProfile();
     getPopularFairyTalesByAge(); // 인기 동화책 데이터 가져오기
     getRecommendedFairyTales(); // 사용자 맞춤 추천 데이터 가져오기
     getFairyTalesByCategory(selectedCategory); // 선택된 카테고리 동화책 데이터 가져오기
@@ -107,12 +125,9 @@ const FairytaleListPage: React.FC = () => {
 
   return (
     <div>
-      {/* 헤더 */}
-      <ParentHeader />
-      {/* 내용 */}
       <div className="pt-24 pb-24 px-10 text-xl">
         <div className="mb-10">
-          <div className="mb-5 text-2xl font-bold">🏆 9살 인기 동화책</div>
+          <div className="mb-5 text-2xl font-bold">🏆 {childInfo?.age}살 인기 동화책</div>
           {popularFairyTales.length > 0 ? (
             <Swiper bookCovers={bookCovers} titles={titles} onBookClick={handlePopularBookClick} />
           ) : (

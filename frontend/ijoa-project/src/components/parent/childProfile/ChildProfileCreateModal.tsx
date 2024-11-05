@@ -68,7 +68,7 @@ const ChildProfileCreateModal = ({ setIsCreateModal, getChildInfoList }: Props) 
 
   return (
     <div className="py-8 bg-black bg-opacity-60 flex justify-center items-center fixed inset-0 z-50">
-      <div className="px-16 py-10 bg-white rounded-3xl shadow-lg flex flex-col items-center space-y-8">
+      <div className="px-16 py-10 bg-white rounded-2xl shadow-lg flex flex-col items-center space-y-8">
         {/* 타이틀 텍스트 */}
         <div className="text-xl font-bold">
           <span className="underline underline-offset-[-3px] decoration-8 decoration-[#67CCFF]">자녀 정보</span>
