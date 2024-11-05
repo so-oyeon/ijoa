@@ -78,10 +78,8 @@ public class StatisticsService {
 
         validateChildAccess(user, child);
 
-        // 시선 추적 데이터 조회 및 단어별 집중 횟수 계산
         List<Tuple> wordFocusCount = eyeTrackingDataRepository.findWordFocusCount(child, count);
 
-        // 응답 객체로 변환
         return wordFocusCount.stream()
                 .map(tuple -> TypographyResponse.of(tuple.get(0, String.class), tuple.get(1, Long.class)))
                 .collect(Collectors.toList());
