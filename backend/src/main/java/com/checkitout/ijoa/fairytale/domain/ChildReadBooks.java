@@ -40,7 +40,6 @@ public class ChildReadBooks {
     @JoinColumn(name = "fairytale_id", nullable = false)
     private Fairytale fairytale;
 
-
     public ChildReadBooks(LocalDateTime createdAt, Integer currentPage, LocalDateTime finishedAt, Boolean isCompleted,
                           Child child, Fairytale fairytale) {
         this.createdAt = createdAt;
