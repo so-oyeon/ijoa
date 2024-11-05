@@ -1,16 +1,19 @@
 package com.checkitout.ijoa.fairytale.dto;
 
+import com.checkitout.ijoa.fairytale.domain.EyeTrackingData;
+import com.checkitout.ijoa.fairytale.domain.PageHistory;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import java.time.LocalDateTime;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 @Getter
-@Setter
-@NoArgsConstructor
 @Schema(description = "시선추척 데이터 요청")
 public class PageHistoryCreationRequest {
 
@@ -44,4 +47,9 @@ public class PageHistoryCreationRequest {
     @NotNull(message = "그림 여부는 필수 항목입니다.")
     @Schema(description = "그림 여부", example = "false")
     private Boolean isImage;
+
+    public EyeTrackingData toEntity(PageHistory pageHistory) {
+        return EyeTrackingData.of(trackedAt, isFaceMissing, isGazeOutOfScreen, gazeX, gazeY, pupilSize, attentionRate,
+                word, isImage, pageHistory);
+    }
 }

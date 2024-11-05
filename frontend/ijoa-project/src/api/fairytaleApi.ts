@@ -3,7 +3,10 @@ import {
   FairyTaleRankByAgeResponse,
   FairyTaleRecommendationsResponse,
   FairyTaleByCategoryListResponse,
+  FairyTaleContentResponse,
   FairyTalePageResponse,
+  QuizQuestionResponse,
+  FairyTaleSearchResponse,
 } from "../types/fairytaleTypes";
 
 export const fairyTaleApi = {
@@ -17,12 +20,30 @@ export const fairyTaleApi = {
     return api.get<FairyTaleRecommendationsResponse>(`/fairytales/recommendations`);
   },
 
-  // 동화 리스트 조회
+  // 카테고리별 동화 리스트 조회
   getFairyTalesList: (categoryId: number, page: number) => {
     return api.get<FairyTaleByCategoryListResponse>(`/fairytales/list/${categoryId}?page=${page}`);
   },
 
-  getFairyTalePages: (fairytaleId: string, pageNumber: string) => {
-    return api.post<FairyTalePageResponse>(`/fairytales/${fairytaleId}/pages/${pageNumber}`);
+  // 동화책 내용 조회
+  getFairyTaleContents: (fairytaleId: string, pageNumber: string) => {
+    return api.post<FairyTaleContentResponse>(`/fairytales/${fairytaleId}/pages/${pageNumber}`);
+  },
+
+  // 동화책 전체 페이지 조회
+  getFairyTalePages: (fairytaleId: string) => {
+    return api.get<FairyTalePageResponse>(`/fairytales/${fairytaleId}/pages`);
+  },
+
+  // 동화책 질문 조회
+  getQuizQuestion: (pageId: number) => {
+    return api.get<QuizQuestionResponse>(`/quiz/question/${pageId}`);
+  },
+
+  // 동화 제목 검색 조회
+  getFairyTalesBySearch: (word: string, page: number) => {
+    return api.get<FairyTaleSearchResponse>(`/fairytales/search`, {
+      params: { word, page },
+    });
   },
 };

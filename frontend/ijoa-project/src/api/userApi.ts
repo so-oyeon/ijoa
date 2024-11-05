@@ -50,6 +50,11 @@ export const userApi = {
   // 사용자 정보 가져오기
   getUserInfo: () => {
     return api.get<UserInfo>(`/user`);
+  },
+
+  // 회원 탈퇴
+  deleteUserInfo : () => {
+    return api.delete(`/user`);
   }
 };
 

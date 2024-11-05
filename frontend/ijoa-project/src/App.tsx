@@ -11,6 +11,7 @@ import MyBookShelves from "./pages/child/MyBookShelves";
 import VoiceAlbum from "./pages/parent/VoiceAlbum";
 import VoiceAlbumDetail from "./pages/parent/VoiceAlbumDetail";
 import ReadingStatistics from "./pages/parent/ReadingStats";
+import FairytaleSearchPage from "./pages/fairytales/FairytaleSearchPage";
 
 const App = () => {
   return (
@@ -54,6 +55,8 @@ const App = () => {
         <Route path="/fairytale/content/:fairytaleId" element={<FairyTaleContentPage />} />
         {/* 부모의 음성 앨범 상세 화면 */}
         <Route path="/parent/voice/album/:id" element={<VoiceAlbumDetail />} />
+        {/* 동화책 제목 검색 화면 */}
+        <Route path="/fairytale/search" element={<FairytaleSearchPage />} />
       </Routes>
     </BrowserRouter>
   );

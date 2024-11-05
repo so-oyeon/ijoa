@@ -35,14 +35,4 @@ public class FairytalePageViewResponse {
                 .pageHistoryId(pageHistory.getId())
                 .build();
     }
-
-    public static FairytalePageViewResponse test(Integer pageNumber) {
-        return FairytalePageViewResponse.builder()
-                .pageNumber(pageNumber)
-                .content("노마가 로켓을 타고 슈웅! 은하수에서 헤엄치는 펭귄들을 보았어요. \"바보 펭귄들아! 너희들 여기 있었구나\" 노마가 웃으며 손을 흔들었어요.")
-                .image("https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2F20141001_272%2Fjh83com_1412142177092obzc7_JPEG%2FSAM_7159.JPG&type=a340")
-                .totalPages(20)
-                .pageHistoryId(1L)
-                .build();
-    }
 }

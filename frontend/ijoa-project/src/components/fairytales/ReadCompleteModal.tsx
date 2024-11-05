@@ -12,6 +12,19 @@ const ReadCompleteModal: React.FC<ReadCompleteModalProps> = ({ isOpen, title }) 
   const navigate = useNavigate();
   if (!isOpen) return null;
 
+  // 한글 받침에 따라 조사를 결정하는 함수
+  const getReadingMessage = (title: string) => {
+    const lastChar = title.charAt(title.length - 1);
+    const code = lastChar.charCodeAt(0);
+
+    const hasBatchim = (code - 0xac00) % 28 !== 0;
+    const particle = hasBatchim ? "을" : "를";
+
+    return `${title}${particle} 다 읽었어요!\n다음엔 또 무슨 책을 읽어볼까?`;
+  };
+
+  const message = getReadingMessage(title);
+
   // 홈으로 렌더링하는 함수
   const toHome = () => {
     navigate("/fairytale/list");
@@ -19,16 +32,14 @@ const ReadCompleteModal: React.FC<ReadCompleteModalProps> = ({ isOpen, title }) 
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
-      <div className="w-1/3 text-center bg-white rounded-3xl shadow-lg">
+      <div className="w-1/3 text-center bg-white rounded-2xl shadow-lg">
         <div className="px-4 py-8">
           <div className="mb-6 flex justify-center items-center">
             <img src={CompleteBadge} alt="독서 완료 뱃지" />
           </div>
-          <div className="text-2xl font-bold text-center fairytale-font whitespace-pre-line">
-            {`${title}를 다 읽었어요!\n다음엔 또 무슨 책을 읽어볼까?`}
-          </div>
+          <div className="text-2xl font-bold text-center fairytale-font whitespace-pre-line">{message}</div>
           <button
-            className="mt-6 px-8 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-3xl border border-2 border-[#67CCFF]"
+            className="mt-6 px-8 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-2xl border border-2 border-[#67CCFF]"
             onClick={toHome}
           >
             목록 화면으로

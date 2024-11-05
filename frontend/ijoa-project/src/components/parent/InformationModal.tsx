@@ -16,6 +16,33 @@ const InformationModal: React.FC<InformationModalProps> = ({ isOpen, onClose }) 
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
 
+  // 비밀번호 유효성 검사 함수
+  const validatePassword = (password: string) => {
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#$%^&*]{8,}$/;
+    return passwordRegex.test(password);
+  };
+  // 모든 필드 유효성 검사 함수
+  const isFormValid = () => {
+    if (!nickname) {
+      setErrorMessage("닉네임을 입력해 주세요.");
+      return false;
+    }
+    if (nickname.length < 2 || nickname.length > 10) {
+      setErrorMessage("닉네임은 2~10자여야 합니다.");
+      return false;
+    }
+    if (!newPassword || !validatePassword(newPassword)) {
+      setErrorMessage("최소 8자 이상, 영문 및 숫자가 포함.");
+      return false;
+    }
+    if (newPassword !== confirmPassword) {
+      setErrorMessage("비밀번호가 일치하지 않습니다.");
+      return false;
+    }
+    setErrorMessage("");
+    return true;
+  };
+
   // 모달이 열릴 때 사용자 정보를 가져옴
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -44,18 +71,17 @@ const InformationModal: React.FC<InformationModalProps> = ({ isOpen, onClose }) 
 
   // 회원정보 수정 로직
   const handleComplete = async () => {
-    if (newPassword !== confirmPassword) {
+    if (!isFormValid()) {
       Swal.fire({
         icon: "error",
         title: "오류",
-        text: "비밀번호가 일치하지 않습니다.",
+        text: errorMessage,
         confirmButtonText: "확인",
       });
       return;
     }
 
     try {
-      // 회원 정보 수정 요청
       const data = {
         nickname,
         password: newPassword,
@@ -87,12 +113,11 @@ const InformationModal: React.FC<InformationModalProps> = ({ isOpen, onClose }) 
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="relative w-1/3 pt-20 pb-10 bg-white rounded-lg p-6">
+      <div className="relative w-1/3 pt-20 pb-10 bg-white rounded-2xl p-6">
         <button className="absolute w-[50px] top-4 right-4 text-red-500" onClick={onClose}>
           <img src={back} alt="뒤로가기" />
         </button>
-        <h1 className="text-center text-gray-700 text-2xl font-bold mb-8">회원정보 변경</h1>
-        {/* 이메일 안에는 본인 이메일 들어가도록 나중에 수정하기 */}
+        <p className="text-center text-gray-700 text-2xl font-bold mb-8">회원정보 변경</p>
         <div className="flex justify-center items-center mb-6 h-10 gap-5">
           <label className="text-gray-700 font-semibold w-24">이메일</label>
           <input
@@ -143,7 +168,7 @@ const InformationModal: React.FC<InformationModalProps> = ({ isOpen, onClose }) 
         {errorMessage && <div className="text-red-500 font-semibold mb-2 mt-2">{errorMessage}</div>}
         <div className="flex justify-center mt-8">
           <button
-            className="w-1/2 h-[60px] py-3 mb-4 font-bold text-xl text-white bg-[#67CCFF] rounded-full hover:bg-blue-50"
+            className="w-1/2 h-[60px] py-3 mb-4 font-bold text-xl text-white bg-[#67CCFF] rounded-full hover:bg-blue-500"
             onClick={handleComplete}
           >
             완료

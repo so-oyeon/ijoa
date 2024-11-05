@@ -6,9 +6,10 @@ import SettingsIcon from "/assets/fairytales/buttons/settings-icon.png";
 import VerificationModal from "./VerificationModal";
 import InformationModal from "./InformationModal";
 import DeleteInformationModal from "./DeleteInformationModal";
+import DeleteConfirmationModal from "./DeleteConfirmationModal";
 import { userApi } from "../../api/userApi";
 
-type ModalType = "main" | "verification" | "information" | "deleteConfirmation";
+type ModalType = "main" | "verification" | "information" | "deleteinformation" | "confirmation";
 
 interface ParentSettingsModalProps {
   isOpen: boolean;
@@ -47,7 +48,7 @@ const ParentSettingsModal: React.FC<ParentSettingsModalProps> = ({ isOpen, onClo
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
-      <div className="relative w-1/3 py-8 text-center bg-white rounded-xl shadow-lg">
+      <div className="relative w-1/3 py-8 text-center bg-white rounded-2xl shadow-lg">
         {/* 닫기 버튼 */}
         <button onClick={onClose} className="absolute top-4 right-4 text-red-400 text-2xl">
           <img src={closebutton} alt="닫기버튼" />
@@ -79,7 +80,7 @@ const ParentSettingsModal: React.FC<ParentSettingsModalProps> = ({ isOpen, onClo
               </button>
               <button
                 className="w-1/2 h-[60px] py-2 bg-[#FF8067] text-white font-bold text-lg rounded-full hover:bg-red-400"
-                onClick={() => setModalType("deleteConfirmation")}
+                onClick={() => setModalType("deleteinformation")}
               >
                 회원 탈퇴
               </button>
@@ -100,9 +101,12 @@ const ParentSettingsModal: React.FC<ParentSettingsModalProps> = ({ isOpen, onClo
         {modalType === "information" && <InformationModal isOpen={true} onClose={() => setModalType("main")} />}
 
         {/* DeleteInformationModal 호출 */}
-        {modalType === "deleteConfirmation" && (
-          <DeleteInformationModal isOpen={true} onClose={() => setModalType("main")} />
+        {modalType === "deleteinformation" && (
+          <DeleteInformationModal isOpen={true} onClose={() => setModalType("main")} onNext={() => setModalType("confirmation")}/>
         )}
+
+        {/* ConfirmationModal 표시 */}
+        {modalType === "confirmation" && <DeleteConfirmationModal isOpen={true} onClose={() => setModalType("main")} />}
       </div>
     </div>
   );

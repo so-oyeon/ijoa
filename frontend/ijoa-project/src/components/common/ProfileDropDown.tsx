@@ -1,8 +1,14 @@
 import { MdLogout, MdChildCare } from "react-icons/md";
 import { PiUserSwitch } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
+import { ChildInfo } from "../../types/childTypes";
 
-const ProfileDropDown = () => {
+interface ProfileDropDownProps {
+  childInfo: ChildInfo | null;
+  onProfileClick: () => void;
+}
+
+const ProfileDropDown = ({ childInfo, onProfileClick }: ProfileDropDownProps) => {
   const navigate = useNavigate();
 
   const handleChangeToParent = () => {
@@ -16,7 +22,7 @@ const ProfileDropDown = () => {
   };
 
   return (
-    <div className="dropdown dropdown-end">
+    <div className="dropdown dropdown-end" onClick={onProfileClick}>
       <button className="w-14 flex flex-col justify-center items-center space-y-1">
         <img
           className="w-12 aspect-1 p-2 bg-white rounded-full shadow-[0_3px_3px_1px_rgba(0,0,0,0.1)]"
@@ -28,11 +34,14 @@ const ProfileDropDown = () => {
 
       <ul
         tabIndex={0}
-        className="menu menu-sm dropdown-content w-60 p-2 mt-3 bg-base-100 rounded-box border-2 shadow-lg z-[1] grid gap-1">
+        className="menu menu-sm dropdown-content w-60 p-2 mt-3 bg-base-100 rounded-box border-2 shadow-lg z-[1] grid gap-1"
+      >
         <li className="h-14">
           <div className="w-full h-full flex items-center space-x-3 hover:bg-white">
             <MdChildCare className="text-2xl" />
-            <p className="text-lg">다솔이 (만 4세)</p>
+            <p className="text-lg">
+              {childInfo ? `${childInfo.name} (만 ${childInfo.age}세)` : "Loading..."}
+            </p>
           </div>
         </li>
         <hr className="h-[0.5px] bg-[#9e9e9e]" />
