@@ -1,5 +1,6 @@
 package com.checkitout.ijoa.statistics.dto;
 
+import com.checkitout.ijoa.fairytale.domain.CATEGORY;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,11 +14,11 @@ public class CategoryStatisticsResponse {
     private final String category;
 
     @Schema(description = "횟수", example = "20")
-    private final Integer count;
+    private final Long count;
 
-    public static CategoryStatisticsResponse test(String category, Integer count) {
+    public static CategoryStatisticsResponse of(CATEGORY category, Long count) {
         return CategoryStatisticsResponse.builder()
-                .category(category)
+                .category(category.getDisplayName())
                 .count(count)
                 .build();
     }
