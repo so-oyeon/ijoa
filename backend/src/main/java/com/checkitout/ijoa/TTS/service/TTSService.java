@@ -58,10 +58,15 @@ public class TTSService {
             throw new CustomException(ErrorCode.TTS_LIMIT_EXCEEDED);
         }
 
+        String key = "ttsprofile/" + user.getId() + "/" + UUID.randomUUID() + "/" + requestDto.getImage();
+
+        //url 발급
+        String url = fileService.getPostS3Url(key);
+
         TTS newTTS = TTSProfileRequestDto.of(requestDto,user);
 
         TTS savedTTS = ttsRepository.save(newTTS);
-        return TTSProfileResponseDto.fromTTS(savedTTS);
+        return TTSProfileResponseDto.fromTTS(savedTTS,url);
     }
 
     // TTS 삭제
@@ -84,11 +89,17 @@ public class TTSService {
         TTS updateTTS = ttsRepository.findById(ttsId).orElseThrow(()-> new CustomException(ErrorCode.TTS_NOT_FOUND));
         checkUser(updateTTS,user.getId());
 
+        String key = "ttsprofile/" + user.getId() + "/" + UUID.randomUUID() + "/" + requestDto.getImage();
+
+        //url 발급
+        String url = fileService.getPostS3Url(key);
+        requestDto.setImage(key);
+
         updateTTS.updateTTS(requestDto);
 
         TTS updatedTTS = ttsRepository.save(updateTTS);
 
-        return TTSProfileResponseDto.fromTTS(updatedTTS);
+        return TTSProfileResponseDto.fromTTS(updatedTTS,url);
     }
 
     // 부모 tts 목록
@@ -100,7 +111,8 @@ public class TTSService {
         List<TTS> ttsList = ttsRepository.findByUserId(user.getId()).orElseThrow(()-> new CustomException(ErrorCode.TTS_NO_CONTENT));
 
         for(TTS ts : ttsList){
-            responseDtos.add(TTSProfileResponseDto.fromTTS(ts));
+            String url = fileService.getGetS3Url(ts.getImage());
+            responseDtos.add(TTSProfileResponseDto.fromTTS(ts,url));
         }
 
         return responseDtos;
