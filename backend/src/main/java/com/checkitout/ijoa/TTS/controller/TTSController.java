@@ -93,4 +93,11 @@ public class TTSController implements TTSApiDocumentation {
         return null;
     }
 
+    @Override
+    @GetMapping("/audios/{bookId}")
+    public ResponseEntity<?> childTTSList(@PathVariable("bookId") Long bookId) throws IOException {
+        List<ChildTTSListDto> responseDto = ttsService.childTTSList(bookId);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
 }

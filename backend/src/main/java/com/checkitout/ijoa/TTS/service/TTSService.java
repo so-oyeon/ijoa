@@ -237,6 +237,20 @@ public class TTSService {
         return PageAudioDto.from(url);
     }
 
+    // 자녀페이지 TTS리스트
+    public List<ChildTTSListDto> childTTSList(Long bookId) {
+        User user = securityUtil.getUserByToken();
+        List<TTS> ttsList = ttsRepository.findByUserId(user.getId()).orElseThrow(()-> new CustomException(ErrorCode.TTS_NO_CONTENT) );
+        Fairytale fairytale = fairytaleRepository.findById(bookId).orElseThrow(()-> new CustomException(ErrorCode.FAIRYTALE_NOT_FOUND));
+        List<ChildTTSListDto> childTTSListDtos = new ArrayList<>();
+        for(TTS tts : ttsList){
+            boolean audio_created = fairytaleTTSRepository.existsByFairytaleAndTts(fairytale, tts);
+            childTTSListDtos.add(ChildTTSListDto.from(tts, audio_created));
+        }
+        return childTTSListDtos;
+
+    }
+
     // 권한 확인
     private void checkUser(TTS tts, Long userId) {
         if(!tts.getUser().getId().equals(userId)){

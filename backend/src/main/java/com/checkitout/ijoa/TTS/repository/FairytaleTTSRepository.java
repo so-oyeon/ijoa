@@ -9,4 +9,5 @@ import java.util.Optional;
 
 public interface FairytaleTTSRepository extends JpaRepository<FairytaleTTS, Long> {
     Optional<FairytaleTTS> findByFairytaleAndTts(Fairytale fairytale, TTS tts);
+    boolean existsByFairytaleAndTts(Fairytale fairytale,TTS tts);
 }

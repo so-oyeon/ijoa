@@ -107,5 +107,12 @@ public interface TTSApiDocumentation {
     })
     public ResponseEntity<?> tempSaveResult(@RequestBody temp temp) throws IOException;
 
+    @Operation(summary = "TTS 목록 조회(자녀 페이지)", description = "책읽기 시작 시 TTS 선택하는 페이지")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "조회", content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+    })
+    public ResponseEntity<?> childTTSList(@PathVariable Long bookId ) throws IOException;
+
 
 }
