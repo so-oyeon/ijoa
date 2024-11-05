@@ -122,3 +122,42 @@ export interface FairyTaleSearchResponse {
   numberOfElements: number;
   empty: boolean;
 }
+
+// 동화책 퀴즈 답변 조회
+export interface FairytaleQuizAnswerItem {
+  answerId: number;
+  fairytaleId: number;
+  quizId: number;
+  text: string;
+  image: string;
+  answer: string;
+}
+
+export interface FairytaleQuizAnswerResponse {
+  totalPages: number;
+  totalElements: number;
+  size: number;
+  content: FairytaleQuizAnswerItem[];
+  number: number;
+  sort: {
+    empty: boolean;
+    sorted: boolean;
+    unsorted: boolean;
+  };
+  pageable: {
+    offset: number;
+    sort: {
+      empty: boolean;
+      sorted: boolean;
+      unsorted: boolean;
+    };
+    paged: boolean;
+    pageNumber: number;
+    pageSize: number;
+    unpaged: boolean;
+  };
+  numberOfElements: number;
+  first: boolean;
+  last: boolean;
+  empty: boolean;
+}

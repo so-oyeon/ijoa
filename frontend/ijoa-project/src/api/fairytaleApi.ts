@@ -7,6 +7,7 @@ import {
   FairyTalePageResponse,
   QuizQuestionResponse,
   FairyTaleSearchResponse,
+  FairytaleQuizAnswerResponse
 } from "../types/fairytaleTypes";
 
 export const fairyTaleApi = {
@@ -44,6 +45,13 @@ export const fairyTaleApi = {
   getFairyTalesBySearch: (word: string, page: number) => {
     return api.get<FairyTaleSearchResponse>(`/fairytales/search`, {
       params: { word, page },
+    });
+  },
+
+  // 동화책 퀴즈 답변 조회
+  getFairytaleQuizAnswer: (childrenId: number, fairytaleId: number, page: number) => {
+    return api.get<FairytaleQuizAnswerResponse>(`/quiz/answer/${childrenId}/${fairytaleId}`, {
+      params: { page },
     });
   },
 };
