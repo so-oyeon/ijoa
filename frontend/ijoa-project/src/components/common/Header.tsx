@@ -42,7 +42,7 @@ const Header = () => {
 
   // 자녀 도서관 라우팅
   const libraryClick = () => {
-    navigate(`/fairytale/list`);
+    navigate(`/child/fairytale/list`);
   };
 
   // 자녀 내 책장 라우팅
@@ -121,7 +121,7 @@ const Header = () => {
         <img className="h-full" src="/assets/logo.png" alt="" onClick={handleGoToMain} />
 
         {/* 검색바 */}
-        {path === "/fairytale/list" ? <SearchBar /> : <></>}
+        {path === "/child/fairytale/list" ? <SearchBar /> : <></>}
       </div>
 
       <div className="grid grid-cols-5 gap-3">

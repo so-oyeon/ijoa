@@ -5,7 +5,7 @@ const SearchBar = () => {
   const navigate = useNavigate();
 
   const handleSearchClick = () => {
-    navigate("/fairytale/search");
+    navigate("/child/fairytale/search");
   };
 
   return (

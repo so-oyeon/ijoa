@@ -48,7 +48,7 @@ const FairytaleSearchPage: React.FC = () => {
   };
 
   const handleGoToMain = () => {
-    navigate(`/fairytale/list`);
+    navigate(`/child/fairytale/list`);
   };
 
   // 컴포넌트 마운트 시 input에 포커스
