@@ -61,6 +61,18 @@ spring:
           writetimeout: 50000
     auth-code-expiration-millis: 300000 # 5 * 60 * 1000 == 5분
 
+  kafka:
+    bootstrap-servers: ${KAFKA_HOST}:${KAFKA_PORT}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+    properties:
+      spring:
+        json:
+          trusted-packages: "*"
 # Log
 logging:
   level:
@@ -117,4 +129,3 @@ management:
 springdoc:
   swagger-ui:
     persist-authorization: true
-
