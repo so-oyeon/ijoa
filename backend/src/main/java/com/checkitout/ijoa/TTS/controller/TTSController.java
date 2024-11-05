@@ -3,10 +3,7 @@ package com.checkitout.ijoa.TTS.controller;
 import com.checkitout.ijoa.TTS.docs.TTSApiDocumentation;
 import com.checkitout.ijoa.TTS.dto.request.TTSProfileRequestDto;
 import com.checkitout.ijoa.TTS.dto.request.TTSTrainRequestDto;
-import com.checkitout.ijoa.TTS.dto.response.PageAudioDto;
-import com.checkitout.ijoa.TTS.dto.response.ScriptResponseDto;
-import com.checkitout.ijoa.TTS.dto.response.TTSProfileResponseDto;
-import com.checkitout.ijoa.TTS.dto.response.TTSTrainResponseDto;
+import com.checkitout.ijoa.TTS.dto.response.*;
 import com.checkitout.ijoa.TTS.service.TTSService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -87,6 +84,13 @@ public class TTSController implements TTSApiDocumentation {
     public ResponseEntity<?> pageAudio(@PathVariable("ttsId")Long ttsId,@PathVariable("pageId") Long pageId) throws IOException {
         PageAudioDto responseDto = ttsService.findPageAudio(ttsId,pageId);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
+    @Override
+    @PostMapping("/result")
+    public ResponseEntity<?> tempSaveResult(@RequestBody temp temp) throws IOException {
+        ttsService.consumeResponse(temp);
+        return null;
     }
 
 }

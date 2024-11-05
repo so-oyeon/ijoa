@@ -3,6 +3,7 @@ package com.checkitout.ijoa.TTS.docs;
 import com.checkitout.ijoa.TTS.dto.request.TTSProfileRequestDto;
 import com.checkitout.ijoa.TTS.dto.request.TTSTrainRequestDto;
 import com.checkitout.ijoa.TTS.dto.response.TTSProfileResponseDto;
+import com.checkitout.ijoa.TTS.dto.response.temp;
 import com.checkitout.ijoa.child.dto.request.CreateChildRequestDto;
 import com.checkitout.ijoa.child.dto.request.UpdateChildRequestDto;
 import com.checkitout.ijoa.child.dto.response.ChildDto;
@@ -97,5 +98,14 @@ public interface TTSApiDocumentation {
             @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
     })
     public ResponseEntity<?> pageAudio(@PathVariable Long ttsId,@PathVariable Long pageId ) throws IOException;
+
+    /////////////임시 ///////////////////
+    @Operation(summary = "추론 결과 저장 ", description = "결과 저장 ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "조회", content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+    })
+    public ResponseEntity<?> tempSaveResult(@RequestBody temp temp) throws IOException;
+
 
 }

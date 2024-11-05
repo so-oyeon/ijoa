@@ -169,14 +169,18 @@ public class TTSService {
         audioBookKafkaTemplate.send(REQUEST_TOPIC, audioBookRequest);
     }
 
-
+/////////////////////////////////////////임시
     // 생성된 audio파일 정보 db 저장
-    @KafkaListener(topics = RESPONSE_TOPIC, groupId = "tts_group")
-    public void consumeResponse(Map<String, Object> message) {
+//    @KafkaListener(topics = RESPONSE_TOPIC, groupId = "tts_group")
+//    public void consumeResponse(Map<String, Object> message) {
+    public void consumeResponse(temp message) {
         LogUtil.info("save");
-        Long bookId = Long.valueOf(message.get("book_id").toString());
-        Long ttsId = Long.valueOf(message.get("tts_id").toString());
-        List<Map<String, String>> s3Keys = (List<Map<String, String>>) message.get("s3_keys");
+        Long ttsId = message.getTtsId();
+        Long bookId = message.getBookId();
+        List<Map<String, String>> s3Keys = message.getS3Keys();
+//        Long bookId = Long.valueOf(message.get("book_id").toString());
+//        Long ttsId = Long.valueOf(message.get("tts_id").toString());
+//        List<Map<String, String>> s3Keys = (List<Map<String, String>>) message.get("s3_keys");
 
         Fairytale fairytale = fairytaleRepository.findById(bookId).orElseThrow(()-> new CustomException(ErrorCode.FAIRYTALE_NOT_FOUND));
         TTS tts = ttsRepository.findById(ttsId).orElseThrow(()-> new CustomException(ErrorCode.TTS_NOT_FOUND));
@@ -223,12 +227,14 @@ public class TTSService {
         trainAudioKafkaTemplate.send(TTS_CREATE_TOPIC, responseDto);
     }
 
+    // 해당 페이지 음성 반환
     public PageAudioDto findPageAudio(Long ttsId, Long pageId) {
         TTS tts = ttsRepository.findById(ttsId).orElseThrow(()-> new CustomException(ErrorCode.TTS_NOT_FOUND));
         FairytalePageContent page = fairytalePageContentRepository.findById(pageId).orElseThrow(()-> new CustomException(ErrorCode.FAIRYTALE_PAGE_NOT_FOUND));
         FairytaleTTS fairytaleTTS = fairytaleTTSRepository.findByFairytaleAndTts(page.getFairytale(), tts).orElseThrow(()-> new CustomException(ErrorCode.TTS_NOT_FOUND));
         Audio audio = audioRepository.findByFairytaleTTSAndPage(fairytaleTTS, page).orElseThrow(()-> new CustomException(ErrorCode.FAIRYTALE_PAGE_NOT_FOUND));
-        return PageAudioDto.from(audio.getAudio());
+        String url = fileService.getGetS3Url(audio.getAudio());
+        return PageAudioDto.from(url);
     }
 
     // 권한 확인
