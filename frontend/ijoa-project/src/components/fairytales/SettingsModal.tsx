@@ -9,12 +9,12 @@ interface SettingsModalProps {
 }
 
 const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
-  const [isLoaded, setIsLoaded] = useState(false); 
+  const [isLoaded, setIsLoaded] = useState(false);
   // 토글 옵션들
   const [toggleOptions, setToggleOptions] = useState([
     { label: "책 읽어주기", checked: true },
     { label: "퀴즈", checked: true },
-    { label: "bgm", checked: false }, 
+    { label: "bgm", checked: false },
   ]);
 
   useEffect(() => {
@@ -22,9 +22,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
     if (isOpen) {
       const isChildBgmPlaying = localStorage.getItem("childBgm") === "true";
       setToggleOptions((prevOptions) =>
-        prevOptions.map((option) =>
-          option.label === "bgm" ? { ...option, checked: isChildBgmPlaying } : option
-        )
+        prevOptions.map((option) => (option.label === "bgm" ? { ...option, checked: isChildBgmPlaying } : option))
       );
       setIsLoaded(true);
     }
