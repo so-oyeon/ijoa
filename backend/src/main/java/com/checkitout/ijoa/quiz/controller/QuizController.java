@@ -37,11 +37,7 @@ public class QuizController implements QuizApiDocumentation {
     @Override
     @PostMapping("/answer")
     public ResponseEntity<AnswerUrlResponseDto> getAnswerUrl(AnswerRequestDto requestDto) {
-        AnswerUrlResponseDto responseDto = AnswerUrlResponseDto.builder()
-                .answerId(313232L)
-                .answerUrl("urlurlrurl")
-                .build();
-
+        AnswerUrlResponseDto responseDto = quizService.getAnswerUrl(requestDto);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 

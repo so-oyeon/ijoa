@@ -1,23 +1,34 @@
 package com.checkitout.ijoa.quiz.service;
 
+import com.checkitout.ijoa.child.domain.Child;
 import com.checkitout.ijoa.exception.CustomException;
 import com.checkitout.ijoa.exception.ErrorCode;
 import com.checkitout.ijoa.fairytale.domain.Fairytale;
 import com.checkitout.ijoa.fairytale.domain.FairytalePageContent;
 import com.checkitout.ijoa.fairytale.repository.FairytalePageContentRepository;
 import com.checkitout.ijoa.fairytale.repository.FairytaleRepository;
+import com.checkitout.ijoa.file.service.FileService;
+import com.checkitout.ijoa.quiz.domain.Answer;
 import com.checkitout.ijoa.quiz.domain.Quiz;
+import com.checkitout.ijoa.quiz.dto.request.AnswerRequestDto;
 import com.checkitout.ijoa.quiz.dto.request.ChatGPTRequest;
 import com.checkitout.ijoa.quiz.dto.request.ChatGPTResponse;
+import com.checkitout.ijoa.quiz.dto.response.AnswerUrlResponseDto;
 import com.checkitout.ijoa.quiz.dto.response.QuizResponseDto;
+import com.checkitout.ijoa.quiz.repository.AnswerRepository;
 import com.checkitout.ijoa.quiz.repository.QuizRepository;
+import com.checkitout.ijoa.util.SecurityUtil;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class QuizService {
 
     private final RestTemplate template;
@@ -30,6 +41,12 @@ public class QuizService {
     private final QuizRepository quizRepository;
     private final FairytaleRepository fairytaleRepository;
     private final FairytalePageContentRepository fairytalePageContentRepository;
+    private final AnswerRepository answerRepository;
+
+    private final FileService fileService;
+
+    private final SecurityUtil securityUtil;
+
 
     public QuizResponseDto fairytaleQuiz(Long bookId, Integer pageNum) {
         // db질문 조회
@@ -55,5 +72,21 @@ public class QuizService {
         newQuiz =quizRepository.save(newQuiz);
 
         return QuizResponseDto.of( newQuiz.getId(),question);
+    }
+
+    public AnswerUrlResponseDto getAnswerUrl(AnswerRequestDto requestDto) {
+        String key = "anwer/" + requestDto.getChildId() + "/" + UUID.randomUUID() + "/" + requestDto.getFileName();
+
+        //url 발급
+        String url = fileService.getPostS3Url(key);
+        Quiz quiz = quizRepository.findById(requestDto.getQuizId()).orElseThrow(() -> new CustomException(ErrorCode.QUIZ_NOT_FOUND));
+        Child child = securityUtil.getChildByToken();
+
+        Answer answer = Answer.of(key,child,quiz);
+
+        answer =answerRepository.save(answer);
+
+        return AnswerUrlResponseDto.builder().answerId(answer.getId()).answerUrl(url).build();
+
     }
 }
