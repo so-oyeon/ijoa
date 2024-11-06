@@ -19,12 +19,12 @@ public class TTSProfileResponseDto {
         this.image_url = image;
     }
 
-    public static TTSProfileResponseDto fromTTS(TTS tts,String url){
+    public static TTSProfileResponseDto fromTTS(TTS tts){
         return TTSProfileResponseDto.builder()
                 .id(tts.getId())
                 .name(tts.getName())
                 .tts(tts.getTTS())
-                .image(url)
+                .image(tts.getImage())
                 .build();
     }
 }
