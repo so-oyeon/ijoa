@@ -48,7 +48,7 @@ public interface QuizApiDocumentation {
             @ApiResponse(responseCode = "200", description = "답변 조회 성공"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    public Page<AnswerResponseDto> getAnswerList(@PathVariable Long childrenId, @PathVariable Long fairytaleId, @RequestParam int page);
+    public ResponseEntity<?> getAnswerList(@PathVariable Long childrenId, @PathVariable Long fairytaleId);
 
     @Operation(summary = "답변 삭제", description = "답변을 삭제할 수 있습니다.")
     @ApiResponses(value = {
