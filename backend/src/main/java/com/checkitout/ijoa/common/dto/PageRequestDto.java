@@ -9,12 +9,12 @@ import lombok.Data;
 public class PageRequestDto {
 
     @Schema(description = "페이지 번호 (1 부터 시작)", example = "1")
-    @NotNull
-    @Positive
+    @NotNull(message = "페이지는 필수 항목입니다")
+    @Positive(message = "페이지는 양수여야합니다")
     private int page;
 
     @Schema(description = "페이지 크기", example = "5")
-    @NotNull
-    @Positive
+    @NotNull(message = "페이지 크기는 필수 항목입니다")
+    @Positive(message = "페이지 크기는 양수여야합니다")
     private int size;
 }
