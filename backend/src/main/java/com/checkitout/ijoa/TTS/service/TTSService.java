@@ -243,6 +243,11 @@ public class TTSService {
     public PageAudioDto findPageAudio(Long ttsId, Long bookId, Integer pageNum) {
         TTS tts = ttsRepository.findById(ttsId).orElseThrow(()-> new CustomException(ErrorCode.TTS_NOT_FOUND));
         Fairytale fairytale = fairytaleRepository.findById(bookId).orElseThrow(()-> new CustomException(ErrorCode.FAIRYTALE_NOT_FOUND));
+
+        if(pageNum == null || pageNum < 1 || pageNum > fairytale.getTotalPages()){
+            throw new CustomException(ErrorCode.FAIRYTALE_PAGE_NOT_FOUND);
+        }
+
         FairytalePageContent page = fairytalePageContentRepository.findByFairytaleAndPageNumber(fairytale, pageNum) .orElseThrow(()-> new CustomException(ErrorCode.FAIRYTALE_PAGE_NOT_FOUND));
         FairytaleTTS fairytaleTTS = fairytaleTTSRepository.findByFairytaleAndTts(page.getFairytale(), tts).orElseThrow(()-> new CustomException(ErrorCode.TTS_NOT_FOUND));
         Audio audio = audioRepository.findByFairytaleTTSAndPage(fairytaleTTS, page).orElseThrow(()-> new CustomException(ErrorCode.FAIRYTALE_PAGE_NOT_FOUND));
