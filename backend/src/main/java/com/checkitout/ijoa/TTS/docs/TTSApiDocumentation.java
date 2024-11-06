@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
 import java.util.List;
@@ -97,7 +98,7 @@ public interface TTSApiDocumentation {
             @ApiResponse(responseCode = "200", description = "조회", content = @Content),
             @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
     })
-    public ResponseEntity<?> pageAudio(@PathVariable Long ttsId,@PathVariable Long pageId ) throws IOException;
+    public ResponseEntity<?> pageAudio(@PathVariable Long ttsId,@PathVariable Long bookId, @RequestParam Integer pageNum) throws IOException;
 
     /////////////임시 ///////////////////
     @Operation(summary = "추론 결과 저장 ", description = "결과 저장 ")
