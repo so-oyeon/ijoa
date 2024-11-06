@@ -4,6 +4,8 @@ import { fairyTaleApi } from "../../api/fairytaleApi";
 import { FairyTaleSearchResponse, FairyTaleListResponse } from "../../types/fairytaleTypes";
 import BookCoverGrid from "../../components/fairytales/BookCoverGrid";
 import SearchBar from "../../components/common/SearchBar";
+import Lottie from "react-lottie-player";
+import loadingAnimation from "../../lottie/footPrint-loadingAnimation.json";
 
 const FairytaleSearchPage: React.FC = () => {
   const navigate = useNavigate();
@@ -14,7 +16,7 @@ const FairytaleSearchPage: React.FC = () => {
   useEffect(() => {
     const getAllFairyTales = async () => {
       try {
-        const response = await fairyTaleApi.getFairyTalesList(1, 2);
+        const response = await fairyTaleApi.getFairyTalesList(1, 5);
         if (response.status === 200) {
           setAllFairyTales(response.data);
         } else {
@@ -56,7 +58,7 @@ const FairytaleSearchPage: React.FC = () => {
     const selectedFairytaleId =
       searchResults?.content[index]?.fairytaleId || allFairyTales?.content[index]?.fairytaleId;
     if (selectedFairytaleId) {
-      navigate(`/fairytale/content/${selectedFairytaleId}`);
+      navigate(`/fairytale/content/${selectedFairytaleId}`, { state: { title: allFairyTales?.content[index].title } });
     }
   };
 
@@ -64,9 +66,7 @@ const FairytaleSearchPage: React.FC = () => {
     <div>
       <div className="relative w-full h-screen overflow-y-auto bg-gradient-to-b from-white">
         <div className="pt-[96px] px-10 flex justify-between items-center mb-6">
-          <div className="text-2xl font-bold flex items-center">
-            {query ? "🔎 검색 결과 ..." : "📚 전체 동화 목록"}
-          </div>
+          <div className="text-2xl font-bold flex items-center">{query ? "🔎 검색 결과 ..." : "📚 전체 동화 목록"}</div>
           <SearchBar onInputChange={handleInputChange} />
         </div>
 
@@ -86,7 +86,7 @@ const FairytaleSearchPage: React.FC = () => {
               onBookClick={handleBookClick}
             />
           ) : (
-            <p className="p-4 text-gray-500">전체 동화 목록이 없습니다.</p>
+             <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
           )}
         </div>
       </div>
