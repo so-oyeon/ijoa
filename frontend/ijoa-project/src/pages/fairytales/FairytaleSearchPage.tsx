@@ -15,6 +15,15 @@ const FairytaleSearchPage: React.FC = () => {
 
   const myBookReadOrNot = allFairyTales?.content?.map((fairyTale: FairyTaleListItem) => fairyTale.isCompleted) || [];
 
+  // 책별 진행도 계산 (currentPage / totalPage)
+  const progress =
+    allFairyTales?.content?.map((fairyTale) => {
+      if (fairyTale.totalPages && fairyTale.currentPage) {
+        return fairyTale.currentPage / fairyTale.totalPages;
+      }
+      return 0;
+    }) || [];
+
   useEffect(() => {
     const getAllFairyTales = async () => {
       try {
@@ -80,6 +89,7 @@ const FairytaleSearchPage: React.FC = () => {
               titles={searchResults.content.map((item) => item.title)}
               onBookClick={handleBookClick}
               myBookReadOrNot={myBookReadOrNot}
+              progress={progress}
             />
           ) : query ? (
             <p className="p-4 text-gray-500">검색 결과가 없습니다.</p>
@@ -89,6 +99,7 @@ const FairytaleSearchPage: React.FC = () => {
               titles={allFairyTales.content.map((item) => item.title)}
               onBookClick={handleBookClick}
               myBookReadOrNot={myBookReadOrNot}
+              progress={progress}
             />
           ) : (
             <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
