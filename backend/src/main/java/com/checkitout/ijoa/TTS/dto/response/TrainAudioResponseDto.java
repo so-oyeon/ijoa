@@ -13,21 +13,17 @@ public class TrainAudioResponseDto {
     private Long ttsId;
     @JsonProperty("path")
     private List<String> path;
-    @JsonProperty("script")
-    private List<String> script;
 
     @Builder
-    public TrainAudioResponseDto(Long ttsId, List<String> path, List<String> script) {
+    public TrainAudioResponseDto(Long ttsId, List<String> path) {
         this.path = path;
-        this.script = script;
         this.ttsId = ttsId;
     }
 
-    public static TrainAudioResponseDto from(Long ttsId, List<String> path, List<String> script) {
+    public static TrainAudioResponseDto from(Long ttsId, List<String> path) {
         return TrainAudioResponseDto.builder()
                 .ttsId(ttsId)
                 .path(path)
-                .script(script)
                 .build();
     }
 }
