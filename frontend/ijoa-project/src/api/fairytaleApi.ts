@@ -11,6 +11,7 @@ import {
   FairyTaleReadCheckResponse,
   FairyTaleListResponse,
   QuizAnswerResponse,
+  ChildrenTTSListResponse
 } from "../types/fairytaleTypes";
 
 export const fairyTaleApi = {
@@ -79,5 +80,10 @@ export const fairyTaleApi = {
       quizId,
       fileName,
     });
+  },
+
+  // 자녀 TTS 목록 조회
+  getChildrenTTSList: (bookId: number) => {
+    return api.get<ChildrenTTSListResponse[]>(`/tts/audios/${bookId}`);
   },
 };

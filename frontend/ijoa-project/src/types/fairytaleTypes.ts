@@ -220,3 +220,11 @@ export interface QuizAnswerResponse {
   answerId: number;
   answerUrl: string;
 }
+
+// 자녀 TTS 목록 조회
+export interface ChildrenTTSListResponse {
+  image: string;
+  audio_created: boolean;
+  ttsname: string;
+  ttsid: number;
+}
