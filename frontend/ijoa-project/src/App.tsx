@@ -48,14 +48,16 @@ const App = () => {
                 <Route path="/parent/reading/stats" element={<ReadingStatistics />} />
                 {/* 부모의 음성 앨범 화면 */}
                 <Route path="/parent/voice/album" element={<VoiceAlbum />} />
+
                 {/* 동화 목록 */}
                 <Route path="/child/fairytale/list" element={<FairytaleListPage />} />
+                {/* 동화책 제목 검색 화면 */}
+                <Route path="/child/fairytale/search" element={<FairytaleSearchPage />} />
+
                 {/* 내 방 */}
                 <Route path="/child/myroom" element={<MyRoom />} />
                 {/* 내 책장 */}
                 <Route path="/child/mybookshelves" element={<MyBookShelves />} />
-                {/* 동화책 제목 검색 화면 */}
-                <Route path="/child/fairytale/search" element={<FairytaleSearchPage />} />
               </Route>
             </Routes>
           </>
