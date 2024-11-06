@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { TbPencilMinus } from "react-icons/tb";
 import { IoIosAdd } from "react-icons/io";
+import TTSCreateGuideModal from "../../components/parent/tts/TTSCreateGuideModal";
 import TTSCreateModal from "../../components/parent/tts/TTSCreateModal";
 import { parentApi } from "../../api/parentApi";
 import { ParentTTSInfo } from "../../types/parentTypes";
 import LoadingAnimation from "../../components/common/LoadingAnimation";
 
 const TTSList = () => {
+  const [isCreateGuideModal, setIsCreateGuideModal] = useState(false);
   const [isCreateModal, setIsCreateModal] = useState(false);
   const [parentTTSList, setParentTTSList] = useState<ParentTTSInfo[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -66,7 +68,7 @@ const TTSList = () => {
             <button className="flex justify-center items-center">
               <IoIosAdd
                 className="text-[100px] text-white bg-[#D9D9D9] rounded-full"
-                onClick={() => setIsCreateModal(true)}
+                onClick={() => setIsCreateGuideModal(true)}
               />
             </button>
           ) : (
@@ -75,6 +77,11 @@ const TTSList = () => {
         </div>
       </div>
 
+      {isCreateGuideModal ? (
+        <TTSCreateGuideModal setIsCreateGuideModal={setIsCreateGuideModal} setIsCreateModal={setIsCreateModal} />
+      ) : (
+        <></>
+      )}
       {isCreateModal ? <TTSCreateModal setIsCreateModal={setIsCreateModal} /> : <></>}
     </div>
   );
