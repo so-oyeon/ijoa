@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Getter
@@ -22,6 +23,7 @@ public class PageHistory {
     @Column(name = "page_history_id")
     private Long id;
 
+    @CreationTimestamp
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
@@ -33,13 +35,12 @@ public class PageHistory {
     @JoinColumn(name = "fairytale_page_content_id", nullable = false)
     private FairytalePageContent pageContent;
 
-    private PageHistory(LocalDateTime createdAt, Child child, FairytalePageContent pageContent) {
-        this.createdAt = createdAt;
+    private PageHistory(Child child, FairytalePageContent pageContent) {
         this.child = child;
         this.pageContent = pageContent;
     }
 
-    public static PageHistory of(LocalDateTime createdAt, Child child, FairytalePageContent pageContent) {
-        return new PageHistory(createdAt, child, pageContent);
+    public static PageHistory of(Child child, FairytalePageContent pageContent) {
+        return new PageHistory(child, pageContent);
     }
 }

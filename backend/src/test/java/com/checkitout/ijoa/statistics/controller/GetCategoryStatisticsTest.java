@@ -91,7 +91,7 @@ public class GetCategoryStatisticsTest {
 
         for (int i = 0; i < total; i++) {
             for (long j = 0L; j < categoryCounts[i]; j++) {
-                ChildReadBooks childReadBook = ChildReadBooks.of(now(), null, null, true, child, fairytales[i]);
+                ChildReadBooks childReadBook = ChildReadBooks.of(null, null, true, child, fairytales[i]);
                 childReadBooksRepository.save(childReadBook);
             }
         }

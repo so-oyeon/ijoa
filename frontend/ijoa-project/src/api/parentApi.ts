@@ -1,9 +1,9 @@
 import api from "../lib/axios";
-import { ChildInfo } from "../types/parentTypes"
+import { ChildInfo, TTSFileStorageUrlInfo } from "../types/parentTypes"
 
 export const parentApi = {
   // 자녀 프로필 목록 조회
-  getChildList: () => {
+  getChildProfileList: () => {
     return api.get(`/parent/children`);
   },
 
@@ -40,5 +40,25 @@ export const parentApi = {
   // 독서 분석 보고서 조회
   getReadingReport: (childId: number) => {
     return api.get(`/children/${childId}/statistics/reading-report`);
+  },
+
+  // TTS 목록 조회
+  getParentTTSList: () => {
+    return api.get(`/tts/profile`);
+  },
+
+  // TTS 녹음 스크립트 목록 조회
+  getTTSScriptList: () => {
+    return api.get(`/tts/script`);
+  },
+
+  // TTS 프로필 생성
+  createTTSProfile: (formData: FormData) => {
+    return api.post(`/tts/profile`, formData);
+  },
+
+  // TTS 학습용 음성 파일 저장 s3 url 목록 조회
+  getTTSFileStorageUrlList: (ttsId: number, data: TTSFileStorageUrlInfo) => {
+    return api.post(`/tts/train/${ttsId}`, data);
   },
 };

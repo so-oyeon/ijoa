@@ -8,6 +8,7 @@ interface BookCoverSwiperProps {
   onBookClick: (index: number) => void; // 클릭 핸들러 추가
   spaceBetween?: number; // 이미지 사이 간 간격
   slidesPerView?: number; // 페이지 당 이미지 개수
+  isCompleted: boolean[];
 }
 
 const BookCoverSwiper: React.FC<BookCoverSwiperProps> = ({
@@ -16,6 +17,7 @@ const BookCoverSwiper: React.FC<BookCoverSwiperProps> = ({
   onBookClick, // 클릭 핸들러
   spaceBetween = 10, // 사진 간 간격
   slidesPerView = 3.5, // 화면 당 슬라이드 개수
+  isCompleted,
 }) => {
   return (
     <Swiper spaceBetween={spaceBetween} slidesPerView={slidesPerView} onSlideChange={() => {}} onSwiper={() => {}}>
@@ -29,6 +31,7 @@ const BookCoverSwiper: React.FC<BookCoverSwiperProps> = ({
             <div className="mt-2 text-left">
               <span className="text-xl">{titles[index]}</span>
             </div>
+            <div>{isCompleted[index] ? "읽음" : "미완성"}</div>
           </div>
         </SwiperSlide>
       ))}

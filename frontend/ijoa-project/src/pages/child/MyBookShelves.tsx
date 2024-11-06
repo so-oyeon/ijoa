@@ -10,6 +10,16 @@ const MyBookShelves: React.FC = () => {
   const [isCurtainOpen, setIsCurtainOpen] = useState(false);
   const [myBookLists, setMyBookLists] = useState<FairyTaleReadCheckItem[]>([]);
 
+  const myBookReadOrNot = myBookLists.map((fairyTale) => fairyTale.isCompleted);
+
+   // 책별 진행도 계산 (currentPage / totalPage)
+   const progress = myBookLists.map((fairyTale) => {
+    if (fairyTale.totalPages && fairyTale.currentPage) {
+      return fairyTale.currentPage / fairyTale.totalPages;
+    }
+    return 0;
+  });
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsCurtainOpen(true);
@@ -24,6 +34,7 @@ const MyBookShelves: React.FC = () => {
       const response = await fairyTaleApi.getFairytalesReadList(0);
       if (response.status === 200) {
         const data = response.data;
+        console.log(data);
         if (data && Array.isArray(data.content)) {
           setMyBookLists(data.content);
         }
@@ -56,10 +67,10 @@ const MyBookShelves: React.FC = () => {
             {myBookLists.length >= 5 ? (
               <>
                 <div className="mb-5">
-                  <MyBookSwiper direction={""} myBookLists={myBookLists} />
+                  <MyBookSwiper direction={""} myBookLists={myBookLists} myBookReadOrNot={myBookReadOrNot} />
                 </div>
                 <div>
-                  <MyBookSwiper direction={"reverse"} myBookLists={myBookLists} />
+                  <MyBookSwiper direction={"reverse"} myBookLists={myBookLists} myBookReadOrNot={myBookReadOrNot} />
                 </div>
               </>
             ) : (
@@ -68,6 +79,8 @@ const MyBookShelves: React.FC = () => {
                   bookCovers={myBookLists.map((book) => book.image || "")}
                   titles={myBookLists.map((book) => book.title || "")}
                   onBookClick={(index) => console.log(`Clicked book index: ${index}`)}
+                  myBookReadOrNot={myBookReadOrNot}
+                  progress={progress}
                 />
               </div>
             )}
