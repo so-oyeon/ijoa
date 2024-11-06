@@ -8,47 +8,61 @@ import Tiger from "/assets/fairytales/images/tiger.png";
 import Zebra from "/assets/fairytales/images/zebra.png";
 import Cloud from "/assets/fairytales/images/cloud.png";
 import Record from "/assets/fairytales/buttons/record.png";
+import { fairyTaleApi } from "../../api/fairytaleApi";
 
 interface QuizModalProps {
-  isOpen: boolean; // 모달 열림 상태
-  onClose: () => void; // 모달 닫기 함수
+  isOpen: boolean;
+  onClose: () => void;
   quizData?: string;
+  quizId?: number;
 }
 
-// 동물 이미지 배열
 const animalImages = [Elephant, Fox, Giraffe, Hippo, Panda, Tiger, Zebra];
-// 모달에 표시할 텍스트
 
-const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, quizData="" }) => {
+const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, quizData = "", quizId }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [animalImage, setAnimalImage] = useState("");
 
-  // 모달이 열릴 때 동물 이미지를 랜덤으로 설정
   useEffect(() => {
     if (isOpen) {
-      setIsRecording(false); // 녹음 상태 초기화
+      setIsRecording(false);
       const randomAnimal = animalImages[Math.floor(Math.random() * animalImages.length)];
-      setAnimalImage(randomAnimal); // 랜덤 동물 이미지 설정
+      setAnimalImage(randomAnimal);
     }
   }, [isOpen]);
 
-  // 녹음 버튼 클릭 핸들러
   const handleRecording = () => {
     if (isRecording) {
-      onClose(); // 녹음 중이면 모달 닫기
+      const childId = parseInt(localStorage.getItem("childId") || "0", 10);
+      const fileName = 1;
+
+      if (!quizId) return;
+      submitQuizAnswer(childId, quizId, fileName);
+      onClose();
     } else {
-      setIsRecording(true); // 녹음 시작
+      setIsRecording(true);
     }
   };
 
-  // 텍스트를 문장 단위로 나누는 함수
-  const splitTextIntoSentences = (quizData: string): string[] => {
-    return quizData.split(/(?<=[.!?])\s+/); // 문장 단위로 나누기
+  // 퀴즈 답변 등록 api 함수
+  const submitQuizAnswer = async (childId: number, quizId: number, fileName: number) => {
+    try {
+      const response = await fairyTaleApi.submitQuizAnswer(childId, quizId, fileName);
+      if (response.status === 200) {
+        const { answerId, answerUrl } = response.data;
+        console.log("퀴즈 답변 전송 성공", answerId, answerUrl);
+      }
+    } catch (error) {
+      console.error("fairyTaleApi의 submitQuizAnswer : ", error);
+    }
   };
 
-  const sentences: string[] = splitTextIntoSentences(quizData); // 나눈 문장 배열
+  const splitTextIntoSentences = (quizData: string): string[] => {
+    return quizData.split(/(?<=[.!?])\s+/);
+  };
 
-  // 모달이 열리지 않으면 null 반환
+  const sentences: string[] = splitTextIntoSentences(quizData);
+
   if (!isOpen) return null;
 
   return (

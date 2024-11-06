@@ -162,8 +162,8 @@ export interface FairytaleQuizAnswerResponse {
   empty: boolean;
 }
 
-// 전체 동화책 목록 조회
-export interface FairyTaleListItem {
+// 읽은 책, 읽는 중인 책 확인
+export interface FairyTaleReadCheckItem {
   fairytaleId: number;
   title: string;
   image: string;
@@ -172,11 +172,11 @@ export interface FairyTaleListItem {
   is_completed: boolean;
 }
 
-export interface FairyTaleListResponse {
+export interface FairyTaleReadCheckResponse {
   totalPages: number;
   totalElements: number;
   size: number;
-  content: FairyTaleListItem[];
+  content: FairyTaleReadCheckItem[];
   number: number;
   sort: {
     empty: boolean;
@@ -201,3 +201,30 @@ export interface FairyTaleListResponse {
   empty: boolean;
 }
 
+// 전체 동화 목록 조회
+export interface FairyTaleListItem {
+  fairytaleId: number;
+  title: string;
+  image: string;
+  totalPages: number;
+  currentPage: number;
+  isCompleted: boolean;
+}
+
+export interface FairyTaleListResponse {
+  content: FairyTaleListItem[]
+}
+
+// 퀴즈 답변 등록 (POST)
+export interface QuizAnswerResponse {
+  answerId: number;
+  answerUrl: string;
+}
+
+// 자녀 TTS 목록 조회
+export interface ChildrenTTSListResponse {
+  image: string;
+  audio_created: boolean;
+  ttsname: string;
+  ttsid: number;
+}
