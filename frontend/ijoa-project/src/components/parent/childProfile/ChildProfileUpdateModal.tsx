@@ -1,8 +1,8 @@
 import { useRef, useState } from "react";
 import { CiCamera } from "react-icons/ci";
-import { childApi } from "../../../api/childApi";
+import { parentApi } from "../../../api/parentApi";
 import { TbPencilMinus } from "react-icons/tb";
-import { ChildInfo } from "../../../types/childTypes";
+import { ChildInfo } from "../../../types/parentTypes";
 
 interface Props {
   updateChildInfo: ChildInfo;
@@ -63,20 +63,20 @@ const ChildProfileCreateModal = ({ updateChildInfo, setIsUpdateModal, getChildIn
     }
 
     try {
-      const response = await childApi.updateChildProfile(childId, formData);
+      const response = await parentApi.updateChildProfile(childId, formData);
       if (response.status === 200) {
         setIsUpdateModal(false);
         getChildInfoList();
       }
     } catch (error) {
-      console.log("childApi의 createChildProfile : ", error);
+      console.log("parentApi의 createChildProfile : ", error);
     }
   };
 
   // 자녀 프로필 삭제 API 함수 호출
   const handleDeleteChild = async () => {
     try {
-      const response = await childApi.deleteChildProfile(childId);
+      const response = await parentApi.deleteChildProfile(childId);
       if (response.status === 200) {
         const confirmFlag = confirm("정말 자녀 프로필을 삭제할까요?");
         if (confirmFlag) {
@@ -85,13 +85,13 @@ const ChildProfileCreateModal = ({ updateChildInfo, setIsUpdateModal, getChildIn
         }
       }
     } catch (error) {
-      console.log("childApi의 deleteChildProfile : ", error);
+      console.log("parentApi의 deleteChildProfile : ", error);
     }
   };
 
   return (
     <div className="py-8 bg-black bg-opacity-60 flex justify-center items-center fixed inset-0 z-50">
-      <div className="p-10 bg-white rounded-3xl shadow-lg">
+      <div className="p-10 bg-white rounded-2xl shadow-lg">
         {/* 닫기 버튼 */}
         <div className="w-full flex justify-end">
           <img className="w-10 h-10" src="/assets/close-button.png" alt="" onClick={() => setIsUpdateModal(false)} />

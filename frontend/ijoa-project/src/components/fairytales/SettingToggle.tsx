@@ -5,7 +5,7 @@ interface ToggleOptionsProps {
   onToggle: (index: number) => void;
 }
 
-const SettingToggles: React.FC<ToggleOptionsProps> = ({ options, onToggle }) => {
+const SettingToggles: React.FC<ToggleOptionsProps> = React.memo(({ options, onToggle }) => {
   return (
     <div className="mt-6 flex justify-center">
       <div className="space-y-3">
@@ -15,7 +15,7 @@ const SettingToggles: React.FC<ToggleOptionsProps> = ({ options, onToggle }) => 
             <input
               type="checkbox"
               className="toggle custom-toggle"
-              defaultChecked={option.checked}
+              checked={option.checked}
               onChange={() => onToggle(index)}
             />
           </label>
@@ -23,6 +23,6 @@ const SettingToggles: React.FC<ToggleOptionsProps> = ({ options, onToggle }) => 
       </div>
     </div>
   );
-};
+});
 
 export default SettingToggles;

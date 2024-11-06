@@ -6,7 +6,12 @@ import {
   FairyTaleContentResponse,
   FairyTalePageResponse,
   QuizQuestionResponse,
-  FairyTaleSearchResponse
+  FairyTaleSearchResponse,
+  FairytaleQuizAnswerResponse,
+  FairyTaleReadCheckResponse,
+  FairyTaleListResponse,
+  QuizAnswerResponse,
+  ChildrenTTSListResponse
 } from "../types/fairytaleTypes";
 
 export const fairyTaleApi = {
@@ -21,7 +26,7 @@ export const fairyTaleApi = {
   },
 
   // 카테고리별 동화 리스트 조회
-  getFairyTalesList: (categoryId: number, page: number) => {
+  getFairyTalesListByCategory: (categoryId: number, page: number) => {
     return api.get<FairyTaleByCategoryListResponse>(`/fairytales/list/${categoryId}?page=${page}`);
   },
 
@@ -45,5 +50,40 @@ export const fairyTaleApi = {
     return api.get<FairyTaleSearchResponse>(`/fairytales/search`, {
       params: { word, page },
     });
+  },
+
+  // 동화책 퀴즈 답변 조회
+  getFairytaleQuizAnswer: (childrenId: number, fairytaleId: number, page: number) => {
+    return api.get<FairytaleQuizAnswerResponse>(`/quiz/answer/${childrenId}/${fairytaleId}`, {
+      params: { page },
+    });
+  },
+
+  // 읽은 책과 읽고 있는 책 목록 조회
+  getFairytalesReadList: (page: number) => {
+    return api.get<FairyTaleReadCheckResponse>(`/fairytales/children`, {
+      params: { page },
+    });
+  },
+
+  // 전체 동화책 목록 조회
+  getFairyTalesList: (page: number, size: number) => {
+    return api.get<FairyTaleListResponse>(`/fairytales/list`, {
+      params: { page, size },
+    });
+  },
+
+  // 퀴즈 답변 저장
+  submitQuizAnswer: (childId: number, quizId: number, fileName: number) => {
+    return api.post<QuizAnswerResponse>(`/quiz/answer`, {
+      childId,
+      quizId,
+      fileName,
+    });
+  },
+
+  // 자녀 TTS 목록 조회
+  getChildrenTTSList: (bookId: number) => {
+    return api.get<ChildrenTTSListResponse[]>(`/tts/audios/${bookId}`);
   },
 };

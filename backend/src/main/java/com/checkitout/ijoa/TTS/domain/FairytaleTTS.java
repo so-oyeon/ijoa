@@ -26,4 +26,12 @@ public class FairytaleTTS {
     @JoinColumn(name = "fairytale_id")
     private Fairytale fairytale;
 
+    public FairytaleTTS(Fairytale fairytale, TTS tts) {
+        this.fairytale = fairytale;
+        this.tts = tts;
+    }
+
+    public static FairytaleTTS of(Fairytale fairytale, TTS tts) {
+        return new FairytaleTTS(fairytale, tts);
+    }
 }

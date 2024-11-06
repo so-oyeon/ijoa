@@ -9,22 +9,22 @@ public class TTSProfileResponseDto {
     private Long id;
     private String name;
     private String tts;
-    private String image;
+    private String image_url;
 
     @Builder
     public TTSProfileResponseDto(Long id, String name, String tts, String image) {
         this.id = id;
         this.name = name;
         this.tts = tts;
-        this.image = image;
+        this.image_url = image;
     }
 
-    public static TTSProfileResponseDto fromTTS(TTS tts){
+    public static TTSProfileResponseDto fromTTS(TTS tts,String url){
         return TTSProfileResponseDto.builder()
                 .id(tts.getId())
                 .name(tts.getName())
                 .tts(tts.getTTS())
-                .image(tts.getImage())
+                .image(url)
                 .build();
     }
 }

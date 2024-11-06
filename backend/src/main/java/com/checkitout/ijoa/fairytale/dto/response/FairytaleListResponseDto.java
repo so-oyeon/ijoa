@@ -1,31 +1,43 @@
 package com.checkitout.ijoa.fairytale.dto.response;
 
-import com.checkitout.ijoa.child.domain.Enum.Gender;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 public class FairytaleListResponseDto {
 
-    private long fairytaleId;
+    @Schema(description = "동화책 Id", example = "1")
+    private Long fairytaleId;
 
+    @Schema(description = "동화책 제목", example = "노마의 우주 여행")
     private String title;
 
+    @Schema(description = "동화책 표지 url", example = "https://checkitout-bucket.s3.amazonaws.com/images/9788929116910_표지.jpg")
     private String image;
 
-    private int total_pages;
+    @Schema(description = "동화책 총 페이지 수", example = "14")
+    private int totalPages;
 
-    private boolean is_completed;
+    @Schema(description = "마지막으로 읽은 페이지", example = "0")
+    private int currentPage;
 
-    private int current_page;
+    @Schema(description = "동화책 완독 여부", example = "false")
+    @JsonProperty("isCompleted")
+    private boolean isCompleted;
+
+    private int progressRate;
 
     @Builder
-    public FairytaleListResponseDto(long fairytaleId, String title, String image, int total_pages, boolean is_completed, int current_page) {
+    public FairytaleListResponseDto(long fairytaleId, String title, String image, int totalPages, boolean isCompleted,
+                                    int currentPage, int progressRate) {
         this.fairytaleId = fairytaleId;
         this.title = title;
         this.image = image;
-        this.total_pages = total_pages;
-        this.is_completed = is_completed;
-        this.current_page = current_page;
+        this.totalPages = totalPages;
+        this.isCompleted = isCompleted;
+        this.currentPage = currentPage;
+        this.progressRate = progressRate;
     }
 }

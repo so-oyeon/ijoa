@@ -45,6 +45,7 @@ public class ChildReadBooks {
 
     public ChildReadBooks(Integer currentPage, LocalDateTime finishedAt, Boolean isCompleted,
                           Child child, Fairytale fairytale) {
+        this.createdAt = createdAt;
         this.currentPage = currentPage;
         this.finishedAt = finishedAt;
         this.isCompleted = isCompleted;

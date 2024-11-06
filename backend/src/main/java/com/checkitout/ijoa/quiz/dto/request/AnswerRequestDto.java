@@ -17,14 +17,14 @@ public class AnswerRequestDto {
     private Long quizId;
 
 
-    @NotBlank(message = "파일 타입은 필수 항목입니다.")
-    @Schema(description = "파일 타입", example = "wav")
-    private Long fileType;
+    @NotBlank(message = "파일 이름 필수 항목입니다.")
+    @Schema(description = "파일이름", example = "fileName.wav")
+    private String fileName;
 
     @Builder
-    public AnswerRequestDto(Long childId, Long quizId, Long fileType) {
+    public AnswerRequestDto(Long childId, Long quizId, String fileName) {
         this.childId = childId;
         this.quizId = quizId;
-        this.fileType = fileType;
+        this.fileName = fileName;
     }
 }

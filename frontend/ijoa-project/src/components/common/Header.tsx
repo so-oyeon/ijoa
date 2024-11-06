@@ -3,11 +3,9 @@ import { useNavigate } from "react-router-dom";
 import SettingsModal from "../../components/fairytales/SettingsModal";
 import ParentSettingsModal from "../../components/parent/ParentSettingsModal";
 import ProfileDropDown from "./ProfileDropDown";
-import SearchBar from "./SearchBar";
 
 const Header = () => {
   const type = localStorage.getItem("userType");
-  const path = window.location.pathname;
   const [isChildSettingsModalOpen, setIsChildSettingsModalOpen] = useState(false); // 자녀 헤더 설정 모달창 열림 여부 상태 변수
   const [isParentSettingsModalOpen, setIsParentSettingsModalOpen] = useState(false); // 부모 헤더 설정 모달창 열림 여부 상태 변수
   const navigate = useNavigate();
@@ -39,7 +37,12 @@ const Header = () => {
 
   // 자녀 도서관 라우팅
   const libraryClick = () => {
-    navigate(`/fairytale/list`);
+    navigate(`/child/fairytale/search`);
+  };
+
+  // 자녀 메인 라우팅
+  const fairytalelistClick = () => {
+    navigate(`/child/fairytale/list`);
   };
 
   // 자녀 내 책장 라우팅
@@ -72,7 +75,7 @@ const Header = () => {
     if (type === "parent") {
       childClick();
     } else {
-      libraryClick();
+      fairytalelistClick();
     }
   };
 
@@ -98,9 +101,6 @@ const Header = () => {
       <div className="w-2/3 h-full flex items-center space-x-5">
         {/* 로고 */}
         <img className="h-full" src="/assets/logo.png" alt="" onClick={handleGoToMain} />
-
-        {/* 검색바 */}
-        {path === "/fairytale/list" ? <SearchBar /> : <></>}
       </div>
 
       <div className="grid grid-cols-5 gap-3">
@@ -109,8 +109,7 @@ const Header = () => {
           <button
             className="w-14 flex flex-col justify-center items-center space-y-1"
             key={index}
-            onClick={menu.action}
-          >
+            onClick={menu.action}>
             <img
               className="w-12 aspect-1 p-2 bg-white rounded-full shadow-[0_3px_3px_1px_rgba(0,0,0,0.1)]"
               src={`/assets/header/${type}/${menu.img}.png`}
@@ -121,7 +120,7 @@ const Header = () => {
         ))}
 
         {/* 프로필 모달 */}
-        {type === "child" ? <ProfileDropDown /> : <></>}
+        {type === "child" && <ProfileDropDown />}
       </div>
 
       {/* 자녀 헤더 설정 모달창 */}

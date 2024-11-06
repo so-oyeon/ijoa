@@ -1,9 +1,15 @@
 import { MdLogout, MdChildCare } from "react-icons/md";
 import { PiUserSwitch } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
+import { ChildInfo } from "../../types/parentTypes";
+import { parentApi } from "../../api/parentApi";
+import { useEffect, useState } from "react";
+import { userApi } from "../../api/userApi";
+import Swal from "sweetalert2";
 
 const ProfileDropDown = () => {
   const navigate = useNavigate();
+  const [childInfo, setChildInfo] = useState<ChildInfo | null>(null);
 
   const handleChangeToParent = () => {
     localStorage.setItem("userType", "parent");
@@ -11,9 +17,51 @@ const ProfileDropDown = () => {
     navigate("/parent/child/list");
   };
 
-  const handleLogout = () => {
-    navigate("/home");
+  const handleLogout = async () => {
+    try {
+      const response = await userApi.logout();
+      if (response.status === 200) {
+        localStorage.clear();
+      }
+      Swal.fire({
+        icon: "success",
+        title: "로그아웃이 완료되었습니다",
+        confirmButtonText: "확인",
+      }).then(() => {
+        navigate("/home");
+      });
+    } catch (error) {
+      console.log("userApi의 logout : ", error);
+      Swal.fire({
+        icon: "error",
+        title: "로그아웃 실패",
+        text: "다시 시도해 주세요.",
+        confirmButtonText: "확인",
+      });
+    }
   };
+
+  // 자녀 프로필을 가져오는 api 통신 함수
+  const getChildProfile = async () => {
+    const childId = parseInt(localStorage.getItem("childId") || "0", 10);
+    if (!childId) {
+      console.error("Child ID is undefined");
+      return;
+    }
+
+    try {
+      const response = await parentApi.getChildProfile(childId);
+      if (response.status === 200 && response.data) {
+        setChildInfo(response.data);
+      }
+    } catch (error) {
+      console.error("parentApi의 getChildProfile:", error);
+    }
+  };
+
+  useEffect(() => {
+    getChildProfile();
+  }, []);
 
   return (
     <div className="dropdown dropdown-end">
@@ -32,7 +80,7 @@ const ProfileDropDown = () => {
         <li className="h-14">
           <div className="w-full h-full flex items-center space-x-3 hover:bg-white">
             <MdChildCare className="text-2xl" />
-            <p className="text-lg">다솔이 (만 4세)</p>
+            <p className="text-lg">{childInfo ? `${childInfo.name} (만 ${childInfo.age}세)` : "Loading..."}</p>
           </div>
         </li>
         <hr className="h-[0.5px] bg-[#9e9e9e]" />

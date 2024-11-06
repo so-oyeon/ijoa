@@ -27,19 +27,19 @@ const ReadCompleteModal: React.FC<ReadCompleteModalProps> = ({ isOpen, title }) 
 
   // 홈으로 렌더링하는 함수
   const toHome = () => {
-    navigate("/fairytale/list");
+    navigate("/child/fairytale/list");
   };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
-      <div className="w-1/3 text-center bg-white rounded-3xl shadow-lg">
+      <div className="w-1/3 text-center bg-white rounded-2xl shadow-lg">
         <div className="px-4 py-8">
           <div className="mb-6 flex justify-center items-center">
             <img src={CompleteBadge} alt="독서 완료 뱃지" />
           </div>
           <div className="text-2xl font-bold text-center fairytale-font whitespace-pre-line">{message}</div>
           <button
-            className="mt-6 px-8 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-3xl border border-2 border-[#67CCFF]"
+            className="mt-6 px-8 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-2xl border border-2 border-[#67CCFF]"
             onClick={toHome}
           >
             목록 화면으로

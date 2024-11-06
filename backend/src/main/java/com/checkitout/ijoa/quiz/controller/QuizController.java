@@ -2,15 +2,19 @@ package com.checkitout.ijoa.quiz.controller;
 
 import com.checkitout.ijoa.quiz.docs.QuizApiDocumentation;
 import com.checkitout.ijoa.quiz.dto.request.AnswerRequestDto;
+import com.checkitout.ijoa.quiz.dto.request.QuizBookRequestDto;
 import com.checkitout.ijoa.quiz.dto.response.AnswerResponseDto;
 import com.checkitout.ijoa.quiz.dto.response.AnswerUrlResponseDto;
+import com.checkitout.ijoa.quiz.dto.response.QuizBookResponseDto;
 import com.checkitout.ijoa.quiz.dto.response.QuizResponseDto;
+import com.checkitout.ijoa.quiz.service.QuizService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,15 +26,13 @@ import java.util.List;
 @RequestMapping("/quiz")
 public class QuizController implements QuizApiDocumentation {
 
+    private final QuizService quizService;
+
     // 질문 조회
     @Override
-    @GetMapping("/question/{pageId}")
-    public ResponseEntity<QuizResponseDto> getQuiz(@PathVariable Long pageId) {
-        QuizResponseDto responseDto = QuizResponseDto.builder()
-                .quizId(123412L)
-                .text("질문질문")
-                .build();
-
+    @GetMapping("/question/{bookId}/{pageNum}")
+    public ResponseEntity<QuizResponseDto> getQuiz(@PathVariable("bookId") Long bookId, @PathVariable("pageNum") Integer pageNum) {
+        QuizResponseDto responseDto = quizService.fairytaleQuiz(bookId, pageNum);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
@@ -38,45 +40,26 @@ public class QuizController implements QuizApiDocumentation {
     @Override
     @PostMapping("/answer")
     public ResponseEntity<AnswerUrlResponseDto> getAnswerUrl(AnswerRequestDto requestDto) {
-        AnswerUrlResponseDto responseDto = AnswerUrlResponseDto.builder()
-                .answerId(313232L)
-                .answerUrl("urlurlrurl")
-                .build();
-
+        AnswerUrlResponseDto responseDto = quizService.getAnswerUrl(requestDto);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
-    private List<AnswerResponseDto> makeList(){
-        List<AnswerResponseDto> list = new ArrayList<>();
-        AnswerResponseDto responseDto = AnswerResponseDto.builder()
-                .answerId(313232L)
-                .quizId(231312L)
-                .answerId(12313213L)
-                .text("질문질문")
-                .image("image urlurl")
-                .fairytaleId(13132L)
-                .answer("answer url")
-                .build();
+    @Override
+    @PostMapping("/answer/list/{childId}")
+    public Page<QuizBookResponseDto> getQuizBookList(@PathVariable("childId") Long childId,@RequestParam("page") int page, @RequestBody QuizBookRequestDto requestDto ) {
+        List<QuizBookResponseDto> responseDtos = quizService.getQuizBookList(requestDto, childId);
 
-        for(int i =0;i<10;i++){
-            list.add(responseDto);
-        }
-        return list;
-
+        Pageable pageable = PageRequest.of(page, 8);
+        return new PageImpl<>(responseDtos, pageable, responseDtos.size());
     }
 
     // 책 답변 목록
     @Override
     @GetMapping("/answer/{childrenId}/{fairytaleId}")
-    public Page<AnswerResponseDto> getAnswerList(Long childrenId, Long fairytaleId, int page) {
-
-        List<AnswerResponseDto> answerList = makeList();
-
-        // 페이지 요청 객체 생성
-        Pageable pageable = PageRequest.of(page, 3);
-
+    public ResponseEntity<?> getAnswerList(@PathVariable("childrenId") Long childrenId, @PathVariable("fairytaleId") Long fairytaleId ) {
+        List<AnswerResponseDto> responseDtos =  quizService.getAnswerList(childrenId,fairytaleId);
         // Page 객체 생성하여 반환
-        return new PageImpl<>(answerList, pageable, answerList.size());
+        return new ResponseEntity<>(responseDtos, HttpStatus.OK);
     }
 
     @Override

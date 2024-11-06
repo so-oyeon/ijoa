@@ -1,4 +1,4 @@
-package com.checkitout.ijoa.TTS.dto.request;
+package com.checkitout.ijoa.TTS.repository;
 
 import com.checkitout.ijoa.TTS.domain.Script;
 import org.springframework.data.jpa.repository.JpaRepository;
