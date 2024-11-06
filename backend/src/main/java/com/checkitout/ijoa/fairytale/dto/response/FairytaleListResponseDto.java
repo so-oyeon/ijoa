@@ -27,15 +27,17 @@ public class FairytaleListResponseDto {
     @JsonProperty("isCompleted")
     private boolean isCompleted;
 
+    private int progressRate;
 
     @Builder
-    public FairytaleListResponseDto(long fairytaleId, String title, String image, int total_pages, boolean is_completed,
-                                    int current_page) {
+    public FairytaleListResponseDto(long fairytaleId, String title, String image, int totalPages, boolean isCompleted,
+                                    int currentPage, int progressRate) {
         this.fairytaleId = fairytaleId;
         this.title = title;
         this.image = image;
-        this.totalPages = total_pages;
-        this.isCompleted = is_completed;
-        this.currentPage = current_page;
+        this.totalPages = totalPages;
+        this.isCompleted = isCompleted;
+        this.currentPage = currentPage;
+        this.progressRate = progressRate;
     }
 }

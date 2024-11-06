@@ -11,7 +11,7 @@ import {
   FairyTaleReadCheckResponse,
   FairyTaleListResponse,
   QuizAnswerResponse,
-  ChildrenTTSListResponse
+  ChildrenTTSListResponse,
 } from "../types/fairytaleTypes";
 
 export const fairyTaleApi = {
