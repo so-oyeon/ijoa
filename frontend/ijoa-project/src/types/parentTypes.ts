@@ -15,3 +15,15 @@ export interface ChildCreateInfo {
   gender: string;
   profileImg: string;
 }
+
+// 히스토그램 집중한 시간 응답 데이터
+export interface FocusTimeUnitInfo {
+  unit: string;
+  avgAttentionRate: number;
+}
+
+// 도넛형 차트 분류별 독서 통계 조회 응답 데이터
+export interface CategoriesUnitInfo {
+  category: string;
+  count: number;
+}

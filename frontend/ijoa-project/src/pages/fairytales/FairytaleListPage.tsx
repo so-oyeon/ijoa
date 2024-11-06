@@ -3,13 +3,13 @@ import { useNavigate } from "react-router-dom";
 import Swiper from "../../components/fairytales/Swiper"; // 스와이퍼 컴포넌트 import
 import ChoiceTab from "../../components/fairytales/ChoiceTab"; // 선택탭 컴포넌트 import
 import { fairyTaleApi } from "../../api/fairytaleApi";
-import { childApi } from "../../api/childApi";
+import { parentApi } from "../../api/parentApi";
 import {
   FairyTaleRankByAgeItem,
   FairyTaleRecommendationItem,
   FairyTaleByCategoryListResponse,
 } from "../../types/fairytaleTypes";
-import { ChildInfo } from "../../types/childTypes";
+import { ChildInfo } from "../../types/parentTypes";
 import Lottie from "react-lottie-player";
 import loadingAnimation from "../../lottie/footPrint-loadingAnimation.json";
 
@@ -88,12 +88,12 @@ const FairytaleListPage: React.FC = () => {
     if (!childId) return;
 
     try {
-      const response = await childApi.getChildProfile(childId);
+      const response = await parentApi.getChildProfile(childId);
       if (response.status === 200 && response.data) {
         setChildInfo(response.data);
       }
     } catch (error) {
-      console.error("childApi의 getChildProfile:", error);
+      console.error("parentApi의 getChildProfile:", error);
     }
   };
 
