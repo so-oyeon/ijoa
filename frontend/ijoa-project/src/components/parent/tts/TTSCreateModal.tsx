@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { parentApi } from "../../../api/parentApi";
-import { TTSScriptInfo } from "../../../types/parentTypes";
+import { S3UrlInfo, TTSScriptInfo } from "../../../types/parentTypes";
 import Lottie from "react-lottie-player";
 import loadingAnimation from "../../../lottie/footPrint-loadingAnimation.json";
 
@@ -12,12 +12,15 @@ const TTSCreateModal = ({ setIsCreateModal }: Props) => {
   const buttonStyle = "w-full px-8 py-2 text-xl font-bold rounded-xl border-2 ";
   const [scriptList, setScriptList] = useState<TTSScriptInfo[] | null>(null);
   const [scriptCurrentIdx, setScriptCurrentIdx] = useState(0);
-
   const [isRecording, setIsRecording] = useState(false); // 녹음 진행 상태 변수
+
   const [audioURL, setAudioURL] = useState<string | null>(null); // 오디오 미리 듣기를 위한 url 변수
   const mediaRecorderRef = useRef<MediaRecorder | null>(null); // 녹음 제어를 위한 참조 변수
   const audioPlayRef = useRef<HTMLAudioElement | null>(null); // 오디오 재생을 위한 참조 변수
   const audioChunksRef = useRef<Blob[]>([]); // 오디오 저장을 위한 청크 배열(작은 데이터 조각) 참조 변수
+  const [recordingList, setRecordingList] = useState<Blob[]>([]); // 전체 녹음본 목록
+
+  const [s3UrlList, setS3UrlList] = useState<S3UrlInfo[] | null>(null); // 전체 녹음본 목록
 
   // 녹음 시작
   const startRecording = async () => {
@@ -36,6 +39,14 @@ const TTSCreateModal = ({ setIsCreateModal }: Props) => {
 
       mediaRecorder.onstop = () => {
         const audioBlob = new Blob(audioChunksRef.current, { type: "audio/wav" });
+
+        // 현재 스크립트 인덱스 위치에 녹음본 추가 (덮어쓰기)
+        setRecordingList((prev) => {
+          const updatedRecordings = [...prev];
+          updatedRecordings[scriptCurrentIdx] = audioBlob;
+          return updatedRecordings;
+        });
+
         const audioURL = URL.createObjectURL(audioBlob);
         setAudioURL(audioURL);
       };
@@ -53,6 +64,11 @@ const TTSCreateModal = ({ setIsCreateModal }: Props) => {
     }
   };
 
+  // 녹음본 자동 재생 함수
+  const handlePlayRecordingAudio = () => {
+    audioPlayRef.current?.play();
+  };
+
   // TTS 녹음 스크립트 목록 조회 통신 함수
   const getTTSScript = async () => {
     try {
@@ -65,18 +81,47 @@ const TTSCreateModal = ({ setIsCreateModal }: Props) => {
     }
   };
 
-  const handlePlayRecordingAudio = () => {
-    audioPlayRef.current?.play();
+  // 다음 스크립트로 이동 함수
+  const handleNextRecording = () => {
+    // 다음 스크립트로 전환
+    setScriptCurrentIdx((prev) => prev + 1);
+
+    // 다음 녹음으로 넘어갈 때 현재 녹음 URL 초기화
+    setAudioURL(null);
+  };
+
+  // 녹음 완료 후 오디오 저장 s3 url 목록 조회 통신 함수
+  const handleCompleteRecording = async () => {
+    const temp = Array.from(Array(21), (_, index) => ({ fileName: `audio${index + 1}.wav`, scriptId: index + 1 }));
+    const data = {
+      fileScriptPairs: temp,
+    };
+
+    try {
+      const response = await parentApi.getTTSFileStorageUrlList(1, data);
+      if (response.status === 201) {
+        setS3UrlList(response.data);
+      }
+    } catch (error) {
+      console.log("parentApi의 getTTSFileStorageUrlList : ", error);
+    }
   };
 
   useEffect(() => {
     getTTSScript();
   }, []);
 
+  useEffect(() => {
+    // scriptList가 업데이트되면 recordings 배열을 scriptList의 길이에 맞게 초기화
+    if (scriptList) {
+      setRecordingList(Array(scriptList.length).fill(null));
+    }
+  }, [scriptList]);
+
   if (!scriptList) {
     return (
       <div className="py-8 bg-black bg-opacity-60 flex justify-center items-center fixed inset-0 z-50">
-        <div className="w-1/2 p-10 bg-white rounded-2xl shadow-lg">
+        <div className="w-1/2 p-10 bg-white rounded-2xl shadow-lg flex justify-center items-center">
           <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
         </div>
       </div>
@@ -94,7 +139,12 @@ const TTSCreateModal = ({ setIsCreateModal }: Props) => {
         <div className="flex flex-col items-center space-y-8">
           {/* 안내 멘트 */}
           <div className="text-xl text-[#565656] text-center font-bold grid gap-5">
-            <p className="underline underline-offset-1 decoration-8 decoration-[#67CCFF]">다음 문장을 녹음해주세요</p>
+            <div>
+              <span className="underline underline-offset-1 decoration-8 decoration-[#67CCFF]">
+                다음 문장을 녹음해주세요
+              </span>
+              <span>({scriptCurrentIdx + 1}/21)</span>
+            </div>
             <p>{scriptList[scriptCurrentIdx].script}</p>
           </div>
 
@@ -116,16 +166,17 @@ const TTSCreateModal = ({ setIsCreateModal }: Props) => {
               결과 확인
             </button>
             <button
+              onClick={scriptCurrentIdx === 20 ? handleCompleteRecording : handleNextRecording}
               disabled={isRecording || !audioURL}
               className={`${buttonStyle} text-white bg-[#67CCFF] border-[#67CCFF] ${
                 isRecording || !audioURL ? "opacity-50" : ""
               }`}>
-              다음
+              {scriptCurrentIdx === 20 ? "완료" : "다음"}
             </button>
           </div>
 
           {/* 오디오 재생 컨트롤바 */}
-          {audioURL && <audio controls src={audioURL} className="hidden" ref={audioPlayRef}></audio>}
+          {audioURL && <audio controls src={audioURL} className="" ref={audioPlayRef}></audio>}
         </div>
       </div>
     </div>
