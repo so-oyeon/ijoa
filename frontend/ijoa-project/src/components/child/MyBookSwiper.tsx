@@ -7,9 +7,10 @@ import { FairyTaleReadCheckItem } from "../../types/fairytaleTypes";
 interface Props {
   direction: string;
   myBookLists: FairyTaleReadCheckItem[];
+  myBookReadOrNot: boolean[];
 }
 
-const MyBookSwiper = ({ direction, myBookLists }: Props) => {
+const MyBookSwiper = ({ direction, myBookLists, myBookReadOrNot }: Props) => {
   const myBookCovers = myBookLists.map((book) => book.image);
   const myBookTitles = myBookLists.map((book) => book.title);
 
@@ -34,6 +35,7 @@ const MyBookSwiper = ({ direction, myBookLists }: Props) => {
             <img src={cover} alt={`동화책 ${index + 1}`} className="w-full" />
             <div className="mt-2 text-left">
               <span className="text-xl text-white line-clamp-1">{myBookTitles[index]}</span>
+              <div>{myBookReadOrNot[index] ? "읽음" : "읽지 않음"}</div>
             </div>
           </div>
         </SwiperSlide>

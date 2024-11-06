@@ -25,7 +25,7 @@ const App = () => {
       MusicManager.playLoginBgm();
     } else if (location.pathname.startsWith("/child") && isBgmEnabled) {
       MusicManager.playChildBgm();
-    } else {
+    } else {  
       MusicManager.stopBgm();
     }
   }, [location]);

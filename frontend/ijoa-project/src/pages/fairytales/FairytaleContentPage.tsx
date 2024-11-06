@@ -18,6 +18,8 @@ const FairyTaleContentPage: React.FC = () => {
   const { fairytaleId } = useParams<{ fairytaleId: string }>();
   const location = useLocation();
   const title = location.state?.title;
+  const isCompleted = location.state?.isCompleted;
+  const currentPage = location.state?.currentPage;
   const [fairytaleCurrentPage, setFairytaleCurrentPage] = useState(0);
   const [fairytaleData, setFairytaleData] = useState<FairyTaleContentResponse>();
   const [quizData, setQuizData] = useState<QuizQuestionResponse>();
@@ -29,6 +31,10 @@ const FairyTaleContentPage: React.FC = () => {
   const [isQuizModalOpen, setIsQuizModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isFocusAlertModalOpen, setIsFocusAlertModalOpen] = useState(false);
+  const [isQuizDataLoading, setIsQuizDataLoading] = useState(false);
+
+  const bookId = fairytaleId ? parseInt(fairytaleId, 10) : 0;
+  const isReading = !isCompleted && currentPage > 0;
 
   // 동화책 내용(이미지, 텍스트)을 가져오는 api 통신 함수
   const getFairyTaleContent = useCallback(
@@ -67,17 +73,23 @@ const FairyTaleContentPage: React.FC = () => {
     }
   };
 
-  // 동화책 퀴즈 가져오는 api 통신 함수
-  const getQuizData = useCallback(async () => {
-    try {
-      const response = await fairyTaleApi.getQuizQuestion(fairytaleCurrentPage);
-      if (response.status === 200) {
-        setQuizData(response.data);
+  // 퀴즈 데이터 로딩 함수에서 로딩 상태 관리
+  const getQuizData = useCallback(
+    async (quizPageNumber: number) => {
+      setIsQuizDataLoading(true); // 로딩 시작
+      try {
+        const response = await fairyTaleApi.getQuizQuestion(bookId, quizPageNumber);
+        if (response.status === 200) {
+          setQuizData(response.data);
+        }
+      } catch (error) {
+        console.error("fairyTaleApi의 getQuizQuestion :", error);
+      } finally {
+        setIsQuizDataLoading(false); // 로딩 종료
       }
-    } catch (error) {
-      console.error("fairyTaleApi의 getQuizQuestion :", error);
-    }
-  }, [fairytaleCurrentPage]);
+    },
+    [bookId]
+  );
 
   // 왼쪽 화살표 클릭 시 현재 페이지를 감소시키는 함수
   const handleLeftClick = () => {
@@ -88,7 +100,7 @@ const FairyTaleContentPage: React.FC = () => {
     }
   };
 
-  // 오른쪽 화살표 클릭 시 현재 페이지를 증가시키는 함수
+  // 오른쪽 화살표 클릭 함수에서 퀴즈 모달을 열기 전에 로딩 상태를 확인
   const handleRightClick = () => {
     if (fairytaleData) {
       const isLastPage = fairytaleCurrentPage === fairytaleData.totalPages - 1;
@@ -100,9 +112,11 @@ const FairyTaleContentPage: React.FC = () => {
         setFairytaleCurrentPage(newPage);
         getFairyTaleContent(newPage);
 
-        if ((newPage + 1) % 5 === 0) {
-          setIsQuizModalOpen(true);
-          getQuizData();
+        const quizEnabled = localStorage.getItem("quizEnabled") === "true";
+        if (quizEnabled && (newPage + 1) % 5 === 0) {
+          const quizPageNumber = (newPage + 1) / 5;
+          getQuizData(quizPageNumber); // 퀴즈 데이터 요청
+          setIsQuizModalOpen(true); // 로딩 상태에 따라 모달 표시
         } else if (newPage === Math.floor(fairytaleData.totalPages / 2)) {
           setIsFocusAlertModalOpen(true);
         }
@@ -155,6 +169,7 @@ const FairyTaleContentPage: React.FC = () => {
 
   useEffect(() => {
     getFairyTaleContent(fairytaleCurrentPage);
+    console.log(title);
   }, [fairytaleCurrentPage, getFairyTaleContent]); // fairytaleCurrentPage가 변경될 때만 호출
 
   return (
@@ -202,13 +217,23 @@ const FairyTaleContentPage: React.FC = () => {
 
       {/* TTS 선택 모달 */}
       {/* Fix: hasRead => 처음 읽는건지 읽었던 건지 구분 */}
-      <TTSChoiceModal isOpen={isTTSChoiceModalOpen} onClose={handleCloseTTSChoiceModal} hasRead={false} />
+      <TTSChoiceModal
+        isOpen={isTTSChoiceModalOpen}
+        onClose={handleCloseTTSChoiceModal}
+        isReadIng={isReading}
+        bookId={bookId}
+      />
       {/* 레벨업 모달 */}
       <LevelUpModal isOpen={isLevelUpModalOpen} />
       {/* 독서완료 모달 */}
       <ReadCompleteModal isOpen={isReadCompleteModalOpen} title={title} />
       {/* 퀴즈 모달 */}
-      <QuizModal isOpen={isQuizModalOpen} onClose={handleCloseQuizModal} quizData={quizData?.text} quizId={quizData?.quizId}/>
+      <QuizModal
+        isOpen={isQuizModalOpen && !isQuizDataLoading}
+        onClose={handleCloseQuizModal}
+        quizData={quizData?.text}
+        quizId={quizData?.quizId}
+      />
       {/* 메뉴창 */}
       <FairytaleMenu
         fairytaleCurrentPage={fairytaleCurrentPage}

@@ -1,6 +1,7 @@
 package com.checkitout.ijoa.quiz.service;
 
 import com.checkitout.ijoa.child.domain.Child;
+import com.checkitout.ijoa.child.repository.ChildRepository;
 import com.checkitout.ijoa.exception.CustomException;
 import com.checkitout.ijoa.exception.ErrorCode;
 import com.checkitout.ijoa.fairytale.domain.Fairytale;
@@ -15,6 +16,7 @@ import com.checkitout.ijoa.quiz.dto.request.AnswerRequestDto;
 import com.checkitout.ijoa.quiz.dto.request.ChatGPTRequest;
 import com.checkitout.ijoa.quiz.dto.request.ChatGPTResponse;
 import com.checkitout.ijoa.quiz.dto.request.QuizBookRequestDto;
+import com.checkitout.ijoa.quiz.dto.response.AnswerResponseDto;
 import com.checkitout.ijoa.quiz.dto.response.AnswerUrlResponseDto;
 import com.checkitout.ijoa.quiz.dto.response.QuizBookResponseDto;
 import com.checkitout.ijoa.quiz.dto.response.QuizResponseDto;
@@ -41,6 +43,7 @@ import java.util.UUID;
 public class QuizService {
 
     private final RestTemplate template;
+    private final ChildRepository childRepository;
     @Value("${openai.model}")
     private String model;
 
@@ -119,5 +122,21 @@ public class QuizService {
 
         return responseDtos;
 
+    }
+
+    //특정 책 답변 목록
+    public List<AnswerResponseDto> getAnswerList(Long childrenId, Long fairytaleId) {
+        Child child = childRepository.findById(childrenId).orElseThrow(() -> new CustomException(ErrorCode.CHILD_NOT_FOUND));
+        Fairytale fairytale = fairytaleRepository.findById(fairytaleId).orElseThrow(() -> new CustomException(ErrorCode.FAIRYTALE_NOT_FOUND));
+        List<Answer> answers =  answerRepository.findByChildIdAndQuizBookFairytaleId(child.getId(),fairytaleId)
+                .orElseThrow(() -> new CustomException(ErrorCode.FAIRYTALE_NO_CONTENT));
+
+        List<AnswerResponseDto> responseDtos = new ArrayList<>();
+        for(Answer answer : answers){
+            String answerurl = fileService.getGetS3Url(answer.getAnswer());
+            responseDtos.add(AnswerResponseDto.from(answer,fairytale,answerurl));
+        }
+
+        return responseDtos;
     }
 }

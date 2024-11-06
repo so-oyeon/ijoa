@@ -4,21 +4,19 @@ interface BookCoverGridProps {
   bookCovers: string[];
   titles: string[];
   onBookClick: (index: number) => void;
+  myBookReadOrNot?: boolean[];
 }
 
-const BookCoverGrid: React.FC<BookCoverGridProps> = ({ bookCovers, titles, onBookClick }) => {
+const BookCoverGrid: React.FC<BookCoverGridProps> = ({ bookCovers, titles, onBookClick, myBookReadOrNot }) => {
   return (
     <div className="grid grid-cols-4 gap-5">
       {bookCovers.map((cover, index) => (
-        <div
-          key={index}
-          onClick={() => onBookClick(index)}
-          className="cursor-pointer"
-        >
+        <div key={index} onClick={() => onBookClick(index)} className="cursor-pointer">
           <img src={cover} alt="동화책 표지 사진" className="w-full h-48 object-cover rounded-lg" />
           <div className="mt-2 ml-2">
             <span className="text-lg font-semibold">{titles[index]}</span>
           </div>
+          <div>{myBookReadOrNot && myBookReadOrNot[index] ? "읽음" : "읽지 않음"}</div>
         </div>
       ))}
     </div>

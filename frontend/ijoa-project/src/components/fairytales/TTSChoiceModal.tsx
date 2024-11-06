@@ -1,21 +1,44 @@
-import React, { useState } from "react";
-import Pororo from "/assets/fairytales/images/pororo.png";
-import Hachuping from "/assets/fairytales/images/hachuping.png";
-import Father from "/assets/fairytales/images/father.png";
+import React, { useEffect, useState } from "react";
+import { fairyTaleApi } from "../../api/fairytaleApi";
+import { ChildrenTTSListResponse } from "../../types/fairytaleTypes";
 
 interface TTSChoiceModalProps {
   isOpen: boolean;
   onClose: () => void;
-  hasRead: boolean;
+  isReadIng: boolean;
+  bookId: number;
 }
 
-const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({ isOpen, onClose, hasRead }) => {
+const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({ isOpen, onClose, isReadIng: isReadIng, bookId }) => {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [ttsList, setTtsList] = useState<ChildrenTTSListResponse[]>([]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    // 자녀 TTS 목록을 가져오는 api 통신 함수
+    const getChildTTSList = async () => {
+      if (!bookId) {
+        return;
+      }
+
+      try {
+        const response = await fairyTaleApi.getChildrenTTSList(bookId);
+        if (response.status === 200 && Array.isArray(response.data)) {
+          setTtsList(response.data);
+        }
+      } catch (error) {
+        console.error("fairyTaleApi의 getChildrenTTSList :", error);
+      }
+    };
+
+    getChildTTSList();
+  }, [isOpen, bookId]);
 
   if (!isOpen) return null;
 
-  const ttsImages = [Pororo, Father, Hachuping, Father];
-  const ttsNames = ["뽀로로", "아빠", "하츄핑", "엄마"];
+  const ttsImages = ttsList.map((tts) => tts.image);
+  const ttsNames = ttsList.map((tts) => tts.ttsname);
 
   const handleImageClick = (index: number) => {
     setSelectedIndex(index);
@@ -60,7 +83,7 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({ isOpen, onClose, hasRea
             </div>
           </div>
 
-          {hasRead ? (
+          {isReadIng ? (
             <div className="flex gap-4 justify-center items-center">
               <button
                 className={`w-36 py-2 text-[#67CCFF] text-lg font-bold bg-white rounded-3xl border-2 border-[#67CCFF] ${

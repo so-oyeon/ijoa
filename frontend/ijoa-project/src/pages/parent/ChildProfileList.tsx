@@ -25,6 +25,9 @@ const ChildProfileList = () => {
         localStorage.setItem("refreshToken", response.data.refreshToken);
         localStorage.setItem("childId", response.data.userId);
         localStorage.setItem("userType", "child");
+        localStorage.setItem("bgm", "true");
+        localStorage.setItem("quizEnabled", "true");
+        localStorage.setItem("readAloudEnabled", "true");
         navigate("/child/fairytale/list");
       }
     } catch (error) {
