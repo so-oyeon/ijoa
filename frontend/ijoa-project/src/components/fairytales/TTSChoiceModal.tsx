@@ -7,9 +7,10 @@ interface TTSChoiceModalProps {
   onClose: () => void;
   isReadIng: boolean;
   bookId: number;
+  setTTSId: (id: number) => void;
 }
 
-const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({ isOpen, onClose, isReadIng: isReadIng, bookId }) => {
+const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({ isOpen, onClose, isReadIng: isReadIng, bookId, setTTSId }) => {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [ttsList, setTtsList] = useState<ChildrenTTSListResponse[]>([]);
 
@@ -39,12 +40,13 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({ isOpen, onClose, isRead
 
   const ttsImages = ttsList.map((tts) => tts.image);
   const ttsNames = ttsList.map((tts) => tts.ttsname);
-  const ttsIds = ttsList.map((tts) => tts.ttsid);  // ttsid 배열 추가
+  const ttsIds = ttsList.map((tts) => tts.ttsid); // ttsid 배열 추가
 
   const handleImageClick = (index: number) => {
     setSelectedIndex(index);
-    const selectedTtsId = ttsIds[index];  // 선택된 TTS의 ttsid 가져오기
-    localStorage.setItem("selectedTtsId", selectedTtsId.toString());  // localStorage에 저장
+    const selectedTtsId = ttsIds[index]; // 선택된 TTS의 ttsid 가져오기
+    // localStorage.setItem("selectedTtsId", selectedTtsId.toString());  // localStorage에 저장
+    setTTSId(selectedTtsId);
   };
 
   return (
