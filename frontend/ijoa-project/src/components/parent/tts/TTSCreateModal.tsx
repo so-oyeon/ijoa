@@ -6,9 +6,10 @@ import loadingAnimation from "../../../lottie/footPrint-loadingAnimation.json";
 
 interface Props {
   setIsCreateModal: (state: boolean) => void;
+  ttsId: number;
 }
 
-const TTSCreateModal = ({ setIsCreateModal }: Props) => {
+const TTSCreateModal = ({ setIsCreateModal, ttsId }: Props) => {
   const buttonStyle = "w-full px-8 py-2 text-xl font-bold rounded-xl border-2 ";
   const [scriptList, setScriptList] = useState<TTSScriptInfo[] | null>(null);
   const [scriptCurrentIdx, setScriptCurrentIdx] = useState(0);
@@ -98,7 +99,7 @@ const TTSCreateModal = ({ setIsCreateModal }: Props) => {
     };
 
     try {
-      const response = await parentApi.getTTSFileStorageUrlList(1, data);
+      const response = await parentApi.getTTSFileStorageUrlList(ttsId, data);
       if (response.status === 201) {
         setS3UrlList(response.data);
       }

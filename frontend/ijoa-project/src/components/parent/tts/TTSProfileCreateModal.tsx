@@ -6,9 +6,10 @@ import { parentApi } from "../../../api/parentApi";
 interface Props {
   setIsProfileCreateModal: (state: boolean) => void;
   setIsCreateCompleted: (state: boolean) => void;
+  setTTSId: (id: number) => void;
 }
 
-const TTSProfileCreateModal = ({ setIsProfileCreateModal, setIsCreateCompleted }: Props) => {
+const TTSProfileCreateModal = ({ setIsProfileCreateModal, setIsCreateCompleted, setTTSId }: Props) => {
   const [ttsName, setTTSName] = useState<string | null>(null);
   const [ttsProfileImg, setTTSProfileImg] = useState<File | null>(null);
   const [ttsProfileImgString, setTTSProfileImgString] = useState<string | null>(null);
@@ -50,6 +51,7 @@ const TTSProfileCreateModal = ({ setIsProfileCreateModal, setIsCreateCompleted }
       const response = await parentApi.createTTSProfile(formData);
       if (response.status === 201) {
         console.log(response);
+        setTTSId(response.data.id);
         setIsProfileCreateModal(false);
         setIsCreateCompleted(true);
       }

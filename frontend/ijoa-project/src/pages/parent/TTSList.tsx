@@ -16,6 +16,7 @@ const TTSList = () => {
   const [isCreateCompleted, setIsCreateCompleted] = useState(false);
   const [parentTTSList, setParentTTSList] = useState<ParentTTSInfo[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [ttsId, setTTSId] = useState<number | null>(null);
 
   const getParentTTSList = async () => {
     try {
@@ -23,6 +24,7 @@ const TTSList = () => {
       const response = await parentApi.getParentTTSList();
       if (response.status === 200) {
         setParentTTSList(response.data);
+        console.log(response);
       }
     } catch (error) {
       console.log("parentApi의 getParentTTSList : ", error);
@@ -86,6 +88,7 @@ const TTSList = () => {
         <TTSProfileCreateModal
           setIsProfileCreateModal={setIsProfileCreateModal}
           setIsCreateCompleted={setIsCreateCompleted}
+          setTTSId={setTTSId}
         />
       ) : (
         <></>
@@ -109,7 +112,7 @@ const TTSList = () => {
       )}
 
       {/* TTS 학습 모달 */}
-      {isCreateModal ? <TTSCreateModal setIsCreateModal={setIsCreateModal} /> : <></>}
+      {isCreateModal ? <TTSCreateModal setIsCreateModal={setIsCreateModal} ttsId={ttsId} /> : <></>}
     </div>
   );
 };
