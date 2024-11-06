@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import "../../css/FairytaleContentPage.css";
 import ReadCompleteModal from "../../components/fairytales/ReadCompleteModal";
@@ -32,6 +32,8 @@ const FairyTaleContentPage: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isFocusAlertModalOpen, setIsFocusAlertModalOpen] = useState(false);
   const [isQuizDataLoading, setIsQuizDataLoading] = useState(false);
+  const [audioURL, setAudioURL] = useState<string | null>(null);
+  const audioPlayRef = useRef<HTMLAudioElement | null>(null);
 
   const bookId = fairytaleId ? parseInt(fairytaleId, 10) : 0;
   const isReading = !isCompleted && currentPage > 0;
@@ -71,6 +73,46 @@ const FairyTaleContentPage: React.FC = () => {
     } catch (error) {
       console.error("fairyTaleApi의 getFairyTalePages :", error);
     }
+  };
+
+  // TTS 낭독 api
+  const getTTSPlayback = async () => {
+    try {
+      // localStorage에서 TTS ID를 가져옴
+      const ttsId = localStorage.getItem("selectedTtsId");
+
+      // ttsId가 null이 아니고, 숫자로 변환할 수 있는지 확인
+      if (ttsId) {
+        const parsedTtsId = parseInt(ttsId, 10);
+
+        // ttsId가 유효한 숫자인지 확인
+        if (!isNaN(parsedTtsId)) {
+          const page = fairytaleCurrentPage + 1;
+
+          // API 호출
+          const response = await fairyTaleApi.getTTSPlayback(parsedTtsId, bookId, page);
+
+          if (response.status === 200 && response.data?.url) {
+            const audioUrl = response.data.url;
+            setAudioURL(audioUrl);
+
+            setTimeout(() => {
+              audioPlayRef.current?.play();
+            }, 100);
+          }
+        } else {
+          console.error("유효하지 않은 ttsId :", ttsId);
+        }
+      } else {
+        console.log("로컬 스토리지에 ttsId가 없음");
+      }
+    } catch (error) {
+      console.error("fairyTaleApi의 getTTSPlayback :", error);
+    }
+  };
+
+  const handlePlayRecordingAudio = () => {
+    getTTSPlayback();
   };
 
   // 퀴즈 데이터 로딩 함수에서 로딩 상태 관리
@@ -168,9 +210,11 @@ const FairyTaleContentPage: React.FC = () => {
   }, [isLevelUpModalOpen]);
 
   useEffect(() => {
-    getFairyTaleContent(fairytaleCurrentPage);
-    console.log(title);
-  }, [fairytaleCurrentPage, getFairyTaleContent]); // fairytaleCurrentPage가 변경될 때만 호출
+    if (!isTTSChoiceModalOpen) {
+      getTTSPlayback(); // TTS 모달이 닫혔을 때 호출
+    }
+    getFairyTaleContent(fairytaleCurrentPage); // 페이지 내용 로드
+  }, [fairytaleCurrentPage, getFairyTaleContent, isTTSChoiceModalOpen]);
 
   return (
     <div className="relative h-screen">
@@ -178,10 +222,11 @@ const FairyTaleContentPage: React.FC = () => {
         <>
           <img src={fairytaleData.image} alt="동화책 내용 사진" className="w-screen h-screen object-cover" />
           <div className="w-[1100px] h-[160px] p-4 flex absolute bottom-10 left-1/2 transform -translate-x-1/2 justify-between items-center bg-white bg-opacity-70 rounded-2xl shadow-lg">
-            <button className="items-center ml-5">
+            <button className="items-center ml-5" onClick={handlePlayRecordingAudio}>
               <img src={SoundOnButton} alt="다시 듣기 버튼" className="w-20 h-20" />
               <p className="text-sm text-[#565656] font-bold">다시 듣기</p>
             </button>
+
             <div className="px-12 flex-1 text-3xl font-bold text-center fairytale-font whitespace-pre-line break-keep">
               <p className="px-12 flex-1 text-3xl font-bold text-center fairytale-font whitespace-pre-line break-keep">
                 {fairytaleData.content}
@@ -215,6 +260,7 @@ const FairyTaleContentPage: React.FC = () => {
         </div>
       )}
 
+      {audioURL && <audio controls src={audioURL} className="hidden" ref={audioPlayRef}></audio>}
       {/* TTS 선택 모달 */}
       {/* Fix: hasRead => 처음 읽는건지 읽었던 건지 구분 */}
       <TTSChoiceModal
