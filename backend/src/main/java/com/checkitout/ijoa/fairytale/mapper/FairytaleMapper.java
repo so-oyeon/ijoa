@@ -2,31 +2,30 @@ package com.checkitout.ijoa.fairytale.mapper;
 
 import com.checkitout.ijoa.fairytale.domain.ChildReadBooks;
 import com.checkitout.ijoa.fairytale.domain.Fairytale;
+import com.checkitout.ijoa.fairytale.domain.redis.RedisReadBook;
 import com.checkitout.ijoa.fairytale.dto.response.FairytaleListResponseDto;
 import com.checkitout.ijoa.fairytale.repository.ChildReadBooksRepository;
-import java.time.Duration;
+import com.checkitout.ijoa.fairytale.repository.redis.RedisReadBookRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 
 @Mapper(componentModel = "spring")
 public abstract class FairytaleMapper {
 
     @Autowired
-    private RedisTemplate<String, String> redisTemplate;
+    private ChildReadBooksRepository childReadBooksRepository;
 
     @Autowired
-    private ChildReadBooksRepository childReadBooksRepository;
+    private RedisReadBookRepository redisReadBookRepository;
 
     @Mapping(target = "fairytaleId", expression = "java(fairytale.getId())")
     @Mapping(target = "image", expression = "java(fairytale.getImageUrl())")
     @Mapping(target = "progressRate", expression = "java(calculateProgressRate(fairytale, childId))")
-    @Mapping(target = "currentPage", expression = "java(getCurrentPageFromCache(fairytale.getId(), childId))")
-    @Mapping(target = "isCompleted", expression = "java(isCompleted(fairytale.getId(), fairytale.getTotalPages(), childId))")
+    @Mapping(target = "currentPage", expression = "java(getReadBookData(fairytale.getId(), childId).getCurrentPage())")
+    @Mapping(target = "isCompleted", expression = "java(getReadBookData(fairytale.getId(), childId).isCompleted())")
     public abstract FairytaleListResponseDto toFairytaleListResponseDto(Fairytale fairytale, Long childId);
 
     public List<FairytaleListResponseDto> toFairytaleListResponseDtoList(List<Fairytale> fairytales, Long childId) {
@@ -36,46 +35,41 @@ public abstract class FairytaleMapper {
     }
 
     /**
-     * 현재 페이지 조회 (Redis 캐싱)
+     * Redis 캐시에서 조회 또는 DB 조회 후 캐시에 저장
      */
-    protected int getCurrentPageFromCache(Long bookId, Long childId) {
-        String redisKey = "currentPage:" + bookId + ":" + childId;
-        ValueOperations<String, String> ops = redisTemplate.opsForValue();
-        String currentPageStr = ops.get(redisKey);
-        if (currentPageStr != null) {
-            return Integer.parseInt(currentPageStr);
+    protected RedisReadBook getReadBookData(Long bookId, Long childId) {
+        String key = bookId + ":" + childId;
+
+        // Redis 캐시에서 조회
+        RedisReadBook redisReadBook = redisReadBookRepository.findById(key).orElse(null);
+        if (redisReadBook != null) {
+            return redisReadBook;
         }
 
-        int currentPageFromDb = findCurrentPageFromChildReadBooks(bookId, childId);
-        ops.set(redisKey, String.valueOf(currentPageFromDb), Duration.ofDays(3));
+        // 캐시에 없으면 DB에서 조회
+        ChildReadBooks childReadBooks = findChildReadBooks(bookId, childId);
+        int currentPage = (childReadBooks != null) ? childReadBooks.getCurrentPage() : 0;
+        boolean isCompleted = (childReadBooks != null) && childReadBooks.getIsCompleted();
 
-        return currentPageFromDb;
+        //캐싱
+        redisReadBook = new RedisReadBook(bookId, childId, currentPage, isCompleted);
+        redisReadBookRepository.save(redisReadBook);
+
+        return redisReadBook;
     }
 
     /**
      * 진행도 계산
      */
     protected int calculateProgressRate(Fairytale fairytale, Long childId) {
-        int lastReadPage = getCurrentPageFromCache(fairytale.getId(), childId);
+        int lastReadPage = getReadBookData(fairytale.getId(), childId).getCurrentPage();
         return Math.round((float) lastReadPage / fairytale.getTotalPages() * 100);
     }
 
     /**
-     * 완독여부 계산
+     * 읽은책 table 조회 (DB 접근)
      */
-    protected boolean isCompleted(Long bookId, int totalPages, Long childId) {
-        int currentPage = getCurrentPageFromCache(bookId, childId);
-        return currentPage == totalPages;
-    }
-
-    /**
-     * 현재 페이지 조회 (DB 접근)
-     */
-    private int findCurrentPageFromChildReadBooks(Long bookId, Long childId) {
-
-        ChildReadBooks childReadBooks = childReadBooksRepository.findTopByChildIdAndFairytaleIdOrderByCreatedAtDesc(
-                bookId, childId).orElse(null);
-
-        return childReadBooks == null ? 0 : childReadBooks.getCurrentPage();
+    private ChildReadBooks findChildReadBooks(Long bookId, Long childId) {
+        return childReadBooksRepository.findByChildIdAndFairytaleId(childId, bookId).orElse(null);
     }
 }
