@@ -41,3 +41,25 @@ export interface TTSScriptInfo {
   id: number;
   script: string;
 }
+
+// TTS 프로필 생성 요청 데이터
+export interface TTSProfileInfo {
+  name: string;
+  image: string;
+}
+
+// TTS 학습용 음성 파일 저장 s3 url 요청 데이터
+export interface TTSFileStorageUrlInfo {
+  fileScriptPairs: AudioFileInfo[];
+}
+
+export interface AudioFileInfo {
+  fileName: string;
+  scriptId: number;
+}
+
+// TTS 학습용 음성 파일 저장 s3 url 응답 데이터
+export interface S3UrlInfo {
+  key: string;
+  url: string;
+}
