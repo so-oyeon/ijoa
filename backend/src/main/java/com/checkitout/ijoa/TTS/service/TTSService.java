@@ -26,6 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.kafka.core.KafkaTemplate;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -128,12 +130,16 @@ public class TTSService {
         List<TTSTrainResponseDto> responseDtos = new ArrayList<>();
         TTS tts = ttsRepository.findById(ttsId).orElseThrow(()-> new CustomException(ErrorCode.TTS_NOT_FOUND));
 
+        String currentTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
+
         for(FileScriptPair pair: requestDto.getFileScriptPairs()){
             Script script= scriptRepository.findById(pair.getScriptId()).orElseThrow(()-> new CustomException( ErrorCode.SCRIPT_NOT_FOUND));
             // filename 설정하기(profile 경로 + 멤버ID + 랜덤 값)
-            String key = "train/" + ttsId + "/" + UUID.randomUUID() + "/" + pair.getFileName();
+            String key = "train/" + ttsId + "/" + currentTime + "/" + pair.getFileName();
             //url 발급
             String url = fileService.getPostS3Url(key);
+            // TODO  s3 기존 데이터 삭제 넣기
+            // TODO  s3 저장기간 설정
 
             TrainAudio trainAudio = trainAudioRepository.findByTtsIdAndScriptId(ttsId, pair.getScriptId());
             // trainAudio가 존재하면 업데이트, 존재하지 않으면 새로운 객체 생성 후 저장
