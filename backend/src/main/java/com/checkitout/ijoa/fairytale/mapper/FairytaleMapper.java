@@ -35,6 +35,9 @@ public abstract class FairytaleMapper {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * 현재 페이지 조회 (Redis 캐싱)
+     */
     protected int getCurrentPageFromCache(Long bookId, Long childId) {
         String redisKey = "currentPage:" + bookId + ":" + childId;
         ValueOperations<String, String> ops = redisTemplate.opsForValue();
@@ -49,16 +52,25 @@ public abstract class FairytaleMapper {
         return currentPageFromDb;
     }
 
+    /**
+     * 진행도 계산
+     */
     protected int calculateProgressRate(Fairytale fairytale, Long childId) {
         int lastReadPage = getCurrentPageFromCache(fairytale.getId(), childId);
         return Math.round((float) lastReadPage / fairytale.getTotalPages() * 100);
     }
 
+    /**
+     * 완독여부 계산
+     */
     protected boolean isCompleted(Long bookId, int totalPages, Long childId) {
         int currentPage = getCurrentPageFromCache(bookId, childId);
         return currentPage == totalPages;
     }
 
+    /**
+     * 현재 페이지 조회 (DB 접근)
+     */
     private int findCurrentPageFromChildReadBooks(Long bookId, Long childId) {
 
         ChildReadBooks childReadBooks = childReadBooksRepository.findTopByChildIdAndFairytaleIdOrderByCreatedAtDesc(
