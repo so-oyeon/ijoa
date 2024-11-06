@@ -72,14 +72,14 @@ const FairyTaleContentPage: React.FC = () => {
   // 동화책 퀴즈 가져오는 api 통신 함수
   const getQuizData = useCallback(async () => {
     try {
-      const response = await fairyTaleApi.getQuizQuestion(fairytaleCurrentPage);
+      const response = await fairyTaleApi.getQuizQuestion(bookId, fairytaleCurrentPage);
       if (response.status === 200) {
         setQuizData(response.data);
       }
     } catch (error) {
       console.error("fairyTaleApi의 getQuizQuestion :", error);
     }
-  }, [fairytaleCurrentPage]);
+  }, []);
 
   // 왼쪽 화살표 클릭 시 현재 페이지를 감소시키는 함수
   const handleLeftClick = () => {
@@ -215,7 +215,12 @@ const FairyTaleContentPage: React.FC = () => {
       {/* 독서완료 모달 */}
       <ReadCompleteModal isOpen={isReadCompleteModalOpen} title={title} />
       {/* 퀴즈 모달 */}
-      <QuizModal isOpen={isQuizModalOpen} onClose={handleCloseQuizModal} quizData={quizData?.text} quizId={quizData?.quizId}/>
+      <QuizModal
+        isOpen={isQuizModalOpen}
+        onClose={handleCloseQuizModal}
+        quizData={quizData?.text}
+        quizId={quizData?.quizId}
+      />
       {/* 메뉴창 */}
       <FairytaleMenu
         fairytaleCurrentPage={fairytaleCurrentPage}

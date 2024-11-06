@@ -38,10 +38,13 @@ const FairytaleListPage: React.FC = () => {
 
   // 인기 동화책 api 통신 함수
   const getPopularFairyTalesByAge = async () => {
+    if (!childInfo) return;
+
     try {
-      const response = await fairyTaleApi.getFairyTalesRankByAge(9); 
+      const response = await fairyTaleApi.getFairyTalesRankByAge(childInfo?.age);
       if (response.status === 200) {
         const data = response.data;
+
         if (Array.isArray(data)) {
           setPopularFairyTales(data);
         } else {
@@ -120,10 +123,15 @@ const FairytaleListPage: React.FC = () => {
 
   useEffect(() => {
     getChildProfile();
-    getPopularFairyTalesByAge(); // 인기 동화책 데이터 가져오기
     getRecommendedFairyTales(); // 사용자 맞춤 추천 데이터 가져오기
     getFairyTalesByCategory(selectedCategory); // 선택된 카테고리 동화책 데이터 가져오기
   }, [selectedCategory]); // categoryId가 변경될 때마다 호출
+
+  useEffect(() => {
+    if (!childInfo) return;
+
+    getPopularFairyTalesByAge();
+  }, [childInfo]);
 
   return (
     <div>
@@ -131,7 +139,12 @@ const FairytaleListPage: React.FC = () => {
         <div className="mb-10">
           <div className="mb-5 text-2xl font-bold">🏆 {childInfo?.age}살 인기 동화책</div>
           {popularFairyTales.length > 0 ? (
-            <Swiper bookCovers={bookCovers} titles={titles} onBookClick={handlePopularBookClick} />
+            <Swiper
+              bookCovers={bookCovers}
+              titles={titles}
+              isCompleted={popularFairyTales.map((fairyTale) => fairyTale.is_completed)}
+              onBookClick={handlePopularBookClick}
+            />
           ) : (
             <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
           )}
@@ -142,6 +155,7 @@ const FairytaleListPage: React.FC = () => {
             <Swiper
               bookCovers={recommendedCovers}
               titles={recommendedTitles}
+              isCompleted={recommendedFairyTales.map((fairyTale) => fairyTale.is_completed)}
               onBookClick={handleRecommendedBookClick}
             />
           ) : (
@@ -157,6 +171,7 @@ const FairytaleListPage: React.FC = () => {
             <Swiper
               bookCovers={categoryFairyTales.content.map((fairyTale) => fairyTale.image)}
               titles={categoryFairyTales.content.map((fairyTale) => fairyTale.title)}
+              isCompleted={categoryFairyTales.content.map((fairyTale) => fairyTale.is_completed)}
               onBookClick={handleCategoryBookClick}
             />
           ) : (

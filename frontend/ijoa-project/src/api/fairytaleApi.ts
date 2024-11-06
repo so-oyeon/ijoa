@@ -41,8 +41,8 @@ export const fairyTaleApi = {
   },
 
   // 동화책 질문 조회
-  getQuizQuestion: (pageId: number) => {
-    return api.get<QuizQuestionResponse>(`/quiz/question/${pageId}`);
+  getQuizQuestion: (bookId: number, pageNumber: number) => {
+    return api.get<QuizQuestionResponse>(`/quiz/question/${bookId}/${pageNumber}`);
   },
 
   // 동화 제목 검색 조회

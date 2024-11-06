@@ -17,9 +17,8 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({ isOpen, onClose, hasRea
     if (!isOpen) return;
 
     // 자녀 TTS 목록을 가져오는 api 통신 함수
-    const getTTSList = async () => {
+    const getChildTTSList = async () => {
       if (!bookId) {
-        console.error("Book ID is undefined");
         return;
       }
 
@@ -27,14 +26,13 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({ isOpen, onClose, hasRea
         const response = await fairyTaleApi.getChildrenTTSList(bookId);
         if (response.status === 200 && Array.isArray(response.data)) {
           setTtsList(response.data);
-          console.log(response)
         }
       } catch (error) {
         console.error("fairyTaleApi의 getChildrenTTSList :", error);
       }
     };
 
-    getTTSList();
+    getChildTTSList();
   }, [isOpen, bookId]);
 
   if (!isOpen) return null;
