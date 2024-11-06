@@ -10,7 +10,6 @@ class MusicManager {
 
   // localStorage와 동기화하여 초기 상태 설정
   private syncWithLocalStorage() {
-    console.log("333");
     const isLoginBgmPlaying = localStorage.getItem("loginBgm") === "true";
     const isChildBgmPlaying = localStorage.getItem("childBgm") === "true";
 
