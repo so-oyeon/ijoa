@@ -95,6 +95,11 @@ cloud:
 
 cors:
   url: ${CORS_URL}
+openai:
+  model: gpt-4o
+  api:
+    key: ${GPT_KEY}
+    url: https://api.openai.com/v1/chat/completions
 
 
 # Blue 서버 프로파일
