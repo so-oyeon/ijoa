@@ -75,7 +75,7 @@ const FairyTaleContentPage: React.FC = () => {
   // 동화책 퀴즈 가져오는 api 통신 함수
   const getQuizData = useCallback(async () => {
     try {
-      const response = await fairyTaleApi.getQuizQuestion(bookId, fairytaleCurrentPage);
+      const response = await fairyTaleApi.getQuizQuestion(fairytaleCurrentPage);
       if (response.status === 200) {
         setQuizData(response.data);
       }
@@ -161,6 +161,7 @@ const FairyTaleContentPage: React.FC = () => {
 
   useEffect(() => {
     getFairyTaleContent(fairytaleCurrentPage);
+    console.log(title)
   }, [fairytaleCurrentPage, getFairyTaleContent]); // fairytaleCurrentPage가 변경될 때만 호출
 
   return (
