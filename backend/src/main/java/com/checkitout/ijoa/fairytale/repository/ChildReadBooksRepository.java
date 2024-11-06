@@ -3,6 +3,7 @@ package com.checkitout.ijoa.fairytale.repository;
 import com.checkitout.ijoa.child.domain.Child;
 import com.checkitout.ijoa.fairytale.domain.ChildReadBooks;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -21,4 +22,7 @@ public interface ChildReadBooksRepository extends JpaRepository<ChildReadBooks, 
             ORDER BY COUNT(crb) DESC
             """)
     List<Object[]> countByCategoryAndChild(@Param("child") Child child);
+
+    Optional<ChildReadBooks> findTopByChildIdAndFairytaleIdOrderByCreatedAtDesc(Long bookId, Long childId);
+
 }
