@@ -25,8 +25,7 @@ const BookCoverGrid: React.FC<BookCoverGridProps> = ({
           {progress && progress[index] > 0 && progress[index] < 1 && (
             <div className="absolute bottom-[60px] left-0 w-full h-2 bg-gray-300 rounded">
               <div
-                className="h-full bg-red-400 rounded"
-                style={{ width: `${progress[index] * 100}%` }} // 진행도에 따라 상태바 너비 설정
+               className={`h-full bg-red-400 rounded ${progress[index] === 1 ? "w-full" : `w-[${Math.round(progress[index] * 100)}%]`}`}
               ></div>
             </div>
           )}
