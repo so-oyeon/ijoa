@@ -1,6 +1,8 @@
 import { MdLogout, MdChildCare } from "react-icons/md";
 import { PiUserSwitch } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
+import { userApi } from "../../api/userApi";
+import Swal from "sweetalert2";
 import { ChildInfo } from "../../types/childTypes";
 
 interface ProfileDropDownProps {
@@ -17,8 +19,28 @@ const ProfileDropDown = ({ childInfo, onProfileClick }: ProfileDropDownProps) =>
     navigate("/parent/child/list");
   };
 
-  const handleLogout = () => {
-    navigate("/home");
+  const handleLogout = async () => {
+    try {
+      const response = await userApi.logout();
+      if (response.status === 200) {
+        localStorage.clear();
+      }
+      Swal.fire({
+        icon: "success",
+        title: "로그아웃이 완료되었습니다",
+        confirmButtonText: "확인",
+      }).then(() => {
+        navigate("/home");
+      });
+    } catch (error) {
+      console.log("userApi의 logout : ", error);
+      Swal.fire({
+        icon: "error",
+        title: "로그아웃 실패",
+        text: "다시 시도해 주세요.",
+        confirmButtonText: "확인",
+      });
+    }
   };
 
   return (

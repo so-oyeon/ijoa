@@ -3,13 +3,11 @@ import { useNavigate } from "react-router-dom";
 import SettingsModal from "../../components/fairytales/SettingsModal";
 import ParentSettingsModal from "../../components/parent/ParentSettingsModal";
 import ProfileDropDown from "./ProfileDropDown";
-import SearchBar from "./SearchBar";
 import { childApi } from "../../api/childApi";
 import { ChildInfo } from "../../types/childTypes";
 
 const Header = () => {
   const type = localStorage.getItem("userType");
-  const path = window.location.pathname;
   const [isChildSettingsModalOpen, setIsChildSettingsModalOpen] = useState(false); // 자녀 헤더 설정 모달창 열림 여부 상태 변수
   const [isParentSettingsModalOpen, setIsParentSettingsModalOpen] = useState(false); // 부모 헤더 설정 모달창 열림 여부 상태 변수
   const [childInfo, setChildInfo] = useState<ChildInfo | null>(null);
@@ -42,7 +40,12 @@ const Header = () => {
 
   // 자녀 도서관 라우팅
   const libraryClick = () => {
-    navigate(`/fairytale/list`);
+    navigate(`/child/fairytale/search`);
+  };
+
+  // 자녀 메인 라우팅
+  const fairytalelistClick = () => {
+    navigate(`/child/fairytale/list`);
   };
 
   // 자녀 내 책장 라우팅
@@ -75,7 +78,7 @@ const Header = () => {
     if (type === "parent") {
       childClick();
     } else {
-      libraryClick();
+      fairytalelistClick();
     }
   };
 
@@ -119,9 +122,6 @@ const Header = () => {
       <div className="w-2/3 h-full flex items-center space-x-5">
         {/* 로고 */}
         <img className="h-full" src="/assets/logo.png" alt="" onClick={handleGoToMain} />
-
-        {/* 검색바 */}
-        {path === "/fairytale/list" ? <SearchBar /> : <></>}
       </div>
 
       <div className="grid grid-cols-5 gap-3">

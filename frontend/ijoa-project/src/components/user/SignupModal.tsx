@@ -17,6 +17,7 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [nickname, setNickname] = useState("");
   const [emailError, setEmailError] = useState("");
+  const [isEmailValid, setIsEmailValid] = useState(false);
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const [generalError, setGeneralError] = useState("");
@@ -26,6 +27,7 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [guideIdx, setGuideIdx] = useState(0);
   const navigate = useNavigate();
+
   const isFormValid =
     email && password && confirmPassword && nickname && !emailError && !confirmPasswordError && isVerified;
 
@@ -41,7 +43,10 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
     setEmail(newEmail);
     setEmailError("");
 
-    if (newEmail && !validateEmail(newEmail)) {
+    if (newEmail && validateEmail(newEmail)) {
+      setIsEmailValid(true);
+    } else {
+      setIsEmailValid(false);
       setEmailError("이메일 형식을 지켜주세요!");
     }
   };
@@ -190,14 +195,15 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
         value={email}
         onChange={handleEmail}
       />
-      {emailError && <p className="text-red-500 text-sm mb-4">{emailError}</p>}
+      {emailError && <p className="text-red-500 text-xs mb-4">* {emailError}</p>}
 
-      {/* 이메일 인증 버튼 */}
+      {/* 이메일 인증 요청 버튼 - 이메일 형식이 유효할 때만 활성화 */}
       {!isVerificationRequested ? (
         <button
           className="w-3/4 h-[60px] mb-2 py-3 rounded-xl font-bold bg-[#FFE0C1] hover:bg-red-200"
           onClick={handleEmailVerification}
-          disabled={isLoading}>
+          disabled={!isEmailValid || isLoading} // 이메일이 유효하고 로딩 중이 아닐 때만 활성화
+        >
           {isLoading ? (
             <div className="flex justify-center">
               <div className="loader"></div>
@@ -237,7 +243,7 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
         value={password}
         onChange={handlePassword}
       />
-      {passwordError && <p className="text-red-500 text-sm mb-4">{passwordError}</p>}
+      {passwordError && <p className="text-red-500 text-xs mb-4">* {passwordError}</p>}
 
       <input
         type="password"
@@ -246,7 +252,7 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
         value={confirmPassword}
         onChange={handleConfirmPassword}
       />
-      {confirmPasswordError && <p className="text-red-500 text-sm mb-4">{confirmPasswordError}</p>}
+      {confirmPasswordError && <p className="text-red-500 text-xs mb-4">* {confirmPasswordError}</p>}
 
       <input
         type="text"
@@ -256,7 +262,7 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
         onChange={handleNickname}
       />
 
-      {generalError && <p className="text-red-500 font-bold text-sm mb-4">{generalError}</p>}
+      {generalError && <p className="text-red-500 font-bold text-xs mb-4">* {generalError}</p>}
 
       <button
         onClick={handleSubmit}

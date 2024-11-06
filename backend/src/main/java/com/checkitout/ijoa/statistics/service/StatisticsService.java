@@ -9,6 +9,7 @@ import com.checkitout.ijoa.child.repository.ChildRepository;
 import com.checkitout.ijoa.exception.CustomException;
 import com.checkitout.ijoa.fairytale.domain.CATEGORY;
 import com.checkitout.ijoa.fairytale.domain.EyeTrackingData;
+import com.checkitout.ijoa.fairytale.repository.ChildReadBooksRepository;
 import com.checkitout.ijoa.fairytale.repository.EyeTrackingDataRepository;
 import com.checkitout.ijoa.statistics.dto.CategoryStatisticsResponse;
 import com.checkitout.ijoa.statistics.dto.FocusTimeResponse;
@@ -40,6 +41,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class StatisticsService {
     private final ChildRepository childRepository;
     private final EyeTrackingDataRepository eyeTrackingDataRepository;
+    private final ChildReadBooksRepository childReadBooksRepository;
     private final SecurityUtil securityUtil;
 
     /**
@@ -83,15 +85,15 @@ public class StatisticsService {
      * 분류별 독서 통계 조회
      */
     public List<CategoryStatisticsResponse> getCategoryStatistics(Long childId) {
+        User user = securityUtil.getUserByToken();
+        Child child = getChildById(childId);
+        validateChildAccess(user, child);
 
-        List<CategoryStatisticsResponse> data = new ArrayList<>();
+        List<Object[]> results = childReadBooksRepository.countByCategoryAndChild(child);
 
-        int count = 10;
-        for (CATEGORY category : CATEGORY.values()) {
-            data.add(CategoryStatisticsResponse.test(category.getDisplayName(), count--));
-        }
-
-        return data;
+        return results.stream()
+                .map(result -> CategoryStatisticsResponse.of((CATEGORY) result[0], (Long) result[1]))
+                .collect(Collectors.toList());
     }
 
 
@@ -107,24 +109,23 @@ public class StatisticsService {
         }
     }
 
-    // 데이터 처리
+    // 시간 간격에 따른 집중도 데이터 처리 및 변환
     private List<FocusTimeResponse> generateFocusTimeResponses(List<EyeTrackingData> dataList, String interval) {
         Map<String, List<Float>> attentionRatesByUnit = new LinkedHashMap<>();
         getAllUnits(interval).forEach(unit -> attentionRatesByUnit.put(unit, new ArrayList<>()));
 
-        // 데이터 그루핑
         for (EyeTrackingData data : dataList) {
             String unit = getUnit(data.getTrackedAt(), interval);
             float attentionRate = data.getIsGazeOutOfScreen() ? 0f : data.getAttentionRate();
             attentionRatesByUnit.get(unit).add(attentionRate);
         }
 
-        // 평균 계산 및 응답 생성
         return attentionRatesByUnit.entrySet().stream()
                 .map(entry -> FocusTimeResponse.of(entry.getKey(), calculateAverage(entry.getValue())))
                 .collect(Collectors.toList());
     }
 
+    // 주어진 시간을 interval에 맞는 단위로 변환 (시간/요일/날짜)
     private String getUnit(LocalDateTime dateTime, String interval) {
         return switch (interval) {
             case "hour" -> String.format("%02d", dateTime.getHour());
@@ -134,6 +135,7 @@ public class StatisticsService {
         };
     }
 
+    // interval에 따른 모든 단위값 목록 반환 (0-23시/월-일/1-31일)
     private List<String> getAllUnits(String interval) {
         return switch (interval) {
             case "hour" -> IntStream.range(0, 24)
@@ -152,12 +154,12 @@ public class StatisticsService {
         };
     }
 
-    // 평균 집중도 계산
+    // 집중도 값들의 평균 계산
     private Float calculateAverage(List<Float> values) {
         return values.isEmpty() ? null :
                 (float) values.stream()
                         .mapToDouble(Float::doubleValue)
                         .average()
-                        .orElse(0.0);
+                        .orElse(0.0) * 100;
     }
 }

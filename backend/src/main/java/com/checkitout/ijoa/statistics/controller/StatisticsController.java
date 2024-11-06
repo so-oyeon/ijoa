@@ -85,6 +85,8 @@ public class StatisticsController implements StatisticsApiDocumentation {
     public ResponseEntity<List<CategoryStatisticsResponse>> getCategoryStatistics(@PathVariable Long childId) {
         List<CategoryStatisticsResponse> result = statisticsService.getCategoryStatistics(childId);
 
-        return ResponseEntity.status(HttpStatus.OK).body(result);
+        HttpStatus status = result.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK;
+
+        return ResponseEntity.status(status).body(result);
     }
 }
