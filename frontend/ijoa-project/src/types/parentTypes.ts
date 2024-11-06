@@ -35,3 +35,9 @@ export interface ParentTTSInfo {
   tts: string;
   image_url: string;
 }
+
+// TTS 학습 스크립트 목록 조회 응답 데이터
+export interface TTSScriptInfo {
+  id: number;
+  script: string;
+}

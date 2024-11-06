@@ -46,4 +46,9 @@ export const parentApi = {
   getParentTTSList: () => {
     return api.get(`/tts/profile`);
   },
+
+  // TTS 녹음 스크립트 목록 조회
+  getTTSScriptList: () => {
+    return api.get(`/tts/script`);
+  },
 };
