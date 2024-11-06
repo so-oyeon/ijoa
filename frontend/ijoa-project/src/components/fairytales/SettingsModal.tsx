@@ -12,31 +12,56 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   // 토글 옵션들
   const [toggleOptions, setToggleOptions] = useState([
-    { label: "책 읽어주기", checked: true },
-    { label: "퀴즈", checked: true },
-    { label: "bgm", checked: false },
+    { label: "책 읽어주기", checked: localStorage.getItem("readAloudEnabled") === "true" },
+    { label: "퀴즈", checked: localStorage.getItem("quizEnabled") === "true" },
+    { label: "bgm", checked: localStorage.getItem("bgm") === "true" },
   ]);
 
   useEffect(() => {
     // 모달이 열릴 때 localStorage에서 현재 childBgm 상태를 가져와 토글 초기화
     if (isOpen) {
       const isChildBgmPlaying = localStorage.getItem("childBgm") === "true";
+      const isQuizEnabled = localStorage.getItem("quizEnabled") === "true";
+      const isReadAloudEnabled = localStorage.getItem("readAloudEnabled") === "true";
       setToggleOptions((prevOptions) =>
-        prevOptions.map((option) => (option.label === "bgm" ? { ...option, checked: isChildBgmPlaying } : option))
+        prevOptions.map((option) => {
+          if (option.label === "bgm") {
+            return { ...option, checked: isChildBgmPlaying };
+          } else if (option.label === "퀴즈") {
+            return { ...option, checked: isQuizEnabled };
+          } else if (option.label === "책 읽어주기") {
+            return { ...option, checked: isReadAloudEnabled };
+          }
+          return option;
+        })
       );
       setIsLoaded(true);
     }
   }, [isOpen]);
-
   useEffect(() => {
-    const bgmOption = toggleOptions.find((option) => option.label === "bgm");
-    if (bgmOption?.checked) {
-      MusicManager.playChildBgm();
-      localStorage.setItem("bgm", "true");
-    } else {
-      MusicManager.stopBgm();
-      localStorage.setItem("bgm", "false");
-    }
+    toggleOptions.forEach((option) => {
+      if (option.label === "bgm") {
+        if (option.checked) {
+          MusicManager.playChildBgm();
+          localStorage.setItem("bgm", "true");
+        } else {
+          MusicManager.stopBgm();
+          localStorage.setItem("bgm", "false");
+        }
+      }
+
+      if (option.label === "퀴즈") {
+        localStorage.setItem("quizEnabled", option.checked.toString());
+
+        // 퀴즈 설정이 변경되면 퀴즈 모달 상태를 초기화하는 이벤트 디스패치
+        const quizToggleEvent = new CustomEvent("quizToggle", { detail: option.checked });
+        window.dispatchEvent(quizToggleEvent);
+      }
+
+      if (option.label === "책 읽어주기") {
+        localStorage.setItem("readAloudEnabled", option.checked.toString());
+      }
+    });
   }, [toggleOptions]);
 
   const handleToggle = (index: number) => {
