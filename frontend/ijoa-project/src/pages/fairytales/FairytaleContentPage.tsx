@@ -30,6 +30,8 @@ const FairyTaleContentPage: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isFocusAlertModalOpen, setIsFocusAlertModalOpen] = useState(false);
 
+  const bookId = fairytaleId ? parseInt(fairytaleId, 10) : 0;
+
   // 동화책 내용(이미지, 텍스트)을 가져오는 api 통신 함수
   const getFairyTaleContent = useCallback(
     async (page: number) => {
@@ -202,7 +204,12 @@ const FairyTaleContentPage: React.FC = () => {
 
       {/* TTS 선택 모달 */}
       {/* Fix: hasRead => 처음 읽는건지 읽었던 건지 구분 */}
-      <TTSChoiceModal isOpen={isTTSChoiceModalOpen} onClose={handleCloseTTSChoiceModal} hasRead={false} />
+      <TTSChoiceModal
+        isOpen={isTTSChoiceModalOpen}
+        onClose={handleCloseTTSChoiceModal}
+        hasRead={false}
+        bookId={bookId}
+      />
       {/* 레벨업 모달 */}
       <LevelUpModal isOpen={isLevelUpModalOpen} />
       {/* 독서완료 모달 */}
