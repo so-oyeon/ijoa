@@ -62,4 +62,11 @@ export const fairyTaleApi = {
       params: { page },
     });
   },
+
+  // 읽은 책과 읽고 있는 책 목록 조회
+  getFairytalesReadList: (page: number) => {
+    return api.get<FairyTaleListResponse>(`/fairytales/children`, {
+      params: { page },
+    });
+  },
 };

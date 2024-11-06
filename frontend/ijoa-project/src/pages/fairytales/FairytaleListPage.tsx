@@ -39,7 +39,7 @@ const FairytaleListPage: React.FC = () => {
   // 인기 동화책 api 통신 함수
   const getPopularFairyTalesByAge = async () => {
     try {
-      const response = await fairyTaleApi.getFairyTalesRankByAge(9);
+      const response = await fairyTaleApi.getFairyTalesRankByAge(9); 
       if (response.status === 200) {
         const data = response.data;
         if (Array.isArray(data)) {

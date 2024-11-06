@@ -19,9 +19,11 @@ const App = () => {
   const location = useLocation();
 
   useEffect(() => {
+    const isBgmEnabled = localStorage.getItem("bgm") === "true";
+
     if (location.pathname === "/home") {
       MusicManager.playLoginBgm();
-    } else if (location.pathname.startsWith("/child")) {
+    } else if (location.pathname.startsWith("/child") && isBgmEnabled) {
       MusicManager.playChildBgm();
     } else {
       MusicManager.stopBgm();

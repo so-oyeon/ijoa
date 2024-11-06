@@ -2,41 +2,41 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/free-mode";
 import { Autoplay, FreeMode } from "swiper/modules";
+import { fairyTaleApi } from "../../api/fairytaleApi";
+import { FairyTaleListItem } from "../../types/fairytaleTypes";
 
-import BookCover from "/assets/fairytales/images/bookcover.png";
+import { useEffect, useState } from "react";
 
 interface Props {
   direction: string;
 }
 
 const MyBookSwiper = ({ direction }: Props) => {
-  // 스와이퍼에 들어갈 사진 리스트
-  const bookCovers = [
-    BookCover,
-    BookCover,
-    BookCover,
-    BookCover,
-    BookCover,
-    BookCover,
-    BookCover,
-    BookCover,
-    BookCover,
-    BookCover,
-  ];
+  const [myBookLists, setMyBookLists] = useState<FairyTaleListItem[]>([]);
 
-  // 스와이퍼에 들어갈 제목 리스트
-  const titles = [
-    "동화책 1",
-    "동화책 제목이 매우 길어질 때아아이아이아오아우아오",
-    "동화책 3",
-    "동화책 4",
-    "동화책 제목이 굉장히 길어지는 경우에",
-    "동화책 6",
-    "동화책 7",
-    "동화책 8",
-    "동화책 9",
-    "동화책 10",
-  ];
+  // 읽은 책 or 읽는 중인 책 조회 api 통신 함수
+  const getMyBookLists = async () => {
+    try {
+      const response = await fairyTaleApi.getFairytalesReadList(0);
+      if (response.status === 200) {
+        const data = response.data;
+        if (data && Array.isArray(data.content)) {
+          setMyBookLists(data.content);
+        } else {
+          console.error("유효하지 않은 데이터 구조 :", data);
+        }
+      }
+    } catch (error) {
+      console.error("fairytaleApi의 getFairytalesReadList :", error);
+    }
+  };
+
+  const myBookCovers = myBookLists.map((book) => book.image);
+  const myBookTitles = myBookLists.map((book) => book.title);
+
+  useEffect(() => {
+    getMyBookLists();
+  });
 
   return (
     <Swiper
@@ -53,12 +53,12 @@ const MyBookSwiper = ({ direction }: Props) => {
       modules={[FreeMode, Autoplay]}
       className="mySwiper"
     >
-      {bookCovers.map((cover, index) => (
+      {myBookCovers.map((cover, index) => (
         <SwiperSlide key={index}>
           <div className="block text-center cursor-pointer">
             <img src={cover} alt={`동화책 ${index + 1}`} className="w-full" />
             <div className="mt-2 text-left">
-              <span className="text-xl text-white line-clamp-1">{titles[index]}</span>
+              <span className="text-xl text-white line-clamp-1">{myBookTitles[index]}</span>
             </div>
           </div>
         </SwiperSlide>
