@@ -19,13 +19,13 @@ const ReadingStats = () => {
   const getChildInfoList = async () => {
     try {
       setIsLoading(true);
-      const response = await parentApi.getChildList();
+      const response = await parentApi.getChildProfileList();
       if (response.status === 200) {
         setChildList(response.data);
         setSelectChild(response.data[0]);
       }
     } catch (error) {
-      console.log("parentApi의 getChildList : ", error);
+      console.log("parentApi의 getChildProfileList : ", error);
     } finally {
       setIsLoading(false);
     }
