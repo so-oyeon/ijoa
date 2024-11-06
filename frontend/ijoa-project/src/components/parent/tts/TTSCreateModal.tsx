@@ -225,7 +225,7 @@ const TTSCreateModal = ({ setIsCreateModal, ttsId }: Props) => {
           </div>
 
           {/* 오디오 재생 컨트롤바 */}
-          {audioURL && <audio controls src={audioURL} className="" ref={audioPlayRef}></audio>}
+          {audioURL && <audio controls src={audioURL} className="hidden" ref={audioPlayRef}></audio>}
         </div>
       </div>
     </div>

@@ -24,7 +24,6 @@ const TTSList = () => {
       const response = await parentApi.getParentTTSList();
       if (response.status === 200) {
         setParentTTSList(response.data);
-        console.log(response);
       }
     } catch (error) {
       console.log("parentApi의 getParentTTSList : ", error);
