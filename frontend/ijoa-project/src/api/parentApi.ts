@@ -1,5 +1,5 @@
 import api from "../lib/axios";
-import { ChildInfo, TTSFileStorageUrlInfo, TTSProfileInfo } from "../types/parentTypes"
+import { ChildInfo, TTSFileStorageUrlInfo } from "../types/parentTypes"
 
 export const parentApi = {
   // 자녀 프로필 목록 조회
