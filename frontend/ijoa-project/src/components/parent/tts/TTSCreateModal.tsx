@@ -20,7 +20,7 @@ const TTSCreateModal = ({ setIsCreateModal }: Props) => {
   const audioChunksRef = useRef<Blob[]>([]); // 오디오 저장을 위한 청크 배열(작은 데이터 조각) 참조 변수
   const [recordingList, setRecordingList] = useState<Blob[]>([]); // 전체 녹음본 목록
 
-  const [s3UrlList, setS3UrlList] = useState<S3UrlInfo[] | null>(null); // 전체 녹음본 목록
+  const [S3UrlList, setS3UrlList] = useState<S3UrlInfo[] | null>(null); // 전체 녹음본 목록
 
   // 녹음 시작
   const startRecording = async () => {
@@ -107,16 +107,64 @@ const TTSCreateModal = ({ setIsCreateModal }: Props) => {
     }
   };
 
+  // S3에 단일 녹음본을 저장하는 통신 함수
+  const handleSaveAudioToS3 = async (presignedUrl: string, file: Blob) => {
+    try {
+      const response = await fetch(presignedUrl, {
+        method: "PUT",
+        body: file,
+      });
+      if (response.ok) {
+        console.log("파일 업로드 성공:", presignedUrl);
+      } else {
+        console.warn("파일 업로드 실패:", presignedUrl);
+      }
+      return response.ok;
+    } catch (error) {
+      console.error("파일 업로드 중 에러 발생:", error);
+      return false;
+    }
+  };
+
+  // S3에 전체 녹음본을 저장하는 통신 함수
+  const handleAllSaveAudioToS3 = async () => {
+    if (!S3UrlList) return;
+
+    try {
+      const uploadPromises = S3UrlList.map((item, index) => handleSaveAudioToS3(item.url, recordingList[index]));
+
+      const results = await Promise.all(uploadPromises);
+      const allUploadsSuccessful = results.every((result) => result);
+
+      if (allUploadsSuccessful) {
+        window.location.href = "/parent/tts/list";
+      } else {
+        alert("일부 파일 업로드에 실패했습니다.");
+      }
+    } catch (error) {
+      console.error("파일 업로드 중 오류가 발생했습니다:", error);
+      alert("파일 업로드 중 에러가 발생했습니다.");
+    }
+  };
+
+  // 페이지 렌더링 시, TTS 스크립트 목록 조회
   useEffect(() => {
     getTTSScript();
   }, []);
 
+  // scriptList가 업데이트되면 recordings 배열을 scriptList의 길이에 맞게 초기화
   useEffect(() => {
-    // scriptList가 업데이트되면 recordings 배열을 scriptList의 길이에 맞게 초기화
     if (scriptList) {
       setRecordingList(Array(scriptList.length).fill(null));
     }
   }, [scriptList]);
+
+  // S3Url 통신 성공 후 S3에 등록
+  useEffect(() => {
+    if (!S3UrlList) return;
+
+    handleAllSaveAudioToS3();
+  }, [S3UrlList]);
 
   if (!scriptList) {
     return (
