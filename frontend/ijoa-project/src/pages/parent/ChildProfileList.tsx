@@ -40,12 +40,12 @@ const ChildProfileList = () => {
   // 자녀 프로필 목록 조회 API 통신 함수
   const getChildInfoList = async () => {
     try {
-      const response = await parentApi.getChildList();
+      const response = await parentApi.getChildProfileList();
       if (response.status === 200) {
         setChildList(response.data);
       }
     } catch (error) {
-      console.log("parentApi의 getChildList : ", error);
+      console.log("parentApi의 getChildProfileList : ", error);
     }
   };
 
@@ -86,8 +86,7 @@ const ChildProfileList = () => {
                 />
                 <div
                   className="w-12 aspect-1 bg-white rounded-full bg-opacity-50 shadow-[1px_3px_2px_0_rgba(0,0,0,0.2)] flex justify-center items-center absolute top-0 right-0"
-                  onClick={() => handleUpdateChild(child)}
-                >
+                  onClick={() => handleUpdateChild(child)}>
                   <TbPencilMinus className="text-2xl" />
                 </div>
               </div>

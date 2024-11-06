@@ -3,7 +3,7 @@ import { ChildInfo } from "../types/parentTypes"
 
 export const parentApi = {
   // 자녀 프로필 목록 조회
-  getChildList: () => {
+  getChildProfileList: () => {
     return api.get(`/parent/children`);
   },
 
@@ -40,5 +40,10 @@ export const parentApi = {
   // 독서 분석 보고서 조회
   getReadingReport: (childId: number) => {
     return api.get(`/children/${childId}/statistics/reading-report`);
+  },
+
+  // TTS 목록 조회
+  getParentTTSList: () => {
+    return api.get(`/tts/profile`);
   },
 };

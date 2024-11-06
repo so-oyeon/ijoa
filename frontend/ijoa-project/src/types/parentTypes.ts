@@ -27,3 +27,11 @@ export interface CategoriesUnitInfo {
   category: string;
   count: number;
 }
+
+// 부모 TTS 목록 조회 응답 데이터
+export interface ParentTTSInfo {
+  id: number;
+  name: string;
+  tts: string;
+  image_url: string;
+}
