@@ -6,10 +6,14 @@ import TTSCreateModal from "../../components/parent/tts/TTSCreateModal";
 import { parentApi } from "../../api/parentApi";
 import { ParentTTSInfo } from "../../types/parentTypes";
 import LoadingAnimation from "../../components/common/LoadingAnimation";
+import TTSProfileCreateModal from "../../components/parent/tts/TTSProfileCreateModal";
+import TTSCreateCompleteModal from "../../components/parent/tts/TTSCreateCompleteModal";
 
 const TTSList = () => {
+  const [isProfileCreateModal, setIsProfileCreateModal] = useState(false);
   const [isCreateGuideModal, setIsCreateGuideModal] = useState(false);
   const [isCreateModal, setIsCreateModal] = useState(false);
+  const [isCreateCompleted, setIsCreateCompleted] = useState(false);
   const [parentTTSList, setParentTTSList] = useState<ParentTTSInfo[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -68,7 +72,7 @@ const TTSList = () => {
             <button className="flex justify-center items-center">
               <IoIosAdd
                 className="text-[100px] text-white bg-[#D9D9D9] rounded-full"
-                onClick={() => setIsCreateGuideModal(true)}
+                onClick={() => setIsProfileCreateModal(true)}
               />
             </button>
           ) : (
@@ -77,11 +81,34 @@ const TTSList = () => {
         </div>
       </div>
 
+      {/* TTS 프로필 생성 모달 */}
+      {isProfileCreateModal ? (
+        <TTSProfileCreateModal
+          setIsProfileCreateModal={setIsProfileCreateModal}
+          setIsCreateCompleted={setIsCreateCompleted}
+        />
+      ) : (
+        <></>
+      )}
+
+      {/* TTS 프로필 생성 완료 모달 (TTS 학습 모달로 이어짐) */}
+      {isCreateCompleted ? (
+        <TTSCreateCompleteModal
+          setIsCreateCompleted={setIsCreateCompleted}
+          setIsCreateGuideModal={setIsCreateGuideModal}
+        />
+      ) : (
+        <></>
+      )}
+
+      {/* TTS 생성 안내 모달 */}
       {isCreateGuideModal ? (
         <TTSCreateGuideModal setIsCreateGuideModal={setIsCreateGuideModal} setIsCreateModal={setIsCreateModal} />
       ) : (
         <></>
       )}
+
+      {/* TTS 학습 모달 */}
       {isCreateModal ? <TTSCreateModal setIsCreateModal={setIsCreateModal} /> : <></>}
     </div>
   );
