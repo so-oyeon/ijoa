@@ -210,11 +210,11 @@ const FairyTaleContentPage: React.FC = () => {
   }, [isLevelUpModalOpen]);
 
   useEffect(() => {
-    if (!isTTSChoiceModalOpen) {
+    if (!isTTSChoiceModalOpen && !isQuizModalOpen) {
       getTTSPlayback(); // TTS 모달이 닫혔을 때 호출
     }
     getFairyTaleContent(fairytaleCurrentPage); // 페이지 내용 로드
-  }, [fairytaleCurrentPage, getFairyTaleContent, isTTSChoiceModalOpen]);
+  }, [fairytaleCurrentPage, getFairyTaleContent, isTTSChoiceModalOpen, isQuizModalOpen]);
 
   return (
     <div className="relative h-screen">
