@@ -106,7 +106,7 @@ public class CreatePageHistoryTest {
                 fairytale);
         fairytalePageContentRepository.save(fairytalePageContent);
 
-        pageHistory = PageHistory.of(now(), child, fairytalePageContent);
+        pageHistory = PageHistory.of(child, fairytalePageContent);
         pageHistoryRepository.save(pageHistory);
     }
 

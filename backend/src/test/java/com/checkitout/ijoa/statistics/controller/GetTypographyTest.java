@@ -108,7 +108,7 @@ public class GetTypographyTest {
                 fairytale);
         fairytalePageContentRepository.save(fairytalePageContent);
 
-        PageHistory pageHistory = PageHistory.of(now(), child, fairytalePageContent);
+        PageHistory pageHistory = PageHistory.of(child, fairytalePageContent);
         pageHistoryRepository.save(pageHistory);
 
         for (int i = 0; i < total; i++) {

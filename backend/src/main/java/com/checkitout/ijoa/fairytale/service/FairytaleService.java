@@ -4,7 +4,6 @@ import static com.checkitout.ijoa.exception.ErrorCode.FAIRYTALE_NOT_FOUND;
 import static com.checkitout.ijoa.exception.ErrorCode.FAIRYTALE_PAGE_NOT_FOUND;
 import static com.checkitout.ijoa.exception.ErrorCode.PAGE_HISTORY_ACCESS_DENIED;
 import static com.checkitout.ijoa.exception.ErrorCode.PAGE_HISTORY_NOT_FOUND;
-import static java.time.LocalDateTime.now;
 
 import com.checkitout.ijoa.child.domain.Child;
 import com.checkitout.ijoa.exception.CustomException;
@@ -55,7 +54,7 @@ public class FairytaleService {
         FairytalePageContent fairytalePageContent = getFairytalePageContent(fairytale, pageNumber);
         Child child = securityUtil.getChildByToken();
 
-        PageHistory pageHistory = pageHistoryRepository.save(PageHistory.of(now(), child, fairytalePageContent));
+        PageHistory pageHistory = pageHistoryRepository.save(PageHistory.of(child, fairytalePageContent));
 
         return FairytalePageViewResponse.of(fairytalePageContent, pageHistory);
     }
