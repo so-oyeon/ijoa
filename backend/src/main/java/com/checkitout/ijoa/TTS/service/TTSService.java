@@ -220,16 +220,12 @@ public class TTSService {
         List<TrainAudio> trainAudios = trainAudioRepository.findByTtsIdOrderByScriptId(ttsId).orElseThrow(()-> new CustomException(ErrorCode.TRAINAUDIO_NOT_FOUND));
         //s3경로
         List<String> paths = new ArrayList<>();
-        // 굳이?
-        // script
-        List<String> scripts = new ArrayList<>();
 
         for(TrainAudio trainAudio : trainAudios){
             paths.add(trainAudio.getFile_path());
-            scripts.add(trainAudio.getScript().getScript());
         }
 
-        TrainAudioResponseDto responseDto = TrainAudioResponseDto.from(ttsId, paths, scripts);
+        TrainAudioResponseDto responseDto = TrainAudioResponseDto.from(ttsId, paths);
         trainAudioKafkaTemplate.send(TTS_CREATE_TOPIC, responseDto);
     }
 
