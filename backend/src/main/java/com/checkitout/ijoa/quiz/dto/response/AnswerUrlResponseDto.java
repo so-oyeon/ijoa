@@ -13,4 +13,5 @@ public class AnswerUrlResponseDto {
         this.answerId = answerId;
         this.answerUrl = answerUrl;
     }
+
 }
