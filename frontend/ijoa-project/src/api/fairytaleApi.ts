@@ -8,7 +8,10 @@ import {
   QuizQuestionResponse,
   FairyTaleSearchResponse,
   FairytaleQuizAnswerResponse,
+  FairyTaleReadCheckResponse,
   FairyTaleListResponse,
+  QuizAnswerResponse,
+  ChildrenTTSListResponse
 } from "../types/fairytaleTypes";
 
 export const fairyTaleApi = {
@@ -56,17 +59,31 @@ export const fairyTaleApi = {
     });
   },
 
-  // 전체 동화책 목록 조회
-  getFairytalesList: (page: number) => {
-    return api.get<FairyTaleListResponse>(`/fairytales/list`, {
+  // 읽은 책과 읽고 있는 책 목록 조회
+  getFairytalesReadList: (page: number) => {
+    return api.get<FairyTaleReadCheckResponse>(`/fairytales/children`, {
       params: { page },
     });
   },
 
-  // 읽은 책과 읽고 있는 책 목록 조회
-  getFairytalesReadList: (page: number) => {
-    return api.get<FairyTaleListResponse>(`/fairytales/children`, {
-      params: { page },
+  // 전체 동화책 목록 조회
+  getFairyTalesList: (page: number, size: number) => {
+    return api.get<FairyTaleListResponse>(`/fairytales/list`, {
+      params: { page, size },
     });
+  },
+
+  // 퀴즈 답변 저장
+  submitQuizAnswer: (childId: number, quizId: number, fileName: number) => {
+    return api.post<QuizAnswerResponse>(`/quiz/answer`, {
+      childId,
+      quizId,
+      fileName,
+    });
+  },
+
+  // 자녀 TTS 목록 조회
+  getChildrenTTSList: (bookId: number) => {
+    return api.get<ChildrenTTSListResponse[]>(`/tts/audios/${bookId}`);
   },
 };

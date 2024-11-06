@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { CiCamera } from "react-icons/ci";
-import { childApi } from "../../../api/childApi";
+import { parentApi } from "../../../api/parentApi";
 import { TbPencilMinus } from "react-icons/tb";
 
 interface Props {
@@ -56,13 +56,13 @@ const ChildProfileCreateModal = ({ setIsCreateModal, getChildInfoList }: Props) 
     }
 
     try {
-      const response = await childApi.createChildProfile(formData);
+      const response = await parentApi.createChildProfile(formData);
       if (response.status === 201) {
         setIsCreateModal(false);
         getChildInfoList();
       }
     } catch (error) {
-      console.log("childApi의 createChildProfile : ", error);
+      console.log("parentApi의 createChildProfile : ", error);
     }
   };
 
