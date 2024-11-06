@@ -80,9 +80,9 @@ public class TTSController implements TTSApiDocumentation {
     }
 
     @Override
-    @GetMapping("/audios/{ttsId}/{pageId}")
-    public ResponseEntity<?> pageAudio(@PathVariable("ttsId")Long ttsId,@PathVariable("pageId") Long pageId) throws IOException {
-        PageAudioDto responseDto = ttsService.findPageAudio(ttsId,pageId);
+    @GetMapping("/audios/{ttsId}/{bookId}")
+    public ResponseEntity<?> pageAudio(@PathVariable("ttsId")Long ttsId,@PathVariable("bookId") Long bookId, @RequestParam("page") Integer pageNum) throws IOException {
+        PageAudioDto responseDto = ttsService.findPageAudio(ttsId,bookId,pageNum);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
