@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Getter
@@ -22,6 +23,7 @@ public class ChildReadBooks {
     @Column(name = "child_read_books_id")
     private Long id;
 
+    @CreationTimestamp
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
@@ -40,7 +42,8 @@ public class ChildReadBooks {
     @JoinColumn(name = "fairytale_id", nullable = false)
     private Fairytale fairytale;
 
-    public ChildReadBooks(LocalDateTime createdAt, Integer currentPage, LocalDateTime finishedAt, Boolean isCompleted,
+
+    public ChildReadBooks(Integer currentPage, LocalDateTime finishedAt, Boolean isCompleted,
                           Child child, Fairytale fairytale) {
         this.createdAt = createdAt;
         this.currentPage = currentPage;
@@ -50,9 +53,9 @@ public class ChildReadBooks {
         this.fairytale = fairytale;
     }
 
-    public static ChildReadBooks of(LocalDateTime createdAt, Integer currentPage, LocalDateTime finishedAt,
+    public static ChildReadBooks of(Integer currentPage, LocalDateTime finishedAt,
                                     Boolean isCompleted,
                                     Child child, Fairytale fairytale) {
-        return new ChildReadBooks(createdAt, currentPage, finishedAt, isCompleted, child, fairytale);
+        return new ChildReadBooks(currentPage, finishedAt, isCompleted, child, fairytale);
     }
 }

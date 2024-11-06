@@ -105,7 +105,7 @@ public class GetFocusTimeTest {
                 fairytale);
         fairytalePageContentRepository.save(fairytalePageContent);
 
-        PageHistory pageHistory = PageHistory.of(now(), child, fairytalePageContent);
+        PageHistory pageHistory = PageHistory.of(child, fairytalePageContent);
         pageHistoryRepository.save(pageHistory);
 
         EyeTrackingData eyeTrackingData = EyeTrackingData.of(now(), false, false,
