@@ -5,11 +5,11 @@ import { ChildrenTTSListResponse } from "../../types/fairytaleTypes";
 interface TTSChoiceModalProps {
   isOpen: boolean;
   onClose: () => void;
-  hasRead: boolean;
+  isReadIng: boolean;
   bookId: number;
 }
 
-const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({ isOpen, onClose, hasRead, bookId }) => {
+const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({ isOpen, onClose, isReadIng: isReadIng, bookId }) => {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [ttsList, setTtsList] = useState<ChildrenTTSListResponse[]>([]);
 
@@ -83,7 +83,7 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({ isOpen, onClose, hasRea
             </div>
           </div>
 
-          {hasRead ? (
+          {isReadIng ? (
             <div className="flex gap-4 justify-center items-center">
               <button
                 className={`w-36 py-2 text-[#67CCFF] text-lg font-bold bg-white rounded-3xl border-2 border-[#67CCFF] ${

@@ -18,6 +18,8 @@ const FairyTaleContentPage: React.FC = () => {
   const { fairytaleId } = useParams<{ fairytaleId: string }>();
   const location = useLocation();
   const title = location.state?.title;
+  const isCompleted = location.state?.isCompleted;
+  const currentPage = location.state?.currentPage;
   const [fairytaleCurrentPage, setFairytaleCurrentPage] = useState(0);
   const [fairytaleData, setFairytaleData] = useState<FairyTaleContentResponse>();
   const [quizData, setQuizData] = useState<QuizQuestionResponse>();
@@ -31,6 +33,7 @@ const FairyTaleContentPage: React.FC = () => {
   const [isFocusAlertModalOpen, setIsFocusAlertModalOpen] = useState(false);
 
   const bookId = fairytaleId ? parseInt(fairytaleId, 10) : 0;
+  const isReading = !isCompleted && currentPage > 0;
 
   // 동화책 내용(이미지, 텍스트)을 가져오는 api 통신 함수
   const getFairyTaleContent = useCallback(
@@ -207,7 +210,7 @@ const FairyTaleContentPage: React.FC = () => {
       <TTSChoiceModal
         isOpen={isTTSChoiceModalOpen}
         onClose={handleCloseTTSChoiceModal}
-        hasRead={false}
+        isReadIng={isReading}
         bookId={bookId}
       />
       {/* 레벨업 모달 */}

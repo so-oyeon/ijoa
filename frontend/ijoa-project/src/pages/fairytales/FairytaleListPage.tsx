@@ -21,11 +21,15 @@ const FairytaleListPage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<number>(1);
   const [childInfo, setChildInfo] = useState<ChildInfo | null>(null);
 
-  const bookCovers = popularFairyTales.map((fairyTale) => fairyTale.image);
-  const titles = popularFairyTales.map((fairyTale) => fairyTale.title);
+  const popularCovers = popularFairyTales.map((fairyTale) => fairyTale.image);
+  const popularTitles = popularFairyTales.map((fairyTale) => fairyTale.title);
+  const popularIsCompleted = popularFairyTales.map((fairyTale) => fairyTale.isCompleted);
+  const popularCurrentPage = popularFairyTales.map((fairyTale) => fairyTale.currentPage)
 
   const recommendedCovers = recommendedFairyTales.map((fairyTale) => fairyTale.image);
   const recommendedTitles = recommendedFairyTales.map((fairyTale) => fairyTale.title);
+  const recommendedIsCompleted = recommendedFairyTales.map((fairyTale) => fairyTale.isCompleted);
+  const recommendedCurrentPage = recommendedFairyTales.map((fairyTale) => fairyTale.currentPage)
 
   // 카테고리 이름과 ID 매핑
   const tabItems = [
@@ -101,19 +105,23 @@ const FairytaleListPage: React.FC = () => {
   };
 
   const handlePopularBookClick = (index: number) => {
-    navigate(`/fairytale/content/${popularFairyTales[index].fairytaleId}`, { state: { title: titles[index] } });
+    navigate(`/fairytale/content/${popularFairyTales[index].fairytaleId}`, {
+      state: { title: popularTitles[index], isCompleted: popularIsCompleted[index], currentPage: popularCurrentPage[index]},
+    });
   };
 
   const handleRecommendedBookClick = (index: number) => {
     navigate(`/fairytale/content/${recommendedFairyTales[index].fairytaleId}`, {
-      state: { title: recommendedTitles[index] },
+      state: { title: recommendedTitles[index], isCompleted: recommendedIsCompleted[index], currentPage: recommendedCurrentPage[index] },
     });
   };
 
   const handleCategoryBookClick = (index: number) => {
     if (categoryFairyTales && categoryFairyTales.content && categoryFairyTales.content[index]) {
       const selectedFairyTale = categoryFairyTales.content[index];
-      navigate(`/fairytale/content/${selectedFairyTale.fairytaleId}`, { state: { title: selectedFairyTale.title } });
+      navigate(`/fairytale/content/${selectedFairyTale.fairytaleId}`, {
+        state: { title: selectedFairyTale.title, isCompleted: selectedFairyTale.isCompleted, currentPage: selectedFairyTale.currentPage },
+      });
     }
   };
 
@@ -129,7 +137,6 @@ const FairytaleListPage: React.FC = () => {
 
   useEffect(() => {
     if (!childInfo) return;
-
     getPopularFairyTalesByAge();
   }, [childInfo]);
 
@@ -140,9 +147,9 @@ const FairytaleListPage: React.FC = () => {
           <div className="mb-5 text-2xl font-bold">🏆 {childInfo?.age}살 인기 동화책</div>
           {popularFairyTales.length > 0 ? (
             <Swiper
-              bookCovers={bookCovers}
-              titles={titles}
-              isCompleted={popularFairyTales.map((fairyTale) => fairyTale.is_completed)}
+              bookCovers={popularCovers}
+              titles={popularTitles}
+              isCompleted={popularFairyTales.map((fairyTale) => fairyTale.isCompleted)}
               onBookClick={handlePopularBookClick}
             />
           ) : (
@@ -155,7 +162,7 @@ const FairytaleListPage: React.FC = () => {
             <Swiper
               bookCovers={recommendedCovers}
               titles={recommendedTitles}
-              isCompleted={recommendedFairyTales.map((fairyTale) => fairyTale.is_completed)}
+              isCompleted={recommendedFairyTales.map((fairyTale) => fairyTale.isCompleted)}
               onBookClick={handleRecommendedBookClick}
             />
           ) : (
@@ -171,7 +178,7 @@ const FairytaleListPage: React.FC = () => {
             <Swiper
               bookCovers={categoryFairyTales.content.map((fairyTale) => fairyTale.image)}
               titles={categoryFairyTales.content.map((fairyTale) => fairyTale.title)}
-              isCompleted={categoryFairyTales.content.map((fairyTale) => fairyTale.is_completed)}
+              isCompleted={categoryFairyTales.content.map((fairyTale) => fairyTale.isCompleted)}
               onBookClick={handleCategoryBookClick}
             />
           ) : (
