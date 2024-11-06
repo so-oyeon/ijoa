@@ -9,7 +9,8 @@ import {
   FairyTaleSearchResponse,
   FairytaleQuizAnswerResponse,
   FairyTaleReadCheckResponse,
-  FairyTaleListResponse
+  FairyTaleListResponse,
+  QuizAnswerResponse,
 } from "../types/fairytaleTypes";
 
 export const fairyTaleApi = {
@@ -68,6 +69,15 @@ export const fairyTaleApi = {
   getFairyTalesList: (page: number, size: number) => {
     return api.get<FairyTaleListResponse>(`/fairytales/list`, {
       params: { page, size },
+    });
+  },
+
+  // 퀴즈 답변 저장
+  submitQuizAnswer: (childId: number, quizId: number, fileName: number) => {
+    return api.post<QuizAnswerResponse>(`/quiz/answer`, {
+      childId,
+      quizId,
+      fileName,
     });
   },
 };

@@ -214,3 +214,9 @@ export interface FairyTaleListItem {
 export interface FairyTaleListResponse {
   content: FairyTaleListItem[]
 }
+
+// 퀴즈 답변 등록 (POST)
+export interface QuizAnswerResponse {
+  answerId: number;
+  answerUrl: string;
+}

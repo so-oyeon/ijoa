@@ -75,7 +75,7 @@ const FairyTaleContentPage: React.FC = () => {
         setQuizData(response.data);
       }
     } catch (error) {
-      console.error("Error fetching quiz data:", error);
+      console.error("fairyTaleApi의 getQuizQuestion :", error);
     }
   }, [fairytaleCurrentPage]);
 
@@ -208,7 +208,7 @@ const FairyTaleContentPage: React.FC = () => {
       {/* 독서완료 모달 */}
       <ReadCompleteModal isOpen={isReadCompleteModalOpen} title={title} />
       {/* 퀴즈 모달 */}
-      <QuizModal isOpen={isQuizModalOpen} onClose={handleCloseQuizModal} quizData={quizData?.text} />
+      <QuizModal isOpen={isQuizModalOpen} onClose={handleCloseQuizModal} quizData={quizData?.text} quizId={quizData?.quizId}/>
       {/* 메뉴창 */}
       <FairytaleMenu
         fairytaleCurrentPage={fairytaleCurrentPage}
