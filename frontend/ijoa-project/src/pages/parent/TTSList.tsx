@@ -112,7 +112,7 @@ const TTSList = () => {
       )}
 
       {/* TTS 학습 모달 */}
-      {isCreateModal ? <TTSCreateModal setIsCreateModal={setIsCreateModal} ttsId={ttsId} /> : <></>}
+      {isCreateModal ? <TTSCreateModal setIsCreateModal={setIsCreateModal} ttsId={ttsId ? ttsId : 0} /> : <></>}
     </div>
   );
 };
