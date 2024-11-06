@@ -12,6 +12,14 @@ const MyBookShelves: React.FC = () => {
 
   const myBookReadOrNot = myBookLists.map((fairyTale) => fairyTale.isCompleted);
 
+   // 책별 진행도 계산 (currentPage / totalPage)
+   const progress = myBookLists.map((fairyTale) => {
+    if (fairyTale.totalPages && fairyTale.currentPage) {
+      return fairyTale.currentPage / fairyTale.totalPages;
+    }
+    return 0;
+  });
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsCurtainOpen(true);
@@ -72,6 +80,7 @@ const MyBookShelves: React.FC = () => {
                   titles={myBookLists.map((book) => book.title || "")}
                   onBookClick={(index) => console.log(`Clicked book index: ${index}`)}
                   myBookReadOrNot={myBookReadOrNot}
+                  progress={progress}
                 />
               </div>
             )}
