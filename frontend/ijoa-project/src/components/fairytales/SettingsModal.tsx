@@ -10,35 +10,33 @@ interface SettingsModalProps {
 
 const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
   const [isLoaded, setIsLoaded] = useState(false);
-  // 토글 옵션들
-  const [toggleOptions, setToggleOptions] = useState([
-    { label: "책 읽어주기", checked: localStorage.getItem("readAloudEnabled") === "true" },
-    { label: "퀴즈", checked: localStorage.getItem("quizEnabled") === "true" },
-    { label: "bgm", checked: localStorage.getItem("bgm") === "true" },
+
+  // 초기 로드 시 localStorage에서 설정 값을 불러오기
+  const [toggleOptions, setToggleOptions] = useState<{ label: string; checked: boolean }[]>(() => [
+    { label: "책 읽어주기", checked: localStorage.getItem("readAloudEnabled") === "true" || false },
+    { label: "퀴즈", checked: localStorage.getItem("quizEnabled") === "true" || false },
+    { label: "bgm", checked: localStorage.getItem("bgm") === "true" || false },
   ]);
 
   useEffect(() => {
-    // 모달이 열릴 때 localStorage에서 현재 childBgm 상태를 가져와 토글 초기화
-    if (isOpen) {
-      const isChildBgmPlaying = localStorage.getItem("childBgm") === "true";
-      const isQuizEnabled = localStorage.getItem("quizEnabled") === "true";
-      const isReadAloudEnabled = localStorage.getItem("readAloudEnabled") === "true";
+    if (isOpen && !isLoaded) {
+      // 설정이 로드되지 않은 상태에서만 localStorage 값을 반영하여 초기화
       setToggleOptions((prevOptions) =>
         prevOptions.map((option) => {
-          if (option.label === "bgm") {
-            return { ...option, checked: isChildBgmPlaying };
-          } else if (option.label === "퀴즈") {
-            return { ...option, checked: isQuizEnabled };
-          } else if (option.label === "책 읽어주기") {
-            return { ...option, checked: isReadAloudEnabled };
+          const storedValue = localStorage.getItem(option.label === "퀴즈" ? "quizEnabled" : option.label);
+          if (storedValue !== null) {
+            return { ...option, checked: storedValue === "true" };
           }
-          return option;
+          return { ...option, checked: true }; // 기본값을 true로 설정
         })
       );
       setIsLoaded(true);
     }
-  }, [isOpen]);
+  }, [isOpen, isLoaded]);
+
   useEffect(() => {
+    if (!isOpen) return;
+
     toggleOptions.forEach((option) => {
       if (option.label === "bgm") {
         if (option.checked) {
@@ -48,31 +46,31 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
           MusicManager.stopBgm();
           localStorage.setItem("bgm", "false");
         }
-      }
-
-      if (option.label === "퀴즈") {
+      } else if (option.label === "퀴즈") {
         localStorage.setItem("quizEnabled", option.checked.toString());
-
-        // 퀴즈 설정이 변경되면 퀴즈 모달 상태를 초기화하는 이벤트 디스패치
         const quizToggleEvent = new CustomEvent("quizToggle", { detail: option.checked });
         window.dispatchEvent(quizToggleEvent);
-      }
-
-      if (option.label === "책 읽어주기") {
+      } else if (option.label === "책 읽어주기") {
         localStorage.setItem("readAloudEnabled", option.checked.toString());
       }
     });
-  }, [toggleOptions]);
+  }, [toggleOptions, isOpen]);
 
   const handleToggle = (index: number) => {
     const newOptions = [...toggleOptions];
     newOptions[index].checked = !newOptions[index].checked;
     setToggleOptions(newOptions);
+
+    // toggle 변경 시 바로 localStorage에 업데이트
+    const optionLabel = newOptions[index].label;
+    localStorage.setItem(optionLabel === "퀴즈" ? "quizEnabled" : optionLabel, newOptions[index].checked.toString());
   };
 
   const handleClose = () => {
     onClose();
+    setIsLoaded(false); // 모달이 닫힐 때 로드 상태 초기화
   };
+
   if (!isOpen || !isLoaded) return null;
 
   return (
@@ -85,10 +83,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
           <span className="blue-highlight">기본 설정</span>을 선택해 주세요.
         </div>
 
-        {/* 토글 컴포넌트 */}
         <SettingToggle options={toggleOptions} onToggle={handleToggle} />
 
-        {/* 취소/완료 버튼 */}
         <div className="flex gap-4 justify-center items-center">
           <button
             onClick={handleClose}
