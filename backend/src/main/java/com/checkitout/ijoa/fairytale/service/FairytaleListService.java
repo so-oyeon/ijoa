@@ -1,6 +1,7 @@
 package com.checkitout.ijoa.fairytale.service;
 
 import com.checkitout.ijoa.common.dto.PageRequestDto;
+import com.checkitout.ijoa.fairytale.domain.CATEGORY;
 import com.checkitout.ijoa.fairytale.domain.Fairytale;
 import com.checkitout.ijoa.fairytale.domain.redis.RedisReadBook;
 import com.checkitout.ijoa.fairytale.dto.response.FairytaleListResponseDto;
@@ -47,8 +48,22 @@ public class FairytaleListService {
     }
 
     /**
-     * TODO:동화책 카테고리별 조회
+     * 카테고리별 목록 조회 메서드
      */
+    @Transactional(readOnly = true)
+    public Page<FairytaleListResponseDto> getFairytalesByCategory(CATEGORY category, PageRequestDto requestDto) {
+
+        Long childId = securityUtil.getCurrentChildId();
+        Pageable pageable = PageRequest.of(requestDto.getPage() - 1, requestDto.getSize());
+
+        Page<Fairytale> fairytales = fairytaleRepository.findByCategory(category, pageable);
+
+        List<FairytaleListResponseDto> responseDtos = fairytaleMapper.toFairytaleListResponseDtoList(
+                fairytales.getContent(), childId);
+
+        return new PageImpl<>(responseDtos, pageable, fairytales.getTotalElements());
+    }
+
 
     /**
      * Test용입니다. 더미데이터 추가
