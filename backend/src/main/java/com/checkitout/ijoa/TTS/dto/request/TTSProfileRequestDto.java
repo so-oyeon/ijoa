@@ -23,11 +23,11 @@ public class TTSProfileRequestDto {
     @Schema(description = "TTS 이름", example = "엄마")
     private String name;
 
-    @Schema(description = "TTS 프로필 이미지 파일 이름", example = "filename.jpg")
-    private String image;
+    @Parameter(description = "사용자의 프로필 이미지 파일", schema = @Schema(type = "string", format = "binary"))
+    private MultipartFile image;
 
-    public static TTS of(TTSProfileRequestDto request, User user){
-        TTS tts = TTS.of(user, request.getName(), null, request.getImage(), LocalDateTime.now(),LocalDateTime.now());
+    public static TTS of(TTSProfileRequestDto request,String url,  User user){
+        TTS tts = TTS.of(user, request.getName(), null, url, LocalDateTime.now(),LocalDateTime.now());
         return tts;
     }
 }

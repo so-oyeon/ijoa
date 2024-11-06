@@ -8,6 +8,7 @@ import com.checkitout.ijoa.TTS.service.TTSService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,8 +23,8 @@ public class TTSController implements TTSApiDocumentation {
     private final TTSService ttsService;
 
     @Override
-    @PostMapping("/profile")
-    public ResponseEntity<TTSProfileResponseDto> createTTSProfile(@Valid @RequestBody TTSProfileRequestDto requestDto) throws IOException {
+    @PostMapping(value = "/profile", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<TTSProfileResponseDto> createTTSProfile(@Valid @ModelAttribute TTSProfileRequestDto requestDto) throws IOException {
         TTSProfileResponseDto responseDto = ttsService.createTTS(requestDto);
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
@@ -36,8 +37,8 @@ public class TTSController implements TTSApiDocumentation {
     }
 
     @Override
-    @PatchMapping("/{ttsId}")
-    public ResponseEntity<?> updateTTSProfile(@PathVariable("ttsId") Long ttsId, @RequestBody TTSProfileRequestDto requestDto) throws IOException {
+    @PatchMapping(value = "/{ttsId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<?> updateTTSProfile(@PathVariable("ttsId") Long ttsId, @ModelAttribute TTSProfileRequestDto requestDto) throws IOException {
         TTSProfileResponseDto responseDto = ttsService.updateTTS(ttsId,requestDto);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
