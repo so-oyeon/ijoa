@@ -15,14 +15,13 @@ const FairytaleSearchPage: React.FC = () => {
 
   const myBookReadOrNot = allFairyTales?.content?.map((fairyTale: FairyTaleListItem) => fairyTale.isCompleted) || [];
 
-
   useEffect(() => {
     const getAllFairyTales = async () => {
       try {
-        const response = await fairyTaleApi.getFairyTalesList(1, 5);
+        const response = await fairyTaleApi.getFairyTalesList(1, 11);
         if (response.status === 200) {
           setAllFairyTales(response.data);
-          console.log(allFairyTales)
+          console.log(allFairyTales);
         } else {
           console.error("유효하지 않은 응답 상태 :", response.status);
         }
@@ -92,7 +91,7 @@ const FairytaleSearchPage: React.FC = () => {
               myBookReadOrNot={myBookReadOrNot}
             />
           ) : (
-             <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
+            <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
           )}
         </div>
       </div>

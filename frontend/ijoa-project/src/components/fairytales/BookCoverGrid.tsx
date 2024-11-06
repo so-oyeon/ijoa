@@ -1,4 +1,5 @@
 import React from "react";
+import bookclip from "/assets/fairytales/images/bookclip.png";
 
 interface BookCoverGridProps {
   bookCovers: string[];
@@ -11,8 +12,14 @@ const BookCoverGrid: React.FC<BookCoverGridProps> = ({ bookCovers, titles, onBoo
   return (
     <div className="grid grid-cols-4 gap-5">
       {bookCovers.map((cover, index) => (
-        <div key={index} onClick={() => onBookClick(index)} className="cursor-pointer">
+        <div key={index} onClick={() => onBookClick(index)} className="relative  cursor-pointer">
           <img src={cover} alt="동화책 표지 사진" className="w-full h-48 object-cover rounded-lg" />
+
+          {/* 읽음 여부에 따라 우측 상단에 bookclip 이미지 표시 */}
+          {myBookReadOrNot && myBookReadOrNot[index] && (
+            <img src={bookclip} alt="읽음 표시" className="absolute -top-7 -right-3 w-20 h-20 z-10" />
+          )}
+
           <div className="mt-2 ml-2">
             <span className="text-lg font-semibold">{titles[index]}</span>
           </div>
