@@ -14,7 +14,6 @@ const VoiceAlbumDetailCard = ({ voiceInfo }: Props) => {
   useEffect(() => {
     const randomAnimal = animalImages[Math.floor(Math.random() * animalImages.length)];
     setAnimalImage(randomAnimal); // 랜덤 동물 이미지 설정
-    console.log(voiceInfo.img + " " + randomAnimal);
   }, []);
 
   return (

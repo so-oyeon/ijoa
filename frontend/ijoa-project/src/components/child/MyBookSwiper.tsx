@@ -2,41 +2,16 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/free-mode";
 import { Autoplay, FreeMode } from "swiper/modules";
-import { fairyTaleApi } from "../../api/fairytaleApi";
-import { FairyTaleListItem } from "../../types/fairytaleTypes";
-
-import { useEffect, useState } from "react";
+import { FairyTaleReadCheckItem } from "../../types/fairytaleTypes";
 
 interface Props {
   direction: string;
+  myBookLists: FairyTaleReadCheckItem[];
 }
 
-const MyBookSwiper = ({ direction }: Props) => {
-  const [myBookLists, setMyBookLists] = useState<FairyTaleListItem[]>([]);
-
-  // 읽은 책 or 읽는 중인 책 조회 api 통신 함수
-  const getMyBookLists = async () => {
-    try {
-      const response = await fairyTaleApi.getFairytalesReadList(0);
-      if (response.status === 200) {
-        const data = response.data;
-        if (data && Array.isArray(data.content)) {
-          setMyBookLists(data.content);
-        } else {
-          console.error("유효하지 않은 데이터 구조 :", data);
-        }
-      }
-    } catch (error) {
-      console.error("fairytaleApi의 getFairytalesReadList :", error);
-    }
-  };
-
+const MyBookSwiper = ({ direction, myBookLists }: Props) => {
   const myBookCovers = myBookLists.map((book) => book.image);
   const myBookTitles = myBookLists.map((book) => book.title);
-
-  useEffect(() => {
-    getMyBookLists();
-  });
 
   return (
     <Swiper

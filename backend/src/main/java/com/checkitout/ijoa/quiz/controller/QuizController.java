@@ -2,9 +2,12 @@ package com.checkitout.ijoa.quiz.controller;
 
 import com.checkitout.ijoa.quiz.docs.QuizApiDocumentation;
 import com.checkitout.ijoa.quiz.dto.request.AnswerRequestDto;
+import com.checkitout.ijoa.quiz.dto.request.QuizBookRequestDto;
 import com.checkitout.ijoa.quiz.dto.response.AnswerResponseDto;
 import com.checkitout.ijoa.quiz.dto.response.AnswerUrlResponseDto;
+import com.checkitout.ijoa.quiz.dto.response.QuizBookResponseDto;
 import com.checkitout.ijoa.quiz.dto.response.QuizResponseDto;
+import com.checkitout.ijoa.quiz.service.QuizService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -22,15 +25,13 @@ import java.util.List;
 @RequestMapping("/quiz")
 public class QuizController implements QuizApiDocumentation {
 
+    private final QuizService quizService;
+
     // 질문 조회
     @Override
-    @GetMapping("/question/{pageId}")
-    public ResponseEntity<QuizResponseDto> getQuiz(@PathVariable Long pageId) {
-        QuizResponseDto responseDto = QuizResponseDto.builder()
-                .quizId(123412L)
-                .text("질문질문")
-                .build();
-
+    @GetMapping("/question/{bookId}/{pageNum}")
+    public ResponseEntity<QuizResponseDto> getQuiz(@PathVariable("bookId") Long bookId, @PathVariable("pageNum") Integer pageNum) {
+        QuizResponseDto responseDto = quizService.fairytaleQuiz(bookId, pageNum);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
@@ -38,12 +39,17 @@ public class QuizController implements QuizApiDocumentation {
     @Override
     @PostMapping("/answer")
     public ResponseEntity<AnswerUrlResponseDto> getAnswerUrl(AnswerRequestDto requestDto) {
-        AnswerUrlResponseDto responseDto = AnswerUrlResponseDto.builder()
-                .answerId(313232L)
-                .answerUrl("urlurlrurl")
-                .build();
-
+        AnswerUrlResponseDto responseDto = quizService.getAnswerUrl(requestDto);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
+    @Override
+    @PostMapping("/answer/list/{childId}")
+    public Page<QuizBookResponseDto> getQuizBookList(@PathVariable("childId") Long childId,@RequestParam("page") int page, @RequestBody QuizBookRequestDto requestDto ) {
+        List<QuizBookResponseDto> responseDtos = quizService.getQuizBookList(requestDto, childId);
+
+        Pageable pageable = PageRequest.of(page, 8);
+        return new PageImpl<>(responseDtos, pageable, responseDtos.size());
     }
 
     private List<AnswerResponseDto> makeList(){
