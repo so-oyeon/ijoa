@@ -1,5 +1,6 @@
 package com.checkitout.ijoa.quiz.service;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import com.checkitout.ijoa.child.domain.Child;
 import com.checkitout.ijoa.child.repository.ChildRepository;
 import com.checkitout.ijoa.exception.CustomException;
@@ -23,10 +24,13 @@ import com.checkitout.ijoa.quiz.dto.response.QuizResponseDto;
 import com.checkitout.ijoa.quiz.repository.AnswerRepository;
 import com.checkitout.ijoa.quiz.repository.QuizBookRepository;
 import com.checkitout.ijoa.quiz.repository.QuizRepository;
+import com.checkitout.ijoa.util.LogUtil;
 import com.checkitout.ijoa.util.SecurityUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -98,8 +102,11 @@ public class QuizService {
         Quiz quiz = quizRepository.findById(requestDto.getQuizId()).orElseThrow(() -> new CustomException(ErrorCode.QUIZ_NOT_FOUND));
         Child child = securityUtil.getChildByToken();
 
-        QuizBook quizBook = QuizBook.of(child,quiz.getFairytale());
-        quizBook = quizBookRepository.save(quizBook);
+        QuizBook quizBook = quizBookRepository.findByChildIdAndFairytaleId(child.getId(),quiz.getFairytale().getId());
+        if(quizBook==null){
+            quizBook= QuizBook.of(child,quiz.getFairytale());
+            quizBook = quizBookRepository.save(quizBook);
+        }
 
         Answer answer = Answer.of(key,quiz,quizBook);
 
@@ -109,21 +116,16 @@ public class QuizService {
 
     }
 
-    public List<QuizBookResponseDto> getQuizBookList(QuizBookRequestDto requestDto, Long childId) {
+    public Page<QuizBookResponseDto> getQuizBookList(QuizBookRequestDto requestDto, Long childId, Pageable pageable) {
 
         // LocalDate로 파싱
         LocalDate start = LocalDate.parse(requestDto.getStartDate());
         LocalDate end = LocalDate.parse(requestDto.getEndDate());
 
-        List<QuizBook> quizBooks =  quizBookRepository.findByChildIdAndCreatedAtBetween(childId, start, end)
-                .orElseThrow(() -> new CustomException(ErrorCode.FAIRYTALE_NO_CONTENT));
-        List<QuizBookResponseDto> responseDtos = new ArrayList<>();
 
-        for(QuizBook quizBook : quizBooks){
-            responseDtos.add(QuizBookResponseDto.from(quizBook));
-        }
+        Page<QuizBook> quizBooks =  quizBookRepository.findByChildIdAndCreatedAtBetween(childId, start, end,pageable);
 
-        return responseDtos;
+        return quizBooks.map(QuizBookResponseDto::from);
 
     }
 
