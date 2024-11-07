@@ -71,8 +71,8 @@ const MyRoom: React.FC = () => {
           alt="표지판"
           className="absolute top-20 left-5 w-[200px] z-20"
           animate={{
-            y: ["0%", "10%", "0%"],
-            rotate: ["0deg", "-10deg", "10deg", "0deg"],
+            y: ["0%", "0%", "0%"],
+            rotate: ["0deg", "-4deg", "4deg", "0deg"],
           }}
           transition={{
             duration: 2,
