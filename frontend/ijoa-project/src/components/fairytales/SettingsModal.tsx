@@ -20,10 +20,9 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
 
   useEffect(() => {
     if (isOpen && !isLoaded) {
-      // 설정이 로드되지 않은 상태에서만 localStorage 값을 반영하여 초기화
       setToggleOptions((prevOptions) =>
         prevOptions.map((option) => {
-          const storedValue = localStorage.getItem(option.label === "퀴즈" ? "quizEnabled" : option.label);
+          const storedValue = localStorage.getItem(option.label === "퀴즈" ? "quizEnabled" : option.label === "책 읽어주기" ? "readAloudEnabled" : "bgm");
           if (storedValue !== null) {
             return { ...option, checked: storedValue === "true" };
           }
@@ -61,9 +60,15 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
     newOptions[index].checked = !newOptions[index].checked;
     setToggleOptions(newOptions);
 
-    // toggle 변경 시 바로 localStorage에 업데이트
+    // 변경된 옵션을 localStorage에 업데이트
     const optionLabel = newOptions[index].label;
-    localStorage.setItem(optionLabel === "퀴즈" ? "quizEnabled" : optionLabel, newOptions[index].checked.toString());
+    if (optionLabel === "책 읽어주기") {
+      localStorage.setItem("readAloudEnabled", newOptions[index].checked.toString());
+    } else if (optionLabel === "퀴즈") {
+      localStorage.setItem("quizEnabled", newOptions[index].checked.toString());
+    } else if (optionLabel === "bgm") {
+      localStorage.setItem("bgm", newOptions[index].checked.toString());
+    }
   };
 
   const handleClose = () => {

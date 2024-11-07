@@ -40,6 +40,12 @@ const FairyTaleContentPage: React.FC = () => {
   const bookId = fairytaleId ? parseInt(fairytaleId, 10) : 0;
   const isReading = !isCompleted && currentPage > 0;
 
+  // 책 읽어주기 설정 확인하여 모달 상태 결정
+  useEffect(() => {
+    const readAloudEnabled = localStorage.getItem("readAloudEnabled") === "true";
+    setIsTTSChoiceModalOpen(readAloudEnabled);
+  }, []);
+
   // 동화책 내용(이미지, 텍스트)을 가져오는 api 통신 함수
   const getFairyTaleContent = useCallback(
     async (page: number) => {
@@ -282,14 +288,16 @@ const FairyTaleContentPage: React.FC = () => {
 
       {audioURL && <audio controls src={audioURL} className="hidden" ref={audioPlayRef}></audio>}
       {/* TTS 선택 모달 */}
-      {/* Fix: hasRead => 처음 읽는건지 읽었던 건지 구분 */}
-      <TTSChoiceModal
-        isOpen={isTTSChoiceModalOpen}
-        onClose={handleCloseTTSChoiceModal}
-        isReadIng={isReading}
-        bookId={bookId}
-        setTTSId={setTTSId}
-      />
+      {isTTSChoiceModalOpen && (
+        <TTSChoiceModal
+          isOpen={isTTSChoiceModalOpen}
+          onClose={handleCloseTTSChoiceModal}
+          isReadIng={isReading}
+          bookId={bookId}
+          setTTSId={setTTSId}
+          setPreviousTTSId={setPreviousTTSId}
+        />
+      )}
       {/* 레벨업 모달 */}
       <LevelUpModal isOpen={isLevelUpModalOpen} />
       {/* 독서완료 모달 */}
@@ -311,6 +319,8 @@ const FairyTaleContentPage: React.FC = () => {
         onPageClick={handlePageClick}
         handleToggleTTS={handleToggleTTS} // 새 toggle 함수 전달
         audioPlayRef={audioPlayRef}
+        ttsId={ttsId}
+        previousTTSId={previousTTSId}
       />
       {/* 집중 알람 모달 */}
       <FocusAlertModal isOpen={isFocusAlertModalOpen} onClose={handleCloseFocusAlertModal} />

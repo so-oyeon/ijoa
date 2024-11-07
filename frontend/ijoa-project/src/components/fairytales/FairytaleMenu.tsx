@@ -15,6 +15,8 @@ interface FairytaleMenuProps {
   fairytaleCurrentPage: number;
   handleToggleTTS: (isSoundOn: boolean) => void;
   audioPlayRef: React.RefObject<HTMLAudioElement>;
+  ttsId: number | null;
+  previousTTSId: number | null;
 }
 const FairytaleMenu: React.FC<FairytaleMenuProps> = ({
   isOpen,
@@ -25,6 +27,8 @@ const FairytaleMenu: React.FC<FairytaleMenuProps> = ({
   fairytaleCurrentPage,
   handleToggleTTS,
   audioPlayRef,
+  previousTTSId,
+  ttsId,
 }) => {
   const [isSoundOn, setIsSoundOn] = useState(true);
   const [isExitConfirmModalOpen, setIsExitConfirmModalOpen] = useState(false);
@@ -62,14 +66,17 @@ const FairytaleMenu: React.FC<FairytaleMenuProps> = ({
 
       {/* 버튼 */}
       <div className="flex gap-36 mb-10">
-        <button className="px-6 py-3 text-white rounded-lg" onClick={toggleSound}>
-          <img
-            src={isSoundOn ? SoundButton : MuteButton}
-            alt={isSoundOn ? "소리 켜기 버튼" : "소리 끄기 버튼"}
-            className="w-40"
-          />
-          <p className="mt-3 text-xl font-semibold">책 읽어주기</p>
-        </button>
+        {(ttsId !== null || previousTTSId !== null) && (
+          <button className="px-6 py-3 text-white rounded-lg" onClick={toggleSound}>
+            <img
+              src={isSoundOn ? SoundButton : MuteButton}
+              alt={isSoundOn ? "소리 켜기 버튼" : "소리 끄기 버튼"}
+              className="w-40"
+            />
+            <p className="mt-3 text-xl font-semibold">책 읽어주기</p>
+          </button>
+        )}
+
         <button className="px-6 py-3 text-white rounded-lg" onClick={handleOpenExitConfirmModal}>
           <img src={ExitButton} alt="나가기 버튼" className="w-40" />
           <p className="mt-3 text-xl font-semibold">나가기</p>
