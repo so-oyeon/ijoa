@@ -47,10 +47,9 @@ public class QuizController implements QuizApiDocumentation {
     @Override
     @PostMapping("/answer/list/{childId}")
     public Page<QuizBookResponseDto> getQuizBookList(@PathVariable("childId") Long childId,@RequestParam("page") int page, @RequestBody QuizBookRequestDto requestDto ) {
-        List<QuizBookResponseDto> responseDtos = quizService.getQuizBookList(requestDto, childId);
+        Pageable pageable = PageRequest.of(page-1, 8);
 
-        Pageable pageable = PageRequest.of(page, 8);
-        return new PageImpl<>(responseDtos, pageable, responseDtos.size());
+        return quizService.getQuizBookList(requestDto, childId,pageable);
     }
 
     // 책 답변 목록
