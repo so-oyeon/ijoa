@@ -86,13 +86,13 @@ public class TTSController implements TTSApiDocumentation {
         PageAudioDto responseDto = ttsService.findPageAudio(ttsId,bookId,pageNum);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
-
-    @Override
-    @PostMapping("/result")
-    public ResponseEntity<?> tempSaveResult(@RequestBody temp temp) throws IOException {
-        ttsService.consumeResponse(temp);
-        return null;
-    }
+//
+//    @Override
+//    @PostMapping("/result")
+//    public ResponseEntity<?> tempSaveResult(@RequestBody temp temp) throws IOException {
+//        ttsService.consumeResponse(temp);
+//        return null;
+//    }
 
     @Override
     @GetMapping("/audios/{bookId}")

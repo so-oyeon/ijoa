@@ -40,12 +40,14 @@ public class TTSService {
 
     private final KafkaTemplate<String, AudioBookRequestDto> audioBookKafkaTemplate;
     private final KafkaTemplate<String, TrainAudioResponseDto> trainAudioKafkaTemplate;
+    // 동화책 audio만들기
     private static final String REQUEST_TOPIC = "tts_create_audio";
+    // 생성된 audio s3키 저장
     private static final String RESPONSE_TOPIC = "tts_save_audio";
+    // tts 모델 생성 시작
     private static final String TTS_CREATE_TOPIC = "create_tts";
-//    private static final String TTS_MODEL_TOPIC =  "tts_model_path";
-
-    private final WebClient webClient;
+    // tts 모델 경로 저장
+    private static final String TTS_MODEL_TOPIC =  "tts_model_path";
 
 
     private final SecurityUtil securityUtil;
@@ -163,6 +165,34 @@ public class TTSService {
 
     }
 
+    // tts모델 학습 시작
+    public void startTrain(Long ttsId) {
+        // 학습데이터
+        List<TrainAudio> trainAudios = trainAudioRepository.findByTtsIdOrderByScriptId(ttsId).orElseThrow(()-> new CustomException(ErrorCode.TRAINAUDIO_NOT_FOUND));
+        //s3경로
+        List<String> paths = new ArrayList<>();
+
+        for(TrainAudio trainAudio : trainAudios){
+            paths.add(trainAudio.getFile_path());
+        }
+
+        TrainAudioResponseDto responseDto = TrainAudioResponseDto.from(ttsId, paths);
+        trainAudioKafkaTemplate.send(TTS_CREATE_TOPIC, responseDto);
+    }
+
+
+    // db 저장
+
+    // 모델경로 db 저장
+    @KafkaListener(topics = TTS_MODEL_TOPIC, groupId = "tts_group")
+    public void saveModelPath(Map<String, Object> message) {
+        String modelPath = message.get("model_path").toString();
+        Long ttsId = Long.valueOf(message.get("tts_id").toString());
+        TTS tts = ttsRepository.findById(ttsId).orElseThrow(()-> new CustomException(ErrorCode.TTS_NOT_FOUND));
+        tts.setTTS(modelPath);
+        ttsRepository.save(tts);
+    }
+
     // 동화책 audio 생성
     public void createAudioBook(Long bookId, Long ttsId) {
 
@@ -181,42 +211,22 @@ public class TTSService {
                 .ttsId(ttsId)
                 .build();
 
-        // fastAPI 로 메시지 전송
-        // FastAPI 호출 비동기 처리
-        webClient.post()
-                .uri("/process_book")
-                .body(Mono.just(audioBookRequest), AudioBookRequestDto.class)
-                .retrieve()
-                .bodyToMono(String.class)
-                .doOnSuccess(response -> {
-                    System.out.println("Audio book created successfully: " + response);
-                    // 필요한 경우, 이후 로직 추가
+        // Kafka로 메시지 전송
+        audioBookKafkaTemplate.send(REQUEST_TOPIC, audioBookRequest);
 
-                })
-                .doOnError(error -> {
-                    System.err.println("Error occurred while creating audio book: " + error.getMessage());
-                    // 에러 처리 로직 추가
-                })
-                .subscribe();
     }
 
-//        LogUtil.info("create");
-//        // Kafka로 메시지 전송
-//        audioBookKafkaTemplate.send(REQUEST_TOPIC, audioBookRequest);
-
-
-/////////////////////////////////////////임시
     // 생성된 audio파일 정보 db 저장
-//    @KafkaListener(topics = RESPONSE_TOPIC, groupId = "tts_group")
-//    public void consumeResponse(Map<String, Object> message) {
-    public void consumeResponse(temp message) {
-        LogUtil.info("save");
-        Long ttsId = message.getTtsId();
-        Long bookId = message.getBookId();
-        List<Map<String, String>> s3Keys = message.getS3Keys();
-//        Long bookId = Long.valueOf(message.get("book_id").toString());
-//        Long ttsId = Long.valueOf(message.get("tts_id").toString());
-//        List<Map<String, String>> s3Keys = (List<Map<String, String>>) message.get("s3_keys");
+    @KafkaListener(topics = RESPONSE_TOPIC, groupId = "tts_group")
+    public void consumeResponse(Map<String, Object> message) {
+//    public void consumeResponse(temp message) {
+//        LogUtil.info("save");
+//        Long ttsId = message.getTtsId();
+//        Long bookId = message.getBookId();
+//        List<Map<String, String>> s3Keys = message.getS3Keys();
+        Long bookId = Long.valueOf(message.get("book_id").toString());
+        Long ttsId = Long.valueOf(message.get("tts_id").toString());
+        List<Map<String, String>> s3Keys = (List<Map<String, String>>) message.get("s3_keys");
 
         Fairytale fairytale = fairytaleRepository.findById(bookId).orElseThrow(()-> new CustomException(ErrorCode.FAIRYTALE_NOT_FOUND));
         TTS tts = ttsRepository.findById(ttsId).orElseThrow(()-> new CustomException(ErrorCode.TTS_NOT_FOUND));
@@ -244,20 +254,6 @@ public class TTSService {
         }
     }
 
-    // tts모델 학습 시작
-    public void startTrain(Long ttsId) {
-        // 학습데이터
-        List<TrainAudio> trainAudios = trainAudioRepository.findByTtsIdOrderByScriptId(ttsId).orElseThrow(()-> new CustomException(ErrorCode.TRAINAUDIO_NOT_FOUND));
-        //s3경로
-        List<String> paths = new ArrayList<>();
-
-        for(TrainAudio trainAudio : trainAudios){
-            paths.add(trainAudio.getFile_path());
-        }
-
-        TrainAudioResponseDto responseDto = TrainAudioResponseDto.from(ttsId, paths);
-        trainAudioKafkaTemplate.send(TTS_CREATE_TOPIC, responseDto);
-    }
 
     // 해당 페이지 음성 반환
     public PageAudioDto findPageAudio(Long ttsId, Long bookId, Integer pageNum) {
