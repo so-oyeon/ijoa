@@ -89,7 +89,6 @@ public class GetReadingReportTest {
         child = Child.createChild(user, "testChild", "", LocalDate.now(), Gender.MALE, now());
         childRepository.save(child);
 
-        // todo: 분석결과 맞춰서 데이터 넣기
         Fairytale fairytale = Fairytale.of("테스트 동화", "작가", "그림 작가", "1234", "", 2024, "아이조아", COMMUNICATION,
                 1);
         fairytaleRepository.save(fairytale);
