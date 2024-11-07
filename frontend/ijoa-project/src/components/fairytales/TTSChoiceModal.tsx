@@ -39,9 +39,12 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({ isOpen, onClose, isRead
 
   const ttsImages = ttsList.map((tts) => tts.image);
   const ttsNames = ttsList.map((tts) => tts.ttsname);
+  const ttsIds = ttsList.map((tts) => tts.ttsid);  // ttsid 배열 추가
 
   const handleImageClick = (index: number) => {
     setSelectedIndex(index);
+    const selectedTtsId = ttsIds[index];  // 선택된 TTS의 ttsid 가져오기
+    localStorage.setItem("selectedTtsId", selectedTtsId.toString());  // localStorage에 저장
   };
 
   return (
@@ -59,7 +62,7 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({ isOpen, onClose, isRead
                   <img
                     src={image}
                     alt={ttsNames[index]}
-                    className={`w-28 cursor-pointer ${
+                    className={`w-28 h-28 object-cover cursor-pointer ${
                       selectedIndex === index ? "border-[6px] border-[#67CCFF] rounded-full" : ""
                     }`}
                   />
@@ -73,7 +76,7 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({ isOpen, onClose, isRead
                   <img
                     src={image}
                     alt={ttsNames[index + 2]}
-                    className={`w-28 cursor-pointer ${
+                    className={`w-28 h-28 cursor-pointer ${
                       selectedIndex === index + 2 ? "border-[6px] border-[#67CCFF] rounded-full" : ""
                     }`}
                   />

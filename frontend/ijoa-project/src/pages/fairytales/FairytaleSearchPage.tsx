@@ -30,7 +30,6 @@ const FairytaleSearchPage: React.FC = () => {
         const response = await fairyTaleApi.getFairyTalesList(1, 11);
         if (response.status === 200) {
           setAllFairyTales(response.data);
-          console.log(allFairyTales);
         } else {
           console.error("유효하지 않은 응답 상태 :", response.status);
         }

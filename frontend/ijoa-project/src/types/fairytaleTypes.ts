@@ -228,3 +228,8 @@ export interface ChildrenTTSListResponse {
   ttsname: string;
   ttsid: number;
 }
+
+// TTS 낭독
+export interface TTSPlaybackResponse {
+  url: string;
+}
