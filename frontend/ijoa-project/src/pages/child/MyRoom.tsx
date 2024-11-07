@@ -4,6 +4,7 @@ import Level2 from "./Level2";
 import Level3 from "./Level3";
 import Level4 from "./Level4";
 import { childApi } from "../../api/childApi";
+import { motion } from "framer-motion"; // Framer Motion import
 import arrow_left from "/assets/child/gamearrow_left.png";
 import arrow_right from "/assets/child/gamearrow_right.png";
 
@@ -65,6 +66,21 @@ const MyRoom: React.FC = () => {
     <div className="relative w-full h-screen overflow-hidden">
       {renderLevelComponent()}
 
+      <motion.img
+          src={`/assets/child/nm_lv${displayLevel}.png`}
+          alt="표지판"
+          className="absolute top-20 left-5 w-[200px] z-20"
+          animate={{
+            y: ["0%", "10%", "0%"],
+            rotate: ["0deg", "-10deg", "10deg", "0deg"],
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+
       {/* 이전 레벨로 이동 버튼 */}
       {displayLevel > 1 && (
         <button
@@ -81,7 +97,7 @@ const MyRoom: React.FC = () => {
           onClick={goToNextLevel}
           className="absolute right-0 top-1/2 -translate-y-1/2 px-4 py-2 text-white rounded-md"
         >
-          <img src={arrow_right} alt="다음 레벨" className="w-[200px]"/>
+          <img src={arrow_right} alt="다음 레벨" className="w-[200px]" />
         </button>
       )}
     </div>

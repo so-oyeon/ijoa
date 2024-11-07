@@ -17,7 +17,6 @@ interface LevelModalProps {
 
 const LevelModal: React.FC<LevelModalProps> = ({ minLevel, maxLevel, totalCount, onClose }) => {
   const [currentModalLevel, setCurrentModalLevel] = useState(minLevel);
-  
 
   const goToPreviousModalLevel = () => {
     if (currentModalLevel > minLevel) {
@@ -35,21 +34,20 @@ const LevelModal: React.FC<LevelModalProps> = ({ minLevel, maxLevel, totalCount,
     const babyImage = currentModalLevel === 2 ? baby2 : currentModalLevel === 3 ? baby3 : baby4;
 
     const unlockText =
-    (currentModalLevel-1) === 1 ? (
-      <span className="whitespace-pre-line font-bold text-2xl">
-        {"다음 단계로 가려면 \n"}
-        <span className="text-purple-600 text-3xl font-bold">1권</span>을 더 읽으면 돼요!
-      </span>
-    ) :
-      (currentModalLevel-1) === 2 ? (
+      currentModalLevel - 1 === 1 ? (
         <span className="whitespace-pre-line font-bold text-2xl">
           {"다음 단계로 가려면 \n"}
-          <span className="text-purple-600 text-3xl font-bold">{6-totalCount}권</span>을 더 읽으면 돼요!
+          <span className="text-purple-600 text-3xl font-bold">1권</span>을 더 읽으면 돼요!
+        </span>
+      ) : currentModalLevel - 1 === 2 ? (
+        <span className="whitespace-pre-line font-bold text-2xl">
+          {"다음 단계로 가려면 \n"}
+          <span className="text-purple-600 text-3xl font-bold">{6 - totalCount}권</span>을 더 읽으면 돼요!
         </span>
       ) : (
         <span className="whitespace-pre-line font-bold text-2xl">
           {"다음 단계로 가려면 \n"}
-          <span className="text-purple-600 text-3xl font-bold">{11-totalCount}권</span>을 더 읽으면 돼요!
+          <span className="text-purple-600 text-3xl font-bold">{11 - totalCount}권</span>을 더 읽으면 돼요!
         </span>
       );
 
@@ -83,6 +81,7 @@ const LevelModal: React.FC<LevelModalProps> = ({ minLevel, maxLevel, totalCount,
     <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20">
       <div className="relative bg-[#FCFFEA] p-10 rounded-2xl shadow-lg w-1/2 max-w-2xl text-center">
         <h2 className="text-2xl font-semibold mb-10 blue-highlight">단계 정보</h2>
+        <p className="mt-5 font-semibold text-lg">읽은 책 수에 따라 나의 레벨이 올라가요!</p>
         <button onClick={onClose} className="absolute top-4 right-4">
           <img src={closebutton} alt="Close" />
         </button>
