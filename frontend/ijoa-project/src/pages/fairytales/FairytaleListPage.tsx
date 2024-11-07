@@ -184,7 +184,7 @@ const FairytaleListPage: React.FC = () => {
         </div>
         <div className="h-[300px]">
           <div className="flex justify-between mb-5">
-            <div className="text-2xl font-bold">🌟 카테고리 별 인기 동화책</div>
+            <div className="text-2xl font-bold">🌟 카테고리 별 동화책</div>
             <ChoiceTab tabs={tabItems} onTabClick={handleCategoryChange} />
           </div>
           {categoryFairyTales && categoryFairyTales.content && categoryFairyTales.content.length > 0 ? (

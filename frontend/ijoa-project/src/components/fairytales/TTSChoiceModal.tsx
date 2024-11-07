@@ -12,7 +12,14 @@ interface TTSChoiceModalProps {
   setPreviousTTSId: (id: number) => void;
 }
 
-const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({ isOpen, onClose, isReadIng, bookId, setTTSId, setPreviousTTSId }) => {
+const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({
+  isOpen,
+  onClose,
+  isReadIng,
+  bookId,
+  setTTSId,
+  setPreviousTTSId,
+}) => {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [ttsList, setTtsList] = useState<ChildrenTTSListResponse[]>([]);
 
@@ -44,7 +51,7 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({ isOpen, onClose, isRead
   const handleImageClick = (index: number) => {
     setSelectedIndex(index);
     setTTSId(ttsIds[index]);
-    setPreviousTTSId(ttsIds[index])
+    setPreviousTTSId(ttsIds[index]);
   };
 
   // 닫기 버튼 클릭 시 ttsId를 null로 설정하고 모달 닫기
@@ -76,7 +83,7 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({ isOpen, onClose, isRead
                   <img
                     src={image}
                     alt={ttsNames[index]}
-                    className={`w-28 h-28 object-cover cursor-pointer ${
+                    className={`w-28 h-28 object-cover cursor-pointer rounded-full ${
                       selectedIndex === index ? "border-[6px] border-[#67CCFF] rounded-full" : ""
                     }`}
                   />
@@ -90,7 +97,7 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({ isOpen, onClose, isRead
                   <img
                     src={image}
                     alt={ttsNames[index + 2]}
-                    className={`w-28 h-28 cursor-pointer ${
+                    className={`w-28 h-28 object-cover cursor-pointer rounded-full ${
                       selectedIndex === index + 2 ? "border-[6px] border-[#67CCFF] rounded-full" : ""
                     }`}
                   />
