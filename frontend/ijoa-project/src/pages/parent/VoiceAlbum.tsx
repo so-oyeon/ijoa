@@ -3,7 +3,7 @@ import VoiceAlbumBookcase from "../../components/parent/voiceAlbum/VoiceAlbumBoo
 
 const VoiceAlbum = () => {
   return (
-    <div className="px-20 pt-24 pb-10 min-h-screen grid grid-cols-4 gap-20 relative">
+    <div className="px-20 pt-24 pb-10 min-h-screen grid grid-cols-4 gap-20 relative font-['IMBold']">
       {/* 좌측상단 아이콘 */}
       <img className="w-24 absolute left-1/4 top-10 z-10" src="/assets/parent/voiceAlbum/bookcase-icon.png" alt="" />
 

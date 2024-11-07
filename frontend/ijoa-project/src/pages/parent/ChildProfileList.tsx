@@ -68,7 +68,7 @@ const ChildProfileList = () => {
   }
 
   return (
-    <div className="min-h-screen pt-24 bg-[#EAF8FF] relative">
+    <div className="min-h-screen pt-24 bg-[#EAF8FF] relative font-['IMBold']">
       <div className="px-40 py-10 grid gap-10">
         {/* 상단 타이틀 */}
         <div className="flex justify-center items-center space-x-3">

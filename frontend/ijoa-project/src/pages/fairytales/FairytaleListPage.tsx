@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import "../../css/FairytaleContentPage.css";
 import { useNavigate } from "react-router-dom";
 import Swiper from "../../components/fairytales/Swiper"; // 스와이퍼 컴포넌트 import
 import ChoiceTab from "../../components/fairytales/ChoiceTab"; // 선택탭 컴포넌트 import
@@ -157,7 +158,7 @@ const FairytaleListPage: React.FC = () => {
     <div>
       <div className="pt-24 pb-24 px-10 text-xl">
         <div className="h-[300px] mb-10">
-          <div className="mb-5 text-2xl font-bold">🏆 {childInfo?.age}살 인기 동화책</div>
+          <div className="mb-5 text-2xl font-bold font-['ElectricalSafetyBold']">🏆 {childInfo?.age}살 인기 동화책</div>
           {popularFairyTales.length > 0 ? (
             <Swiper
               bookCovers={popularCovers}
@@ -170,7 +171,7 @@ const FairytaleListPage: React.FC = () => {
           )}
         </div>
         <div className="h-[300px] mb-10">
-          <div className="mb-5 text-2xl font-bold">🧸 이런 책 어때요?</div>
+          <div className="mb-5 text-2xl font-bold font-['ElectricalSafetyBold']">🧸 이런 책 어때요?</div>
           {recommendedFairyTales.length > 0 ? (
             <Swiper
               bookCovers={recommendedCovers}
@@ -184,7 +185,7 @@ const FairytaleListPage: React.FC = () => {
         </div>
         <div className="h-[300px]">
           <div className="flex justify-between mb-5">
-            <div className="text-2xl font-bold">🌟 카테고리 별 동화책</div>
+            <div className="text-2xl font-bold font-['ElectricalSafetyBold']">🌟 카테고리 별 동화책</div>
             <ChoiceTab tabs={tabItems} onTabClick={handleCategoryChange} />
           </div>
           {categoryFairyTales && categoryFairyTales.content && categoryFairyTales.content.length > 0 ? (
