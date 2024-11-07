@@ -78,7 +78,7 @@ const FairytaleSearchPage: React.FC = () => {
     <div>
       <div className="relative w-full h-screen overflow-y-auto bg-gradient-to-b from-white">
         <div className="pt-[96px] px-10 flex justify-between items-center mb-6">
-          <div className="text-2xl font-bold flex items-center font-['ElectricalSafetyBold']">{query ? "🔎 검색 결과 ..." : "📚 전체 동화 목록"}</div>
+          <div className="text-2xl font-bold flex items-center font-['IMBold']">{query ? "🔎 검색 결과 ..." : "📚 전체 동화 목록"}</div>
           <SearchBar onInputChange={handleInputChange} />
         </div>
 

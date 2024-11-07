@@ -68,15 +68,15 @@ const ChildProfileList = () => {
   }
 
   return (
-    <div className="min-h-screen pt-24 bg-[#EAF8FF] relative font-['IMBold']">
+    <div className="min-h-screen pt-24 bg-[#EAF8FF] relative">
       <div className="px-40 py-10 grid gap-10">
         {/* 상단 타이틀 */}
-        <div className="flex justify-center items-center space-x-3">
+        <div className="flex justify-center items-center space-x-3 font-['IMBold']">
           <img className="w-10 aspect-1" src="/assets/header/parent/child-icon.png" alt="" />
           <p className="text-[30px] font-semibold">자녀를 선택해주세요</p>
         </div>
 
-        <div className="grid grid-cols-3 gap-y-12">
+        <div className="grid grid-cols-3 gap-y-12 font-['IMBold']">
           {/* 자녀 목록 */}
           {childList.map((child, index) => (
             <div className="flex flex-col items-center space-y-3" key={index}>

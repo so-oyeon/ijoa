@@ -24,7 +24,7 @@ const ChoiceTab: React.FC<ChoiceTabProps> = ({ tabs, onTabClick }) => {
         <a
           key={tab.id}
           role="tab"
-          className={`tab ${activeTabIndex === index ? "font-bold tab-active border-b-2" : "font-bold text-gray-400"}`}
+          className={`tab ${activeTabIndex === index ? "font-['IMRegular'] text-xl font-bold tab-active border-b-2" : "font-['IMRegular'] text-md font-bold text-gray-500"}`}
           onClick={() => handleTabClick(index)}
         >
           {tab.name}
