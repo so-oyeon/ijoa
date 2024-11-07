@@ -13,8 +13,9 @@ interface FairytaleMenuProps {
   pageNums: string[];
   onPageClick: (index: number) => void;
   fairytaleCurrentPage: number;
+  handleToggleTTS: (isSoundOn: boolean) => void;
+  audioPlayRef: React.RefObject<HTMLAudioElement>;
 }
-
 const FairytaleMenu: React.FC<FairytaleMenuProps> = ({
   isOpen,
   onClose,
@@ -22,12 +23,20 @@ const FairytaleMenu: React.FC<FairytaleMenuProps> = ({
   pageNums,
   onPageClick,
   fairytaleCurrentPage,
+  handleToggleTTS,
+  audioPlayRef,
 }) => {
-  const [isSoundOn, setIsSoundOn] = useState(true); // TTS 읽어주기 on/off 상태 추적 변수
+  const [isSoundOn, setIsSoundOn] = useState(true);
   const [isExitConfirmModalOpen, setIsExitConfirmModalOpen] = useState(false);
 
-  // TTS 읽어주기 소리 on/off 토글 함수
   const toggleSound = () => {
+    if (isSoundOn && audioPlayRef.current) {
+      audioPlayRef.current.pause();
+      audioPlayRef.current.currentTime = 0;
+      handleToggleTTS(false);
+    } else {
+      handleToggleTTS(true);
+    }
     setIsSoundOn((prev) => !prev);
   };
 
@@ -39,7 +48,6 @@ const FairytaleMenu: React.FC<FairytaleMenuProps> = ({
     setIsExitConfirmModalOpen(false);
   };
 
-  // 모달이 열리지 않으면 null 반환
   if (!isOpen) return null;
 
   return (

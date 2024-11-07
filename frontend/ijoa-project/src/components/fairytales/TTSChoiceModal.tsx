@@ -1,27 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { fairyTaleApi } from "../../api/fairytaleApi";
 import { ChildrenTTSListResponse } from "../../types/fairytaleTypes";
+import closebutton from "/assets/close-button.png";
 
 interface TTSChoiceModalProps {
   isOpen: boolean;
   onClose: () => void;
   isReadIng: boolean;
   bookId: number;
-  setTTSId: (id: number) => void;
+  setTTSId: (id: number | null) => void; // id를 null로 설정할 수 있도록 변경
 }
 
-const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({ isOpen, onClose, isReadIng: isReadIng, bookId, setTTSId }) => {
+const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({ isOpen, onClose, isReadIng, bookId, setTTSId }) => {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [ttsList, setTtsList] = useState<ChildrenTTSListResponse[]>([]);
 
   useEffect(() => {
     if (!isOpen) return;
 
-    // 자녀 TTS 목록을 가져오는 api 통신 함수
     const getChildTTSList = async () => {
-      if (!bookId) {
-        return;
-      }
+      if (!bookId) return;
 
       try {
         const response = await fairyTaleApi.getChildrenTTSList(bookId);
@@ -40,19 +38,31 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({ isOpen, onClose, isRead
 
   const ttsImages = ttsList.map((tts) => tts.image);
   const ttsNames = ttsList.map((tts) => tts.ttsname);
-  const ttsIds = ttsList.map((tts) => tts.ttsid); // ttsid 배열 추가
+  const ttsIds = ttsList.map((tts) => tts.ttsid);
 
   const handleImageClick = (index: number) => {
     setSelectedIndex(index);
-    const selectedTtsId = ttsIds[index]; // 선택된 TTS의 ttsid 가져오기
-    // localStorage.setItem("selectedTtsId", selectedTtsId.toString());  // localStorage에 저장
-    setTTSId(selectedTtsId);
+    setTTSId(ttsIds[index]);
+  };
+
+  // 닫기 버튼 클릭 시 ttsId를 null로 설정하고 모달 닫기
+  const handleClose = () => {
+    setTTSId(null); // ttsId를 null로 설정
+    onClose();
   };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
-      <div className="w-1/3 text-center bg-white rounded-2xl shadow-lg">
-        <div className="px-4 py-8">
+      <div className="w-1/3 text-center bg-white rounded-2xl shadow-lg relative">
+        {/* 오른쪽 상단 닫기 버튼 */}
+        <button
+          onClick={handleClose}
+          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl font-bold"
+        >
+          <img src={closebutton} alt="닫기 버튼" />
+        </button>
+
+        <div className="px-4 py-12">
           <div className="text-xl font-bold">
             <span className="blue-highlight">누구 목소리</span>로 책을 읽어줄까요?
           </div>
