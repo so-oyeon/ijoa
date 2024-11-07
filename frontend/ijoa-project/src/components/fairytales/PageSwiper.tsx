@@ -40,7 +40,7 @@ const PageSwiper: React.FC<PageSwiperProps> = ({
                   }`}
                 />
                 <div className="mt-2 text-center pr-10">
-                  <span className="text-2xl font-semibold">{pageNums[index]}</span>
+                  <span className="text-2xl font-semibold font-['IMRegular']">{pageNums[index]}</span>
                 </div>
               </div>
             </SwiperSlide>

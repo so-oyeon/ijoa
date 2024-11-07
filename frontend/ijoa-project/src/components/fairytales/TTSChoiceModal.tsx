@@ -56,16 +56,14 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({
     setPreviousTTSId(ttsIds[index]);
   };
 
-  // 닫기 버튼 클릭 시 ttsId를 null로 설정하고 모달 닫기
   const handleClose = () => {
-    setTTSId(null); // ttsId를 null로 설정
+    setTTSId(null);
     onClose();
   };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
       <div className="w-1/3 text-center bg-white rounded-2xl shadow-lg relative">
-        {/* 오른쪽 상단 닫기 버튼 */}
         <button
           onClick={handleClose}
           className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl font-bold"
@@ -112,22 +110,16 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({
           {isReadIng ? (
             <div className="flex gap-4 justify-center items-center">
               <button
-                className={`w-36 py-2 text-[#67CCFF] text-lg font-bold bg-white rounded-3xl border-2 border-[#67CCFF] ${
-                  selectedIndex === null ? "opacity-50 cursor-not-allowed" : ""
-                }`}
+                className="w-36 py-2 text-[#67CCFF] text-lg font-bold bg-white rounded-3xl border-2 border-[#67CCFF]"
                 onClick={() => {
                   if (onContinueReading) onContinueReading();
                 }}
-                disabled={selectedIndex === null}
               >
                 이어서 읽기
               </button>
               <button
-                className={`w-36 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-3xl border-2 border-[#67CCFF] ${
-                  selectedIndex === null ? "opacity-50 cursor-not-allowed" : ""
-                }`}
+                className="w-36 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-3xl border-2 border-[#67CCFF]"
                 onClick={onClose}
-                disabled={selectedIndex === null}
               >
                 처음부터 읽기
               </button>
@@ -135,11 +127,8 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({
           ) : (
             <div className="mt-8 text-lg">
               <button
-                className={`w-36 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-3xl border-2 border-[#67CCFF] ${
-                  selectedIndex === null ? "opacity-50 cursor-not-allowed" : ""
-                }`}
+                className="w-36 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-3xl border-2 border-[#67CCFF]"
                 onClick={onClose}
-                disabled={selectedIndex === null}
               >
                 동화책 읽기
               </button>

@@ -264,9 +264,7 @@ const FairyTaleContentPage: React.FC = () => {
             )}
 
             <div className="px-12 flex-1 text-3xl font-bold text-center fairytale-font whitespace-pre-line break-keep">
-              <p className="px-12 flex-1 text-3xl font-bold text-center fairytale-font whitespace-pre-line break-keep">
                 {fairytaleData.content}
-              </p>
             </div>
           </div>
           {fairytaleCurrentPage > 0 && (
