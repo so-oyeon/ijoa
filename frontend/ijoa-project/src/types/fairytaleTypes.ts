@@ -3,9 +3,9 @@ export interface FairyTaleRankByAgeItem {
   fairytaleId: number;
   title: string;
   image: string;
-  total_pages: number;
-  current_page: number;
-  is_completed: boolean;
+  totalPages: number;
+  currentPage: number;
+  isCompleted: boolean;
 }
 
 export interface FairyTaleRankByAgeResponse {
@@ -17,9 +17,9 @@ export interface FairyTaleRecommendationItem {
   fairytaleId: number;
   title: string;
   image: string;
-  total_pages: number;
-  current_page: number;
-  is_completed: boolean;
+  totalPages: number;
+  currentPage: number;
+  isCompleted: boolean;
 }
 
 export type FairyTaleRecommendationsResponse = FairyTaleRecommendationItem[];
@@ -29,9 +29,9 @@ export interface FairyTaleByCategoryItem {
   fairytaleId: number;
   title: string;
   image: string;
-  total_pages: number;
-  current_page: number;
-  is_completed: boolean;
+  totalPages: number;
+  currentPage: number;
+  isCompleted: boolean;
 }
 
 export interface FairyTaleByCategoryListResponse {
@@ -89,9 +89,9 @@ export interface FairyTaleSearchItem {
   fairytaleId: number;
   title: string;
   image: string;
-  total_pages: number;
-  current_page: number;
-  is_completed: boolean;
+  totalPages: number;
+  currentPage: number;
+  isCompleted: boolean;
 }
 
 export interface FairyTaleSearchResponse {
@@ -167,9 +167,9 @@ export interface FairyTaleReadCheckItem {
   fairytaleId: number;
   title: string;
   image: string;
-  total_pages: number;
-  current_page: number;
-  is_completed: boolean;
+  totalPages: number;
+  currentPage: number;
+  isCompleted: boolean;
 }
 
 export interface FairyTaleReadCheckResponse {
@@ -227,4 +227,9 @@ export interface ChildrenTTSListResponse {
   audio_created: boolean;
   ttsname: string;
   ttsid: number;
+}
+
+// TTS 낭독
+export interface TTSPlaybackResponse {
+  url: string;
 }

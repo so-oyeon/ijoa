@@ -25,6 +25,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.kafka.core.KafkaTemplate;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -51,22 +54,19 @@ public class TTSService {
     private final FairytalePageContentRepository fairytalePageContentRepository;;
 
     // TTS 프로필 생성
-    public TTSProfileResponseDto createTTS(TTSProfileRequestDto requestDto){
+    public TTSProfileResponseDto createTTS(TTSProfileRequestDto requestDto) throws IOException {
         User user = securityUtil.getUserByToken();
         int num = ttsRepository.countByUserId(user.getId());
         if(num==4){
             throw new CustomException(ErrorCode.TTS_LIMIT_EXCEEDED);
         }
 
-        String key = "ttsprofile/" + user.getId() + "/" + UUID.randomUUID() + "/" + requestDto.getImage();
+        String url = fileService.saveProfileImage(requestDto.getImage());
 
-        //url 발급
-        String url = fileService.getPostS3Url(key);
-
-        TTS newTTS = TTSProfileRequestDto.of(requestDto,user);
+        TTS newTTS = TTSProfileRequestDto.of(requestDto,url,user);
 
         TTS savedTTS = ttsRepository.save(newTTS);
-        return TTSProfileResponseDto.fromTTS(savedTTS,url);
+        return TTSProfileResponseDto.fromTTS(savedTTS);
     }
 
     // TTS 삭제
@@ -83,23 +83,20 @@ public class TTSService {
     }
 
     // TTS 수정
-    public TTSProfileResponseDto updateTTS(Long ttsId,TTSProfileRequestDto requestDto) {
+    public TTSProfileResponseDto updateTTS(Long ttsId,TTSProfileRequestDto requestDto) throws IOException {
         User user = securityUtil.getUserByToken();
 
         TTS updateTTS = ttsRepository.findById(ttsId).orElseThrow(()-> new CustomException(ErrorCode.TTS_NOT_FOUND));
         checkUser(updateTTS,user.getId());
 
-        String key = "ttsprofile/" + user.getId() + "/" + UUID.randomUUID() + "/" + requestDto.getImage();
+        String url = fileService.saveProfileImage(requestDto.getImage());
 
-        //url 발급
-        String url = fileService.getPostS3Url(key);
-        requestDto.setImage(key);
-
-        updateTTS.updateTTS(requestDto);
+        updateTTS.setImage(url);
+        updateTTS.setName(requestDto.getName());
 
         TTS updatedTTS = ttsRepository.save(updateTTS);
 
-        return TTSProfileResponseDto.fromTTS(updatedTTS,url);
+        return TTSProfileResponseDto.fromTTS(updatedTTS);
     }
 
     // 부모 tts 목록
@@ -111,8 +108,7 @@ public class TTSService {
         List<TTS> ttsList = ttsRepository.findByUserId(user.getId()).orElseThrow(()-> new CustomException(ErrorCode.TTS_NO_CONTENT));
 
         for(TTS ts : ttsList){
-            String url = fileService.getGetS3Url(ts.getImage());
-            responseDtos.add(TTSProfileResponseDto.fromTTS(ts,url));
+            responseDtos.add(TTSProfileResponseDto.fromTTS(ts));
         }
 
         return responseDtos;
@@ -134,12 +130,16 @@ public class TTSService {
         List<TTSTrainResponseDto> responseDtos = new ArrayList<>();
         TTS tts = ttsRepository.findById(ttsId).orElseThrow(()-> new CustomException(ErrorCode.TTS_NOT_FOUND));
 
+        String currentTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
+
         for(FileScriptPair pair: requestDto.getFileScriptPairs()){
             Script script= scriptRepository.findById(pair.getScriptId()).orElseThrow(()-> new CustomException( ErrorCode.SCRIPT_NOT_FOUND));
             // filename 설정하기(profile 경로 + 멤버ID + 랜덤 값)
-            String key = "train/" + ttsId + "/" + UUID.randomUUID() + "/" + pair.getFileName();
+            String key = "train/" + ttsId + "/" + currentTime + "/" + pair.getFileName();
             //url 발급
             String url = fileService.getPostS3Url(key);
+            // TODO  s3 기존 데이터 삭제 넣기
+            // TODO  s3 저장기간 설정
 
             TrainAudio trainAudio = trainAudioRepository.findByTtsIdAndScriptId(ttsId, pair.getScriptId());
             // trainAudio가 존재하면 업데이트, 존재하지 않으면 새로운 객체 생성 후 저장
@@ -226,23 +226,25 @@ public class TTSService {
         List<TrainAudio> trainAudios = trainAudioRepository.findByTtsIdOrderByScriptId(ttsId).orElseThrow(()-> new CustomException(ErrorCode.TRAINAUDIO_NOT_FOUND));
         //s3경로
         List<String> paths = new ArrayList<>();
-        // 굳이?
-        // script
-        List<String> scripts = new ArrayList<>();
 
         for(TrainAudio trainAudio : trainAudios){
             paths.add(trainAudio.getFile_path());
-            scripts.add(trainAudio.getScript().getScript());
         }
 
-        TrainAudioResponseDto responseDto = TrainAudioResponseDto.from(ttsId, paths, scripts);
+        TrainAudioResponseDto responseDto = TrainAudioResponseDto.from(ttsId, paths);
         trainAudioKafkaTemplate.send(TTS_CREATE_TOPIC, responseDto);
     }
 
     // 해당 페이지 음성 반환
-    public PageAudioDto findPageAudio(Long ttsId, Long pageId) {
+    public PageAudioDto findPageAudio(Long ttsId, Long bookId, Integer pageNum) {
         TTS tts = ttsRepository.findById(ttsId).orElseThrow(()-> new CustomException(ErrorCode.TTS_NOT_FOUND));
-        FairytalePageContent page = fairytalePageContentRepository.findById(pageId).orElseThrow(()-> new CustomException(ErrorCode.FAIRYTALE_PAGE_NOT_FOUND));
+        Fairytale fairytale = fairytaleRepository.findById(bookId).orElseThrow(()-> new CustomException(ErrorCode.FAIRYTALE_NOT_FOUND));
+
+        if(pageNum == null || pageNum < 1 || pageNum > fairytale.getTotalPages()){
+            throw new CustomException(ErrorCode.FAIRYTALE_PAGE_NOT_FOUND);
+        }
+
+        FairytalePageContent page = fairytalePageContentRepository.findByFairytaleAndPageNumber(fairytale, pageNum) .orElseThrow(()-> new CustomException(ErrorCode.FAIRYTALE_PAGE_NOT_FOUND));
         FairytaleTTS fairytaleTTS = fairytaleTTSRepository.findByFairytaleAndTts(page.getFairytale(), tts).orElseThrow(()-> new CustomException(ErrorCode.TTS_NOT_FOUND));
         Audio audio = audioRepository.findByFairytaleTTSAndPage(fairytaleTTS, page).orElseThrow(()-> new CustomException(ErrorCode.FAIRYTALE_PAGE_NOT_FOUND));
         String url = fileService.getGetS3Url(audio.getAudio());

@@ -27,3 +27,39 @@ export interface CategoriesUnitInfo {
   category: string;
   count: number;
 }
+
+// 부모 TTS 목록 조회 응답 데이터
+export interface ParentTTSInfo {
+  id: number;
+  name: string;
+  tts: string;
+  image_url: string;
+}
+
+// TTS 학습 스크립트 목록 조회 응답 데이터
+export interface TTSScriptInfo {
+  id: number;
+  script: string;
+}
+
+// TTS 프로필 생성 요청 데이터
+export interface TTSProfileInfo {
+  name: string;
+  image: string;
+}
+
+// TTS 학습용 음성 파일 저장 s3 url 요청 데이터
+export interface TTSFileStorageUrlInfo {
+  fileScriptPairs: AudioFileInfo[];
+}
+
+export interface AudioFileInfo {
+  fileName: string;
+  scriptId: number;
+}
+
+// TTS 학습용 음성 파일 저장 s3 url 응답 데이터
+export interface S3UrlInfo {
+  key: string;
+  url: string;
+}

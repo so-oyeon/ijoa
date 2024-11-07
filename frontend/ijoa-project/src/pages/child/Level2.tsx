@@ -4,7 +4,13 @@ import bglv2 from "/assets/child/bg-lv2.png";
 import baby2 from "/assets/child/baby2.png";
 import profile from "/assets/child/profile.png";
 
-const Level2: React.FC = () => {
+interface Level2Props {
+  currentLevel: number;
+  totalCount: number;
+}
+
+const Level2: React.FC<Level2Props> = ({ currentLevel, totalCount }) => {
+  const templateLevel = 2;
   const profileAnimation = {
     initial: { x: 0, y: 0 },
     animate: {
@@ -12,8 +18,8 @@ const Level2: React.FC = () => {
       y: [0, 20, -10, 0],
       transition: {
         duration: 10,
-        ease: "easeInOut", 
-        times: [0, 0.6, 0.7, 1], 
+        ease: "easeInOut",
+        times: [0, 0.6, 0.7, 1],
       },
     },
   };
@@ -21,13 +27,13 @@ const Level2: React.FC = () => {
   const babyAnimation = {
     initial: { x: 0, y: 0, scaleX: 1 },
     animate: {
-      x: [-100, -800, -450, -200], 
-      y: [0, 20, -10, 0], 
+      x: [-100, -800, -450, -200],
+      y: [0, 20, -10, 0],
       scaleX: [1, 1, -1, -1],
       transition: {
         duration: 10,
-        ease: "easeInOut", 
-        times: [0, 0.6, 0.7, 1], 
+        ease: "easeInOut",
+        times: [0, 0.6, 0.7, 1],
       },
     },
   };
@@ -43,6 +49,9 @@ const Level2: React.FC = () => {
       maxLevel={4}
       babyAnimation={babyAnimation}
       profileAnimation={profileAnimation}
+      currentLevel={currentLevel}
+      totalCount={totalCount}
+      templateLevel={templateLevel}
     />
   );
 };
