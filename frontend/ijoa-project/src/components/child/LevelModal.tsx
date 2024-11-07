@@ -10,11 +10,14 @@ import closebutton from "/assets/close-button.png";
 interface LevelModalProps {
   minLevel: number;
   maxLevel: number;
+  currentLevel: number;
+  totalCount: number;
   onClose: () => void;
 }
 
-const LevelModal: React.FC<LevelModalProps> = ({ minLevel, maxLevel, onClose }) => {
+const LevelModal: React.FC<LevelModalProps> = ({ minLevel, maxLevel, totalCount, onClose }) => {
   const [currentModalLevel, setCurrentModalLevel] = useState(minLevel);
+  
 
   const goToPreviousModalLevel = () => {
     if (currentModalLevel > minLevel) {
@@ -32,20 +35,21 @@ const LevelModal: React.FC<LevelModalProps> = ({ minLevel, maxLevel, onClose }) 
     const babyImage = currentModalLevel === 2 ? baby2 : currentModalLevel === 3 ? baby3 : baby4;
 
     const unlockText =
-      currentModalLevel === 2 ? (
+    (currentModalLevel-1) === 1 ? (
+      <span className="whitespace-pre-line font-bold text-2xl">
+        {"다음 단계로 가려면 \n"}
+        <span className="text-purple-600 text-3xl font-bold">1권</span>을 더 읽으면 돼요!
+      </span>
+    ) :
+      (currentModalLevel-1) === 2 ? (
         <span className="whitespace-pre-line font-bold text-2xl">
           {"다음 단계로 가려면 \n"}
-          <span className="text-purple-600 text-3xl font-bold">5권</span>을 더 읽으면 돼요!
-        </span>
-      ) : currentModalLevel === 3 ? (
-        <span className="whitespace-pre-line font-bold text-2xl">
-          {"다음 단계로 가려면 \n"}
-          <span className="text-purple-600 text-3xl font-bold">10권</span>을 더 읽으면 돼요!
+          <span className="text-purple-600 text-3xl font-bold">{6-totalCount}권</span>을 더 읽으면 돼요!
         </span>
       ) : (
         <span className="whitespace-pre-line font-bold text-2xl">
           {"다음 단계로 가려면 \n"}
-          <span className="text-purple-600 text-3xl font-bold">15권</span>을 더 읽으면 돼요!
+          <span className="text-purple-600 text-3xl font-bold">{11-totalCount}권</span>을 더 읽으면 돼요!
         </span>
       );
 

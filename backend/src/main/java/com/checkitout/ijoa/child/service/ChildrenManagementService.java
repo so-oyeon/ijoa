@@ -145,6 +145,10 @@ public class ChildrenManagementService {
         List<Child> activeChildren = childRepository.findByParentAndIsDeletedFalse(user)
                 .orElseGet(Collections::emptyList);
 
+        if (activeChildren.isEmpty()) {
+            throw new CustomException(ErrorCode.CHILD_NO_CONTENT);
+        }
+
         return childMapper.toChildDtoList(activeChildren);
     }
 
