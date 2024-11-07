@@ -28,7 +28,6 @@ const LoginModal: React.FC<LoginModalProps> = ({ openForgotPasswordModal }) => {
     try {
       const response = await userApi.login(data);
       // 로그인 성공 시(200)
-      console.log(response);
       if (response.status === 200) {
         localStorage.setItem("accessToken", response.data.accessToken);
         localStorage.setItem("refreshToken", response.data.refreshToken);

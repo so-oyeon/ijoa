@@ -1,13 +1,13 @@
 import React from "react";
 
 interface TabItem {
-  id: number;
+  id: string;
   name: string;
 }
 
 interface ChoiceTabProps {
   tabs: TabItem[];
-  onTabClick: (categoryId: number) => void;
+  onTabClick: (categoryId: string) => void; // categoryId 타입을 string으로 변경
 }
 
 const ChoiceTab: React.FC<ChoiceTabProps> = ({ tabs, onTabClick }) => {
@@ -15,7 +15,7 @@ const ChoiceTab: React.FC<ChoiceTabProps> = ({ tabs, onTabClick }) => {
 
   const handleTabClick = (index: number) => {
     setActiveTabIndex(index);
-    onTabClick(tabs[index].id);
+    onTabClick(tabs[index].id); // 이제 오류가 발생하지 않습니다.
   };
 
   return (

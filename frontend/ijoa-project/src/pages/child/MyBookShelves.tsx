@@ -12,8 +12,8 @@ const MyBookShelves: React.FC = () => {
 
   const myBookReadOrNot = myBookLists.map((fairyTale) => fairyTale.isCompleted);
 
-   // 책별 진행도 계산 (currentPage / totalPage)
-   const progress = myBookLists.map((fairyTale) => {
+  // 책별 진행도 계산 (currentPage / totalPage)
+  const progress = myBookLists.map((fairyTale) => {
     if (fairyTale.totalPages && fairyTale.currentPage) {
       return fairyTale.currentPage / fairyTale.totalPages;
     }
@@ -34,7 +34,6 @@ const MyBookShelves: React.FC = () => {
       const response = await fairyTaleApi.getFairytalesReadList(0);
       if (response.status === 200) {
         const data = response.data;
-        console.log(data);
         if (data && Array.isArray(data.content)) {
           setMyBookLists(data.content);
         }
