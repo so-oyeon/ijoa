@@ -12,6 +12,7 @@ import {
   FairyTaleListResponse,
   QuizAnswerResponse,
   ChildrenTTSListResponse,
+  TTSPlaybackResponse,
 } from "../types/fairytaleTypes";
 
 export const fairyTaleApi = {
@@ -84,4 +85,11 @@ export const fairyTaleApi = {
   getChildrenTTSList: (bookId: number) => {
     return api.get<ChildrenTTSListResponse[]>(`/tts/audios/${bookId}`);
   },
+
+ // TTS 낭독
+ getTTSPlayback: (ttsId: number, bookId: number, page: number) => {
+  return api.get<TTSPlaybackResponse>(`/tts/audios/${ttsId}/${bookId}`, {
+    params: { page },
+  });
+},
 };
