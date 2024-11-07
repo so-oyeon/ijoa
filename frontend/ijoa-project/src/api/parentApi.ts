@@ -1,5 +1,6 @@
 import api from "../lib/axios";
 import { ChildInfo, TTSFileStorageUrlInfo } from "../types/parentTypes"
+import { VoiceAlbumDateRange } from "../types/voiceAlbumTypes";
 
 export const parentApi = {
   // 자녀 프로필 목록 조회
@@ -60,5 +61,15 @@ export const parentApi = {
   // TTS 학습용 음성 파일 저장 s3 url 목록 조회
   getTTSFileStorageUrlList: (ttsId: number, data: TTSFileStorageUrlInfo) => {
     return api.post(`/tts/train/${ttsId}`, data);
+  },
+
+  // 음성 앨범 답변한 책 목록 조회
+  getVoiceAlbumBookList: (childId: number, page: number, data: VoiceAlbumDateRange) => {
+    return api.post(`/quiz/answer/list/${childId}?page=${page}`, data);
+  },
+
+  // 음성 앨범 답변한 책 상세 조회
+  getVoiceAlbumBookDetail: (childId: string, bookId: string) => {
+    return api.get(`/quiz/answer/${childId}/${bookId}`);
   },
 };

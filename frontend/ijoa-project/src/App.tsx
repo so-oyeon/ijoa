@@ -25,7 +25,7 @@ const App = () => {
       MusicManager.playLoginBgm();
     } else if (location.pathname.startsWith("/child") && isBgmEnabled) {
       MusicManager.playChildBgm();
-    } else {  
+    } else {
       MusicManager.stopBgm();
     }
   }, [location]);
@@ -73,7 +73,7 @@ const App = () => {
       <Route path="/fairytale/content/:fairytaleId" element={<FairyTaleContentPage />} />
 
       {/* 부모의 음성 앨범 상세 화면 */}
-      <Route path="/parent/voice/album/:id" element={<VoiceAlbumDetail />} />
+      <Route path="/parent/voice/album/:bookId" element={<VoiceAlbumDetail />} />
     </Routes>
   );
 };
