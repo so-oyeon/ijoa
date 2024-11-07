@@ -1,7 +1,5 @@
 package com.checkitout.ijoa.statistics.service;
 
-import static com.checkitout.ijoa.exception.ErrorCode.CHILD_NOT_BELONG_TO_PARENT;
-import static com.checkitout.ijoa.exception.ErrorCode.CHILD_NOT_FOUND;
 import static com.checkitout.ijoa.exception.ErrorCode.INVALID_INTERVAL;
 
 import com.checkitout.ijoa.child.domain.Child;
@@ -13,8 +11,8 @@ import com.checkitout.ijoa.fairytale.repository.ChildReadBooksRepository;
 import com.checkitout.ijoa.fairytale.repository.EyeTrackingDataRepository;
 import com.checkitout.ijoa.statistics.dto.CategoryStatisticsResponse;
 import com.checkitout.ijoa.statistics.dto.FocusTimeResponse;
-import com.checkitout.ijoa.statistics.dto.ReadingReportResponse;
 import com.checkitout.ijoa.statistics.dto.TypographyResponse;
+import com.checkitout.ijoa.statistics.util.StatisticsUtil;
 import com.checkitout.ijoa.user.domain.User;
 import com.checkitout.ijoa.util.SecurityUtil;
 import jakarta.persistence.Tuple;
@@ -28,7 +26,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
@@ -49,8 +46,8 @@ public class StatisticsService {
      */
     public List<FocusTimeResponse> getFocusTime(Long childId, String interval) {
         User user = securityUtil.getUserByToken();
-        Child child = getChildById(childId);
-        validateChildAccess(user, child);
+        Child child = StatisticsUtil.getChildById(childRepository, childId);
+        StatisticsUtil.validateChildAccess(user, child);
 
         List<EyeTrackingData> eyeTrackingDataList = eyeTrackingDataRepository.findTrackedDataByChild(child);
 
@@ -61,18 +58,13 @@ public class StatisticsService {
         return generateFocusTimeResponses(eyeTrackingDataList, interval);
     }
 
-    public ReadingReportResponse getReadingReport(Long childId) {
-
-        return ReadingReportResponse.test();
-    }
-
     /**
      * 집중한 단어 타이포그래피 조회
      */
     public List<TypographyResponse> getTypography(Long childId, Integer count) {
         User user = securityUtil.getUserByToken();
-        Child child = getChildById(childId);
-        validateChildAccess(user, child);
+        Child child = StatisticsUtil.getChildById(childRepository, childId);
+        StatisticsUtil.validateChildAccess(user, child);
 
         List<Tuple> wordFocusCount = eyeTrackingDataRepository.findWordFocusCount(child, count);
 
@@ -86,8 +78,8 @@ public class StatisticsService {
      */
     public List<CategoryStatisticsResponse> getCategoryStatistics(Long childId) {
         User user = securityUtil.getUserByToken();
-        Child child = getChildById(childId);
-        validateChildAccess(user, child);
+        Child child = StatisticsUtil.getChildById(childRepository, childId);
+        StatisticsUtil.validateChildAccess(user, child);
 
         List<Object[]> results = childReadBooksRepository.countByCategoryAndChild(child);
 
@@ -96,18 +88,6 @@ public class StatisticsService {
                 .collect(Collectors.toList());
     }
 
-
-    // 아이 조회
-    private Child getChildById(Long childId) {
-        return childRepository.findById(childId).orElseThrow(() -> new CustomException(CHILD_NOT_FOUND));
-    }
-
-    // 아이 접근 권한 검증
-    private void validateChildAccess(User user, Child child) {
-        if (!Objects.equals(user.getId(), child.getParent().getId())) {
-            throw new CustomException(CHILD_NOT_BELONG_TO_PARENT);
-        }
-    }
 
     // 시간 간격에 따른 집중도 데이터 처리 및 변환
     private List<FocusTimeResponse> generateFocusTimeResponses(List<EyeTrackingData> dataList, String interval) {

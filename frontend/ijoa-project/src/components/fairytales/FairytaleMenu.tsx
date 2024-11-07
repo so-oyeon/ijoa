@@ -13,8 +13,11 @@ interface FairytaleMenuProps {
   pageNums: string[];
   onPageClick: (index: number) => void;
   fairytaleCurrentPage: number;
+  handleToggleTTS: (isSoundOn: boolean) => void;
+  audioPlayRef: React.RefObject<HTMLAudioElement>;
+  ttsId: number | null;
+  previousTTSId: number | null;
 }
-
 const FairytaleMenu: React.FC<FairytaleMenuProps> = ({
   isOpen,
   onClose,
@@ -22,12 +25,22 @@ const FairytaleMenu: React.FC<FairytaleMenuProps> = ({
   pageNums,
   onPageClick,
   fairytaleCurrentPage,
+  handleToggleTTS,
+  audioPlayRef,
+  previousTTSId,
+  ttsId,
 }) => {
-  const [isSoundOn, setIsSoundOn] = useState(true); // TTS 읽어주기 on/off 상태 추적 변수
+  const [isSoundOn, setIsSoundOn] = useState(true);
   const [isExitConfirmModalOpen, setIsExitConfirmModalOpen] = useState(false);
 
-  // TTS 읽어주기 소리 on/off 토글 함수
   const toggleSound = () => {
+    if (isSoundOn && audioPlayRef.current) {
+      audioPlayRef.current.pause();
+      audioPlayRef.current.currentTime = 0;
+      handleToggleTTS(false);
+    } else {
+      handleToggleTTS(true);
+    }
     setIsSoundOn((prev) => !prev);
   };
 
@@ -39,7 +52,6 @@ const FairytaleMenu: React.FC<FairytaleMenuProps> = ({
     setIsExitConfirmModalOpen(false);
   };
 
-  // 모달이 열리지 않으면 null 반환
   if (!isOpen) return null;
 
   return (
@@ -54,14 +66,17 @@ const FairytaleMenu: React.FC<FairytaleMenuProps> = ({
 
       {/* 버튼 */}
       <div className="flex gap-36 mb-10">
-        <button className="px-6 py-3 text-white rounded-lg" onClick={toggleSound}>
-          <img
-            src={isSoundOn ? SoundButton : MuteButton}
-            alt={isSoundOn ? "소리 켜기 버튼" : "소리 끄기 버튼"}
-            className="w-40"
-          />
-          <p className="mt-3 text-xl font-semibold">책 읽어주기</p>
-        </button>
+        {(ttsId !== null || previousTTSId !== null) && (
+          <button className="px-6 py-3 text-white rounded-lg" onClick={toggleSound}>
+            <img
+              src={isSoundOn ? SoundButton : MuteButton}
+              alt={isSoundOn ? "소리 켜기 버튼" : "소리 끄기 버튼"}
+              className="w-40"
+            />
+            <p className="mt-3 text-xl font-semibold">책 읽어주기</p>
+          </button>
+        )}
+
         <button className="px-6 py-3 text-white rounded-lg" onClick={handleOpenExitConfirmModal}>
           <img src={ExitButton} alt="나가기 버튼" className="w-40" />
           <p className="mt-3 text-xl font-semibold">나가기</p>

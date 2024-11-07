@@ -38,10 +38,10 @@ public interface StatisticsApiDocumentation {
     @Operation(summary = "독서 분석 보고서 조회", description = "아이의 독서 활동을 종합적으로 분석한 보고서를 제공합니다. 독서 습관과 관련된 통계를 포함합니다.<br>독서 분석 보고서를 포함하는 ResponseEntity 객체를 반환합니다. 독서 분석 보고서 조회에 실패하면 에러 코드를 담은 ResponseEntity를 반환합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "독서 분석 보고서 조회 성공"),
-            @ApiResponse(responseCode = "204", description = "독서 분석 보고서 조회 성공 - 독서 기록이 없는 경우", content = @Content),
+            @ApiResponse(responseCode = "204", description = "독서 분석 보고서 조회 성공 - 독서 데이터가 없는 경우", content = @Content),
             @ApiResponse(responseCode = "401", description = "로그인 안함", content = @Content),
             @ApiResponse(responseCode = "403", description = "부모 ID와 연결되지 않은 아이 ID", content = @Content),
-            @ApiResponse(responseCode = "404", description = "존재하지 않는 아이 ID", content = @Content),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 부모 ID / 존재하지 않는 아이 ID", content = @Content),
             @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
     })
     public ResponseEntity<ReadingReportResponse> getReadingReport(

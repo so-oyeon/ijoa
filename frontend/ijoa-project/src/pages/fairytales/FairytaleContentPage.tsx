@@ -34,10 +34,17 @@ const FairyTaleContentPage: React.FC = () => {
   const [isQuizDataLoading, setIsQuizDataLoading] = useState(false);
   const [audioURL, setAudioURL] = useState<string | null>(null);
   const audioPlayRef = useRef<HTMLAudioElement | null>(null);
+  const [previousTTSId, setPreviousTTSId] = useState<number | null>(null);
   const [ttsId, setTTSId] = useState<number | null>(null);
 
   const bookId = fairytaleId ? parseInt(fairytaleId, 10) : 0;
   const isReading = !isCompleted && currentPage > 0;
+
+  // 책 읽어주기 설정 확인하여 모달 상태 결정
+  useEffect(() => {
+    const readAloudEnabled = localStorage.getItem("readAloudEnabled") === "true";
+    setIsTTSChoiceModalOpen(readAloudEnabled);
+  }, []);
 
   // 동화책 내용(이미지, 텍스트)을 가져오는 api 통신 함수
   const getFairyTaleContent = useCallback(
@@ -100,7 +107,9 @@ const FairyTaleContentPage: React.FC = () => {
   };
 
   const handlePlayRecordingAudio = () => {
-    getTTSPlayback();
+    if (ttsId) {
+      getTTSPlayback();
+    }
   };
 
   // 퀴즈 데이터 로딩 함수에서 로딩 상태 관리
@@ -186,6 +195,18 @@ const FairyTaleContentPage: React.FC = () => {
     setIsMenuOpen(false);
   };
 
+  // toggleSound 함수 호출 시 이전 ttsId 저장 로직을 추가하여 수정
+  const handleToggleTTS = (isSoundOn: boolean) => {
+    if (!isSoundOn) {
+      // TTS가 꺼질 때만 이전 ID를 저장
+      setPreviousTTSId(ttsId);
+      setTTSId(null); // 현재 TTS를 비활성화
+    } else {
+      // TTS가 켜질 때 이전 TTS ID를 복원
+      setTTSId(previousTTSId);
+    }
+  };
+
   // 레벨업 모달이 열릴 때 일정 시간 후에 독서 완료 모달 열기
   useEffect(() => {
     if (isLevelUpModalOpen) {
@@ -198,13 +219,14 @@ const FairyTaleContentPage: React.FC = () => {
   }, [isLevelUpModalOpen]);
 
   useEffect(() => {
-    // TTS 모달과 퀴즈 모달이 모두 닫혀 있을 때만 실행
-    if (!isTTSChoiceModalOpen && !isQuizModalOpen) {
-      getTTSPlayback(); // TTS 낭독 실행
-    }
-
     getFairyTaleContent(fairytaleCurrentPage); // 페이지 내용 로드
   }, [fairytaleCurrentPage, getFairyTaleContent, isTTSChoiceModalOpen, isQuizModalOpen]);
+
+  useEffect(() => {
+    if (ttsId !== null && !isTTSChoiceModalOpen && !isQuizModalOpen) {
+      getTTSPlayback();
+    }
+  }, [ttsId, fairytaleCurrentPage]);
 
   // QuizModal 열림 상태 변화에 따른 오디오 제어
   useEffect(() => {
@@ -216,7 +238,7 @@ const FairyTaleContentPage: React.FC = () => {
       // QuizModal과 TTSChoiceModal이 모두 닫혀 있을 때만 TTS 낭독 재생
       getTTSPlayback();
     }
-  }, [isQuizModalOpen, isTTSChoiceModalOpen, fairytaleCurrentPage])
+  }, [isQuizModalOpen, isTTSChoiceModalOpen, fairytaleCurrentPage]);
 
   return (
     <div className="relative h-screen">
@@ -224,10 +246,12 @@ const FairyTaleContentPage: React.FC = () => {
         <>
           <img src={fairytaleData.image} alt="동화책 내용 사진" className="w-screen h-screen object-cover" />
           <div className="w-[1100px] h-[160px] p-4 flex absolute bottom-10 left-1/2 transform -translate-x-1/2 justify-between items-center bg-white bg-opacity-70 rounded-2xl shadow-lg">
-            <button className="items-center ml-5" onClick={handlePlayRecordingAudio}>
-              <img src={SoundOnButton} alt="다시 듣기 버튼" className="w-20 h-20" />
-              <p className="text-sm text-[#565656] font-bold">다시 듣기</p>
-            </button>
+            {ttsId && (
+              <button className="items-center ml-5" onClick={handlePlayRecordingAudio}>
+                <img src={SoundOnButton} alt="다시 듣기 버튼" className="w-20 h-20" />
+                <p className="text-sm text-[#565656] font-bold">다시 듣기</p>
+              </button>
+            )}
 
             <div className="px-12 flex-1 text-3xl font-bold text-center fairytale-font whitespace-pre-line break-keep">
               <p className="px-12 flex-1 text-3xl font-bold text-center fairytale-font whitespace-pre-line break-keep">
@@ -264,14 +288,16 @@ const FairyTaleContentPage: React.FC = () => {
 
       {audioURL && <audio controls src={audioURL} className="hidden" ref={audioPlayRef}></audio>}
       {/* TTS 선택 모달 */}
-      {/* Fix: hasRead => 처음 읽는건지 읽었던 건지 구분 */}
-      <TTSChoiceModal
-        isOpen={isTTSChoiceModalOpen}
-        onClose={handleCloseTTSChoiceModal}
-        isReadIng={isReading}
-        bookId={bookId}
-        setTTSId={setTTSId}
-      />
+      {isTTSChoiceModalOpen && (
+        <TTSChoiceModal
+          isOpen={isTTSChoiceModalOpen}
+          onClose={handleCloseTTSChoiceModal}
+          isReadIng={isReading}
+          bookId={bookId}
+          setTTSId={setTTSId}
+          setPreviousTTSId={setPreviousTTSId}
+        />
+      )}
       {/* 레벨업 모달 */}
       <LevelUpModal isOpen={isLevelUpModalOpen} />
       {/* 독서완료 모달 */}
@@ -291,6 +317,10 @@ const FairyTaleContentPage: React.FC = () => {
         bookPages={bookPages}
         pageNums={pageNums}
         onPageClick={handlePageClick}
+        handleToggleTTS={handleToggleTTS} // 새 toggle 함수 전달
+        audioPlayRef={audioPlayRef}
+        ttsId={ttsId}
+        previousTTSId={previousTTSId}
       />
       {/* 집중 알람 모달 */}
       <FocusAlertModal isOpen={isFocusAlertModalOpen} onClose={handleCloseFocusAlertModal} />
