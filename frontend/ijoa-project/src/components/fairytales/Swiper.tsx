@@ -1,6 +1,7 @@
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
+import bookclip from "/assets/fairytales/images/bookclip.png";
 
 interface BookCoverSwiperProps {
   bookCovers: string[]; // 스와이퍼에 넣을 이미지 리스트
@@ -15,7 +16,7 @@ const BookCoverSwiper: React.FC<BookCoverSwiperProps> = ({
   bookCovers, // 책 표지 사진들
   titles, // 책 제목들
   onBookClick, // 클릭 핸들러
-  spaceBetween = 10, // 사진 간 간격
+  spaceBetween = 20, // 사진 간 간격
   slidesPerView = 3.5, // 화면 당 슬라이드 개수
   isCompleted,
 }) => {
@@ -23,15 +24,17 @@ const BookCoverSwiper: React.FC<BookCoverSwiperProps> = ({
     <Swiper spaceBetween={spaceBetween} slidesPerView={slidesPerView} onSlideChange={() => {}} onSwiper={() => {}}>
       {bookCovers.map((cover, index) => (
         <SwiperSlide key={index}>
-          <div
-            onClick={() => onBookClick(index + 1)} // index + 1로 수정하여 정확한 경로로 내비게이션
-            className="block text-center cursor-pointer"
-          >
-            <img src={cover} alt="동화책 표지 사진" className="w-full" />
-            <div className="mt-2 text-left">
+          <div onClick={() => onBookClick(index + 1)} className="block text-center cursor-pointer">
+            <div className="relative">
+              {" "}
+              <img src={cover} alt="동화책 표지 사진" className="w-[340px] h-[200px] object-cover rounded-3xl" />
+              {isCompleted[index] && (
+                <img src={bookclip} alt="책 완료 표시" className="absolute top-0 -right-2 w-20 h-20 z-50" />
+              )}
+            </div>
+            <div className="mt-2 ml-2 font-bold text-left">
               <span className="text-xl">{titles[index]}</span>
             </div>
-            <div>{isCompleted[index] ? "읽음" : "미완성"}</div>
           </div>
         </SwiperSlide>
       ))}

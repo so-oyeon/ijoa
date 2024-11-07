@@ -76,28 +76,21 @@ const FairyTaleContentPage: React.FC = () => {
     }
   };
 
-  // TTS 낭독 api
+  // TTS 낭독 API 호출 및 재생
   const getTTSPlayback = async () => {
     try {
-      // localStorage에서 TTS ID를 가져옴
-      // const ttsId = localStorage.getItem("selectedTtsId");
-
-      // ttsId가 null이 아니고, 숫자로 변환할 수 있는지 확인
       if (ttsId) {
-        // const parsedTtsId = parseInt(ttsId, 10);
-
-        // ttsId가 유효한 숫자인지 확인
         const page = fairytaleCurrentPage + 1;
-
-        // API 호출
         const response = await fairyTaleApi.getTTSPlayback(ttsId, bookId, page);
 
         if (response.status === 200 && response.data?.url) {
           const audioUrl = response.data.url;
-          setAudioURL(audioUrl);
+          setAudioURL(audioUrl); // 새로운 오디오 URL 설정
 
           setTimeout(() => {
-            audioPlayRef.current?.play();
+            if (audioPlayRef.current) {
+              audioPlayRef.current.play(); // 오디오 재생
+            }
           }, 100);
         }
       }
@@ -205,11 +198,25 @@ const FairyTaleContentPage: React.FC = () => {
   }, [isLevelUpModalOpen]);
 
   useEffect(() => {
+    // TTS 모달과 퀴즈 모달이 모두 닫혀 있을 때만 실행
     if (!isTTSChoiceModalOpen && !isQuizModalOpen) {
-      getTTSPlayback(); // TTS 모달이 닫혔을 때 호출
+      getTTSPlayback(); // TTS 낭독 실행
     }
+
     getFairyTaleContent(fairytaleCurrentPage); // 페이지 내용 로드
   }, [fairytaleCurrentPage, getFairyTaleContent, isTTSChoiceModalOpen, isQuizModalOpen]);
+
+  // QuizModal 열림 상태 변화에 따른 오디오 제어
+  useEffect(() => {
+    if (isQuizModalOpen && audioPlayRef.current) {
+      // QuizModal이 열리면 오디오를 멈추고, 현재 재생 위치를 처음으로 돌림
+      audioPlayRef.current.pause();
+      audioPlayRef.current.currentTime = 0;
+    } else if (!isQuizModalOpen && !isTTSChoiceModalOpen) {
+      // QuizModal과 TTSChoiceModal이 모두 닫혀 있을 때만 TTS 낭독 재생
+      getTTSPlayback();
+    }
+  }, [isQuizModalOpen, isTTSChoiceModalOpen, fairytaleCurrentPage])
 
   return (
     <div className="relative h-screen">
