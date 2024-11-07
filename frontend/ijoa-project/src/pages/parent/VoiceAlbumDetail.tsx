@@ -103,7 +103,11 @@ const VoiceAlbumDetail = () => {
               }}>
               {voiceList.map((voice, index) => (
                 <SwiperSlide className="flex-grow" key={index}>
-                  <VoiceAlbumDetailCard voiceInfo={voice} childId={location.state.childId} />
+                  <VoiceAlbumDetailCard
+                    voiceInfo={voice}
+                    childId={location.state.childId}
+                    voiceListLength={voiceList.length}
+                  />
                 </SwiperSlide>
               ))}
             </Swiper>
@@ -121,7 +125,7 @@ const VoiceAlbumDetail = () => {
               className={`text-6xl text-[#FBCA4E] ${isBeginning ? "opacity-50" : ""}`}
               onClick={handlePrev}
             />
-            <p className="w-20 text-4xl font-semibold text-[#5E3200]">
+            <p className="w-24 text-4xl text-center font-semibold text-[#5E3200]">
               {currentSlideIdx + 1} / {voiceList.length}
             </p>
             <TbArrowBigRightFilled

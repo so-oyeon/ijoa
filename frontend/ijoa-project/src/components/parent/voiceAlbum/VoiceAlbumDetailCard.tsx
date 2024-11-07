@@ -9,9 +9,10 @@ import loadingAnimation from "../../../lottie/footPrint-loadingAnimation.json";
 interface Props {
   voiceInfo: VoiceAlbumBookDetailInfo;
   childId: number;
+  voiceListLength: number;
 }
 
-const VoiceAlbumDetailCard = ({ voiceInfo, childId }: Props) => {
+const VoiceAlbumDetailCard = ({ voiceInfo, childId, voiceListLength }: Props) => {
   const animalImages = ["elephant", "fox", "giraffe", "hippo", "tiger", "zebra"];
   const [animalImage, setAnimalImage] = useState("");
   const [childInfo, setChildInfo] = useState<ChildInfo | null>(null);
@@ -50,7 +51,10 @@ const VoiceAlbumDetailCard = ({ voiceInfo, childId }: Props) => {
     );
 
   return (
-    <div className="h-full p-5 bg-white rounded-2xl flex flex-col justify-between space-y-5">
+    <div
+      className={`${
+        voiceListLength === 1 ? "w-1/3" : "w-full"
+      } h-full p-5 bg-white rounded-2xl flex flex-col justify-between space-y-5`}>
       {/* 동화책 그림 이미지 */}
       <img className="w-full aspect-2 rounded-xl object-cover" src={voiceInfo.image} alt="" />
 
@@ -62,7 +66,7 @@ const VoiceAlbumDetailCard = ({ voiceInfo, childId }: Props) => {
 
       {/* 퀴즈 답변 */}
       <div className="flex justify-end items-center space-x-3">
-        {/* 재생 버튼FF8067 */}
+        {/* 재생 버튼 */}
         <div className="w-10 aspect-1 bg-[#FFCA75] flex justify-center items-center rounded-full">
           <BiSolidRightArrow className="text-2xl text-white" onClick={handlePlayRecordingAudio} />
 
