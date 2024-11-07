@@ -5,20 +5,17 @@ class MusicManager {
   constructor() {
     this.loginBgm.loop = true;
     this.childBgm.loop = true;
+    this.syncWithLocalStorage();
 
-    // 페이지 로드 시 음소거 상태로 자동 재생
+    // 초기 로드 시 음소거 상태로 재생 시도
     this.loginBgm.muted = true;
     this.childBgm.muted = true;
 
-    this.syncWithLocalStorage();
-
-    // 일정 시간 이후 음소거 해제하여 소리 재생 시도
     setTimeout(() => {
       this.setMuted(false); // 음소거 해제
-    }, 3000); // 3초 후 음소거 해제
+    }, 1000); // 3초 후 음소거 해제
   }
 
-  // localStorage와 동기화하여 초기 상태 설정
   private syncWithLocalStorage() {
     const isLoginBgmPlaying = localStorage.getItem("loginBgm") === "true";
     const isChildBgmPlaying = localStorage.getItem("childBgm") === "true";
@@ -34,14 +31,14 @@ class MusicManager {
 
   public playLoginBgm() {
     this.stopBgm();
-    this.tryPlayAudio(this.loginBgm); // 재생 시도
+    this.tryPlayAudio(this.loginBgm); // 현재 위치에서 재생 시도
     localStorage.setItem("loginBgm", "true");
     localStorage.setItem("childBgm", "false");
   }
 
   public playChildBgm() {
     this.stopBgm();
-    this.tryPlayAudio(this.childBgm); // 재생 시도
+    this.tryPlayAudio(this.childBgm); // 현재 위치에서 재생 시도
     localStorage.setItem("loginBgm", "false");
     localStorage.setItem("childBgm", "true");
   }
@@ -49,8 +46,6 @@ class MusicManager {
   public stopBgm() {
     this.loginBgm.pause();
     this.childBgm.pause();
-    this.loginBgm.currentTime = 0;
-    this.childBgm.currentTime = 0;
     localStorage.setItem("loginBgm", "false");
     localStorage.setItem("childBgm", "false");
   }
@@ -63,11 +58,11 @@ class MusicManager {
   private async tryPlayAudio(audio: HTMLAudioElement) {
     try {
       await audio.play();
-    } catch  {
+    } catch {
       console.warn("자동 재생 실패, 음소거 상태로 재생 시도");
       audio.muted = true;
       await audio.play();
-      audio.muted = false;
+      audio.muted = false; // 음소거 해제
     }
   }
 }
