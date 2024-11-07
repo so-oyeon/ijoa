@@ -17,7 +17,6 @@ interface LevelModalProps {
 
 const LevelModal: React.FC<LevelModalProps> = ({ minLevel, maxLevel, totalCount, onClose }) => {
   const [currentModalLevel, setCurrentModalLevel] = useState(minLevel);
-  
 
   const goToPreviousModalLevel = () => {
     if (currentModalLevel > minLevel) {
@@ -35,46 +34,39 @@ const LevelModal: React.FC<LevelModalProps> = ({ minLevel, maxLevel, totalCount,
     const babyImage = currentModalLevel === 2 ? baby2 : currentModalLevel === 3 ? baby3 : baby4;
 
     const unlockText =
-    (currentModalLevel-1) === 1 ? (
-      <span className="whitespace-pre-line font-bold text-2xl">
-        {"다음 단계로 가려면 \n"}
-        <span className="text-purple-600 text-3xl font-bold">1권</span>을 더 읽으면 돼요!
-      </span>
-    ) :
-      (currentModalLevel-1) === 2 ? (
+      currentModalLevel - 1 === 1 ? (
         <span className="whitespace-pre-line font-bold text-2xl">
           {"다음 단계로 가려면 \n"}
-          <span className="text-purple-600 text-3xl font-bold">{6-totalCount}권</span>을 더 읽으면 돼요!
+          <span className="text-purple-600 text-3xl font-bold">1권</span>을 더 읽으면 돼요!
+        </span>
+      ) : currentModalLevel - 1 === 2 ? (
+        <span className="whitespace-pre-line font-bold text-2xl">
+          {"다음 단계로 가려면 \n"}
+          <span className="text-purple-600 text-3xl font-bold">{6 - totalCount}권</span>을 더 읽으면 돼요!
         </span>
       ) : (
         <span className="whitespace-pre-line font-bold text-2xl">
           {"다음 단계로 가려면 \n"}
-          <span className="text-purple-600 text-3xl font-bold">{11-totalCount}권</span>을 더 읽으면 돼요!
+          <span className="text-purple-600 text-3xl font-bold">{11 - totalCount}권</span>을 더 읽으면 돼요!
         </span>
       );
 
     return (
       <div className="text-center">
         <div className="relative inline-block w-64 h-64">
+        <p className="mt-5 font-semibold text-lg whitespace-pre-line">{"읽은 책 수에 따라\n나의 레벨이 올라가요!"}</p>
           <img
             src={babyImage}
             alt={`LV${currentModalLevel} 이미지`}
-            className="w-full h-full filter brightness-50 object-contain mt-6 pb-10"
+            className="w-full h-full filter brightness-50 object-contain mt-3 pb-10"
           />
           <img
             src={lock}
             alt="잠금 아이콘"
-            className="absolute"
-            style={{
-              width: "40%",
-              height: "auto",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-            }}
+            className="absolute w-[100px] h-auto top-[200px] left-1/2 transform -translate-x-1/2 -translate-y-1/2"
           />
         </div>
-        <p className="mt-4 font-semilbold text-2xl">{unlockText}</p>
+        <p className="mt-20 font-semilbold text-2xl">{unlockText}</p>
       </div>
     );
   };
@@ -82,7 +74,10 @@ const LevelModal: React.FC<LevelModalProps> = ({ minLevel, maxLevel, totalCount,
   return (
     <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20">
       <div className="relative bg-[#FCFFEA] p-10 rounded-2xl shadow-lg w-1/2 max-w-2xl text-center">
-        <h2 className="text-2xl font-semibold mb-10 blue-highlight">단계 정보</h2>
+       
+        <p className="mt-3 font-bold text-black text-2xl yellow-highlight">
+            {currentModalLevel === 2 ? "LV2.책아장" : currentModalLevel === 3 ? "LV3.책린이" : "LV4.독서왕"}
+          </p>
         <button onClick={onClose} className="absolute top-4 right-4">
           <img src={closebutton} alt="Close" />
         </button>
