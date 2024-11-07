@@ -34,4 +34,6 @@ public interface EyeTrackingDataRepository extends JpaRepository<EyeTrackingData
             LIMIT :limit
             """)
     List<Tuple> findWordFocusCount(@Param("child") Child child, @Param("limit") Integer limit);
+
+    List<EyeTrackingData> findByPageHistory_Child(Child child);
 }
