@@ -26,12 +26,14 @@ const FairytaleListPage: React.FC = () => {
   const popularTitles = popularFairyTales.map((fairyTale) => fairyTale.title);
   const popularIsCompleted = popularFairyTales.map((fairyTale) => fairyTale.isCompleted);
   const popularCurrentPage = popularFairyTales.map((fairyTale) => fairyTale.currentPage);
+  const popularTotalPage = popularFairyTales.map((fairyTale) => fairyTale.currentPage);
 
   const recommendedCovers = recommendedFairyTales.map((fairyTale) => fairyTale.image);
   const recommendedTitles = recommendedFairyTales.map((fairyTale) => fairyTale.title);
   const recommendedIsCompleted = recommendedFairyTales.map((fairyTale) => fairyTale.isCompleted);
   const recommendedCurrentPage = recommendedFairyTales.map((fairyTale) => fairyTale.currentPage);
-
+  const recommendedTotalPage = recommendedFairyTales.map((fairyTale) => fairyTale.currentPage);
+  
   // 카테고리 이름과 ID 매핑
   const tabItems = [
     { id: "COMMUNICATION", name: "의사소통" },
@@ -112,6 +114,7 @@ const FairytaleListPage: React.FC = () => {
         title: popularTitles[index],
         isCompleted: popularIsCompleted[index],
         currentPage: popularCurrentPage[index],
+        totalPages: popularTotalPage[index]
       },
     });
   };
@@ -122,6 +125,7 @@ const FairytaleListPage: React.FC = () => {
         title: recommendedTitles[index],
         isCompleted: recommendedIsCompleted[index],
         currentPage: recommendedCurrentPage[index],
+        totalPages: recommendedTotalPage[index]
       },
     });
   };
@@ -134,6 +138,7 @@ const FairytaleListPage: React.FC = () => {
           title: selectedFairyTale.title,
           isCompleted: selectedFairyTale.isCompleted,
           currentPage: selectedFairyTale.currentPage,
+          totalPages: selectedFairyTale.totalPages
         },
       });
     }

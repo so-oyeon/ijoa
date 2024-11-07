@@ -18,8 +18,8 @@ const FairyTaleContentPage: React.FC = () => {
   const { fairytaleId } = useParams<{ fairytaleId: string }>();
   const location = useLocation();
   const title = location.state?.title;
-  const isCompleted = location.state?.isCompleted;
   const currentPage = location.state?.currentPage;
+  const totalPages = location.state?.totalPages;
   const [fairytaleCurrentPage, setFairytaleCurrentPage] = useState(0);
   const [fairytaleData, setFairytaleData] = useState<FairyTaleContentResponse>();
   const [quizData, setQuizData] = useState<QuizQuestionResponse>();
@@ -38,13 +38,7 @@ const FairyTaleContentPage: React.FC = () => {
   const [ttsId, setTTSId] = useState<number | null>(null);
 
   const bookId = fairytaleId ? parseInt(fairytaleId, 10) : 0;
-  const isReading = !isCompleted && currentPage > 0;
-
-  // 책 읽어주기 설정 확인하여 모달 상태 결정
-  useEffect(() => {
-    const readAloudEnabled = localStorage.getItem("readAloudEnabled") === "true";
-    setIsTTSChoiceModalOpen(readAloudEnabled);
-  }, []);
+  const isReading = currentPage > 0 && currentPage != totalPages;
 
   // 동화책 내용(이미지, 텍스트)을 가져오는 api 통신 함수
   const getFairyTaleContent = useCallback(
@@ -206,6 +200,12 @@ const FairyTaleContentPage: React.FC = () => {
       setTTSId(previousTTSId);
     }
   };
+
+  // 책 읽어주기 설정 확인하여 모달 상태 결정
+  useEffect(() => {
+    const readAloudEnabled = localStorage.getItem("readAloudEnabled") === "true";
+    setIsTTSChoiceModalOpen(readAloudEnabled);
+  }, []);
 
   // 레벨업 모달이 열릴 때 일정 시간 후에 독서 완료 모달 열기
   useEffect(() => {
