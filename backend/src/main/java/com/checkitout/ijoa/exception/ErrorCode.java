@@ -56,7 +56,10 @@ public enum ErrorCode {
     ANSWER_NO_CONTENT(HttpStatus.NO_CONTENT, "QUIZ-002", "답변을 찾을 수 없습니다."),
 
     // statistics
-    INVALID_INTERVAL(HttpStatus.BAD_REQUEST, "STATISTICS-001", "주기는 date, day, hour 중 하나여야 합니다.");
+    INVALID_INTERVAL(HttpStatus.BAD_REQUEST, "STATISTICS-001", "주기는 date, day, hour 중 하나여야 합니다."),
+
+    // childreadbooks
+    CHILD_READ_BOOK_NOT_FOUND(HttpStatus.NOT_FOUND, "READ-001", "읽은 책을 찾을 수 없습니다.");
 
 
     private final HttpStatus httpStatus;
