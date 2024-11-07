@@ -6,6 +6,7 @@ import { ChildInfo } from "../../types/parentTypes";
 import LoadingAnimation from "../../components/common/LoadingAnimation";
 import ReadingReport from "../../components/parent/stats/ReadingReport";
 import WordCloud from "../../components/parent/stats/WordCloud";
+import ChildDropDown from "../../components/parent/ChildDropDown";
 
 const ReadingStats = () => {
   const filterText = ["일자", "요일", "시간"];
@@ -62,20 +63,7 @@ const ReadingStats = () => {
             {selectChild.name} / 만 {selectChild.age}세
           </p>
 
-          <div className="dropdown">
-            <div tabIndex={0} role="button" className="btn m-1">
-              자녀 선택
-            </div>
-            <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
-              {childList?.map((child, index) => (
-                <li key={index} onClick={() => setSelectChild(child)}>
-                  <a>
-                    {child.name} / 만 {child.age}세
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <ChildDropDown childList={childList} setSelectChild={setSelectChild} />
         </div>
 
         {/* 히스토그램 차트 */}
