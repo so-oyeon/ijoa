@@ -2,7 +2,6 @@ import React from "react";
 import LevelTemplate from "../../components/child/LevelTemplate";
 import bglv4 from "/assets/child/bg-lv4.png";
 import baby4 from "/assets/child/baby4.png";
-import profile from "/assets/child/profile.png";
 
 interface Level4Props {
   currentLevel: number;
@@ -27,9 +26,8 @@ const Level4: React.FC<Level4Props> = ({ currentLevel, totalCount })=> {
   return (
     <LevelTemplate
       bgImage={bglv4}
-      profileImage={profile}
       babyImage={baby4}
-      profileCss="bottom-56 left-[calc(20%)] transform -translate-x-1/2 w-[190px] z-10 rounded-3xl"
+      profileCss="bottom-56 left-[calc(20%+15px)] transform -translate-x-1/2 w-[190px] z-10 rounded-3xl"
       babyCss="bottom-5 left-[calc(20%+10px)] w-[180px]"
       profileAnimation={dynamicAnimation}
       babyAnimation={dynamicAnimation}

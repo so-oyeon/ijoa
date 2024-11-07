@@ -16,6 +16,12 @@
   box-shadow: inset 0 -10px 0 #67ccff;
 }
 
+/* 모달창 제목에 노랑 형광펜 효과 */
+.yellow-highlight {
+  display: inline;
+  box-shadow: inset 0 -10px 0 yellow;
+}
+
 /* 모달창 제목에 빨강 형광펜 효과 */
 .red-highlight {
   display: inline;
