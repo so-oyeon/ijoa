@@ -24,8 +24,9 @@ public interface FairytaleListApiDocumentation {
     @Operation(summary = "동화책 전체 목록 조회", description = "모든 동화책 목록을 조회할 수 있습니다. ")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(array = @ArraySchema(schema = @Schema(implementation = FairytaleListResponseDto.class)))),
-            @ApiResponse(responseCode = "400", description = "잘못된 요청"),
-            @ApiResponse(responseCode = "500", description = "서버 오류")
+            @ApiResponse(responseCode = "204", description = "동화책 없음", content = @Content),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
     })
     public ResponseEntity<Page<FairytaleListResponseDto>> fairytaleListAll(
             @Valid @ModelAttribute PageRequestDto requestDto);
@@ -33,8 +34,9 @@ public interface FairytaleListApiDocumentation {
     @Operation(summary = "카테고리별 도서 목록 조회", description = "해당 카테고리별 도서 목록을 조회 할 수 있습니다. ")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(array = @ArraySchema(schema = @Schema(implementation = FairytaleListResponseDto.class)))),
-            @ApiResponse(responseCode = "400", description = "잘못된 요청"),
-            @ApiResponse(responseCode = "500", description = "서버 오류")
+            @ApiResponse(responseCode = "204", description = "동화책 없음", content = @Content),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
     })
     public ResponseEntity<Page<FairytaleListResponseDto>> categoryFairytale(@PathVariable("category") CATEGORY category,
                                                                             @Valid @ModelAttribute PageRequestDto requestDto);

@@ -1,6 +1,8 @@
 package com.checkitout.ijoa.fairytale.service;
 
 import com.checkitout.ijoa.common.dto.PageRequestDto;
+import com.checkitout.ijoa.exception.CustomException;
+import com.checkitout.ijoa.exception.ErrorCode;
 import com.checkitout.ijoa.fairytale.domain.CATEGORY;
 import com.checkitout.ijoa.fairytale.domain.Fairytale;
 import com.checkitout.ijoa.fairytale.domain.redis.RedisReadBook;
@@ -40,6 +42,9 @@ public class FairytaleListService {
         Pageable pageable = PageRequest.of(requestDto.getPage() - 1, requestDto.getSize());
 
         Page<Fairytale> fairytales = fairytaleRepository.findAllBy(pageable);
+        if (fairytales.isEmpty()) {
+            throw new CustomException(ErrorCode.FAIRYTALE_NO_CONTENT);
+        }
 
         List<FairytaleListResponseDto> responseDtos = fairytaleMapper.toFairytaleListResponseDtoList(
                 fairytales.getContent(), childId);
@@ -57,7 +62,9 @@ public class FairytaleListService {
         Pageable pageable = PageRequest.of(requestDto.getPage() - 1, requestDto.getSize());
 
         Page<Fairytale> fairytales = fairytaleRepository.findByCategory(category, pageable);
-
+        if (fairytales.isEmpty()) {
+            throw new CustomException(ErrorCode.FAIRYTALE_NO_CONTENT);
+        }
         List<FairytaleListResponseDto> responseDtos = fairytaleMapper.toFairytaleListResponseDtoList(
                 fairytales.getContent(), childId);
 
