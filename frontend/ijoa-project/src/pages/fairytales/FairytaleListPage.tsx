@@ -18,26 +18,26 @@ const FairytaleListPage: React.FC = () => {
   const [popularFairyTales, setPopularFairyTales] = useState<FairyTaleRankByAgeItem[]>([]);
   const [recommendedFairyTales, setRecommendedFairyTales] = useState<FairyTaleRecommendationItem[]>([]);
   const [categoryFairyTales, setCategoryFairyTales] = useState<FairyTaleByCategoryListResponse | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<number>(1);
+  const [selectedCategory, setSelectedCategory] = useState<string>("COMMUNICATION");
   const [childInfo, setChildInfo] = useState<ChildInfo | null>(null);
 
   const popularCovers = popularFairyTales.map((fairyTale) => fairyTale.image);
   const popularTitles = popularFairyTales.map((fairyTale) => fairyTale.title);
   const popularIsCompleted = popularFairyTales.map((fairyTale) => fairyTale.isCompleted);
-  const popularCurrentPage = popularFairyTales.map((fairyTale) => fairyTale.currentPage)
+  const popularCurrentPage = popularFairyTales.map((fairyTale) => fairyTale.currentPage);
 
   const recommendedCovers = recommendedFairyTales.map((fairyTale) => fairyTale.image);
   const recommendedTitles = recommendedFairyTales.map((fairyTale) => fairyTale.title);
   const recommendedIsCompleted = recommendedFairyTales.map((fairyTale) => fairyTale.isCompleted);
-  const recommendedCurrentPage = recommendedFairyTales.map((fairyTale) => fairyTale.currentPage)
+  const recommendedCurrentPage = recommendedFairyTales.map((fairyTale) => fairyTale.currentPage);
 
   // 카테고리 이름과 ID 매핑
   const tabItems = [
-    { id: 1, name: "의사소통" },
-    { id: 2, name: "자연탐구" },
-    { id: 3, name: "사회관계" },
-    { id: 4, name: "예술경험" },
-    { id: 5, name: "신체운동 / 건강" },
+    { id: "COMMUNICATION", name: "의사소통" },
+    { id: "NATURE_EXPLORATION", name: "자연탐구" },
+    { id: "SOCIAL_RELATIONSHIPS", name: "사회관계" },
+    { id: "ART_EXPERIENCE", name: "예술경험" },
+    { id: "PHYSICAL_ACTIVITY_HEALTH", name: "신체운동 / 건강" },
   ];
 
   // 인기 동화책 api 통신 함수
@@ -77,12 +77,14 @@ const FairytaleListPage: React.FC = () => {
     }
   };
 
-  // 카테고리 동화책 api 통신 함수
-  const getFairyTalesByCategory = async (categoryId: number) => {
+  // 카테고리별 동화책 조회 함수
+  const getFairyTalesByCategory = async (category: string, page: number = 1, size: number = 5) => {
     try {
-      const response = await fairyTaleApi.getFairyTalesListByCategory(categoryId, 0);
+      const response = await fairyTaleApi.getFairyTalesListByCategory(category, page, size);
       if (response.status === 200) {
-        setCategoryFairyTales(response.data);
+        const data: FairyTaleByCategoryListResponse = response.data;
+        setCategoryFairyTales(data); // 전체 데이터를 상태로 설정
+        console.log("카테고리별 동화책 응답 데이터:", data); // 응답 데이터 확인
       }
     } catch (error) {
       console.error("fairytaleApi의 getFairyTalesListByCategory :", error);
@@ -106,13 +108,21 @@ const FairytaleListPage: React.FC = () => {
 
   const handlePopularBookClick = (index: number) => {
     navigate(`/fairytale/content/${popularFairyTales[index].fairytaleId}`, {
-      state: { title: popularTitles[index], isCompleted: popularIsCompleted[index], currentPage: popularCurrentPage[index]},
+      state: {
+        title: popularTitles[index],
+        isCompleted: popularIsCompleted[index],
+        currentPage: popularCurrentPage[index],
+      },
     });
   };
 
   const handleRecommendedBookClick = (index: number) => {
     navigate(`/fairytale/content/${recommendedFairyTales[index].fairytaleId}`, {
-      state: { title: recommendedTitles[index], isCompleted: recommendedIsCompleted[index], currentPage: recommendedCurrentPage[index] },
+      state: {
+        title: recommendedTitles[index],
+        isCompleted: recommendedIsCompleted[index],
+        currentPage: recommendedCurrentPage[index],
+      },
     });
   };
 
@@ -120,13 +130,17 @@ const FairytaleListPage: React.FC = () => {
     if (categoryFairyTales && categoryFairyTales.content && categoryFairyTales.content[index]) {
       const selectedFairyTale = categoryFairyTales.content[index];
       navigate(`/fairytale/content/${selectedFairyTale.fairytaleId}`, {
-        state: { title: selectedFairyTale.title, isCompleted: selectedFairyTale.isCompleted, currentPage: selectedFairyTale.currentPage },
+        state: {
+          title: selectedFairyTale.title,
+          isCompleted: selectedFairyTale.isCompleted,
+          currentPage: selectedFairyTale.currentPage,
+        },
       });
     }
   };
 
-  const handleCategoryChange = (categoryId: number) => {
-    setSelectedCategory(categoryId);
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
   };
 
   useEffect(() => {

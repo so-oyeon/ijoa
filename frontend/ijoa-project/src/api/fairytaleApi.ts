@@ -27,8 +27,8 @@ export const fairyTaleApi = {
   },
 
   // 카테고리별 동화 리스트 조회
-  getFairyTalesListByCategory: (categoryId: number, page: number) => {
-    return api.get<FairyTaleByCategoryListResponse>(`/fairytales/list/${categoryId}?page=${page}`);
+  getFairyTalesListByCategory: (category: string, page: number, size: number) => {
+    return api.get<FairyTaleByCategoryListResponse>(`/fairytales/list/${category}?page=${page}&size=${size}`);
   },
 
   // 동화책 내용 조회
@@ -73,7 +73,7 @@ export const fairyTaleApi = {
   },
 
   // 퀴즈 답변 저장
-  submitQuizAnswer: (childId: number, quizId: number, fileName: number) => {
+  submitQuizAnswer: (childId: number, quizId: number, fileName: string) => {
     return api.post<QuizAnswerResponse>(`/quiz/answer`, {
       childId,
       quizId,
@@ -86,10 +86,10 @@ export const fairyTaleApi = {
     return api.get<ChildrenTTSListResponse[]>(`/tts/audios/${bookId}`);
   },
 
- // TTS 낭독
- getTTSPlayback: (ttsId: number, bookId: number, page: number) => {
-  return api.get<TTSPlaybackResponse>(`/tts/audios/${ttsId}/${bookId}`, {
-    params: { page },
-  });
-},
+  // TTS 낭독
+  getTTSPlayback: (ttsId: number, bookId: number, page: number) => {
+    return api.get<TTSPlaybackResponse>(`/tts/audios/${ttsId}/${bookId}`, {
+      params: { page },
+    });
+  },
 };
