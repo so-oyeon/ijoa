@@ -20,10 +20,13 @@ import com.checkitout.ijoa.util.LogUtil;
 import com.checkitout.ijoa.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -41,6 +44,9 @@ public class TTSService {
     private static final String RESPONSE_TOPIC = "tts_save_audio";
     private static final String TTS_CREATE_TOPIC = "create_tts";
 //    private static final String TTS_MODEL_TOPIC =  "tts_model_path";
+
+    private final WebClient webClient;
+
 
     private final SecurityUtil securityUtil;
     private final FileService fileService;
@@ -159,27 +165,45 @@ public class TTSService {
 
     // 동화책 audio 생성
     public void createAudioBook(Long bookId, Long ttsId) {
-        //TODO tts id로 modelpath 찾기
-        String modelPath = "/home/j-k11d105/ijoa/app/run/training/GPT_XTTS_v2.0-October-29-2024_02+49PM-0000000/";
 
-        List<FairytalePageContent> contents = fairytalePageContentRepository.findByfairytaleId(bookId).orElseThrow(()-> new CustomException(ErrorCode.FAIRYTALE_NOT_FOUND));
+        TTS tts = ttsRepository.findById(ttsId).orElseThrow(() -> new CustomException(ErrorCode.TTS_NOT_FOUND));
+
+        List<FairytalePageContent> contents = fairytalePageContentRepository.findByfairytaleId(bookId).orElseThrow(() -> new CustomException(ErrorCode.FAIRYTALE_NOT_FOUND));
         List<FairytalePageResponseDto> pages = new ArrayList<>();
-        for(FairytalePageContent content : contents){
+        for (FairytalePageContent content : contents) {
             pages.add(FairytalePageResponseDto.from(content));
         }
 
         AudioBookRequestDto audioBookRequest = AudioBookRequestDto.builder()
                 .bookId(bookId)
-                .modelPath(modelPath)
+                .modelPath(tts.getTTS())
                 .pages(pages)
                 .ttsId(ttsId)
                 .build();
 
+        // fastAPI 로 메시지 전송
+        // FastAPI 호출 비동기 처리
+        webClient.post()
+                .uri("/process_book")
+                .body(Mono.just(audioBookRequest), AudioBookRequestDto.class)
+                .retrieve()
+                .bodyToMono(String.class)
+                .doOnSuccess(response -> {
+                    System.out.println("Audio book created successfully: " + response);
+                    // 필요한 경우, 이후 로직 추가
 
-        LogUtil.info("create");
-        // Kafka로 메시지 전송
-        audioBookKafkaTemplate.send(REQUEST_TOPIC, audioBookRequest);
+                })
+                .doOnError(error -> {
+                    System.err.println("Error occurred while creating audio book: " + error.getMessage());
+                    // 에러 처리 로직 추가
+                })
+                .subscribe();
     }
+
+//        LogUtil.info("create");
+//        // Kafka로 메시지 전송
+//        audioBookKafkaTemplate.send(REQUEST_TOPIC, audioBookRequest);
+
 
 /////////////////////////////////////////임시
     // 생성된 audio파일 정보 db 저장
