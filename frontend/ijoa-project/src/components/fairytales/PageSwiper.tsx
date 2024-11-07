@@ -35,7 +35,7 @@ const PageSwiper: React.FC<PageSwiperProps> = ({
                 <img
                   src={cover}
                   alt={`동화책 ${index + 1}`}
-                  className={`w-[330px] h-[200px] rounded-2xl ${
+                  className={`w-[330px] h-[200px] rounded-2xl object-cover ${
                     activeIndex === index ? "border-8 border-[#67CCFF] rounded-2xl" : "grayscale-[80%]"
                   }`}
                 />

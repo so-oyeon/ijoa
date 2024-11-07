@@ -84,7 +84,6 @@ const FairytaleListPage: React.FC = () => {
       if (response.status === 200) {
         const data: FairyTaleByCategoryListResponse = response.data;
         setCategoryFairyTales(data); // 전체 데이터를 상태로 설정
-        console.log("카테고리별 동화책 응답 데이터:", data); // 응답 데이터 확인
       }
     } catch (error) {
       console.error("fairytaleApi의 getFairyTalesListByCategory :", error);
@@ -157,7 +156,7 @@ const FairytaleListPage: React.FC = () => {
   return (
     <div>
       <div className="pt-24 pb-24 px-10 text-xl">
-        <div className="mb-10">
+        <div className="h-[300px] mb-10">
           <div className="mb-5 text-2xl font-bold">🏆 {childInfo?.age}살 인기 동화책</div>
           {popularFairyTales.length > 0 ? (
             <Swiper
@@ -170,7 +169,7 @@ const FairytaleListPage: React.FC = () => {
             <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
           )}
         </div>
-        <div className="mb-10">
+        <div className="h-[300px] mb-10">
           <div className="mb-5 text-2xl font-bold">🧸 이런 책 어때요?</div>
           {recommendedFairyTales.length > 0 ? (
             <Swiper
@@ -183,9 +182,9 @@ const FairytaleListPage: React.FC = () => {
             <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
           )}
         </div>
-        <div>
+        <div className="h-[300px]">
           <div className="flex justify-between mb-5">
-            <div className="text-2xl font-bold">🌟 카테고리 별 인기 동화책</div>
+            <div className="text-2xl font-bold">🌟 카테고리 별 동화책</div>
             <ChoiceTab tabs={tabItems} onTabClick={handleCategoryChange} />
           </div>
           {categoryFairyTales && categoryFairyTales.content && categoryFairyTales.content.length > 0 ? (
@@ -196,7 +195,7 @@ const FairytaleListPage: React.FC = () => {
               onBookClick={handleCategoryBookClick}
             />
           ) : (
-            <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
+            <Lottie className="h-full w-40 aspect-1" loop play animationData={loadingAnimation} />
           )}
         </div>
       </div>
