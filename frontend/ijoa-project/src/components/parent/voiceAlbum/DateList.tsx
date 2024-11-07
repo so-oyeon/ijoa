@@ -1,11 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
 
-const DateList = () => {
+interface Props {
+  setSelectStartDate: (date: string) => void;
+  setSelectEndDate: (date: string) => void;
+}
+
+const DateList = ({ setSelectStartDate, setSelectEndDate }: Props) => {
   const today = new Date();
   const yearList = ["24", "23", "22"];
   const [selectYear, setSelectYear] = useState<string | null>(String(today.getFullYear()).slice(2));
-  const [selectMonth, setSelectMonth] = useState(String(today.getMonth() + 1));
+  const [selectMonth, setSelectMonth] = useState(String(today.getMonth() + 1).padStart(2, "0"));
   const yearRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
   // 년도 선택 핸들러
@@ -16,7 +21,7 @@ const DateList = () => {
 
   // 월 선택 핸들러
   const handleMonth = (month: string) => {
-    setSelectMonth(month);
+    setSelectMonth(month.padStart(2, "0"));
   };
 
   // 년도 선택 시 스크롤이 항상 년도에서 시작되도록
@@ -26,8 +31,20 @@ const DateList = () => {
     }
   }, [selectYear]);
 
+  // 년도와 월이 바뀔 때마다 날짜를 "yyyy-MM-dd" 형식으로 설정
+  useEffect(() => {
+    if (selectYear && selectMonth) {
+      const startDate = `20${selectYear}-${selectMonth}-01`;
+      const lastDayOfMonth = new Date(Number(`20${selectYear}`), Number(selectMonth), 0).getDate(); // 월의 마지막 날짜 계산
+      const endDate = `20${selectYear}-${selectMonth}-${String(lastDayOfMonth).padStart(2, "0")}`;
+
+      setSelectStartDate(startDate);
+      setSelectEndDate(endDate);
+    }
+  }, [selectYear, selectMonth]);
+
   return (
-    <div className="max-h-[calc(100vh-250px)] overflow-y-auto">
+    <div className="h-80 overflow-y-auto">
       <hr className="my-3 bg-[#9E9E9E]" />
 
       {yearList.map((year, index) => (
@@ -48,25 +65,27 @@ const DateList = () => {
           {/* 월 */}
           <div>
             {selectYear === year &&
-              Array.from({ length: 12 }, (_, i) => 12 - i).map((month, index) => (
-                <div key={index}>
-                  <div
-                    className={`px-5 py-2 ${
-                      selectMonth === `${month}` ? "bg-[#FFF3D0] rounded-lg" : ""
-                    } flex justify-between items-center`}
-                    onClick={() => handleMonth(`${month}`)}>
-                    <p
-                      className={`text-lg font-semibold ${
-                        selectMonth === `${month}` ? "text-[#565656]" : "text-[#9E9E9E]"
-                      }`}>
-                      {year}년 {month}월
-                    </p>
-                    {selectMonth === `${month}` ? <IoIosArrowForward className="text-2xl text-[#FC9B35]" /> : <></>}
+              Array.from({ length: 12 }, (_, i) => 12 - i).map((month) => {
+                const monthStr = String(month).padStart(2, "0");
+                return (
+                  <div key={month}>
+                    <div
+                      className={`px-5 py-2 ${
+                        selectMonth === monthStr ? "bg-[#FFF3D0] rounded-lg" : ""
+                      } flex justify-between items-center`}
+                      onClick={() => handleMonth(monthStr)}>
+                      <p
+                        className={`text-lg font-semibold ${
+                          selectMonth === monthStr ? "text-[#565656]" : "text-[#9E9E9E]"
+                        }`}>
+                        {year}년 {monthStr}월
+                      </p>
+                      {selectMonth === monthStr ? <IoIosArrowForward className="text-2xl text-[#FC9B35]" /> : null}
+                    </div>
+                    <hr className="my-3 bg-[#9E9E9E]" />
                   </div>
-                  {/* 구분선 */}
-                  <hr className="my-3 bg-[#9E9E9E]" />
-                </div>
-              ))}
+                );
+              })}
           </div>
         </div>
       ))}
