@@ -36,6 +36,7 @@ const FairyTaleContentPage: React.FC = () => {
   const audioPlayRef = useRef<HTMLAudioElement | null>(null);
   const [previousTTSId, setPreviousTTSId] = useState<number | null>(null);
   const [ttsId, setTTSId] = useState<number | null>(null);
+  const [shownQuizPages, setShownQuizPages] = useState<number[]>([]);
 
   const bookId = fairytaleId ? parseInt(fairytaleId, 10) : 0;
   const isReading = currentPage > 0 && currentPage != totalPages;
@@ -133,7 +134,6 @@ const FairyTaleContentPage: React.FC = () => {
     }
   };
 
-  // 오른쪽 화살표 클릭 함수에서 퀴즈 모달을 열기 전에 로딩 상태를 확인
   const handleRightClick = () => {
     if (fairytaleData) {
       const isLastPage = fairytaleCurrentPage === fairytaleData.totalPages - 1;
@@ -146,10 +146,15 @@ const FairyTaleContentPage: React.FC = () => {
         getFairyTaleContent(newPage);
 
         const quizEnabled = localStorage.getItem("quizEnabled") === "true";
-        if (quizEnabled && (newPage + 1) % 5 === 0) {
+        if (
+          quizEnabled &&
+          (newPage + 1) % 5 === 0 &&
+          !shownQuizPages.includes(newPage) // 이미 나온 페이지가 아닌 경우에만 퀴즈 모달 열기
+        ) {
           const quizPageNumber = (newPage + 1) / 5;
           getQuizData(quizPageNumber); // 퀴즈 데이터 요청
           setIsQuizModalOpen(true); // 로딩 상태에 따라 모달 표시
+          setShownQuizPages((prevPages) => [...prevPages, newPage]); // 페이지 기록
         } else if (newPage === Math.floor(fairytaleData.totalPages / 2)) {
           setIsFocusAlertModalOpen(true);
         }
@@ -199,6 +204,11 @@ const FairyTaleContentPage: React.FC = () => {
       // TTS가 켜질 때 이전 TTS ID를 복원
       setTTSId(previousTTSId);
     }
+  };
+
+  const handleContinueReading = () => {
+    setFairytaleCurrentPage(currentPage - 1); //
+    setIsTTSChoiceModalOpen(false); // 모달 닫기
   };
 
   // 책 읽어주기 설정 확인하여 모달 상태 결정
@@ -296,6 +306,7 @@ const FairyTaleContentPage: React.FC = () => {
           bookId={bookId}
           setTTSId={setTTSId}
           setPreviousTTSId={setPreviousTTSId}
+          onContinueReading={handleContinueReading}
         />
       )}
       {/* 레벨업 모달 */}

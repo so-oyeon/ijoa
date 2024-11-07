@@ -10,6 +10,7 @@ interface TTSChoiceModalProps {
   bookId: number;
   setTTSId: (id: number | null) => void;
   setPreviousTTSId: (id: number) => void;
+  onContinueReading?: () => void;
 }
 
 const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({
@@ -19,6 +20,7 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({
   bookId,
   setTTSId,
   setPreviousTTSId,
+  onContinueReading
 }) => {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [ttsList, setTtsList] = useState<ChildrenTTSListResponse[]>([]);
@@ -113,7 +115,9 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({
                 className={`w-36 py-2 text-[#67CCFF] text-lg font-bold bg-white rounded-3xl border-2 border-[#67CCFF] ${
                   selectedIndex === null ? "opacity-50 cursor-not-allowed" : ""
                 }`}
-                onClick={onClose}
+                onClick={() => {
+                  if (onContinueReading) onContinueReading();
+                }}
                 disabled={selectedIndex === null}
               >
                 이어서 읽기
