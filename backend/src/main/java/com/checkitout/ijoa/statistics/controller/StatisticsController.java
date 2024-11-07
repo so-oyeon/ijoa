@@ -7,6 +7,7 @@ import com.checkitout.ijoa.statistics.dto.FocusTimeResponse;
 import com.checkitout.ijoa.statistics.dto.ReadingReportResponse;
 import com.checkitout.ijoa.statistics.dto.TypographyRequest;
 import com.checkitout.ijoa.statistics.dto.TypographyResponse;
+import com.checkitout.ijoa.statistics.service.StatisticsReportService;
 import com.checkitout.ijoa.statistics.service.StatisticsService;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/children/{childId}/statistics")
 public class StatisticsController implements StatisticsApiDocumentation {
     private final StatisticsService statisticsService;
+    private final StatisticsReportService statisticsReportService;
 
     /**
      * 집중한 시간 그래프 조회
@@ -51,9 +53,11 @@ public class StatisticsController implements StatisticsApiDocumentation {
      */
     @GetMapping("/reading-report")
     public ResponseEntity<ReadingReportResponse> getReadingReport(@PathVariable Long childId) {
-        ReadingReportResponse result = statisticsService.getReadingReport(childId);
+        ReadingReportResponse result = statisticsReportService.getReadingReport(childId);
 
-        return ResponseEntity.status(HttpStatus.OK).body(result);
+        HttpStatus status = result == null ? HttpStatus.NO_CONTENT : HttpStatus.OK;
+
+        return ResponseEntity.status(status).body(result);
     }
 
     /**
