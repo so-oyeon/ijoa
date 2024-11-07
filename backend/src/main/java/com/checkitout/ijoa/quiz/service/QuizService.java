@@ -88,7 +88,10 @@ public class QuizService {
     }
 
     public AnswerUrlResponseDto getAnswerUrl(AnswerRequestDto requestDto) {
-        String key = "anwer/" + requestDto.getChildId() + "/" + UUID.randomUUID() + "/" + requestDto.getFileName();
+
+        String currentTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
+
+        String key = "anwer/" + requestDto.getChildId() + "/"+requestDto.getQuizId() + "/" + currentTime + requestDto.getFileName();
 
         //url 발급
         String url = fileService.getPostS3Url(key);

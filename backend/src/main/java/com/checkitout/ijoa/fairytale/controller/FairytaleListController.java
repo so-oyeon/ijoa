@@ -2,6 +2,7 @@ package com.checkitout.ijoa.fairytale.controller;
 
 import com.checkitout.ijoa.common.dto.PageRequestDto;
 import com.checkitout.ijoa.fairytale.docs.FairytaleListApiDocumentation;
+import com.checkitout.ijoa.fairytale.domain.CATEGORY;
 import com.checkitout.ijoa.fairytale.dto.response.FairytaleListResponseDto;
 import com.checkitout.ijoa.fairytale.service.FairytaleListService;
 import jakarta.validation.Valid;
@@ -57,17 +58,12 @@ public class FairytaleListController implements FairytaleListApiDocumentation {
     }
 
     //카테고리별 책 목록 조회
-    @Override
-    @GetMapping("/list/{categoryId}")
-    public Page<FairytaleListResponseDto> categoryFairytale(@PathVariable("categoryId") int categoryId,
-                                                            @RequestParam("page") int page) {
-        List<FairytaleListResponseDto> fairytaleList = makeList();
+    @GetMapping("/list/{category}")
+    public ResponseEntity<Page<FairytaleListResponseDto>> categoryFairytale(@PathVariable("category") CATEGORY category,
+                                                                            @Valid @ModelAttribute PageRequestDto requestDto) {
 
-        // 페이지 요청 객체 생성
-        Pageable pageable = PageRequest.of(page, 8);
-
-        // Page 객체 생성하여 반환
-        return new PageImpl<>(fairytaleList, pageable, fairytaleList.size());
+        Page<FairytaleListResponseDto> response = fairytaleListService.getFairytalesByCategory(category, requestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     // 나이대별 인기도서
