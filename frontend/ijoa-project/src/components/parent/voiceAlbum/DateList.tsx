@@ -2,18 +2,15 @@ import { useEffect, useRef, useState } from "react";
 import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
 
 const DateList = () => {
+  const today = new Date();
   const yearList = ["24", "23", "22"];
-  const [selectYear, setSelectYear] = useState<string | null>("24");
-  const [selectMonth, setSelectMonth] = useState("12");
+  const [selectYear, setSelectYear] = useState<string | null>(String(today.getFullYear()).slice(2));
+  const [selectMonth, setSelectMonth] = useState(String(today.getMonth() + 1));
   const yearRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
   // 년도 선택 핸들러
   const handleYear = (year: string) => {
-    if (selectYear === year) {
-      setSelectYear(null);
-    } else {
-      setSelectYear(year);
-    }
+    setSelectYear(selectYear === year ? null : year);
     setSelectMonth("12");
   };
 
