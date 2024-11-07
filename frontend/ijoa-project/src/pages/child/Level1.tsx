@@ -4,7 +4,13 @@ import bglv1 from "/assets/child/bg-lv1.png";
 import baby1 from "/assets/child/baby1.png";
 import profile from "/assets/child/profile.png";
 
-const Level1: React.FC = () => {
+interface Level1Props {
+  currentLevel: number;
+  totalCount: number;
+}
+
+const Level1: React.FC<Level1Props> = ({ currentLevel, totalCount }) => {
+  const templateLevel = 1;
   const sideToSideAnimation = {
     initial: { x: 0 },
     animate: {
@@ -27,6 +33,9 @@ const Level1: React.FC = () => {
       maxLevel={4}
       profileAnimation={sideToSideAnimation}
       babyAnimation={sideToSideAnimation}
+      currentLevel={currentLevel}
+      totalCount={totalCount}
+      templateLevel={templateLevel}
     />
   );
 };

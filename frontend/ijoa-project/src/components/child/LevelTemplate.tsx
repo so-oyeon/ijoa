@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, MotionProps } from "framer-motion";
-import LevelInfoModal from "../../components/child/LevelInfoModal";
+import LevelModal from "./LevelModal";
 
 interface LevelTemplateProps {
   bgImage: string;
@@ -12,6 +12,9 @@ interface LevelTemplateProps {
   maxLevel?: number;
   babyAnimation?: MotionProps;
   profileAnimation?: MotionProps;
+  currentLevel: number;
+  totalCount: number;
+  templateLevel: number;
 }
 
 const LevelTemplate: React.FC<LevelTemplateProps> = ({
@@ -24,6 +27,9 @@ const LevelTemplate: React.FC<LevelTemplateProps> = ({
   maxLevel,
   babyAnimation,
   profileAnimation,
+  currentLevel,
+  totalCount,
+  templateLevel,
 }) => {
   const [isInfoVisible, setIsInfoVisible] = useState(false);
   const [loopAnimation, setLoopAnimation] = useState(false);
@@ -67,7 +73,7 @@ const LevelTemplate: React.FC<LevelTemplateProps> = ({
       </motion.div>
 
       {/* 정보 버튼 */}
-      {minLevel && maxLevel && (
+      {currentLevel === templateLevel && currentLevel !== 4 && (
         <button
           onClick={() => setIsInfoVisible(true)}
           className="absolute bottom-[-12px] left-10 px-2 py-3 bg-gray-700 bg-opacity-50 rounded-2xl shadow-md"
@@ -79,7 +85,13 @@ const LevelTemplate: React.FC<LevelTemplateProps> = ({
 
       {/* 모달 화면 */}
       {isInfoVisible && minLevel && maxLevel && (
-        <LevelInfoModal minLevel={minLevel} maxLevel={maxLevel} onClose={() => setIsInfoVisible(false)} />
+        <LevelModal
+          minLevel={minLevel}
+          maxLevel={maxLevel}
+          currentLevel={currentLevel}
+          totalCount={totalCount}
+          onClose={() => setIsInfoVisible(false)}
+        />
       )}
     </div>
   );
