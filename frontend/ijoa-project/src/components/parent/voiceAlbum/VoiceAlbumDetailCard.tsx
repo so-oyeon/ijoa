@@ -50,12 +50,12 @@ const VoiceAlbumDetailCard = ({ voiceInfo, childId }: Props) => {
     );
 
   return (
-    <div className="h-full p-5 bg-white rounded-2xl grid grid-rows-[2fr_1fr_1fr]">
+    <div className="h-full p-5 bg-white rounded-2xl flex flex-col justify-between space-y-5">
       {/* 동화책 그림 이미지 */}
       <img className="w-full aspect-2 rounded-xl object-cover" src={voiceInfo.image} alt="" />
 
       {/* 퀴즈 질문 */}
-      <div className="grid grid-cols-[1fr_4fr] gap-5 place-items-center">
+      <div className="grow grid grid-cols-[1fr_4fr] gap-5 place-items-center">
         <img className="w-14" src={`/assets/fairytales/images/${animalImage}.png`} alt="" />
         <p className="text-lg text-left break-keep">{voiceInfo.questionText}</p>
       </div>
