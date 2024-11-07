@@ -1,6 +1,6 @@
 import { BiSolidLeftArrow, BiSolidRightArrow } from "react-icons/bi";
 import "../../../css/VoiceAlbum.css";
-import BoiceAlbumList from "./BoiceAlbumList";
+import BoiceAlbumList from "./VoiceAlbumList";
 import { useEffect, useState } from "react";
 import { VoiceAlbumBookInfo } from "../../../types/voiceAlbumTypes";
 import { parentApi } from "../../../api/parentApi";
@@ -65,10 +65,10 @@ const VoiceAlbumList = ({ selectStartDate, selectEndDate, childId }: Props) => {
     <div className="voice-album-font w-full h-full p-1 relative">
       <div className="w-full h-full bg-[#FFD979] rounded-2xl flex justify-center items-end">
         {/* 상단 리스트 및 책장 */}
-        <BoiceAlbumList partBookList={bookList.slice(0, 4)} topSize={25} />
+        <BoiceAlbumList partBookList={bookList.slice(0, 4)} topSize={25} childId={childId} />
 
         {/* 하단 리스트 및 책장 */}
-        <BoiceAlbumList partBookList={bookList.slice(4, 8)} topSize={70} />
+        <BoiceAlbumList partBookList={bookList.slice(4, 8)} topSize={70} childId={childId} />
 
         {/* 화살표 및 쪽수 */}
         {bookList.length === 0 ? (
