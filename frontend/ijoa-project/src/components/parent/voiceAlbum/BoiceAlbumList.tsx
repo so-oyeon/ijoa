@@ -20,7 +20,7 @@ const BoiceAlbumList = ({ topSize, partBookList }: Props) => {
         className="w-full px-5 grid grid-cols-4 place-items-center absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10"
         style={{ top: `${topSize}%` }}>
         {partBookList.map((book, index) => (
-          <div className="w-40 h-48 p-3 relative" key={index} onClick={() => handleGoToVoiceAlbumDetail(index)}>
+          <div className="w-40 h-48 p-3 relative" key={index} onClick={() => handleGoToVoiceAlbumDetail(book.book_id)}>
             <div className="w-full h-full rounded-2xl shadow-[0_5px_3px_1px_rgba(0,0,0,0.2)]">
               {/* 동화책 표지 */}
               <img className="w-full h-3/5 rounded-t-2xl object-cover" src={book.image} alt="" />
