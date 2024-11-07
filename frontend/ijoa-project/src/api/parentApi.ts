@@ -67,4 +67,9 @@ export const parentApi = {
   getVoiceAlbumBookList: (childId: number, page: number, data: VoiceAlbumDateRange) => {
     return api.post(`/quiz/answer/list/${childId}?page=${page}`, data);
   },
+
+  // 음성 앨범 답변한 책 상세 조회
+  getVoiceAlbumBookDetail: (childId: string, bookId: string) => {
+    return api.get(`/quiz/answer/${childId}/${bookId}`);
+  },
 };
