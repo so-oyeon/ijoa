@@ -6,10 +6,11 @@ export interface FairyTaleRankByAgeItem {
   totalPages: number;
   currentPage: number;
   isCompleted: boolean;
+  progressRate: number;
 }
 
 export interface FairyTaleRankByAgeResponse {
-  rankList: FairyTaleRankByAgeItem[];
+  content: FairyTaleRankByAgeItem[];
 }
 
 // 사용자 맞춤 책 추천
@@ -22,7 +23,9 @@ export interface FairyTaleRecommendationItem {
   isCompleted: boolean;
 }
 
-export type FairyTaleRecommendationsResponse = FairyTaleRecommendationItem[];
+export interface FairyTaleRecommendationsResponse {
+  content: FairyTaleRecommendationItem[];
+}
 
 // 카테고리별 동화 리스트 조회
 export interface FairyTaleByCategoryItem {

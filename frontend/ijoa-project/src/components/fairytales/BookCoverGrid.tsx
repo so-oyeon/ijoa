@@ -18,31 +18,32 @@ const BookCoverGrid: React.FC<BookCoverGridProps> = ({
   progress,
 }) => {
   return (
-    <div className="grid grid-cols-4 gap-5">
-      {bookCovers.map((cover, index) => (
-        <div key={index} onClick={() => onBookClick(index)} className="relative cursor-pointer mb-5">
-          <img src={cover} alt="동화책 표지 사진" className=" relative w-full h-48 object-cover rounded-lg" />
-          {/* 진행 상태바 */}
-          {progress && progress[index] > 0 && progress[index] < 1 && (
-            <div className="absolute bottom-[35px] left-0 w-full h-2 bg-gray-300 rounded">
-              <div
-                className="h-full bg-red-400 rounded"
-                style={{ width: `${progress[index] * 100}%` }} // 진행도에 따라 상태바 너비 설정
-              ></div>
+    <div className="w-full h-full flex justify-center items-center mt-20">
+      <div className="flex gap-5 overflow-x-auto pr-10 justify-center">
+        {bookCovers.map((cover, index) => (
+          <div key={index} onClick={() => onBookClick(index)} className="relative cursor-pointer w-[350px]">
+            <img src={cover} alt="동화책 표지 사진" className="relative w-full h-[200px] object-cover rounded-lg" />
+            {/* 진행 상태바 */}
+            {progress && progress[index] > 0 && progress[index] < 1 && (
+              <div className="absolute bottom-[48px] left-0 w-full h-2 bg-gray-300 rounded">
+                <div
+                  className="h-full bg-red-400 rounded"
+                  style={{ width: `${progress[index] * 100}%` }} // 진행도에 따라 상태바 너비 설정
+                ></div>
+              </div>
+            )}
+
+            {/* 읽음 여부에 따라 우측 상단에 bookclip 이미지 표시 */}
+            {myBookReadOrNot && myBookReadOrNot[index] && (
+              <img src={bookclip} alt="읽음 표시" className="absolute -top-7 -right-3 w-20 h-20 z-10" />
+            )}
+
+            <div className="mt-5">
+              <span className="text-xl font-semibold font-['MapleLight']">{titles[index]}</span>
             </div>
-          )}
-
-          {/* 읽음 여부에 따라 우측 상단에 bookclip 이미지 표시 */}
-          {myBookReadOrNot && myBookReadOrNot[index] && (
-            <img src={bookclip} alt="읽음 표시" className="absolute -top-7 -right-3 w-20 h-20 z-10" />
-          )}
-
-          <div className="mt-2 ml-2">
-            <span className="text-lg font-semibold font-['IMRegular']">{titles[index]}</span>
           </div>
-          {/* <div>{myBookReadOrNot && myBookReadOrNot[index] ? "읽음" : "읽지 않음"}</div> */}
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 };

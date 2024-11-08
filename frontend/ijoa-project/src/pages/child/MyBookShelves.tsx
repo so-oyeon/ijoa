@@ -31,9 +31,10 @@ const MyBookShelves: React.FC = () => {
   // 읽거나 읽는 중인 책 목록을 API에서 가져오는 함수
   const getMyBookLists = async () => {
     try {
-      const response = await fairyTaleApi.getFairytalesReadList(0);
+      const response = await fairyTaleApi.getFairytalesReadList(1, 5);
       if (response.status === 200) {
         const data = response.data;
+        console.log(data);
         if (data && Array.isArray(data.content)) {
           setMyBookLists(data.content);
         }
@@ -49,18 +50,20 @@ const MyBookShelves: React.FC = () => {
   }, []);
 
   return (
-    <div className="w-full h-screen relative fairytale-font">
+    <div className="w-full h-screen relative fairytale-font overflow-hidden">
+      {" "}
+      {/* overflow-hidden 추가 */}
       {/* 배경 이미지 */}
-      <img src={hall} alt="배경" className="w-screen h-screen object-cover" />
-
+      <img src={hall} alt="배경" className="fixed top-0 left-0 w-full h-full object-cover" /> {/* fixed 속성 추가 */}
       <div className="absolute z-20">
         <CurtainAnimation />
       </div>
-
       {isCurtainOpen && (
         <>
           {/* 스와이퍼 */}
-          <p className="w-full absolute top-[100px] mb-10 font-['IMBold'] text-3xl text-white text-center">📚 내가 읽은 책이야!</p>
+          <p className="w-full absolute top-[100px] mb-10 font-['MapleLight'] text-3xl text-white text-center">
+            📚 내가 읽은 책들이야!
+          </p>
           <div className="w-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
             {/* 슬라이드 개수가 5개 이상이면 스와이퍼로, 아니라면 BookCoverGrid 컴포넌트로 조건부 렌더링 */}
             {myBookLists.length >= 5 ? (

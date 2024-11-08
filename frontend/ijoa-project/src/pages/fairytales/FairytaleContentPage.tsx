@@ -257,7 +257,7 @@ const FairyTaleContentPage: React.FC = () => {
               </button>
             )}
 
-            <div className="px-12 flex-1 text-4xl font-['IMBold'] font-bold text-center whitespace-pre-line break-keep">
+            <div className="px-12 flex-1 text-4xl font-['MapleBold'] font-bold text-center whitespace-pre-line break-keep">
                 {fairytaleData.content}
             </div>
           </div>

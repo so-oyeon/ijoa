@@ -32,7 +32,7 @@ const MyBookSwiper = ({ direction, myBookLists, myBookReadOrNot }: Props) => {
       {myBookCovers.map((cover, index) => (
         <SwiperSlide key={index}>
           <div className="block text-center cursor-pointer">
-            <img src={cover} alt={`동화책 ${index + 1}`} className="w-full" />
+            <img src={cover} alt={`동화책 ${index + 1}`} className="w-[380px] h-[200px] object-cover rounded-3xl" />
             <div className="mt-2 text-left">
               <span className="text-xl text-white line-clamp-1">{myBookTitles[index]}</span>
               <div>{myBookReadOrNot[index] ? "읽음" : "읽지 않음"}</div>
