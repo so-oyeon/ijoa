@@ -65,13 +65,6 @@ const ChildProfileList = () => {
     getChildInfoList();
   }, []);
 
-  // childList가 빈 배열이면 모달이 열리도록 유지
-  useEffect(() => {
-    if (childList && childList.length === 0) {
-      setIsCreateModal(true);
-    }
-  }, [childList]);
-
   // childList가 null이면 loading 화면 출력
   if (!childList) {
     return <LoadingAnimation />;
