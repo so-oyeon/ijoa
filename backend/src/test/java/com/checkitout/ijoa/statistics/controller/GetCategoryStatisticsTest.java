@@ -53,7 +53,7 @@ public class GetCategoryStatisticsTest {
     private static final String BASE_URL = "/children/{childId}/statistics/categories";
     private static final Integer total = 3;
     private static final CATEGORY[] category = {COMMUNICATION, ART_EXPERIENCE, NATURE_EXPLORATION};
-    private static final Long[] categoryCounts = {10L, 5L, 3L};
+    private static final Integer[] categoryCounts = {10, 5, 3};
 
     private User user;
     private Child child;
@@ -90,10 +90,8 @@ public class GetCategoryStatisticsTest {
         }
 
         for (int i = 0; i < total; i++) {
-            for (long j = 0L; j < categoryCounts[i]; j++) {
-                ChildReadBooks childReadBook = ChildReadBooks.of(null, null, true, child, fairytales[i]);
-                childReadBooksRepository.save(childReadBook);
-            }
+            ChildReadBooks childReadBook = ChildReadBooks.of(null, null, true, child, fairytales[i], categoryCounts[i]);
+            childReadBooksRepository.save(childReadBook);
         }
     }
 
