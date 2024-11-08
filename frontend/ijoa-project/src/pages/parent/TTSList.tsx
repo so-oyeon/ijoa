@@ -49,7 +49,7 @@ const TTSList = () => {
           <p className="text-[30px] font-semibold">사용자의 목소리로 학습된 TTS 목록이에요</p>
         </div>
 
-        <div className="flex justify-center space-x-10">
+        <div className="flex justify-center space-x-10 grid grid-cols-4">
           {/* TTS 목록 */}
           {parentTTSList.map((tts, index) => (
             <div className="flex flex-col items-center space-y-3" key={index}>
@@ -69,7 +69,7 @@ const TTSList = () => {
           ))}
 
           {/* TTS 추가 버튼 */}
-          {parentTTSList.length < 4 ? (
+          {/* {parentTTSList.length < 4 ? (
             <button className="flex justify-center items-center">
               <IoIosAdd
                 className="text-[100px] text-white bg-[#D9D9D9] rounded-full"
@@ -78,7 +78,14 @@ const TTSList = () => {
             </button>
           ) : (
             <></>
-          )}
+          )} */}
+
+          <button className="flex justify-center items-center">
+            <IoIosAdd
+              className="text-[100px] text-white bg-[#D9D9D9] rounded-full"
+              onClick={() => setIsProfileCreateModal(true)}
+            />
+          </button>
         </div>
       </div>
 

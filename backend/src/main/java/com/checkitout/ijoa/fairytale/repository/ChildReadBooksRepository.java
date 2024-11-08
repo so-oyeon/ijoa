@@ -23,5 +23,5 @@ public interface ChildReadBooksRepository extends JpaRepository<ChildReadBooks, 
             """)
     List<Object[]> countByCategoryAndChild(@Param("child") Child child);
 
-    Optional<ChildReadBooks> findByChildIdAndFairytaleId(Long bookId, Long childId);
+    Optional<ChildReadBooks> findByChildIdAndFairytaleId(Long childId, Long bookId);
 }
