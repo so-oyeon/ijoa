@@ -82,17 +82,17 @@ const ChildProfileCreateModal = ({ updateChildInfo, setIsUpdateModal, getChildIn
 
   // 자녀 프로필 삭제 API 함수 호출
   const handleDeleteChild = async () => {
-    try {
-      const response = await parentApi.deleteChildProfile(childId);
-      if (response.status === 200) {
-        const confirmFlag = confirm("정말 자녀 프로필을 삭제할까요?");
-        if (confirmFlag) {
+    const confirmFlag = confirm("정말 자녀 프로필을 삭제할까요?");
+    if (confirmFlag) {
+      try {
+        const response = await parentApi.deleteChildProfile(childId);
+        if (response.status === 200) {
           setIsUpdateModal(false);
           getChildInfoList();
         }
+      } catch (error) {
+        console.log("parentApi의 deleteChildProfile : ", error);
       }
-    } catch (error) {
-      console.log("parentApi의 deleteChildProfile : ", error);
     }
   };
 
