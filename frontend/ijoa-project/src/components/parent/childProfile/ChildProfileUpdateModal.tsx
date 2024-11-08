@@ -60,7 +60,6 @@ const ChildProfileCreateModal = ({ updateChildInfo, setIsUpdateModal, getChildIn
 
     // 프로필 이미지를 설정할 경우
     if (childProfileImg) {
-      console.log("호출");
       formData.append("profileImg", childProfileImg);
     }
 
@@ -109,7 +108,7 @@ const ChildProfileCreateModal = ({ updateChildInfo, setIsUpdateModal, getChildIn
           {/* 타이틀 텍스트 */}
           <div className="text-xl font-bold">
             <span className="underline underline-offset-[-3px] decoration-8 decoration-[#67CCFF]">자녀 정보</span>
-            <span>를 등록해주세요</span>
+            <span>를 입력해 주세요</span>
           </div>
 
           {/* 프로필 사진 선택 */}
