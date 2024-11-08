@@ -47,18 +47,19 @@ public class ChildReadBooks {
 
 
     public ChildReadBooks(Integer currentPage, LocalDateTime finishedAt, Boolean isCompleted,
-                          Child child, Fairytale fairytale) {
+                          Child child, Fairytale fairytale, Integer completionCount) {
         this.currentPage = currentPage;
         this.finishedAt = finishedAt;
         this.isCompleted = isCompleted;
         this.child = child;
         this.fairytale = fairytale;
+        this.completionCount = completionCount;
     }
 
     public static ChildReadBooks of(Integer currentPage, LocalDateTime finishedAt,
                                     Boolean isCompleted,
-                                    Child child, Fairytale fairytale) {
-        return new ChildReadBooks(currentPage, finishedAt, isCompleted, child, fairytale);
+                                    Child child, Fairytale fairytale, Integer completionCount) {
+        return new ChildReadBooks(currentPage, finishedAt, isCompleted, child, fairytale, completionCount);
     }
 
     public void incrementCompletionCount() {

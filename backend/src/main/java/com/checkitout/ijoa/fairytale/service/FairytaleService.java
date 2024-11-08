@@ -139,7 +139,7 @@ public class FairytaleService {
     private ChildReadBooks getOrCreateReadBook(Child child, Fairytale fairytale, Integer currentPage) {
         return childReadBooksRepository.findByChildIdAndFairytaleId(child.getId(), fairytale.getId())
                 .orElseGet(() -> {
-                    ChildReadBooks newReadBook = ChildReadBooks.of(currentPage, null, false, child, fairytale);
+                    ChildReadBooks newReadBook = ChildReadBooks.of(currentPage, null, false, child, fairytale, 0);
                     return childReadBooksRepository.save(newReadBook);
                 });
     }
