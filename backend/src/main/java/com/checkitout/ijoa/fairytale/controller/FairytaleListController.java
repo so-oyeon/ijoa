@@ -80,7 +80,7 @@ public class FairytaleListController implements FairytaleListApiDocumentation {
     public ResponseEntity<Page<FairytaleListResponseDto>> readFairytaleList(
             @Valid @ModelAttribute PageRequestDto requestDto) {
 
-        Page<FairytaleListResponseDto> response = fairytaleListService.getAllFairytale(requestDto);
+        Page<FairytaleListResponseDto> response = fairytaleListService.readFairytaleList(requestDto);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
