@@ -11,7 +11,6 @@ import com.checkitout.ijoa.fairytale.mapper.ChildReadBooksMapper;
 import com.checkitout.ijoa.fairytale.mapper.FairytaleMapper;
 import com.checkitout.ijoa.fairytale.repository.ChildReadBooksRepository;
 import com.checkitout.ijoa.fairytale.repository.FairytaleRepository;
-import com.checkitout.ijoa.fairytale.repository.redis.RedisReadBookRepository;
 import com.checkitout.ijoa.util.SecurityUtil;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -33,8 +32,6 @@ public class FairytaleListService {
     private final ChildReadBooksRepository childReadBooksRepository;
     private final ChildReadBooksMapper childReadBooksMapper;
 
-    private final RedisReadBookRepository redisReadBookRepository;
-
     private final SecurityUtil securityUtil;
 
     /**
@@ -43,7 +40,7 @@ public class FairytaleListService {
     @Transactional(readOnly = true)
     public Page<FairytaleListResponseDto> getAllFairytale(PageRequestDto requestDto) {
 
-        Long childId = securityUtil.getCurrentChildId();
+        Long childId = securityUtil.getChildByToken().getId();
         Pageable pageable = PageRequest.of(requestDto.getPage() - 1, requestDto.getSize());
 
         Page<Fairytale> fairytales = fairytaleRepository.findAllBy(pageable);
@@ -63,7 +60,7 @@ public class FairytaleListService {
     @Transactional(readOnly = true)
     public Page<FairytaleListResponseDto> getFairytalesByCategory(CATEGORY category, PageRequestDto requestDto) {
 
-        Long childId = securityUtil.getCurrentChildId();
+        Long childId = securityUtil.getChildByToken().getId();
         Pageable pageable = PageRequest.of(requestDto.getPage() - 1, requestDto.getSize());
 
         Page<Fairytale> fairytales = fairytaleRepository.findByCategory(category, pageable);
@@ -82,7 +79,7 @@ public class FairytaleListService {
     @Transactional(readOnly = true)
     public Page<FairytaleListResponseDto> readFairytaleList(PageRequestDto requestDto) {
 
-        Long childId = securityUtil.getCurrentChildId();
+        Long childId = securityUtil.getChildByToken().getId();
         Pageable pageable = PageRequest.of(requestDto.getPage() - 1, requestDto.getSize());
 
         Page<ChildReadBooks> fairytales = childReadBooksRepository.findByChildIdOrderByFairytaleIdAsc(childId,
