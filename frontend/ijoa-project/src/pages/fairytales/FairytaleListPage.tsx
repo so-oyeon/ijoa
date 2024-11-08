@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import "../../css/FairytaleContentPage.css";
 import { useNavigate } from "react-router-dom";
 import Swiper from "../../components/fairytales/Swiper"; // 스와이퍼 컴포넌트 import
 import ChoiceTab from "../../components/fairytales/ChoiceTab"; // 선택탭 컴포넌트 import
@@ -25,12 +26,14 @@ const FairytaleListPage: React.FC = () => {
   const popularTitles = popularFairyTales.map((fairyTale) => fairyTale.title);
   const popularIsCompleted = popularFairyTales.map((fairyTale) => fairyTale.isCompleted);
   const popularCurrentPage = popularFairyTales.map((fairyTale) => fairyTale.currentPage);
+  const popularTotalPage = popularFairyTales.map((fairyTale) => fairyTale.currentPage);
 
   const recommendedCovers = recommendedFairyTales.map((fairyTale) => fairyTale.image);
   const recommendedTitles = recommendedFairyTales.map((fairyTale) => fairyTale.title);
   const recommendedIsCompleted = recommendedFairyTales.map((fairyTale) => fairyTale.isCompleted);
   const recommendedCurrentPage = recommendedFairyTales.map((fairyTale) => fairyTale.currentPage);
-
+  const recommendedTotalPage = recommendedFairyTales.map((fairyTale) => fairyTale.currentPage);
+  
   // 카테고리 이름과 ID 매핑
   const tabItems = [
     { id: "COMMUNICATION", name: "의사소통" },
@@ -111,6 +114,7 @@ const FairytaleListPage: React.FC = () => {
         title: popularTitles[index],
         isCompleted: popularIsCompleted[index],
         currentPage: popularCurrentPage[index],
+        totalPages: popularTotalPage[index]
       },
     });
   };
@@ -121,6 +125,7 @@ const FairytaleListPage: React.FC = () => {
         title: recommendedTitles[index],
         isCompleted: recommendedIsCompleted[index],
         currentPage: recommendedCurrentPage[index],
+        totalPages: recommendedTotalPage[index]
       },
     });
   };
@@ -133,6 +138,7 @@ const FairytaleListPage: React.FC = () => {
           title: selectedFairyTale.title,
           isCompleted: selectedFairyTale.isCompleted,
           currentPage: selectedFairyTale.currentPage,
+          totalPages: selectedFairyTale.totalPages
         },
       });
     }
@@ -157,7 +163,7 @@ const FairytaleListPage: React.FC = () => {
     <div>
       <div className="pt-24 pb-24 px-10 text-xl">
         <div className="h-[300px] mb-10">
-          <div className="mb-5 text-2xl font-bold">🏆 {childInfo?.age}살 인기 동화책</div>
+          <div className="mb-5 text-2xl font-bold font-['IMBold']">🏆 {childInfo?.age}살 인기 동화책</div>
           {popularFairyTales.length > 0 ? (
             <Swiper
               bookCovers={popularCovers}
@@ -170,7 +176,7 @@ const FairytaleListPage: React.FC = () => {
           )}
         </div>
         <div className="h-[300px] mb-10">
-          <div className="mb-5 text-2xl font-bold">🧸 이런 책 어때요?</div>
+          <div className="mb-5 text-2xl font-bold font-['IMBold']">🧸 이런 책 어때요?</div>
           {recommendedFairyTales.length > 0 ? (
             <Swiper
               bookCovers={recommendedCovers}
@@ -184,7 +190,7 @@ const FairytaleListPage: React.FC = () => {
         </div>
         <div className="h-[300px]">
           <div className="flex justify-between mb-5">
-            <div className="text-2xl font-bold">🌟 카테고리 별 동화책</div>
+            <div className="text-2xl font-bold font-['IMBold']">🌟 카테고리 별 동화책</div>
             <ChoiceTab tabs={tabItems} onTabClick={handleCategoryChange} />
           </div>
           {categoryFairyTales && categoryFairyTales.content && categoryFairyTales.content.length > 0 ? (

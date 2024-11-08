@@ -6,9 +6,16 @@ class MusicManager {
     this.loginBgm.loop = true;
     this.childBgm.loop = true;
     this.syncWithLocalStorage();
+
+    // 초기 로드 시 음소거 상태로 재생 시도
+    this.loginBgm.muted = true;
+    this.childBgm.muted = true;
+
+    setTimeout(() => {
+      this.setMuted(false); // 음소거 해제
+    }, 1000); // 3초 후 음소거 해제
   }
 
-  // localStorage와 동기화하여 초기 상태 설정
   private syncWithLocalStorage() {
     const isLoginBgmPlaying = localStorage.getItem("loginBgm") === "true";
     const isChildBgmPlaying = localStorage.getItem("childBgm") === "true";
@@ -22,28 +29,41 @@ class MusicManager {
     }
   }
 
-  // 로그인 BGM 재생 및 상태 저장
   public playLoginBgm() {
     this.stopBgm();
-    this.loginBgm.play();
+    this.tryPlayAudio(this.loginBgm); // 현재 위치에서 재생 시도
     localStorage.setItem("loginBgm", "true");
     localStorage.setItem("childBgm", "false");
   }
 
-  // 자녀 BGM 재생 및 상태 저장
   public playChildBgm() {
     this.stopBgm();
-    this.childBgm.play();
+    this.tryPlayAudio(this.childBgm); // 현재 위치에서 재생 시도
     localStorage.setItem("loginBgm", "false");
     localStorage.setItem("childBgm", "true");
   }
 
-  // BGM 정지 및 상태 초기화
   public stopBgm() {
     this.loginBgm.pause();
     this.childBgm.pause();
     localStorage.setItem("loginBgm", "false");
     localStorage.setItem("childBgm", "false");
+  }
+
+  public setMuted(muted: boolean) {
+    this.loginBgm.muted = muted;
+    this.childBgm.muted = muted;
+  }
+
+  private async tryPlayAudio(audio: HTMLAudioElement) {
+    try {
+      await audio.play();
+    } catch {
+      console.warn("자동 재생 실패, 음소거 상태로 재생 시도");
+      audio.muted = true;
+      await audio.play();
+      audio.muted = false; // 음소거 해제
+    }
   }
 }
 

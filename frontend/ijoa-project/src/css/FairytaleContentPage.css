@@ -5,6 +5,30 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: "ElectricalSafetyBold";
+  src: url("../assets/fonts/ElectricalSafetyBold.ttf") format("truetype");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "MyLotteRegular";
+  src: url("../assets/fonts/MyLotteRegular.ttf") format("truetype");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "IMBold";
+  src: url("../assets/fonts/IMBold.ttf") format("truetype");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "IMRegular";
+  src: url("../assets/fonts/IMRegular.ttf") format("truetype");
+  font-weight: normal;
+}
+
 /* 동화책 내용 글씨체 - 배민주아체 */
 .fairytale-font {
   font-family: "BMJUA";

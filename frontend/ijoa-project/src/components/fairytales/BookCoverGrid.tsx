@@ -1,5 +1,6 @@
 import React from "react";
 import bookclip from "/assets/fairytales/images/bookclip.png";
+import "../../css/FairytaleContentPage.css";
 
 interface BookCoverGridProps {
   bookCovers: string[];
@@ -19,11 +20,11 @@ const BookCoverGrid: React.FC<BookCoverGridProps> = ({
   return (
     <div className="grid grid-cols-4 gap-5">
       {bookCovers.map((cover, index) => (
-        <div key={index} onClick={() => onBookClick(index)} className="relative  cursor-pointer">
+        <div key={index} onClick={() => onBookClick(index)} className="relative cursor-pointer mb-5">
           <img src={cover} alt="동화책 표지 사진" className=" relative w-full h-48 object-cover rounded-lg" />
           {/* 진행 상태바 */}
           {progress && progress[index] > 0 && progress[index] < 1 && (
-            <div className="absolute bottom-[60px] left-0 w-full h-2 bg-gray-300 rounded">
+            <div className="absolute bottom-[35px] left-0 w-full h-2 bg-gray-300 rounded">
               <div
                 className="h-full bg-red-400 rounded"
                 style={{ width: `${progress[index] * 100}%` }} // 진행도에 따라 상태바 너비 설정
@@ -37,9 +38,9 @@ const BookCoverGrid: React.FC<BookCoverGridProps> = ({
           )}
 
           <div className="mt-2 ml-2">
-            <span className="text-lg font-semibold">{titles[index]}</span>
+            <span className="text-lg font-semibold font-['IMRegular']">{titles[index]}</span>
           </div>
-          <div>{myBookReadOrNot && myBookReadOrNot[index] ? "읽음" : "읽지 않음"}</div>
+          {/* <div>{myBookReadOrNot && myBookReadOrNot[index] ? "읽음" : "읽지 않음"}</div> */}
         </div>
       ))}
     </div>

@@ -41,7 +41,7 @@ const TTSList = () => {
   }
 
   return (
-    <div className="min-h-screen pt-24 bg-[#EAF8FF] relative">
+    <div className="min-h-screen pt-24 bg-[#EAF8FF] relative font-['IMBold']">
       <div className="p-20 grid gap-10">
         {/* 상단 타이틀 */}
         <div className="flex justify-center items-center space-x-3">
