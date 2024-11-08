@@ -33,7 +33,7 @@ const FairytaleListPage: React.FC = () => {
   const recommendedIsCompleted = recommendedFairyTales.map((fairyTale) => fairyTale.isCompleted);
   const recommendedCurrentPage = recommendedFairyTales.map((fairyTale) => fairyTale.currentPage);
   const recommendedTotalPage = recommendedFairyTales.map((fairyTale) => fairyTale.currentPage);
-  
+
   // 카테고리 이름과 ID 매핑
   const tabItems = [
     { id: "COMMUNICATION", name: "의사소통" },
@@ -45,15 +45,13 @@ const FairytaleListPage: React.FC = () => {
 
   // 인기 동화책 api 통신 함수
   const getPopularFairyTalesByAge = async () => {
-    if (!childInfo) return;
-
     try {
-      const response = await fairyTaleApi.getFairyTalesRankByAge(childInfo?.age);
+      const response = await fairyTaleApi.getFairyTalesRankByAge(1, 8);
       if (response.status === 200) {
         const data = response.data;
 
-        if (Array.isArray(data)) {
-          setPopularFairyTales(data);
+        if (data && Array.isArray(data.content)) {
+          setPopularFairyTales(data.content);
         } else {
           console.error("유효하지 않은 데이터 구조 :", data);
         }
@@ -66,11 +64,12 @@ const FairytaleListPage: React.FC = () => {
   // 사용자 맞춤 책 추천 api 통신 함수
   const getRecommendedFairyTales = async () => {
     try {
-      const response = await fairyTaleApi.getFairyTaleRecommendations();
+      const response = await fairyTaleApi.getFairyTaleRecommendations(1, 8);
       if (response.status === 200) {
         const data = response.data;
-        if (Array.isArray(data)) {
-          setRecommendedFairyTales(data);
+
+        if (data && Array.isArray(data.content)) {
+          setRecommendedFairyTales(data.content);
         } else {
           console.error("유효하지 않은 데이터 구조 :", data);
         }
@@ -114,7 +113,7 @@ const FairytaleListPage: React.FC = () => {
         title: popularTitles[index],
         isCompleted: popularIsCompleted[index],
         currentPage: popularCurrentPage[index],
-        totalPages: popularTotalPage[index]
+        totalPages: popularTotalPage[index],
       },
     });
   };
@@ -125,7 +124,7 @@ const FairytaleListPage: React.FC = () => {
         title: recommendedTitles[index],
         isCompleted: recommendedIsCompleted[index],
         currentPage: recommendedCurrentPage[index],
-        totalPages: recommendedTotalPage[index]
+        totalPages: recommendedTotalPage[index],
       },
     });
   };
@@ -138,7 +137,7 @@ const FairytaleListPage: React.FC = () => {
           title: selectedFairyTale.title,
           isCompleted: selectedFairyTale.isCompleted,
           currentPage: selectedFairyTale.currentPage,
-          totalPages: selectedFairyTale.totalPages
+          totalPages: selectedFairyTale.totalPages,
         },
       });
     }
@@ -163,7 +162,7 @@ const FairytaleListPage: React.FC = () => {
     <div>
       <div className="pt-24 pb-24 px-10 text-xl">
         <div className="h-[300px] mb-10">
-          <div className="mb-5 text-2xl font-bold font-['IMBold']">🏆 {childInfo?.age}살 인기 동화책</div>
+          <div className="mb-5 text-2xl font-bold font-['MapleBold']">🏆 {childInfo?.age}살 인기 동화책</div>
           {popularFairyTales.length > 0 ? (
             <Swiper
               bookCovers={popularCovers}
@@ -176,7 +175,7 @@ const FairytaleListPage: React.FC = () => {
           )}
         </div>
         <div className="h-[300px] mb-10">
-          <div className="mb-5 text-2xl font-bold font-['IMBold']">🧸 이런 책 어때요?</div>
+          <div className="mb-5 text-2xl font-bold font-['MapleBold']">🧸 이런 책 어때요?</div>
           {recommendedFairyTales.length > 0 ? (
             <Swiper
               bookCovers={recommendedCovers}
@@ -190,7 +189,7 @@ const FairytaleListPage: React.FC = () => {
         </div>
         <div className="h-[300px]">
           <div className="flex justify-between mb-5">
-            <div className="text-2xl font-bold font-['IMBold']">🌟 카테고리 별 동화책</div>
+            <div className="text-2xl font-bold font-['MapleBold']">🌟 카테고리 별 동화책</div>
             <ChoiceTab tabs={tabItems} onTabClick={handleCategoryChange} />
           </div>
           {categoryFairyTales && categoryFairyTales.content && categoryFairyTales.content.length > 0 ? (

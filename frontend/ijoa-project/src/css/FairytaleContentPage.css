@@ -6,8 +6,14 @@
 }
 
 @font-face {
-  font-family: "ElectricalSafetyBold";
-  src: url("../assets/fonts/ElectricalSafetyBold.ttf") format("truetype");
+  font-family: "MapleBold";
+  src: url("../assets/fonts/MapleBold.ttf") format("truetype");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "MapleLight";
+  src: url("../assets/fonts/MapleLight.ttf") format("truetype");
   font-weight: normal;
 }
 
