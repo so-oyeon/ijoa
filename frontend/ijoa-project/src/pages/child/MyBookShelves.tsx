@@ -12,14 +12,6 @@ const MyBookShelves: React.FC = () => {
 
   const myBookReadOrNot = myBookLists.map((fairyTale) => fairyTale.isCompleted);
 
-  // 책별 진행도 계산 (currentPage / totalPage)
-  const progress = myBookLists.map((fairyTale) => {
-    if (fairyTale.totalPages && fairyTale.currentPage) {
-      return fairyTale.currentPage / fairyTale.totalPages;
-    }
-    return 0;
-  });
-
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsCurtainOpen(true);
@@ -36,7 +28,7 @@ const MyBookShelves: React.FC = () => {
         const data = response.data;
         console.log(data);
         if (data && Array.isArray(data.content)) {
-          setMyBookLists(data.content);
+          setMyBookLists(data.content); // progressRate 값을 포함한 데이터를 상태로 설정
         }
       }
     } catch (error) {
@@ -51,38 +43,43 @@ const MyBookShelves: React.FC = () => {
 
   return (
     <div className="w-full h-screen relative fairytale-font overflow-hidden">
-      {" "}
-      {/* overflow-hidden 추가 */}
-      {/* 배경 이미지 */}
-      <img src={hall} alt="배경" className="fixed top-0 left-0 w-full h-full object-cover" /> {/* fixed 속성 추가 */}
+      <img src={hall} alt="배경" className="fixed top-0 left-0 w-full h-full object-cover" />
       <div className="absolute z-20">
         <CurtainAnimation />
       </div>
       {isCurtainOpen && (
         <>
-          {/* 스와이퍼 */}
           <p className="w-full absolute top-[100px] mb-10 font-['MapleLight'] text-3xl text-white text-center">
             📚 내가 읽은 책들이야!
           </p>
           <div className="w-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
-            {/* 슬라이드 개수가 5개 이상이면 스와이퍼로, 아니라면 BookCoverGrid 컴포넌트로 조건부 렌더링 */}
             {myBookLists.length >= 5 ? (
               <>
-                <div className="mb-5">
-                  <MyBookSwiper direction={""} myBookLists={myBookLists} myBookReadOrNot={myBookReadOrNot} />
+                <div className="mt-32 mb-8">
+                  <MyBookSwiper
+                    direction={""}
+                    myBookLists={myBookLists}
+                    myBookReadOrNot={myBookReadOrNot}
+                    progress={myBookLists.map((book) => book.progressRate || 0)}
+                  />
                 </div>
                 <div>
-                  <MyBookSwiper direction={"reverse"} myBookLists={myBookLists} myBookReadOrNot={myBookReadOrNot} />
+                  <MyBookSwiper
+                    direction={"reverse"}
+                    myBookLists={myBookLists}
+                    myBookReadOrNot={myBookReadOrNot}
+                    progress={myBookLists.map((book) => book.progressRate || 0)}
+                  />
                 </div>
               </>
             ) : (
-              <div className="ml-10 text-white">
+              <div className="text-white">
                 <BookCoverGrid
                   bookCovers={myBookLists.map((book) => book.image || "")}
                   titles={myBookLists.map((book) => book.title || "")}
                   onBookClick={(index) => console.log(`Clicked book index: ${index}`)}
                   myBookReadOrNot={myBookReadOrNot}
-                  progress={progress}
+                  progress={myBookLists.map((book) => book.progressRate || 0)} // progressRate 사용
                 />
               </div>
             )}

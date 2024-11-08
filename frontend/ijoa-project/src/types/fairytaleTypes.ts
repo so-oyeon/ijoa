@@ -148,6 +148,7 @@ export interface FairyTaleReadCheckItem {
   totalPages: number;
   currentPage: number;
   isCompleted: boolean;
+  progressRate: number;
 }
 
 export interface FairyTaleReadCheckResponse {
