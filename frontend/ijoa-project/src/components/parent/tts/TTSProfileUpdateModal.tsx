@@ -51,12 +51,27 @@ const TTSProfileUpdateeModal = ({ setIsProfileUpdateModal, updateTTSInfo, getPar
     try {
       const response = await parentApi.updateTTSProfile(updateTTSInfo.id, formData);
       if (response.status === 200) {
-        console.log(response);
         setIsProfileUpdateModal(false);
         getParentTTSList();
       }
     } catch (error) {
-      console.log("", error);
+      console.log("parentApi의 updateTTSProfile : ", error);
+    }
+  };
+
+  // TTS 프로필 삭제 통신 함수
+  const handleDeleteTTS = async () => {
+    const confirmFlag = confirm("정말 TTS 프로필을 삭제할까요?");
+    if (confirmFlag) {
+      try {
+        const response = await parentApi.deleteTTSProfile(updateTTSInfo.id);
+        if (response.status === 200) {
+          setIsProfileUpdateModal(false);
+          getParentTTSList();
+        }
+      } catch (error) {
+        console.log("parentApi의 deleteTTSProfile : ", error);
+      }
     }
   };
 
@@ -113,7 +128,7 @@ const TTSProfileUpdateeModal = ({ setIsProfileUpdateModal, updateTTSInfo, getPar
           <div className="flex gap-4 justify-center items-center">
             <button
               className="px-8 py-2 text-[#FF8067] text-lg font-bold bg-white rounded-3xl border-2 border-[#FF8067]"
-              onClick={() => setIsProfileUpdateModal(false)}>
+              onClick={handleDeleteTTS}>
               삭제
             </button>
             <button
