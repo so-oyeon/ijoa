@@ -60,7 +60,7 @@ const MyBookShelves: React.FC = () => {
       {isCurtainOpen && (
         <>
           {/* 스와이퍼 */}
-          <p className="w-full absolute top-[100px] mb-10 text-3xl text-white text-center">📚 내가 읽은 책이야!</p>
+          <p className="w-full absolute top-[100px] mb-10 font-['IMBold'] text-3xl text-white text-center">📚 내가 읽은 책이야!</p>
           <div className="w-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
             {/* 슬라이드 개수가 5개 이상이면 스와이퍼로, 아니라면 BookCoverGrid 컴포넌트로 조건부 렌더링 */}
             {myBookLists.length >= 5 ? (
