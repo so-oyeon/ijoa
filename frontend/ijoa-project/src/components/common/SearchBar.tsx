@@ -11,7 +11,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onInputChange }) => {
   };
 
   return (
-    <div className="w-1/3 h-5/6 px-5 py-3 bg-white border-2 rounded-[100px] flex items-center space-x-3 font-['IMRegular']">
+    <div className="w-1/3 h-5/6 px-5 py-3 bg-white border-2 rounded-[100px] flex items-center space-x-3 font-['MapleLight']">
       <IoSearchSharp className="text-2xl cursor-pointer" />
       <input
         className="w-full text-xl font-semibold outline-none"

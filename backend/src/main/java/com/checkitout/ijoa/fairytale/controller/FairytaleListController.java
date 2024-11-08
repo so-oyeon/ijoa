@@ -67,79 +67,30 @@ public class FairytaleListController implements FairytaleListApiDocumentation {
     }
 
     // 나이대별 인기도서
-    @Override
-    @GetMapping("/rank/{age}")
-    public ResponseEntity<List<FairytaleListResponseDto>> fairytaleRankAge(@PathVariable("age") int age) {
-        List<FairytaleListResponseDto> fairytaleList = makeList();
+    @GetMapping("/rank")
+    public ResponseEntity<Page<FairytaleListResponseDto>> fairytaleRankAge(
+            @Valid @ModelAttribute PageRequestDto requestDto) {
 
-        return new ResponseEntity<>(fairytaleList, HttpStatus.OK);
-    }
-
-    // Page로 만드는 함수 API 만들면 지워질 예정
-    private List<FairytaleListResponseDto> makeReadFairytaleList() {
-        FairytaleListResponseDto fairytale = FairytaleListResponseDto.builder()
-                .fairytaleId(1)
-                .image("url")
-                .title("제목")
-                .isCompleted(true)
-                .currentPage(5)
-                .totalPages(5)
-                .build();
-        FairytaleListResponseDto fairytale1 = FairytaleListResponseDto.builder()
-                .fairytaleId(1)
-                .image("url")
-                .title("제목")
-                .isCompleted(false)
-                .currentPage(3)
-                .totalPages(5)
-                .build();
-        FairytaleListResponseDto fairytale2 = FairytaleListResponseDto.builder()
-                .fairytaleId(1)
-                .image("url")
-                .title("제목")
-                .isCompleted(true)
-                .currentPage(5)
-                .totalPages(5)
-                .build();
-        FairytaleListResponseDto fairytale3 = FairytaleListResponseDto.builder()
-                .fairytaleId(1)
-                .image("url")
-                .title("제목")
-                .isCompleted(false)
-                .currentPage(1)
-                .totalPages(5)
-                .build();
-
-        List<FairytaleListResponseDto> fairytaleList = new ArrayList<>();
-
-        fairytaleList.add(fairytale);
-        fairytaleList.add(fairytale1);
-        fairytaleList.add(fairytale2);
-        fairytaleList.add(fairytale3);
-
-        return fairytaleList;
+        Page<FairytaleListResponseDto> response = fairytaleListService.getAllFairytale(requestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     // 읽은 책 목록 조회
-    @Override
     @GetMapping("/children")
-    public Page<FairytaleListResponseDto> readFairytaleList(@RequestParam("page") int page) {
-        List<FairytaleListResponseDto> fairytaleList = makeReadFairytaleList();
+    public ResponseEntity<Page<FairytaleListResponseDto>> readFairytaleList(
+            @Valid @ModelAttribute PageRequestDto requestDto) {
 
-        // 페이지 요청 객체 생성
-        Pageable pageable = PageRequest.of(page, 8);
-
-        // Page 객체 생성하여 반환
-        return new PageImpl<>(fairytaleList, pageable, fairytaleList.size());
+        Page<FairytaleListResponseDto> response = fairytaleListService.readFairytaleList(requestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     // 책 추천
-    @Override
     @GetMapping("/recommendations")
-    public ResponseEntity<List<FairytaleListResponseDto>> recommendFairytale() {
-        List<FairytaleListResponseDto> fairytaleList = makeList();
+    public ResponseEntity<Page<FairytaleListResponseDto>> recommendFairytale(
+            @Valid @ModelAttribute PageRequestDto requestDto) {
 
-        return new ResponseEntity<>(fairytaleList, HttpStatus.OK);
+        Page<FairytaleListResponseDto> response = fairytaleListService.getAllFairytale(requestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     // 책검색
