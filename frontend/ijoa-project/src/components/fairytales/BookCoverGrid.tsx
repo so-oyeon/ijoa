@@ -18,15 +18,15 @@ const BookCoverGrid: React.FC<BookCoverGridProps> = ({
   progress,
 }) => {
   return (
-    <div className="w-full h-full flex justify-center items-center">
-      <div className="grid grid-cols-4 gap-5 justify-center">
+    <div className="w-full h-full flex justify-center items-center px-2">
+      <div className="w-full grid grid-cols-4 gap-5 justify-center">
         {bookCovers.map((cover, index) => (
-          <div key={index} onClick={() => onBookClick(index)} className="relative cursor-pointer w-[350px]">
+          <div key={index} onClick={() => onBookClick(index)} className="relative cursor-pointer">
             <img src={cover} alt="동화책 표지 사진" className="relative w-full h-[200px] object-cover rounded-lg" />
-            
+
             {/* 진행 상태바 */}
             {progress && progress[index] > 0 && progress[index] < 100 && (
-              <div className="absolute bottom-[48px] left-0 w-full h-2 bg-gray-300 rounded">
+              <div className="absolute bottom-[48px] left-0 w-full h-2 bg-gray-300 rounded-b">
                 <div
                   className="h-full bg-red-400 rounded"
                   style={{ width: `${progress[index]}%` }} // API에서 받아온 진행률 사용

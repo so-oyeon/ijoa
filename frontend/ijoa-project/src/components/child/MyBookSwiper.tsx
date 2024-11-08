@@ -30,13 +30,13 @@ const MyBookSwiper = ({ direction, myBookLists, myBookReadOrNot, progress }: Pro
       freeMode={true}
       modules={[FreeMode, Autoplay]}
       className="mySwiper"
-      style={{ overflow: 'visible' }}
+      style={{ overflow: "visible" }}
     >
       {myBookCovers.map((cover, index) => (
-        <SwiperSlide key={index}  style={{ overflow: 'visible' }}>
-          <div className="block text-center cursor-pointer">
-            <div className="relative w-[380px]">
-              <img src={cover} alt={`동화책 ${index + 1}`} className="w-full h-[200px] object-cover rounded-lg" />
+        <SwiperSlide key={index} style={{ overflow: "visible" }}>
+          <div className="block text-center cursor-pointer gap-10">
+            <div className="relative">
+              <img src={cover} alt={`동화책 ${index + 1}`} className="w-full h-[210px] object-cover rounded-lg" />
 
               {/* 읽음 여부에 따라 우측 상단에 뱃지 이미지 표시 */}
               {myBookReadOrNot[index] && (
@@ -50,7 +50,7 @@ const MyBookSwiper = ({ direction, myBookLists, myBookReadOrNot, progress }: Pro
                 </div>
               )}
             </div>
-            <div dir="ltr" className={`mt-2 text-left ${direction === "reverse" ? "ml-10" : ""}`}>
+            <div dir="ltr" className="mt-2 text-left">
               <span className="text-xl text-white line-clamp-1">{myBookTitles[index]}</span>
             </div>
           </div>
