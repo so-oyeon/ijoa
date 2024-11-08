@@ -58,6 +58,11 @@ export const parentApi = {
     return api.post(`/tts/profile`, formData);
   },
 
+  // TTS 프로필 수정
+  updateTTSProfile: (ttsId: number, formData: FormData) => {
+    return api.patch(`/tts/${ttsId}`, formData);
+  },
+
   // TTS 학습용 음성 파일 저장 s3 url 목록 조회
   getTTSFileStorageUrlList: (ttsId: number, data: TTSFileStorageUrlInfo) => {
     return api.post(`/tts/train/${ttsId}`, data);
