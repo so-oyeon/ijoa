@@ -211,12 +211,6 @@ const FairyTaleContentPage: React.FC = () => {
     setIsTTSChoiceModalOpen(false); // 모달 닫기
   };
 
-  // 책 읽어주기 설정 확인하여 모달 상태 결정
-  useEffect(() => {
-    const readAloudEnabled = localStorage.getItem("readAloudEnabled") === "true";
-    setIsTTSChoiceModalOpen(readAloudEnabled);
-  }, []);
-
   // 레벨업 모달이 열릴 때 일정 시간 후에 독서 완료 모달 열기
   useEffect(() => {
     if (isLevelUpModalOpen) {
@@ -263,7 +257,7 @@ const FairyTaleContentPage: React.FC = () => {
               </button>
             )}
 
-            <div className="px-12 flex-1 text-3xl font-bold text-center fairytale-font whitespace-pre-line break-keep">
+            <div className="px-12 flex-1 text-4xl font-['IMBold'] font-bold text-center whitespace-pre-line break-keep">
                 {fairytaleData.content}
             </div>
           </div>
