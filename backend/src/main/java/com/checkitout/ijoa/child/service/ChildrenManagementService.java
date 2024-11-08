@@ -93,8 +93,12 @@ public class ChildrenManagementService {
             child.setProfile(profileUrl);
         } else if (gender != null && (file == null || file.isEmpty())) {
             child.setGender(gender);
-            String profileUrl = determineProfileUrl(null, gender);
-            child.setProfile(profileUrl);
+
+            if (child.getProfile().equals(GIRL_PROFILE_DEFAULT_URL) || child.getProfile()
+                    .equals(BOY_PROFILE_DEFAULT_URL)) {
+                String profileUrl = determineProfileUrl(null, gender);
+                child.setProfile(profileUrl);
+            }
         }
 
         child.setUpdatedAt(LocalDateTime.now());
