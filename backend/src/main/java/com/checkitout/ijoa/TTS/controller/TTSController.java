@@ -2,6 +2,7 @@ package com.checkitout.ijoa.TTS.controller;
 
 import com.checkitout.ijoa.TTS.docs.TTSApiDocumentation;
 import com.checkitout.ijoa.TTS.dto.request.TTSProfileRequestDto;
+import com.checkitout.ijoa.TTS.dto.request.TTSProfileUpdateRequestDto;
 import com.checkitout.ijoa.TTS.dto.request.TTSTrainRequestDto;
 import com.checkitout.ijoa.TTS.dto.response.*;
 import com.checkitout.ijoa.TTS.service.TTSService;
@@ -38,7 +39,7 @@ public class TTSController implements TTSApiDocumentation {
 
     @Override
     @PatchMapping(value = "/{ttsId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> updateTTSProfile(@PathVariable("ttsId") Long ttsId, @ModelAttribute TTSProfileRequestDto requestDto) throws IOException {
+    public ResponseEntity<?> updateTTSProfile(@PathVariable("ttsId") Long ttsId, @ModelAttribute TTSProfileUpdateRequestDto requestDto) throws IOException {
         TTSProfileResponseDto responseDto = ttsService.updateTTS(ttsId,requestDto);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }

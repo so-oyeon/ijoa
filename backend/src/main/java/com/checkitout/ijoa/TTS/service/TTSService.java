@@ -3,6 +3,7 @@ package com.checkitout.ijoa.TTS.service;
 
 import com.checkitout.ijoa.TTS.domain.*;
 import com.checkitout.ijoa.TTS.dto.request.FileScriptPair;
+import com.checkitout.ijoa.TTS.dto.request.TTSProfileUpdateRequestDto;
 import com.checkitout.ijoa.TTS.dto.response.*;
 import com.checkitout.ijoa.TTS.repository.*;
 import com.checkitout.ijoa.TTS.dto.request.TTSProfileRequestDto;
@@ -91,16 +92,20 @@ public class TTSService {
     }
 
     // TTS 수정
-    public TTSProfileResponseDto updateTTS(Long ttsId,TTSProfileRequestDto requestDto) throws IOException {
+    public TTSProfileResponseDto updateTTS(Long ttsId, TTSProfileUpdateRequestDto requestDto) throws IOException {
         User user = securityUtil.getUserByToken();
 
         TTS updateTTS = ttsRepository.findById(ttsId).orElseThrow(()-> new CustomException(ErrorCode.TTS_NOT_FOUND));
         checkUser(updateTTS,user.getId());
 
-        String url = fileService.saveProfileImage(requestDto.getImage());
+        if(requestDto.getImage() != null && !requestDto.getImage().isEmpty()){
+            String url = fileService.saveProfileImage(requestDto.getImage());
+            updateTTS.setImage(url);
+        }
 
-        updateTTS.setImage(url);
-        updateTTS.setName(requestDto.getName());
+        if( requestDto.getName()!=null &&!requestDto.getName().isEmpty()){
+            updateTTS.setName(requestDto.getName());
+        }
 
         TTS updatedTTS = ttsRepository.save(updateTTS);
 

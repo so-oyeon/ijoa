@@ -1,6 +1,7 @@
 package com.checkitout.ijoa.TTS.docs;
 
 import com.checkitout.ijoa.TTS.dto.request.TTSProfileRequestDto;
+import com.checkitout.ijoa.TTS.dto.request.TTSProfileUpdateRequestDto;
 import com.checkitout.ijoa.TTS.dto.request.TTSTrainRequestDto;
 import com.checkitout.ijoa.TTS.dto.response.TTSProfileResponseDto;
 import com.checkitout.ijoa.TTS.dto.response.temp;
@@ -50,7 +51,7 @@ public interface TTSApiDocumentation {
             @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content),
             @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
     })
-    public ResponseEntity<?> updateTTSProfile(@PathVariable Long ttsId, @RequestBody TTSProfileRequestDto requestDto) throws IOException;
+    public ResponseEntity<?> updateTTSProfile(@PathVariable Long ttsId, @RequestBody TTSProfileUpdateRequestDto requestDto) throws IOException;
 
 
     @Operation(summary = "TTS 목록 조회(부모페이지)", description = "부모가 자신이 생성한 TTS 목록을 조회할 수 있습니다.")
