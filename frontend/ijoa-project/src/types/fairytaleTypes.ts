@@ -188,6 +188,7 @@ export interface FairyTaleListItem {
   totalPages: number;
   currentPage: number;
   isCompleted: boolean;
+  progressRate: number;
 }
 
 export interface FairyTaleListResponse {

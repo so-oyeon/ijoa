@@ -100,12 +100,6 @@ const InformationModal: React.FC<InformationModalProps> = ({ isOpen, onClose }) 
       }
     } catch (error) {
       console.error("정보 변경 오류:", error);
-      Swal.fire({
-        icon: "error",
-        title: "오류 발생",
-        text: "정보 변경에 실패했습니다. 다시 시도해 주세요.",
-        confirmButtonText: "확인",
-      });
     }
   };
 
@@ -168,8 +162,10 @@ const InformationModal: React.FC<InformationModalProps> = ({ isOpen, onClose }) 
         {errorMessage && <div className="text-red-500 font-semibold mb-2 mt-2">{errorMessage}</div>}
         <div className="flex justify-center mt-8">
           <button
-            className="w-1/2 h-[60px] py-3 mb-4 font-bold text-xl text-white bg-[#67CCFF] rounded-full hover:bg-blue-500"
+            className={`w-1/2 h-[60px] py-3 mb-4 font-bold text-xl text-white rounded-full 
+    ${!newPassword || !confirmPassword ? "bg-gray-400 cursor-not-allowed" : "bg-[#67CCFF] hover:bg-blue-500"}`}
             onClick={handleComplete}
+            disabled={!newPassword || !confirmPassword}
           >
             완료
           </button>
