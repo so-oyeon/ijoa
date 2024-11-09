@@ -283,6 +283,9 @@ public class TTSService {
         Fairytale fairytale = fairytaleRepository.findById(bookId).orElseThrow(()-> new CustomException(ErrorCode.FAIRYTALE_NOT_FOUND));
         List<ChildTTSListDto> childTTSListDtos = new ArrayList<>();
         for(TTS tts : ttsList){
+            if(tts.getTTS() ==null){
+                continue;
+            }
             boolean audio_created = fairytaleTTSRepository.existsByFairytaleAndTts(fairytale, tts);
             childTTSListDtos.add(ChildTTSListDto.from(tts, audio_created));
         }
