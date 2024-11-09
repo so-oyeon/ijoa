@@ -30,7 +30,7 @@ const SplashScreen: React.FC = () => {
           <span className="text-[#FF6666] ">조</span>
           <span className="text-[#339999] ">아</span>
         </div>
-        <p className="w-full text-center font-semibold text-[#565656] text-2xl tracking-widest">엄마, 아빠가 읽어주는 동화책</p>
+        <p className="w-full font-['MapleBold'] text-center font-semibold text-[#565656] text-2xl tracking-widest">엄마, 아빠가 읽어주는 동화책</p>
       </div>
 
       <div className="flex items-end absolute left-[10%] bottom-[15%] gap-[0vw] z-10">

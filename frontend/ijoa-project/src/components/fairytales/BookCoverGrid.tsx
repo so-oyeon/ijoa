@@ -29,7 +29,7 @@ const BookCoverGrid: React.FC<BookCoverGridProps> = ({
               <div className="absolute bottom-[48px] left-0 w-full h-2 bg-gray-300 rounded-b">
                 <div
                   className="h-full bg-red-400 rounded"
-                  style={{ width: `${progress[index]}%` }} // API에서 받아온 진행률 사용
+                  style={{ width: `${progress[index]}%` }}
                 ></div>
               </div>
             )}
