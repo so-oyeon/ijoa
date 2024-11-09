@@ -26,13 +26,13 @@ const FairytaleListPage: React.FC = () => {
   const popularTitles = popularFairyTales.map((fairyTale) => fairyTale.title);
   const popularIsCompleted = popularFairyTales.map((fairyTale) => fairyTale.isCompleted);
   const popularCurrentPage = popularFairyTales.map((fairyTale) => fairyTale.currentPage);
-  const popularTotalPage = popularFairyTales.map((fairyTale) => fairyTale.currentPage);
+  const popularTotalPage = popularFairyTales.map((fairyTale) => fairyTale.totalPages);
 
   const recommendedCovers = recommendedFairyTales.map((fairyTale) => fairyTale.image);
   const recommendedTitles = recommendedFairyTales.map((fairyTale) => fairyTale.title);
   const recommendedIsCompleted = recommendedFairyTales.map((fairyTale) => fairyTale.isCompleted);
   const recommendedCurrentPage = recommendedFairyTales.map((fairyTale) => fairyTale.currentPage);
-  const recommendedTotalPage = recommendedFairyTales.map((fairyTale) => fairyTale.currentPage);
+  const recommendedTotalPage = recommendedFairyTales.map((fairyTale) => fairyTale.totalPages);
 
   // 카테고리 이름과 ID 매핑
   const tabItems = [
@@ -49,7 +49,6 @@ const FairytaleListPage: React.FC = () => {
       const response = await fairyTaleApi.getFairyTalesRankByAge();
       if (response.status === 200) {
         const data = response.data;
-        console.log(data);
 
         if (data && Array.isArray(data)) {
           setPopularFairyTales(data);
