@@ -71,7 +71,6 @@ public class FairytaleListController implements FairytaleListApiDocumentation {
      *
      * @return 아이의 나이대에서 많이 본 동화책 목록을 포함하는 ResponseEntity 객체를 반환합니다. 나이대 인기 도서 조회에 실패하면 에러 코드를 담은 ResponseEntity를 반환합니다.
      */
-    @Override
     @GetMapping("/rank")
     public ResponseEntity<List<FairytaleListResponseDto>> getFairytaleRank() {
         List<FairytaleListResponseDto> fairytaleList = fairytaleListService.getFairytaleRank();
@@ -79,51 +78,6 @@ public class FairytaleListController implements FairytaleListApiDocumentation {
         HttpStatus status = fairytaleList.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK;
 
         return new ResponseEntity<>(fairytaleList, status);
-    }
-
-    // Page로 만드는 함수 API 만들면 지워질 예정
-    private List<FairytaleListResponseDto> makeReadFairytaleList() {
-        FairytaleListResponseDto fairytale = FairytaleListResponseDto.builder()
-                .fairytaleId(1)
-                .image("url")
-                .title("제목")
-                .isCompleted(true)
-                .currentPage(5)
-                .totalPages(5)
-                .build();
-        FairytaleListResponseDto fairytale1 = FairytaleListResponseDto.builder()
-                .fairytaleId(1)
-                .image("url")
-                .title("제목")
-                .isCompleted(false)
-                .currentPage(3)
-                .totalPages(5)
-                .build();
-        FairytaleListResponseDto fairytale2 = FairytaleListResponseDto.builder()
-                .fairytaleId(1)
-                .image("url")
-                .title("제목")
-                .isCompleted(true)
-                .currentPage(5)
-                .totalPages(5)
-                .build();
-        FairytaleListResponseDto fairytale3 = FairytaleListResponseDto.builder()
-                .fairytaleId(1)
-                .image("url")
-                .title("제목")
-                .isCompleted(false)
-                .currentPage(1)
-                .totalPages(5)
-                .build();
-
-        List<FairytaleListResponseDto> fairytaleList = new ArrayList<>();
-
-        fairytaleList.add(fairytale);
-        fairytaleList.add(fairytale1);
-        fairytaleList.add(fairytale2);
-        fairytaleList.add(fairytale3);
-
-        return fairytaleList;
     }
 
     // 읽은 책 목록 조회

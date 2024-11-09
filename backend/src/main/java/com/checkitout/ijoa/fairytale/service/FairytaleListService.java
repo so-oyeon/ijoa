@@ -81,7 +81,7 @@ public class FairytaleListService {
     /**
      * 나이대 인기 도서 조회
      */
-    @Transactional
+    @Transactional(readOnly = true)
     public List<FairytaleListResponseDto> getFairytaleRank() {
         Child child = securityUtil.getChildByToken();
 
