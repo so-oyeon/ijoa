@@ -46,12 +46,13 @@ const FairytaleListPage: React.FC = () => {
   // 인기 동화책 api 통신 함수
   const getPopularFairyTalesByAge = async () => {
     try {
-      const response = await fairyTaleApi.getFairyTalesRankByAge(1, 8);
+      const response = await fairyTaleApi.getFairyTalesRankByAge();
       if (response.status === 200) {
         const data = response.data;
+        console.log(data);
 
-        if (data && Array.isArray(data.content)) {
-          setPopularFairyTales(data.content);
+        if (data && Array.isArray(data)) {
+          setPopularFairyTales(data);
         } else {
           console.error("유효하지 않은 데이터 구조 :", data);
         }
@@ -169,6 +170,7 @@ const FairytaleListPage: React.FC = () => {
               titles={popularTitles}
               isCompleted={popularFairyTales.map((fairyTale) => fairyTale.isCompleted)}
               onBookClick={handlePopularBookClick}
+              progress={popularFairyTales?.map((book) => book.progressRate || 0)}
             />
           ) : (
             <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
@@ -182,6 +184,7 @@ const FairytaleListPage: React.FC = () => {
               titles={recommendedTitles}
               isCompleted={recommendedFairyTales.map((fairyTale) => fairyTale.isCompleted)}
               onBookClick={handleRecommendedBookClick}
+              progress={recommendedFairyTales?.map((book) => book.progressRate || 0)}
             />
           ) : (
             <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
@@ -198,6 +201,7 @@ const FairytaleListPage: React.FC = () => {
               titles={categoryFairyTales.content.map((fairyTale) => fairyTale.title)}
               isCompleted={categoryFairyTales.content.map((fairyTale) => fairyTale.isCompleted)}
               onBookClick={handleCategoryBookClick}
+              progress={categoryFairyTales.content.map((fairyTale) => fairyTale.progressRate || 0)}
             />
           ) : (
             <Lottie className="h-full w-40 aspect-1" loop play animationData={loadingAnimation} />

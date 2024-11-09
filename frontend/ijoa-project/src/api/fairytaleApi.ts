@@ -17,8 +17,8 @@ import {
 
 export const fairyTaleApi = {
   // 나이별 인기 도서 조회
-  getFairyTalesRankByAge: (page: number, size: number) => {
-    return api.get<FairyTaleRankByAgeResponse>(`/fairytales/rank?page=${page}&size=${size}`);
+  getFairyTalesRankByAge: () => {
+    return api.get<FairyTaleRankByAgeResponse>(`/fairytales/rank`);
   },
 
   // 사용자 맞춤 책 추천 조회

@@ -224,6 +224,7 @@ const FairyTaleContentPage: React.FC = () => {
 
   useEffect(() => {
     getFairyTaleContent(fairytaleCurrentPage); // 페이지 내용 로드
+    console.log(fairytaleData)
   }, [fairytaleCurrentPage, getFairyTaleContent, isTTSChoiceModalOpen, isQuizModalOpen]);
 
   useEffect(() => {
