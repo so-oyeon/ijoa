@@ -8,16 +8,25 @@ import { ParentTTSInfo } from "../../types/parentTypes";
 import LoadingAnimation from "../../components/common/LoadingAnimation";
 import TTSProfileCreateModal from "../../components/parent/tts/TTSProfileCreateModal";
 import TTSCreateCompleteModal from "../../components/parent/tts/TTSCreateCompleteModal";
+import TTSProfileUpdateeModal from "../../components/parent/tts/TTSProfileUpdateModal";
 
 const TTSList = () => {
   const [isProfileCreateModal, setIsProfileCreateModal] = useState(false);
+  const [isProfileUpdateModal, setIsProfileUpdateModal] = useState(false);
   const [isCreateGuideModal, setIsCreateGuideModal] = useState(false);
   const [isCreateModal, setIsCreateModal] = useState(false);
   const [isCreateCompleted, setIsCreateCompleted] = useState(false);
   const [parentTTSList, setParentTTSList] = useState<ParentTTSInfo[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [ttsId, setTTSId] = useState<number | null>(null);
+  const [updateTTSInfo, setUpdateTTSInfo] = useState<ParentTTSInfo | null>(null);
 
+  // TTS 프로필 수정 모달 열기
+  const handleUpdateTTS = (ttsInfo: ParentTTSInfo) => {
+    setUpdateTTSInfo(ttsInfo);
+  };
+
+  // TTS 프로필 목록 조회 API 통신 함수
   const getParentTTSList = async () => {
     try {
       setIsLoading(true);
@@ -36,6 +45,11 @@ const TTSList = () => {
     getParentTTSList();
   }, []);
 
+  // 수정할 TTS 프로필 데이터가 state에 저장되면 모달 열기
+  useEffect(() => {
+    if (updateTTSInfo) setIsProfileUpdateModal(true);
+  }, [updateTTSInfo]);
+
   if (!parentTTSList || isLoading) {
     return <LoadingAnimation />;
   }
@@ -44,12 +58,19 @@ const TTSList = () => {
     <div className="min-h-screen pt-24 bg-[#EAF8FF] relative font-['IMBold']">
       <div className="p-20 grid gap-10">
         {/* 상단 타이틀 */}
-        <div className="flex justify-center items-center space-x-3">
-          <img className="w-10 aspect-1" src="/assets/header/parent/tts-icon.png" alt="" />
-          <p className="text-[30px] font-semibold">사용자의 목소리로 학습된 TTS 목록이에요</p>
+        <div className="flex flex-col justify-center items-center space-y-3">
+          <div className="flex space-x-3">
+            <img className="w-10 aspect-1" src="/assets/header/parent/tts-icon.png" alt="" />
+            <p className="text-[30px] font-semibold">
+              {TTSList.length === 0
+                ? "사용자의 목소리로 TTS를 만들어주세요"
+                : "사용자의 목소리로 학습된 TTS 목록이에요"}
+            </p>
+          </div>
+          <p className="text-lg">TTS 프로필은 4개까지 만들 수 있어요</p>
         </div>
 
-        <div className="flex justify-center space-x-10 grid grid-cols-4">
+        <div className="flex justify-center space-x-10">
           {/* TTS 목록 */}
           {parentTTSList.map((tts, index) => (
             <div className="flex flex-col items-center space-y-3" key={index}>
@@ -59,7 +80,9 @@ const TTSList = () => {
                   src={tts.image_url}
                   alt=""
                 />
-                <div className="w-10 aspect-1 bg-white rounded-full bg-opacity-50 shadow-[1px_3px_2px_0_rgba(0,0,0,0.2)] flex justify-center items-center absolute top-0 right-0">
+                <div
+                  className="w-10 aspect-1 bg-white rounded-full bg-opacity-50 shadow-[1px_3px_2px_0_rgba(0,0,0,0.2)] flex justify-center items-center absolute top-0 right-0"
+                  onClick={() => handleUpdateTTS(tts)}>
                   <TbPencilMinus className="text-2xl" />
                 </div>
               </div>
@@ -69,7 +92,7 @@ const TTSList = () => {
           ))}
 
           {/* TTS 추가 버튼 */}
-          {/* {parentTTSList.length < 4 ? (
+          {parentTTSList.length < 4 ? (
             <button className="flex justify-center items-center">
               <IoIosAdd
                 className="text-[100px] text-white bg-[#D9D9D9] rounded-full"
@@ -78,14 +101,7 @@ const TTSList = () => {
             </button>
           ) : (
             <></>
-          )} */}
-
-          <button className="flex justify-center items-center">
-            <IoIosAdd
-              className="text-[100px] text-white bg-[#D9D9D9] rounded-full"
-              onClick={() => setIsProfileCreateModal(true)}
-            />
-          </button>
+          )}
         </div>
       </div>
 
@@ -95,6 +111,17 @@ const TTSList = () => {
           setIsProfileCreateModal={setIsProfileCreateModal}
           setIsCreateCompleted={setIsCreateCompleted}
           setTTSId={setTTSId}
+        />
+      ) : (
+        <></>
+      )}
+
+      {/* TTS 프로필 수정 모달 */}
+      {isProfileUpdateModal && updateTTSInfo ? (
+        <TTSProfileUpdateeModal
+          setIsProfileUpdateModal={setIsProfileUpdateModal}
+          updateTTSInfo={updateTTSInfo}
+          getParentTTSList={getParentTTSList}
         />
       ) : (
         <></>

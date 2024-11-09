@@ -74,7 +74,7 @@ const TTSProfileCreateModal = ({ setIsProfileCreateModal, setIsCreateCompleted, 
           className="w-20 h-20 border-4 border-[#9E9E9E] rounded-full flex justify-center items-center relative"
           onClick={handleUploadClick}>
           {ttsProfileImgString ? (
-            <img className="w-full aspect-1 rounded-full" src={`${ttsProfileImgString}`} alt="" />
+            <img className="w-full aspect-1 rounded-full object-cover" src={`${ttsProfileImgString}`} alt="" />
           ) : (
             <CiCamera className="text-[50px]" />
           )}

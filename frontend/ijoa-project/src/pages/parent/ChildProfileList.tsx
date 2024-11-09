@@ -47,6 +47,9 @@ const ChildProfileList = () => {
       if (response.status === 200) {
         setChildList(response.data);
       }
+      if (response.status === 204) {
+        setChildList([]);
+      }
     } catch (error) {
       console.log("parentApi의 getChildProfileList : ", error);
     }
@@ -73,10 +76,13 @@ const ChildProfileList = () => {
         {/* 상단 타이틀 */}
         <div className="flex justify-center items-center space-x-3 font-['IMBold']">
           <img className="w-10 aspect-1" src="/assets/header/parent/child-icon.png" alt="" />
-          <p className="text-[30px] font-semibold">자녀를 선택해주세요</p>
+          <p className="text-[30px] font-semibold">
+            {childList.length === 0 ? "자녀 프로필을 만들어주세요" : "자녀 프로필을 선택해 주세요"}
+          </p>
         </div>
 
-        <div className="grid grid-cols-3 gap-y-12 font-['IMBold']">
+        <div
+          className={`${childList.length === 0 ? "flex justify-center" : "grid grid-cols-3"} gap-y-12 font-['IMBold']`}>
           {/* 자녀 목록 */}
           {childList.map((child, index) => (
             <div className="flex flex-col items-center space-y-3" key={index}>
