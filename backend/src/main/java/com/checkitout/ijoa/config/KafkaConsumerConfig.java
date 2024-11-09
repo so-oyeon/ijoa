@@ -1,5 +1,6 @@
 package com.checkitout.ijoa.config;
 
+import com.checkitout.ijoa.TTS.dto.request.AudioPathDto;
 import com.checkitout.ijoa.TTS.dto.request.ModelPathDto;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -44,4 +45,20 @@ public class KafkaConsumerConfig {
         return factory;
     }
 
+    // audioPath 전용 ConsumerFactory 및 KafkaListenerContainerFactory 설정
+    @Bean
+    public ConsumerFactory<String, AudioPathDto> audioPathConsumerFactory() {
+        return new DefaultKafkaConsumerFactory<>(
+                consumerConfigs(),
+                new ErrorHandlingDeserializer<>(new StringDeserializer()),
+                new ErrorHandlingDeserializer<>(new JsonDeserializer<>(AudioPathDto.class))
+        );
+    }
+
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, AudioPathDto> audioPathKafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, AudioPathDto> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(audioPathConsumerFactory());
+        return factory;
+    }
 }

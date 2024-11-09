@@ -219,16 +219,11 @@ public class TTSService {
     }
 
     // 생성된 audio파일 정보 db 저장
-    @KafkaListener(topics = RESPONSE_TOPIC, groupId = "tts_group")
-    public void consumeResponse(Map<String, Object> message) {
-//    public void consumeResponse(temp message) {
-//        LogUtil.info("save");
-//        Long ttsId = message.getTtsId();
-//        Long bookId = message.getBookId();
-//        List<Map<String, String>> s3Keys = message.getS3Keys();
-        Long bookId = Long.valueOf(message.get("book_id").toString());
-        Long ttsId = Long.valueOf(message.get("tts_id").toString());
-        List<Map<String, String>> s3Keys = (List<Map<String, String>>) message.get("s3_keys");
+    @KafkaListener(topics = RESPONSE_TOPIC, groupId = "tts_group",containerFactory = "audioPathKafkaListenerContainerFactory")
+    public void consumeResponse(AudioPathDto audioPathDto) {
+        Long bookId = audioPathDto.getBookId();
+        Long ttsId = audioPathDto.getTtsId();
+        List<Map<String, String>> s3Keys = audioPathDto.getAudioPath();
 
         Fairytale fairytale = fairytaleRepository.findById(bookId).orElseThrow(()-> new CustomException(ErrorCode.FAIRYTALE_NOT_FOUND));
         TTS tts = ttsRepository.findById(ttsId).orElseThrow(()-> new CustomException(ErrorCode.TTS_NOT_FOUND));
