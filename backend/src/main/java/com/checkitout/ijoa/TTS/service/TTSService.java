@@ -2,12 +2,9 @@ package com.checkitout.ijoa.TTS.service;
 
 
 import com.checkitout.ijoa.TTS.domain.*;
-import com.checkitout.ijoa.TTS.dto.request.FileScriptPair;
-import com.checkitout.ijoa.TTS.dto.request.TTSProfileUpdateRequestDto;
+import com.checkitout.ijoa.TTS.dto.request.*;
 import com.checkitout.ijoa.TTS.dto.response.*;
 import com.checkitout.ijoa.TTS.repository.*;
-import com.checkitout.ijoa.TTS.dto.request.TTSProfileRequestDto;
-import com.checkitout.ijoa.TTS.dto.request.TTSTrainRequestDto;
 import com.checkitout.ijoa.exception.CustomException;
 import com.checkitout.ijoa.exception.ErrorCode;
 import com.checkitout.ijoa.fairytale.domain.Fairytale;
@@ -189,10 +186,10 @@ public class TTSService {
     // db 저장
 
     // 모델경로 db 저장
-    @KafkaListener(topics = TTS_MODEL_TOPIC, groupId = "tts_group")
-    public void saveModelPath(Map<String, Object> message) {
-        String modelPath = message.get("model_path").toString();
-        Long ttsId = Long.valueOf(message.get("tts_id").toString());
+    @KafkaListener(topics = TTS_MODEL_TOPIC, groupId = "tts_group", containerFactory = "modelPathKafkaListenerContainerFactory")
+    public void saveModelPath(ModelPathDto modelPathDto) {
+        String modelPath = modelPathDto.getModelPath();
+        Long ttsId = modelPathDto.getTtsId();
         TTS tts = ttsRepository.findById(ttsId).orElseThrow(()-> new CustomException(ErrorCode.TTS_NOT_FOUND));
         tts.setTTS(modelPath);
         ttsRepository.save(tts);
