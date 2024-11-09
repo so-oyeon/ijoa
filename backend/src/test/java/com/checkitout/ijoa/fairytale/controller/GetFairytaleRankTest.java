@@ -49,7 +49,7 @@ public class GetFairytaleRankTest {
     private final FairytaleRepository fairytaleRepository;
     private final ChildReadBooksRepository childReadBooksRepository;
 
-    @Value("${recommendation_count}")
+    @Value("${RECOMMENDATION_COUNT}")
     private Integer recommendationCount;
 
     private static final String BASE_URL = "/fairytales/rank";
