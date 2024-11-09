@@ -21,6 +21,7 @@ export interface FairyTaleRecommendationItem {
   totalPages: number;
   currentPage: number;
   isCompleted: boolean;
+  progressRate: number;
 }
 
 export interface FairyTaleRecommendationsResponse {
@@ -35,6 +36,7 @@ export interface FairyTaleByCategoryItem {
   totalPages: number;
   currentPage: number;
   isCompleted: boolean;
+  progressRate: number;
 }
 
 export type FairyTaleByCategoryListResponse = {
@@ -188,6 +190,7 @@ export interface FairyTaleListItem {
   totalPages: number;
   currentPage: number;
   isCompleted: boolean;
+  progressRate: number;
 }
 
 export interface FairyTaleListResponse {
