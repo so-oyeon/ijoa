@@ -41,13 +41,15 @@ public interface FairytaleListApiDocumentation {
     public ResponseEntity<Page<FairytaleListResponseDto>> categoryFairytale(@PathVariable("category") CATEGORY category,
                                                                             @Valid @ModelAttribute PageRequestDto requestDto);
 
-    @Operation(summary = "나이별 인기도서 ", description = "나이별 인기 도서 순위를 조회할 수 있습니다. ")
+    @Operation(summary = "나이대 인기 도서 조회", description = "아이 나이대 인기 도서 순위를 조회할 수 있습니다.\n아이의 나이대에서 많이 본 동화책 목록을 포함하는 ResponseEntity 객체를 반환합니다. 나이대 인기 도서 조회에 실패하면 에러 코드를 담은 ResponseEntity를 반환합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "조회 성공"),
-            @ApiResponse(responseCode = "400", description = "잘못된 요청"),
-            @ApiResponse(responseCode = "500", description = "서버 오류")
+            @ApiResponse(responseCode = "200", description = "나이대 인기 도서 조회 성공"),
+            @ApiResponse(responseCode = "204", description = "나이대 인기 도서 조회 성공 - 동화책 데이터가 없는 경우", content = @Content),
+            @ApiResponse(responseCode = "401", description = "로그인 안함", content = @Content),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 아이 ID", content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
     })
-    public ResponseEntity<List<FairytaleListResponseDto>> fairytaleRankAge(@PathVariable("age") int age);
+    public ResponseEntity<List<FairytaleListResponseDto>> getFairytaleRank();
 
     @Operation(summary = "읽은 책과 읽고있는 책 목록 조회", description = "아이가 읽은 책과 읽고있는 책의 목록을 조회할 수 있습니다. ")
     @ApiResponses(value = {

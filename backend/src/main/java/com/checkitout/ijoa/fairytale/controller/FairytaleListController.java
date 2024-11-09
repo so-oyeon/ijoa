@@ -66,13 +66,19 @@ public class FairytaleListController implements FairytaleListApiDocumentation {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    // 나이대별 인기도서
+    /**
+     * 나이대 인기 도서 조회
+     *
+     * @return 아이의 나이대에서 많이 본 동화책 목록을 포함하는 ResponseEntity 객체를 반환합니다. 나이대 인기 도서 조회에 실패하면 에러 코드를 담은 ResponseEntity를 반환합니다.
+     */
     @Override
-    @GetMapping("/rank/{age}")
-    public ResponseEntity<List<FairytaleListResponseDto>> fairytaleRankAge(@PathVariable("age") int age) {
-        List<FairytaleListResponseDto> fairytaleList = makeList();
+    @GetMapping("/rank")
+    public ResponseEntity<List<FairytaleListResponseDto>> getFairytaleRank() {
+        List<FairytaleListResponseDto> fairytaleList = fairytaleListService.getFairytaleRank();
 
-        return new ResponseEntity<>(fairytaleList, HttpStatus.OK);
+        HttpStatus status = fairytaleList.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK;
+
+        return new ResponseEntity<>(fairytaleList, status);
     }
 
     // Page로 만드는 함수 API 만들면 지워질 예정

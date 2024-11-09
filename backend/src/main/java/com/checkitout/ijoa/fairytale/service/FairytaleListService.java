@@ -1,5 +1,6 @@
 package com.checkitout.ijoa.fairytale.service;
 
+import com.checkitout.ijoa.child.domain.Child;
 import com.checkitout.ijoa.common.dto.PageRequestDto;
 import com.checkitout.ijoa.exception.CustomException;
 import com.checkitout.ijoa.exception.ErrorCode;
@@ -13,6 +14,7 @@ import com.checkitout.ijoa.fairytale.repository.redis.RedisReadBookRepository;
 import com.checkitout.ijoa.util.SecurityUtil;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -29,6 +31,9 @@ public class FairytaleListService {
     private final SecurityUtil securityUtil;
     private final FairytaleMapper fairytaleMapper;
     private final RedisReadBookRepository redisReadBookRepository;
+
+    @Value("${recommendation_count}")
+    private Integer recommendationCount;
 
     /**
      * 동화책 목록 조회
@@ -69,6 +74,19 @@ public class FairytaleListService {
                 fairytales.getContent(), childId);
 
         return new PageImpl<>(responseDtos, pageable, fairytales.getTotalElements());
+    }
+
+    /**
+     * 나이대 인기 도서 조회
+     */
+    @Transactional
+    public List<FairytaleListResponseDto> getFairytaleRank() {
+        Child child = securityUtil.getChildByToken();
+
+        List<Fairytale> fairytales = fairytaleRepository.findPopularFairytalesByAgeGroup(child.getBirth(),
+                recommendationCount);
+
+        return fairytaleMapper.toFairytaleListResponseDtoList(fairytales, child.getId());
     }
 
 
