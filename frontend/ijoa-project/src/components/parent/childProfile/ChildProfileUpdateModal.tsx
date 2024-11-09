@@ -51,6 +51,7 @@ const ChildProfileCreateModal = ({ updateChildInfo, setIsUpdateModal, getChildIn
   // 자녀 프로필 수정 API 함수 호출
   const handleUpdateChild = async () => {
     if (!childName || !childBirth || !childGender) return;
+    console.log("11");
 
     const formData = new FormData();
     formData.append("name", childName);
@@ -73,19 +74,25 @@ const ChildProfileCreateModal = ({ updateChildInfo, setIsUpdateModal, getChildIn
     }
   };
 
+  // 생년월일 유효성 검사
+  const checkBirthValidation = (text: string) => {
+    const pattern = /^\d{4}-\d{2}-\d{2}$/; // YYYY-MM-DD 형식을 나타내는 정규식
+    return pattern.test(text);
+  };
+
   // 자녀 프로필 삭제 API 함수 호출
   const handleDeleteChild = async () => {
-    try {
-      const response = await parentApi.deleteChildProfile(childId);
-      if (response.status === 200) {
-        const confirmFlag = confirm("정말 자녀 프로필을 삭제할까요?");
-        if (confirmFlag) {
+    const confirmFlag = confirm("정말 자녀 프로필을 삭제할까요?");
+    if (confirmFlag) {
+      try {
+        const response = await parentApi.deleteChildProfile(childId);
+        if (response.status === 200) {
           setIsUpdateModal(false);
           getChildInfoList();
         }
+      } catch (error) {
+        console.log("parentApi의 deleteChildProfile : ", error);
       }
-    } catch (error) {
-      console.log("parentApi의 deleteChildProfile : ", error);
     }
   };
 
@@ -101,7 +108,7 @@ const ChildProfileCreateModal = ({ updateChildInfo, setIsUpdateModal, getChildIn
           {/* 타이틀 텍스트 */}
           <div className="text-xl font-bold">
             <span className="underline underline-offset-[-3px] decoration-8 decoration-[#67CCFF]">자녀 정보</span>
-            <span>를 등록해주세요</span>
+            <span>를 입력해 주세요</span>
           </div>
 
           {/* 프로필 사진 선택 */}
@@ -120,7 +127,7 @@ const ChildProfileCreateModal = ({ updateChildInfo, setIsUpdateModal, getChildIn
           </div>
 
           {/* 입력필드 */}
-          <div className="grid grid-rows-3 gap-5">
+          <div className="grid gap-3">
             {/* 이름 입력 */}
             <div className={`${divStyle}`}>
               <label className={`${labelStyle}`} htmlFor="name">
@@ -130,9 +137,16 @@ const ChildProfileCreateModal = ({ updateChildInfo, setIsUpdateModal, getChildIn
                 className={`${inputStyle}`}
                 type="text"
                 id="name"
+                placeholder="1~10자"
+                maxLength={10}
                 value={childName ? childName : ""}
                 onChange={(e) => setChildName(e.target.value)}
               />
+              {childName ? (
+                <></>
+              ) : (
+                <p className={`col-start-2 px-3 py-1 text-sm text-[#FF8067]`}>이름을 입력해주세요</p>
+              )}
             </div>
 
             {/* 생년월일 입력 */}
@@ -144,9 +158,19 @@ const ChildProfileCreateModal = ({ updateChildInfo, setIsUpdateModal, getChildIn
                 className={`${inputStyle}`}
                 type="text"
                 id="birth"
+                placeholder="ex) 2024-01-01"
                 value={childBirth ? childBirth : ""}
                 onChange={(e) => setChildBirth(e.target.value)}
               />
+              {childBirth && checkBirthValidation(childBirth) ? (
+                <></>
+              ) : (
+                <p
+                  className={`col-start-2 px-3 py-1 text-sm text-[#FF8067]
+              }`}>
+                  생년월일 형식을 지켜주세요
+                </p>
+              )}
             </div>
 
             {/* 성별 입력 */}
@@ -190,7 +214,10 @@ const ChildProfileCreateModal = ({ updateChildInfo, setIsUpdateModal, getChildIn
               삭제
             </button>
             <button
-              className="px-8 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-3xl border-2 border-[#67CCFF]"
+              className={`px-8 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-3xl border-2 border-[#67CCFF] ${
+                !childName || !childBirth || !childGender || !checkBirthValidation(childBirth) ? "opacity-50" : ""
+              }`}
+              disabled={!childName || !childBirth || !childGender || !checkBirthValidation(childBirth)}
               onClick={handleUpdateChild}>
               수정
             </button>
