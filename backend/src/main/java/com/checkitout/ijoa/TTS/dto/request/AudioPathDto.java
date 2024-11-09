@@ -10,5 +10,5 @@ import java.util.Map;
 public class AudioPathDto {
     private Long ttsId;
     private Long bookId;
-    private List<Map<String, String>> audioPath;
+    private List<Map<String, String>> s3Keys;
 }

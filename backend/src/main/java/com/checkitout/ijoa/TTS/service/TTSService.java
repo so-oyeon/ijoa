@@ -223,7 +223,7 @@ public class TTSService {
     public void consumeResponse(AudioPathDto audioPathDto) {
         Long bookId = audioPathDto.getBookId();
         Long ttsId = audioPathDto.getTtsId();
-        List<Map<String, String>> s3Keys = audioPathDto.getAudioPath();
+        List<Map<String, String>> s3Keys = audioPathDto.getS3Keys();
 
         Fairytale fairytale = fairytaleRepository.findById(bookId).orElseThrow(()-> new CustomException(ErrorCode.FAIRYTALE_NOT_FOUND));
         TTS tts = ttsRepository.findById(ttsId).orElseThrow(()-> new CustomException(ErrorCode.TTS_NOT_FOUND));
