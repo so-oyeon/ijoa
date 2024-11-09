@@ -6,6 +6,7 @@ import { ChildInfo } from "../../types/parentTypes";
 import LoadingAnimation from "../../components/common/LoadingAnimation";
 import ReadingReport from "../../components/parent/stats/ReadingReport";
 import WordCloud from "../../components/parent/stats/WordCloud";
+import ChildDropDown from "../../components/parent/ChildDropDown";
 
 const ReadingStats = () => {
   const filterText = ["일자", "요일", "시간"];
@@ -48,7 +49,7 @@ const ReadingStats = () => {
   }
 
   return (
-    <div className="h-screen px-20 pt-28 pb-10 grid grid-rows-2 gap-3">
+    <div className="h-screen px-20 pt-28 pb-10 grid grid-rows-2 gap-3 font-['IMBold']">
       {/* 상단 내용 */}
       <div className="grid grid-cols-[1fr_4fr_2fr] gap-3">
         <div className="flex flex-col justify-center items-center space-y-3">
@@ -62,20 +63,7 @@ const ReadingStats = () => {
             {selectChild.name} / 만 {selectChild.age}세
           </p>
 
-          <div className="dropdown">
-            <div tabIndex={0} role="button" className="btn m-1">
-              자녀 선택
-            </div>
-            <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
-              {childList?.map((child, index) => (
-                <li key={index} onClick={() => setSelectChild(child)}>
-                  <a>
-                    {child.name} / 만 {child.age}세
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <ChildDropDown childList={childList} setSelectChild={setSelectChild} />
         </div>
 
         {/* 히스토그램 차트 */}
@@ -108,7 +96,7 @@ const ReadingStats = () => {
         {/* 도넛형 차트 */}
         <div className="flex flex-col space-y-3">
           <p className="text-xl font-semibold">
-            <span className="text-xl text-[#F26172] font-semibold">{maxCategory}</span> 유형이 좋아요!
+            <span className="text-3xl text-[#F26172] font-semibold">{maxCategory}</span> 유형이 좋아요!
           </p>
           <PieChart childId={selectChild.childId} setMaxCategory={setMaxCategory} />
         </div>

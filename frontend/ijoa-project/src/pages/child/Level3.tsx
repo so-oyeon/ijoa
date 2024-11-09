@@ -2,9 +2,14 @@ import React from "react";
 import LevelTemplate from "../../components/child/LevelTemplate";
 import bglv3 from "/assets/child/bg-lv3.png";
 import baby3 from "/assets/child/baby3.png";
-import profile from "/assets/child/profile.png";
 
-const Level3: React.FC = () => {
+interface Level3Props {
+  currentLevel: number;
+  totalCount: number;
+}
+
+const Level3: React.FC<Level3Props> = ({ currentLevel, totalCount })=> {
+  const templateLevel = 3;
   const profileAnimation = {
     initial: { x: 0, y: 0 },
     animate: {
@@ -35,14 +40,16 @@ const Level3: React.FC = () => {
   return (
     <LevelTemplate
       bgImage={bglv3}
-      profileImage={profile}
       babyImage={baby3}
-      profileCss="bottom-56 right-[calc(10%+130px)] transform -translate-x-1/2 w-[180px] z-10 rounded-3xl"
+      profileCss="bottom-56 right-[calc(10%+140px)] transform -translate-x-1/2 z-10 rounded-3xl"
       babyCss="bottom-5 right-[calc(10%+60px)] transform -translate-x-1/2 w-[320px]"
       minLevel={4}
       maxLevel={4}
       babyAnimation={babyAnimation} 
-      profileAnimation={profileAnimation} 
+      profileAnimation={profileAnimation}
+      currentLevel={currentLevel}
+      totalCount={totalCount}
+      templateLevel={templateLevel}
     />
   );
 };

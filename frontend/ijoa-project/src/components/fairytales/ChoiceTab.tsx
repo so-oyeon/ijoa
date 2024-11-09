@@ -1,13 +1,13 @@
 import React from "react";
 
 interface TabItem {
-  id: number;
+  id: string;
   name: string;
 }
 
 interface ChoiceTabProps {
   tabs: TabItem[];
-  onTabClick: (categoryId: number) => void;
+  onTabClick: (categoryId: string) => void; // categoryId 타입을 string으로 변경
 }
 
 const ChoiceTab: React.FC<ChoiceTabProps> = ({ tabs, onTabClick }) => {
@@ -15,16 +15,16 @@ const ChoiceTab: React.FC<ChoiceTabProps> = ({ tabs, onTabClick }) => {
 
   const handleTabClick = (index: number) => {
     setActiveTabIndex(index);
-    onTabClick(tabs[index].id);
+    onTabClick(tabs[index].id); // 이제 오류가 발생하지 않습니다.
   };
 
   return (
-    <div role="tablist" className="tabs tabs-bordered">
+    <div role="tablist" className="tabs tabs-bordered w-[600px]">
       {tabs.map((tab, index) => (
         <a
           key={tab.id}
           role="tab"
-          className={`tab ${activeTabIndex === index ? "font-bold tab-active border-b-2" : "font-bold text-gray-400"}`}
+          className={`tab ${activeTabIndex === index ? "font-['MapleLight'] text-xl font-bold tab-active border-b-2" : "font-['MapleLight'] text-lg font-bold text-gray-500"}`}
           onClick={() => handleTabClick(index)}
         >
           {tab.name}

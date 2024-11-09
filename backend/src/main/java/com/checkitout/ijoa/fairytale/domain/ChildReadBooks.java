@@ -34,6 +34,9 @@ public class ChildReadBooks {
     @Column(nullable = false)
     private Boolean isCompleted;
 
+    @Column(nullable = false)
+    private Integer completionCount = 0;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "child_id", nullable = false)
     private Child child;
@@ -44,18 +47,34 @@ public class ChildReadBooks {
 
 
     public ChildReadBooks(Integer currentPage, LocalDateTime finishedAt, Boolean isCompleted,
-                          Child child, Fairytale fairytale) {
-        this.createdAt = createdAt;
+                          Child child, Fairytale fairytale, Integer completionCount) {
         this.currentPage = currentPage;
         this.finishedAt = finishedAt;
         this.isCompleted = isCompleted;
         this.child = child;
         this.fairytale = fairytale;
+        this.completionCount = completionCount;
     }
 
     public static ChildReadBooks of(Integer currentPage, LocalDateTime finishedAt,
                                     Boolean isCompleted,
-                                    Child child, Fairytale fairytale) {
-        return new ChildReadBooks(currentPage, finishedAt, isCompleted, child, fairytale);
+                                    Child child, Fairytale fairytale, Integer completionCount) {
+        return new ChildReadBooks(currentPage, finishedAt, isCompleted, child, fairytale, completionCount);
+    }
+
+    public void incrementCompletionCount() {
+        this.completionCount++;
+    }
+
+    public void completeReading() {
+        if (!this.isCompleted) {
+            this.isCompleted = true;
+            this.finishedAt = LocalDateTime.now();
+        }
+        incrementCompletionCount();
+    }
+
+    public void updateCurrentPage(Integer currentPage) {
+        this.currentPage = currentPage;
     }
 }

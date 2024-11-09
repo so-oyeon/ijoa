@@ -25,6 +25,8 @@ public enum ErrorCode {
     CHILD_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, "CHILD-001", "자녀 프로필은 최대 10명까지 생성할 수 있습니다."),
     CHILD_NOT_FOUND(HttpStatus.NOT_FOUND, "CHILD-002", "자녀를 찾을 수 없습니다."),
     CHILD_NOT_BELONG_TO_PARENT(HttpStatus.FORBIDDEN, "CHILD-003", "자녀가 현재 로그인한 부모의 자녀가 아닙니다."),
+    CHILD_NO_CONTENT(HttpStatus.NO_CONTENT, "CHILD-004", "자녀가 없습니다."),
+
 
     // fairytale
     FAIRYTALE_NOT_FOUND(HttpStatus.NOT_FOUND, "FAIRYTALE-001", "존재하지 않는 동화책입니다."),
@@ -37,11 +39,11 @@ public enum ErrorCode {
     FILE_CONVERSION_ERROR(HttpStatus.BAD_REQUEST, "FILE-001", "파일 변환 에러가 발생했습니다."),
 
     // TrainAudio
-    TRAINAUDIO_NOT_FOUND(HttpStatus.NOT_FOUND,"TRAIN-001","TRIANDATA를 찾을 수 없습니다."),
-    AUDIO_NOT_FOUND(HttpStatus.NOT_FOUND,"AUDIO-001","AUDIO를 찾을 수 없습니다."),
+    TRAINAUDIO_NOT_FOUND(HttpStatus.NOT_FOUND, "TRAIN-001", "TRIANDATA를 찾을 수 없습니다."),
+    AUDIO_NOT_FOUND(HttpStatus.NOT_FOUND, "AUDIO-001", "AUDIO를 찾을 수 없습니다."),
 
     //script
-    SCRIPT_NOT_FOUND(HttpStatus.NOT_FOUND,"SCRIPT-001","SCRIPT를 찾을 수 없습니다."),
+    SCRIPT_NOT_FOUND(HttpStatus.NOT_FOUND, "SCRIPT-001", "SCRIPT를 찾을 수 없습니다."),
 
     //TTS
     TTS_NOT_FOUND(HttpStatus.NOT_FOUND, "TTS-001", "TTS를 찾을 수 없습니다."),
@@ -50,11 +52,14 @@ public enum ErrorCode {
     UNAUTHORIZED_USER(HttpStatus.FORBIDDEN, "UU-001", "권한이 없습니다."),
 
     // quiz
-    QUIZ_NOT_FOUND(HttpStatus.NOT_FOUND, "QUIZ-001","quiz를 찾을 수 없습니다."),
-    ANSWER_NO_CONTENT(HttpStatus.NO_CONTENT,"QUIZ-002","답변을 찾을 수 없습니다."),
+    QUIZ_NOT_FOUND(HttpStatus.NOT_FOUND, "QUIZ-001", "quiz를 찾을 수 없습니다."),
+    ANSWER_NO_CONTENT(HttpStatus.NO_CONTENT, "QUIZ-002", "답변을 찾을 수 없습니다."),
 
     // statistics
-    INVALID_INTERVAL(HttpStatus.BAD_REQUEST, "STATISTICS-001", "주기는 date, day, hour 중 하나여야 합니다.");
+    INVALID_INTERVAL(HttpStatus.BAD_REQUEST, "STATISTICS-001", "주기는 date, day, hour 중 하나여야 합니다."),
+
+    // childreadbooks
+    CHILD_READ_BOOK_NOT_FOUND(HttpStatus.NOT_FOUND, "READ-001", "읽은 책을 찾을 수 없습니다.");
 
 
     private final HttpStatus httpStatus;

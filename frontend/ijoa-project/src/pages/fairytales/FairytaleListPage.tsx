@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import "../../css/FairytaleContentPage.css";
 import { useNavigate } from "react-router-dom";
 import Swiper from "../../components/fairytales/Swiper"; // 스와이퍼 컴포넌트 import
 import ChoiceTab from "../../components/fairytales/ChoiceTab"; // 선택탭 컴포넌트 import
@@ -18,39 +19,39 @@ const FairytaleListPage: React.FC = () => {
   const [popularFairyTales, setPopularFairyTales] = useState<FairyTaleRankByAgeItem[]>([]);
   const [recommendedFairyTales, setRecommendedFairyTales] = useState<FairyTaleRecommendationItem[]>([]);
   const [categoryFairyTales, setCategoryFairyTales] = useState<FairyTaleByCategoryListResponse | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<number>(1);
+  const [selectedCategory, setSelectedCategory] = useState<string>("COMMUNICATION");
   const [childInfo, setChildInfo] = useState<ChildInfo | null>(null);
 
   const popularCovers = popularFairyTales.map((fairyTale) => fairyTale.image);
   const popularTitles = popularFairyTales.map((fairyTale) => fairyTale.title);
   const popularIsCompleted = popularFairyTales.map((fairyTale) => fairyTale.isCompleted);
-  const popularCurrentPage = popularFairyTales.map((fairyTale) => fairyTale.currentPage)
+  const popularCurrentPage = popularFairyTales.map((fairyTale) => fairyTale.currentPage);
+  const popularTotalPage = popularFairyTales.map((fairyTale) => fairyTale.currentPage);
 
   const recommendedCovers = recommendedFairyTales.map((fairyTale) => fairyTale.image);
   const recommendedTitles = recommendedFairyTales.map((fairyTale) => fairyTale.title);
   const recommendedIsCompleted = recommendedFairyTales.map((fairyTale) => fairyTale.isCompleted);
-  const recommendedCurrentPage = recommendedFairyTales.map((fairyTale) => fairyTale.currentPage)
+  const recommendedCurrentPage = recommendedFairyTales.map((fairyTale) => fairyTale.currentPage);
+  const recommendedTotalPage = recommendedFairyTales.map((fairyTale) => fairyTale.currentPage);
 
   // 카테고리 이름과 ID 매핑
   const tabItems = [
-    { id: 1, name: "의사소통" },
-    { id: 2, name: "자연탐구" },
-    { id: 3, name: "사회관계" },
-    { id: 4, name: "예술경험" },
-    { id: 5, name: "신체운동 / 건강" },
+    { id: "COMMUNICATION", name: "의사소통" },
+    { id: "NATURE_EXPLORATION", name: "자연탐구" },
+    { id: "SOCIAL_RELATIONSHIPS", name: "사회관계" },
+    { id: "ART_EXPERIENCE", name: "예술경험" },
+    { id: "PHYSICAL_ACTIVITY_HEALTH", name: "신체운동 / 건강" },
   ];
 
   // 인기 동화책 api 통신 함수
   const getPopularFairyTalesByAge = async () => {
-    if (!childInfo) return;
-
     try {
-      const response = await fairyTaleApi.getFairyTalesRankByAge(childInfo?.age);
+      const response = await fairyTaleApi.getFairyTalesRankByAge(1, 8);
       if (response.status === 200) {
         const data = response.data;
 
-        if (Array.isArray(data)) {
-          setPopularFairyTales(data);
+        if (data && Array.isArray(data.content)) {
+          setPopularFairyTales(data.content);
         } else {
           console.error("유효하지 않은 데이터 구조 :", data);
         }
@@ -63,11 +64,12 @@ const FairytaleListPage: React.FC = () => {
   // 사용자 맞춤 책 추천 api 통신 함수
   const getRecommendedFairyTales = async () => {
     try {
-      const response = await fairyTaleApi.getFairyTaleRecommendations();
+      const response = await fairyTaleApi.getFairyTaleRecommendations(1, 8);
       if (response.status === 200) {
         const data = response.data;
-        if (Array.isArray(data)) {
-          setRecommendedFairyTales(data);
+
+        if (data && Array.isArray(data.content)) {
+          setRecommendedFairyTales(data.content);
         } else {
           console.error("유효하지 않은 데이터 구조 :", data);
         }
@@ -77,12 +79,13 @@ const FairytaleListPage: React.FC = () => {
     }
   };
 
-  // 카테고리 동화책 api 통신 함수
-  const getFairyTalesByCategory = async (categoryId: number) => {
+  // 카테고리별 동화책 조회 함수
+  const getFairyTalesByCategory = async (category: string, page: number = 1, size: number = 5) => {
     try {
-      const response = await fairyTaleApi.getFairyTalesListByCategory(categoryId, 0);
+      const response = await fairyTaleApi.getFairyTalesListByCategory(category, page, size);
       if (response.status === 200) {
-        setCategoryFairyTales(response.data);
+        const data: FairyTaleByCategoryListResponse = response.data;
+        setCategoryFairyTales(data); // 전체 데이터를 상태로 설정
       }
     } catch (error) {
       console.error("fairytaleApi의 getFairyTalesListByCategory :", error);
@@ -106,13 +109,23 @@ const FairytaleListPage: React.FC = () => {
 
   const handlePopularBookClick = (index: number) => {
     navigate(`/fairytale/content/${popularFairyTales[index].fairytaleId}`, {
-      state: { title: popularTitles[index], isCompleted: popularIsCompleted[index], currentPage: popularCurrentPage[index]},
+      state: {
+        title: popularTitles[index],
+        isCompleted: popularIsCompleted[index],
+        currentPage: popularCurrentPage[index],
+        totalPages: popularTotalPage[index],
+      },
     });
   };
 
   const handleRecommendedBookClick = (index: number) => {
     navigate(`/fairytale/content/${recommendedFairyTales[index].fairytaleId}`, {
-      state: { title: recommendedTitles[index], isCompleted: recommendedIsCompleted[index], currentPage: recommendedCurrentPage[index] },
+      state: {
+        title: recommendedTitles[index],
+        isCompleted: recommendedIsCompleted[index],
+        currentPage: recommendedCurrentPage[index],
+        totalPages: recommendedTotalPage[index],
+      },
     });
   };
 
@@ -120,13 +133,18 @@ const FairytaleListPage: React.FC = () => {
     if (categoryFairyTales && categoryFairyTales.content && categoryFairyTales.content[index]) {
       const selectedFairyTale = categoryFairyTales.content[index];
       navigate(`/fairytale/content/${selectedFairyTale.fairytaleId}`, {
-        state: { title: selectedFairyTale.title, isCompleted: selectedFairyTale.isCompleted, currentPage: selectedFairyTale.currentPage },
+        state: {
+          title: selectedFairyTale.title,
+          isCompleted: selectedFairyTale.isCompleted,
+          currentPage: selectedFairyTale.currentPage,
+          totalPages: selectedFairyTale.totalPages,
+        },
       });
     }
   };
 
-  const handleCategoryChange = (categoryId: number) => {
-    setSelectedCategory(categoryId);
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
   };
 
   useEffect(() => {
@@ -143,8 +161,8 @@ const FairytaleListPage: React.FC = () => {
   return (
     <div>
       <div className="pt-24 pb-24 px-10 text-xl">
-        <div className="mb-10">
-          <div className="mb-5 text-2xl font-bold">🏆 {childInfo?.age}살 인기 동화책</div>
+        <div className="h-[300px] mb-10">
+          <div className="mb-5 text-2xl font-bold font-['MapleBold']">🏆 {childInfo?.age}살 인기 동화책</div>
           {popularFairyTales.length > 0 ? (
             <Swiper
               bookCovers={popularCovers}
@@ -156,8 +174,8 @@ const FairytaleListPage: React.FC = () => {
             <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
           )}
         </div>
-        <div className="mb-10">
-          <div className="mb-5 text-2xl font-bold">🧸 이런 책 어때요?</div>
+        <div className="h-[300px] mb-10">
+          <div className="mb-5 text-2xl font-bold font-['MapleBold']">🧸 이런 책 어때요?</div>
           {recommendedFairyTales.length > 0 ? (
             <Swiper
               bookCovers={recommendedCovers}
@@ -169,9 +187,9 @@ const FairytaleListPage: React.FC = () => {
             <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
           )}
         </div>
-        <div>
+        <div className="h-[300px]">
           <div className="flex justify-between mb-5">
-            <div className="text-2xl font-bold">🌟 카테고리 별 인기 동화책</div>
+            <div className="text-2xl font-bold font-['MapleBold']">🌟 카테고리 별 동화책</div>
             <ChoiceTab tabs={tabItems} onTabClick={handleCategoryChange} />
           </div>
           {categoryFairyTales && categoryFairyTales.content && categoryFairyTales.content.length > 0 ? (
@@ -182,7 +200,7 @@ const FairytaleListPage: React.FC = () => {
               onBookClick={handleCategoryBookClick}
             />
           ) : (
-            <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
+            <Lottie className="h-full w-40 aspect-1" loop play animationData={loadingAnimation} />
           )}
         </div>
       </div>

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { motion, MotionProps } from "framer-motion";
-import LevelInfoModal from "../../components/child/LevelInfoModal";
+import LevelModal from "./LevelModal";
+import { parentApi } from "../../api/parentApi";
 
 interface LevelTemplateProps {
   bgImage: string;
-  profileImage: string;
   babyImage: string;
   babyCss: string;
   profileCss: string;
@@ -12,11 +12,13 @@ interface LevelTemplateProps {
   maxLevel?: number;
   babyAnimation?: MotionProps;
   profileAnimation?: MotionProps;
+  currentLevel: number;
+  totalCount: number;
+  templateLevel: number;
 }
 
 const LevelTemplate: React.FC<LevelTemplateProps> = ({
   bgImage,
-  profileImage,
   babyImage,
   babyCss,
   profileCss,
@@ -24,9 +26,28 @@ const LevelTemplate: React.FC<LevelTemplateProps> = ({
   maxLevel,
   babyAnimation,
   profileAnimation,
+  currentLevel,
+  totalCount,
+  templateLevel,
 }) => {
   const [isInfoVisible, setIsInfoVisible] = useState(false);
   const [loopAnimation, setLoopAnimation] = useState(false);
+  const [profileImage, setProfileImage] = useState<string>("");
+
+  // 자녀 프로필 API 통신
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      const childId = localStorage.getItem("childId")
+      try {
+        const response = await parentApi.getChildProfile(Number(childId));
+        setProfileImage(response.data.profileUrl);
+      } catch (error) {
+        console.error("Failed to fetch user profile:", error);
+      }
+    };
+
+    fetchUserProfile();
+  }, []);
 
   // 무한 반복 애니메이션
   const infiniteVerticalAnimation = {
@@ -54,7 +75,7 @@ const LevelTemplate: React.FC<LevelTemplateProps> = ({
         animate={loopAnimation ? infiniteVerticalAnimation : profileAnimation?.animate}
         className={`absolute ${profileCss}`}
       >
-        <img src={profileImage} alt="프로필 이미지" className="w-full h-full" />
+        <img src={profileImage} alt="프로필 이미지" className="w-[170px] h-[170px] rounded-full object-cover" />
       </motion.div>
 
       {/* 아기 이미지 애니메이션 */}
@@ -67,7 +88,7 @@ const LevelTemplate: React.FC<LevelTemplateProps> = ({
       </motion.div>
 
       {/* 정보 버튼 */}
-      {minLevel && maxLevel && (
+      {currentLevel === templateLevel && currentLevel !== 4 && (
         <button
           onClick={() => setIsInfoVisible(true)}
           className="absolute bottom-[-12px] left-10 px-2 py-3 bg-gray-700 bg-opacity-50 rounded-2xl shadow-md"
@@ -79,7 +100,13 @@ const LevelTemplate: React.FC<LevelTemplateProps> = ({
 
       {/* 모달 화면 */}
       {isInfoVisible && minLevel && maxLevel && (
-        <LevelInfoModal minLevel={minLevel} maxLevel={maxLevel} onClose={() => setIsInfoVisible(false)} />
+        <LevelModal
+          minLevel={minLevel}
+          maxLevel={maxLevel}
+          currentLevel={currentLevel}
+          totalCount={totalCount}
+          onClose={() => setIsInfoVisible(false)}
+        />
       )}
     </div>
   );

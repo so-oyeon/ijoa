@@ -5,6 +5,7 @@ import { FairyTaleSearchResponse, FairyTaleListResponse, FairyTaleListItem } fro
 import BookCoverGrid from "../../components/fairytales/BookCoverGrid";
 import SearchBar from "../../components/common/SearchBar";
 import Lottie from "react-lottie-player";
+import "../../css/FairytaleContentPage.css";
 import loadingAnimation from "../../lottie/footPrint-loadingAnimation.json";
 
 const FairytaleSearchPage: React.FC = () => {
@@ -69,7 +70,14 @@ const FairytaleSearchPage: React.FC = () => {
     const selectedFairytaleId =
       searchResults?.content[index]?.fairytaleId || allFairyTales?.content[index]?.fairytaleId;
     if (selectedFairytaleId) {
-      navigate(`/fairytale/content/${selectedFairytaleId}`, { state: { title: allFairyTales?.content[index].title } });
+      navigate(`/fairytale/content/${selectedFairytaleId}`, {
+        state: {
+          title: allFairyTales?.content[index].title,
+          isCompleted: allFairyTales?.content[index].isCompleted,
+          currentPage: allFairyTales?.content[index].currentPage,
+          totalPages: allFairyTales?.content[index].totalPages,
+        },
+      });
     }
   };
 
@@ -77,7 +85,9 @@ const FairytaleSearchPage: React.FC = () => {
     <div>
       <div className="relative w-full h-screen overflow-y-auto bg-gradient-to-b from-white">
         <div className="pt-[96px] px-10 flex justify-between items-center mb-6">
-          <div className="text-2xl font-bold flex items-center">{query ? "🔎 검색 결과 ..." : "📚 전체 동화 목록"}</div>
+          <div className="text-2xl font-bold flex items-center font-['MapleBold']">
+            {query ? "🔎 검색 결과 ..." : "📚 전체 동화 목록"}
+          </div>
           <SearchBar onInputChange={handleInputChange} />
         </div>
 

@@ -6,10 +6,11 @@ export interface FairyTaleRankByAgeItem {
   totalPages: number;
   currentPage: number;
   isCompleted: boolean;
+  progressRate: number;
 }
 
 export interface FairyTaleRankByAgeResponse {
-  rankList: FairyTaleRankByAgeItem[];
+  content: FairyTaleRankByAgeItem[];
 }
 
 // 사용자 맞춤 책 추천
@@ -22,7 +23,9 @@ export interface FairyTaleRecommendationItem {
   isCompleted: boolean;
 }
 
-export type FairyTaleRecommendationsResponse = FairyTaleRecommendationItem[];
+export interface FairyTaleRecommendationsResponse {
+  content: FairyTaleRecommendationItem[];
+}
 
 // 카테고리별 동화 리스트 조회
 export interface FairyTaleByCategoryItem {
@@ -34,34 +37,9 @@ export interface FairyTaleByCategoryItem {
   isCompleted: boolean;
 }
 
-export interface FairyTaleByCategoryListResponse {
-  totalPages: number;
-  totalElements: number;
-  size: number;
+export type FairyTaleByCategoryListResponse = {
   content: FairyTaleByCategoryItem[];
-  number: number;
-  sort: {
-    empty: boolean;
-    sorted: boolean;
-    unsorted: boolean;
-  };
-  pageable: {
-    offset: number;
-    sort: {
-      empty: boolean;
-      sorted: boolean;
-      unsorted: boolean;
-    };
-    paged: boolean;
-    pageNumber: number;
-    pageSize: number;
-    unpaged: boolean;
-  };
-  numberOfElements: number;
-  first: boolean;
-  last: boolean;
-  empty: boolean;
-}
+};
 
 // 동화 내용 조회 (POST)
 export interface FairyTaleContentResponse {
@@ -170,6 +148,7 @@ export interface FairyTaleReadCheckItem {
   totalPages: number;
   currentPage: number;
   isCompleted: boolean;
+  progressRate: number;
 }
 
 export interface FairyTaleReadCheckResponse {
@@ -212,7 +191,7 @@ export interface FairyTaleListItem {
 }
 
 export interface FairyTaleListResponse {
-  content: FairyTaleListItem[]
+  content: FairyTaleListItem[];
 }
 
 // 퀴즈 답변 등록 (POST)

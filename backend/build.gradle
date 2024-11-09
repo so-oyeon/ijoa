@@ -73,6 +73,8 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
+    // 통계 패키지
+    implementation 'org.apache.commons:commons-math3:3.6.1'
 }
 
 tasks.named('test') {
