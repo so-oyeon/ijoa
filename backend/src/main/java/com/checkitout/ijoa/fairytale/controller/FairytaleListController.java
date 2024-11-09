@@ -127,25 +127,21 @@ public class FairytaleListController implements FairytaleListApiDocumentation {
     }
 
     // 읽은 책 목록 조회
-    @Override
     @GetMapping("/children")
-    public Page<FairytaleListResponseDto> readFairytaleList(@RequestParam("page") int page) {
-        List<FairytaleListResponseDto> fairytaleList = makeReadFairytaleList();
+    public ResponseEntity<Page<FairytaleListResponseDto>> readFairytaleList(
+            @Valid @ModelAttribute PageRequestDto requestDto) {
 
-        // 페이지 요청 객체 생성
-        Pageable pageable = PageRequest.of(page, 8);
-
-        // Page 객체 생성하여 반환
-        return new PageImpl<>(fairytaleList, pageable, fairytaleList.size());
+        Page<FairytaleListResponseDto> response = fairytaleListService.readFairytaleList(requestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     // 책 추천
-    @Override
     @GetMapping("/recommendations")
-    public ResponseEntity<List<FairytaleListResponseDto>> recommendFairytale() {
-        List<FairytaleListResponseDto> fairytaleList = makeList();
+    public ResponseEntity<Page<FairytaleListResponseDto>> recommendFairytale(
+            @Valid @ModelAttribute PageRequestDto requestDto) {
 
-        return new ResponseEntity<>(fairytaleList, HttpStatus.OK);
+        Page<FairytaleListResponseDto> response = fairytaleListService.getAllFairytale(requestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     // 책검색

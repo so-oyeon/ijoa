@@ -17,13 +17,13 @@ import {
 
 export const fairyTaleApi = {
   // 나이별 인기 도서 조회
-  getFairyTalesRankByAge: (age: number) => {
-    return api.get<FairyTaleRankByAgeResponse>(`/fairytales/rank/${age}`);
+  getFairyTalesRankByAge: (page: number, size: number) => {
+    return api.get<FairyTaleRankByAgeResponse>(`/fairytales/rank?page=${page}&size=${size}`);
   },
 
   // 사용자 맞춤 책 추천 조회
-  getFairyTaleRecommendations: () => {
-    return api.get<FairyTaleRecommendationsResponse>(`/fairytales/recommendations`);
+  getFairyTaleRecommendations: (page: number, size: number) => {
+    return api.get<FairyTaleRecommendationsResponse>(`/fairytales/recommendations?page=${page}&size=${size}`);
   },
 
   // 카테고리별 동화 리스트 조회
@@ -61,10 +61,8 @@ export const fairyTaleApi = {
   },
 
   // 읽은 책과 읽고 있는 책 목록 조회
-  getFairytalesReadList: (page: number) => {
-    return api.get<FairyTaleReadCheckResponse>(`/fairytales/children`, {
-      params: { page },
-    });
+  getFairytalesReadList: (page: number, size: number) => {
+    return api.get<FairyTaleReadCheckResponse>(`/fairytales/children?page=${page}&size=${size}`);
   },
 
   // 전체 동화책 목록 조회

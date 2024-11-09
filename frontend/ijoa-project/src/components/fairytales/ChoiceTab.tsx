@@ -19,12 +19,12 @@ const ChoiceTab: React.FC<ChoiceTabProps> = ({ tabs, onTabClick }) => {
   };
 
   return (
-    <div role="tablist" className="tabs tabs-bordered">
+    <div role="tablist" className="tabs tabs-bordered w-[600px]">
       {tabs.map((tab, index) => (
         <a
           key={tab.id}
           role="tab"
-          className={`tab ${activeTabIndex === index ? "font-bold tab-active border-b-2" : "font-bold text-gray-400"}`}
+          className={`tab ${activeTabIndex === index ? "font-['MapleLight'] text-xl font-bold tab-active border-b-2" : "font-['MapleLight'] text-lg font-bold text-gray-500"}`}
           onClick={() => handleTabClick(index)}
         >
           {tab.name}

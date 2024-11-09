@@ -16,7 +16,7 @@ const PageSwiper: React.FC<PageSwiperProps> = ({
   pageNums, // 책 페이지 번호들
   onPageClick, // 클릭 핸들러
   activeIndex,
-  spaceBetween = 5, // 사진 간 간격
+  spaceBetween = 20, // 사진 간 간격
   slidesPerView = 3.5, // 화면 당 슬라이드 개수
 }) => {
 
@@ -35,12 +35,12 @@ const PageSwiper: React.FC<PageSwiperProps> = ({
                 <img
                   src={cover}
                   alt={`동화책 ${index + 1}`}
-                  className={`w-[330px] h-[200px] rounded-2xl object-cover ${
+                  className={`w-[380px] h-[200px] rounded-2xl object-cover ${
                     activeIndex === index ? "border-8 border-[#67CCFF] rounded-2xl" : "grayscale-[80%]"
                   }`}
                 />
                 <div className="mt-2 text-center pr-10">
-                  <span className="text-2xl font-semibold">{pageNums[index]}</span>
+                  <span className="text-2xl font-semibold font-['IMRegular']">{pageNums[index]}</span>
                 </div>
               </div>
             </SwiperSlide>
