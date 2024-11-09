@@ -218,15 +218,15 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
         <div className="flex w-full items-center justify-center mb-2 gap-2">
           <input
             type="text"
-            placeholder="인증번호를 입력해주세요"
-            className="w-[150px] h-[50px] px-6 py-3 rounded-full bg-gray-100 text-gray-500 placeholder-gray-400 focus:outline-none"
+            placeholder="인증번호 입력"
+            className="w-[200px] h-[50px] px-6 py-3 rounded-full bg-gray-100 text-gray-500 placeholder-gray-400 focus:outline-none"
             value={verificationCode}
             onChange={(e) => setVerificationCode(e.target.value)}
             disabled={isVerified} // 인증 완료 시 입력 비활성화
           />
           <button
             className={`w-[60px] h-[50px] py-3 rounded-xl font-bold ${
-              isVerified ? "bg-red-300" : "bg-[#FFC890] hover:bg-red-200"
+              isVerified ? "bg-gray-400 text-white" : "bg-[#FFC890] hover:bg-red-200"
             }`}
             onClick={handleVerificationCodeConfirm}
             disabled={isVerified} // 인증 완료 시 버튼 비활성화
@@ -234,11 +234,13 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
             {isVerified ? "완료" : "확인"}
           </button>
           <button
-            className="w-[80px] h-[50px] py-2 rounded-xl font-bold bg-blue-200 hover:bg-blue-300"
+            className={`w-[80px] h-[50px] py-2 rounded-xl font-bold ${
+              isVerified ? "bg-gray-400 text-white" : "bg-blue-200 hover:bg-blue-300"
+            }`}
             onClick={handleEmailVerification}
-            disabled={isLoading}
+            disabled={isLoading || isVerified}
           >
-            재요청
+            재전송
           </button>
         </div>
       )}
