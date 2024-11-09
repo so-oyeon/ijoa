@@ -36,7 +36,7 @@ public class FairytaleListService {
 
     private final SecurityUtil securityUtil;
 
-    @Value("${recommendation_count}")
+    @Value("${RECOMMENDATION_COUNT}")
     private Integer recommendationCount;
 
     /**
