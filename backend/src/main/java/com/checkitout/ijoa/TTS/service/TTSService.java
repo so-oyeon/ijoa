@@ -19,6 +19,8 @@ import com.checkitout.ijoa.util.LogUtil;
 import com.checkitout.ijoa.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.redisson.api.RBucket;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
@@ -31,12 +33,14 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class TTSService {
 
+    private final RedissonClient redissonClient;
     private final KafkaTemplate<String, AudioBookRequestDto> audioBookKafkaTemplate;
     private final KafkaTemplate<String, TrainAudioResponseDto> trainAudioKafkaTemplate;
     // 동화책 audio만들기
@@ -232,23 +236,35 @@ public class TTSService {
     // 동화책 audio 생성
     public void createAudioBook(Long bookId, Long ttsId) {
 
+        List<FairytalePageContent> contents = fairytalePageContentRepository.findByfairytaleId(bookId).orElseThrow(() -> new CustomException(ErrorCode.FAIRYTALE_NOT_FOUND));
         TTS tts = ttsRepository.findById(ttsId).orElseThrow(() -> new CustomException(ErrorCode.TTS_NOT_FOUND));
 
-        List<FairytalePageContent> contents = fairytalePageContentRepository.findByfairytaleId(bookId).orElseThrow(() -> new CustomException(ErrorCode.FAIRYTALE_NOT_FOUND));
-        List<FairytalePageResponseDto> pages = new ArrayList<>();
-        for (FairytalePageContent content : contents) {
-            pages.add(FairytalePageResponseDto.from(content));
+        String lockKey = "createAudioBook:"+bookId+"_ttsId:"+ttsId;
+        RBucket<String> statusFlag = redissonClient.getBucket(lockKey);
+
+        // 상태 플래그가 없으면 플래그를 설정하고 true 반환, 이미 존재하면 false 반환
+        if(!statusFlag.setIfAbsent("IN_PROGRESS")){
+            throw new CustomException(ErrorCode.AUDIO_CREATION_ALREADY_IN_PROGRESS);
+        }else{
+            // 만료 시간 설정
+            statusFlag.expire(10, TimeUnit.MINUTES);
+
+            List<FairytalePageResponseDto> pages = new ArrayList<>();
+            for (FairytalePageContent content : contents) {
+                pages.add(FairytalePageResponseDto.from(content));
+            }
+
+            AudioBookRequestDto audioBookRequest = AudioBookRequestDto.builder()
+                    .bookId(bookId)
+                    .modelPath(tts.getTTS())
+                    .pages(pages)
+                    .ttsId(ttsId)
+                    .build();
+
+            // Kafka로 메시지 전송
+            audioBookKafkaTemplate.send(REQUEST_TOPIC, audioBookRequest);
+
         }
-
-        AudioBookRequestDto audioBookRequest = AudioBookRequestDto.builder()
-                .bookId(bookId)
-                .modelPath(tts.getTTS())
-                .pages(pages)
-                .ttsId(ttsId)
-                .build();
-
-        // Kafka로 메시지 전송
-        audioBookKafkaTemplate.send(REQUEST_TOPIC, audioBookRequest);
 
     }
 
@@ -284,6 +300,10 @@ public class TTSService {
             audioRepository.save(audio);
         }
 
+        // 상태 변환
+        String lockKey = "createAudioBook:"+bookId+"_ttsId:"+ttsId;
+        RBucket<String> statusFlag = redissonClient.getBucket(lockKey);
+        statusFlag.delete();
 
     }
 
