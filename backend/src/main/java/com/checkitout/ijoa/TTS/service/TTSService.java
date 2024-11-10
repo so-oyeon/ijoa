@@ -88,6 +88,29 @@ public class TTSService {
         // 생성자인지 확인
         checkUser(deleteTTS,user.getId());
 
+        //s3 파일 삭제
+        // 프로필 이미지 삭제
+        fileService.deleteFile(deleteTTS.getImage());
+        // 학습 데이터 삭제
+        List<TrainAudio> trainAudios = trainAudioRepository.findByTtsId(deleteTTS.getId());
+        if(trainAudios!=null){
+            for(TrainAudio trainAudio : trainAudios){
+                fileService.deleteFile(trainAudio.getFile_path());
+            }
+        }
+
+        // 책 오디오 삭제
+        List<FairytaleTTS> fairytaleTTSList =  fairytaleTTSRepository.findByTtsId(deleteTTS.getId());
+        if(fairytaleTTSList!=null){
+            for(FairytaleTTS fairytaleTTS : fairytaleTTSList){
+                List<Audio> audioList = audioRepository.findByFairytaleTTS(fairytaleTTS);
+                if(audioList!=null){
+                    for(Audio audio : audioList){
+                        fileService.deleteFile(audio.getAudio());
+                    }
+                }
+            }
+        }
         ttsRepository.delete(deleteTTS);
     }
 
@@ -99,6 +122,9 @@ public class TTSService {
         checkUser(updateTTS,user.getId());
 
         if(requestDto.getImage() != null && !requestDto.getImage().isEmpty()){
+            //기존 이미지 s3삭제
+            fileService.deleteFile(updateTTS.getImage());
+
             String url = fileService.saveProfileImage(requestDto.getImage());
             updateTTS.setImage(url);
         }
@@ -151,12 +177,13 @@ public class TTSService {
             String key = "train/" + ttsId + "/" + currentTime + "/" + pair.getFileName();
             //url 발급
             String url = fileService.getPostS3Url(key);
-            // TODO  s3 기존 데이터 삭제 넣기
             // TODO  s3 저장기간 설정
 
             TrainAudio trainAudio = trainAudioRepository.findByTtsIdAndScriptId(ttsId, pair.getScriptId());
             // trainAudio가 존재하면 업데이트, 존재하지 않으면 새로운 객체 생성 후 저장
             if (trainAudio != null) {
+                // s3 학습 데이터 삭제
+                fileService.deleteFile(trainAudio.getFile_path());
                 trainAudio.update(key);
             } else {
                 trainAudio = TrainAudio.of(tts, script, key);
