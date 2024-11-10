@@ -13,16 +13,21 @@ import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Document(indexName = "fairytale")
 public class Fairytale {
     @Id
     @GeneratedValue
     @Column(name = "fairytale_id")
     private Long id;
 
+    @Field(type = FieldType.Text)
     @Column(nullable = false)
     private String title;
 
