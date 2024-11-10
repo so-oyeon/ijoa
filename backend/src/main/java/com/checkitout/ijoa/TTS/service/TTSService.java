@@ -75,7 +75,7 @@ public class TTSService {
         TTS newTTS = TTSProfileRequestDto.of(requestDto,url,user);
 
         TTS savedTTS = ttsRepository.save(newTTS);
-        return TTSProfileResponseDto.fromTTS(savedTTS);
+        return TTSProfileResponseDto.fromTTS(savedTTS,false);
     }
 
     // TTS 삭제
@@ -135,7 +135,7 @@ public class TTSService {
 
         TTS updatedTTS = ttsRepository.save(updateTTS);
 
-        return TTSProfileResponseDto.fromTTS(updatedTTS);
+        return TTSProfileResponseDto.fromTTS(updatedTTS,trainAudioRepository.existsByTtsId(updateTTS.getId()));
     }
 
     // 부모 tts 목록
@@ -147,7 +147,7 @@ public class TTSService {
         List<TTS> ttsList = ttsRepository.findByUserId(user.getId()).orElseThrow(()-> new CustomException(ErrorCode.TTS_NO_CONTENT));
 
         for(TTS ts : ttsList){
-            responseDtos.add(TTSProfileResponseDto.fromTTS(ts));
+            responseDtos.add(TTSProfileResponseDto.fromTTS(ts,trainAudioRepository.existsByTtsId(ts.getId())));
         }
 
         return responseDtos;
