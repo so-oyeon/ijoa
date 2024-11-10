@@ -8,6 +8,7 @@ import com.checkitout.ijoa.fairytale.domain.CATEGORY;
 import com.checkitout.ijoa.fairytale.domain.ChildReadBooks;
 import com.checkitout.ijoa.fairytale.domain.Fairytale;
 import com.checkitout.ijoa.fairytale.dto.response.FairytaleListResponseDto;
+import com.checkitout.ijoa.fairytale.elasticsearch.FairytaleSearchRepository;
 import com.checkitout.ijoa.fairytale.mapper.ChildReadBooksMapper;
 import com.checkitout.ijoa.fairytale.mapper.FairytaleMapper;
 import com.checkitout.ijoa.fairytale.repository.ChildReadBooksRepository;
@@ -29,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class FairytaleListService {
 
     private final FairytaleRepository fairytaleRepository;
+    private final FairytaleSearchRepository fairytaleSearchRepository;
     private final FairytaleMapper fairytaleMapper;
 
     private final ChildReadBooksRepository childReadBooksRepository;
@@ -111,5 +113,32 @@ public class FairytaleListService {
                 fairytales.getContent());
 
         return new PageImpl<>(responseDtos, pageable, fairytales.getTotalElements());
+    }
+
+    /**
+     * 동화책 검색 메서드
+     */
+    public Page<FairytaleListResponseDto> searchFairytaleList(String title, PageRequestDto requestDto) {
+
+//        init();
+        Long childId = securityUtil.getChildByToken().getId();
+        Pageable pageable = PageRequest.of(requestDto.getPage() - 1, requestDto.getSize());
+
+        Page<Fairytale> fairytales = fairytaleSearchRepository.findByTitle(title, pageable);
+        if (fairytales.isEmpty()) {
+            throw new CustomException(ErrorCode.FAIRYTALE_NO_CONTENT);
+        }
+        List<FairytaleListResponseDto> responseDtos = fairytaleMapper.toFairytaleListResponseDtoList(
+                fairytales.getContent(), childId);
+
+        return new PageImpl<>(responseDtos, pageable, fairytales.getTotalElements());
+    }
+
+    /**
+     * elastic search 인덱스 초기화
+     */
+    public void init() {
+
+        fairytaleSearchRepository.saveAll(fairytaleRepository.findAll());
     }
 }
