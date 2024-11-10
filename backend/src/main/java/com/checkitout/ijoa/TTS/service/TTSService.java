@@ -14,6 +14,7 @@ import com.checkitout.ijoa.fairytale.repository.FairytalePageContentRepository;
 import com.checkitout.ijoa.fairytale.repository.FairytaleRepository;
 import com.checkitout.ijoa.file.service.FileService;
 import com.checkitout.ijoa.user.domain.User;
+import com.checkitout.ijoa.user.service.EmailServie;
 import com.checkitout.ijoa.util.LogUtil;
 import com.checkitout.ijoa.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
@@ -49,7 +50,9 @@ public class TTSService {
 
 
     private final SecurityUtil securityUtil;
+
     private final FileService fileService;
+    private final EmailServie emailServie;
 
     private final TTSRepository ttsRepository;
     private final ScriptRepository scriptRepository;
@@ -192,7 +195,11 @@ public class TTSService {
         Long ttsId = modelPathDto.getTtsId();
         TTS tts = ttsRepository.findById(ttsId).orElseThrow(()-> new CustomException(ErrorCode.TTS_NOT_FOUND));
         tts.setTTS(modelPath);
-        ttsRepository.save(tts);
+        TTS savedTts = ttsRepository.save(tts);
+
+        // 생성완료 이메일 전송
+        String email = savedTts.getUser().getEmail();
+        emailServie.sendCompleteEmail(email);
     }
 
     // 동화책 audio 생성
@@ -249,6 +256,8 @@ public class TTSService {
                     .orElse(Audio.of(fairytaleTTS, pageContent, s3Path));
             audioRepository.save(audio);
         }
+
+
     }
 
 
