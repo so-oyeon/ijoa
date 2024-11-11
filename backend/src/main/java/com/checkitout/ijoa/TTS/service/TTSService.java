@@ -230,7 +230,7 @@ public class TTSService {
 
         // 생성완료 이메일 전송
         String email = savedTts.getUser().getEmail();
-        emailServie.sendCompleteEmail(email);
+        emailServie.sendCompleteEmail(email, savedTts.getName());
     }
 
     // 동화책 audio 생성

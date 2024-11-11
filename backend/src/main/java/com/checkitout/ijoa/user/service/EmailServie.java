@@ -22,7 +22,7 @@ public class EmailServie {
     private static final String EMAIL_SUBJECT_PASSWORD_RESET = "아이조아 비밀번호 초기화 안내";
     private static final String EMAIL_CONTENT_PASSWORD_RESET = "아이조아 회원님의 초기화된 비밀번호는<br>[ %s ] 입니다.<br>로그인 후 반드시 비밀번호를 변경해 주세요😊";
     private static final String EMAIL_SUBJECT_COMPLETE_TTS="아이조아 TTS 생성 완료 알림";
-    private static final String EMAIL_CONTENT_COMPLETE_TTS="회원님의 목소리를 학습한 TTS가 생성되었습니다. <br> 지금 <strong><a href='https://ijoaa.com'>아이조아</a></strong> 에서 확인해보세요😊";
+    private static final String EMAIL_CONTENT_COMPLETE_TTS="회원님의 목소리를 학습한 [ %s ]TTS가 생성되었습니다. <br> 지금 <strong><a href='https://ijoaa.com'>아이조아</a></strong> 에서 확인해보세요😊";
     private final JavaMailSender mailSender;
 
 
@@ -66,8 +66,9 @@ public class EmailServie {
         sendEmail(email, EMAIL_SUBJECT_PASSWORD_RESET, content);
     }
 
-    public void sendCompleteEmail(String email){
-        sendEmail(email, EMAIL_SUBJECT_COMPLETE_TTS, EMAIL_CONTENT_COMPLETE_TTS);
+    public void sendCompleteEmail(String email, String ttsName){
+        String content = String.format(EMAIL_CONTENT_COMPLETE_TTS, ttsName);
+        sendEmail(email, EMAIL_SUBJECT_COMPLETE_TTS,content );
 
     }
 
