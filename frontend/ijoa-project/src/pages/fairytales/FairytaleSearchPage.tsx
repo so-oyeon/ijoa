@@ -72,6 +72,7 @@ const FairytaleSearchPage: React.FC = () => {
           isCompleted: allFairyTales?.content[index].isCompleted,
           currentPage: allFairyTales?.content[index].currentPage,
           totalPages: allFairyTales?.content[index].totalPages,
+          from: "search"
         },
       });
     }

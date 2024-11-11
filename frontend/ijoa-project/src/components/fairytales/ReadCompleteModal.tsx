@@ -6,31 +6,35 @@ import Animals from "/assets/fairytales/images/animals.png";
 interface ReadCompleteModalProps {
   isOpen: boolean;
   title: string;
+  from: string;
 }
 
-const ReadCompleteModal: React.FC<ReadCompleteModalProps> = ({ isOpen, title = "" }) => {
+const ReadCompleteModal: React.FC<ReadCompleteModalProps> = ({ isOpen, title = "", from }) => {
   const navigate = useNavigate();
   if (!isOpen) return null;
 
   // 한글 받침에 따라 조사를 결정하는 함수
   const getReadingMessage = (title: string) => {
     if (!title) return "책을 다 읽었어요!\n다음엔 또 무슨 책을 읽어볼까?";
-  
+
     const lastChar = title.charAt(title.length - 1);
     const code = lastChar.charCodeAt(0);
-  
+
     const hasBatchim = (code - 0xac00) % 28 !== 0;
     const particle = hasBatchim ? "을" : "를";
-  
+
     return `${title}${particle} 다 읽었어요!\n다음엔 또 무슨 책을 읽어볼까?`;
   };
-  
 
   const message = getReadingMessage(title);
 
   // 홈으로 렌더링하는 함수
   const toHome = () => {
-    navigate("/child/fairytale/list");
+    if (from === "list") {
+      navigate("/child/fairytale/list");
+    } else if (from === "search") {
+      navigate("/child/fairytale/search");
+    }
   };
 
   return (

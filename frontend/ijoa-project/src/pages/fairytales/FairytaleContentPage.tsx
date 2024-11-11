@@ -14,7 +14,7 @@ import RightArrow from "/assets/fairytales/buttons/right-arrow.png";
 import { fairyTaleApi } from "../../api/fairytaleApi";
 import { FairyTaleContentResponse, FairyTalePageResponse, QuizQuestionResponse } from "../../types/fairytaleTypes";
 import Lottie from "react-lottie-player";
-import loadingAnimation from "../../lottie/footPrint-loadingAnimation.json"
+import loadingAnimation from "../../lottie/footPrint-loadingAnimation.json";
 
 const FairyTaleContentPage: React.FC = () => {
   const { fairytaleId } = useParams<{ fairytaleId: string }>();
@@ -22,6 +22,7 @@ const FairyTaleContentPage: React.FC = () => {
   const title = location.state?.title;
   const currentPage = location.state?.currentPage;
   const totalPages = location.state?.totalPages;
+  const from = location.state?.from;
   const [fairytaleCurrentPage, setFairytaleCurrentPage] = useState(0);
   const [fairytaleData, setFairytaleData] = useState<FairyTaleContentResponse>();
   const [quizData, setQuizData] = useState<QuizQuestionResponse>();
@@ -278,7 +279,10 @@ const FairyTaleContentPage: React.FC = () => {
 
           {/* 메뉴 버튼 */}
           <div className="absolute top-[-12px] right-10">
-            <button className="px-3 py-4 bg-gray-700 bg-opacity-50 rounded-2xl shadow-md active:bg-gray-800" onClick={handleOpenMenu}>
+            <button
+              className="px-3 py-4 bg-gray-700 bg-opacity-50 rounded-2xl shadow-md active:bg-gray-800"
+              onClick={handleOpenMenu}
+            >
               <img src={MenuButton} alt="메뉴 버튼" />
               <p className="text-xs text-white">메뉴</p>
             </button>
@@ -306,7 +310,7 @@ const FairyTaleContentPage: React.FC = () => {
       {/* 레벨업 모달 */}
       <LevelUpModal isOpen={isLevelUpModalOpen} />
       {/* 독서완료 모달 */}
-      <ReadCompleteModal isOpen={isReadCompleteModalOpen} title={title} />
+      <ReadCompleteModal isOpen={isReadCompleteModalOpen} title={title} from={from}/>
       {/* 퀴즈 모달 */}
       <QuizModal
         isOpen={isQuizModalOpen && !isQuizDataLoading}

@@ -114,6 +114,7 @@ const FairytaleListPage: React.FC = () => {
         isCompleted: popularIsCompleted[index],
         currentPage: popularCurrentPage[index],
         totalPages: popularTotalPage[index],
+        from: "list"
       },
     });
   };
@@ -125,6 +126,7 @@ const FairytaleListPage: React.FC = () => {
         isCompleted: recommendedIsCompleted[index],
         currentPage: recommendedCurrentPage[index],
         totalPages: recommendedTotalPage[index],
+        from: "list"
       },
     });
   };
@@ -138,6 +140,7 @@ const FairytaleListPage: React.FC = () => {
           isCompleted: selectedFairyTale.isCompleted,
           currentPage: selectedFairyTale.currentPage,
           totalPages: selectedFairyTale.totalPages,
+          from: "list"
         },
       });
     }
