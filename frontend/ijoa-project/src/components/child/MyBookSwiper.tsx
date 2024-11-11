@@ -36,7 +36,7 @@ const MyBookSwiper = ({ direction, myBookLists, myBookReadOrNot, progress }: Pro
         <SwiperSlide key={index} style={{ overflow: "visible" }}>
           <div className="block text-center cursor-pointer gap-10">
             <div className="relative">
-              <img src={cover} alt={`동화책 ${index + 1}`} className="w-full h-[210px] object-cover rounded-lg" />
+              <img src={cover} alt={`동화책 ${index + 1}`} className="book-cover-image w-full h-[210px] object-cover rounded-lg" />
 
               {/* 읽음 여부에 따라 우측 상단에 뱃지 이미지 표시 */}
               {myBookReadOrNot[index] && (

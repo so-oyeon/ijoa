@@ -72,7 +72,7 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({
             <>
               <button
                 onClick={handleClose}
-                className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl font-bold"
+                className="absolute top-4 right-4 text-2xl font-bold"
               >
                 <img src={closebutton} alt="닫기 버튼" />
               </button>
@@ -80,43 +80,53 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({
                 <span className="blue-highlight">누구 목소리</span>로 책을 읽어줄까요?
               </div>
 
-              <div className="mt-8 mb-8 text-lg">
-                <div className="mb-8 flex flex-wrap justify-center gap-8">
-                  {ttsImages.slice(0, 2).map((image, index) => (
-                    <div key={index} onClick={() => handleImageClick(index)}>
-                      <img
-                        src={image}
-                        alt={ttsNames[index]}
-                        className={`w-28 h-28 object-cover cursor-pointer rounded-full ${
-                          selectedIndex === index ? "border-[6px] border-[#67CCFF] rounded-full" : ""
-                        }`}
-                      />
-                      <p className="mt-2">{ttsNames[index]}</p>
-                    </div>
-                  ))}
+              {ttsImages.length > 0 ? (
+                <div className="mt-8 mb-8 text-lg">
+                  <div className="flex flex-wrap justify-center gap-8">
+                    {ttsImages.slice(0, 2).map((image, index) => (
+                      <div key={index} onClick={() => handleImageClick(index)}>
+                        <img
+                          src={image}
+                          alt={ttsNames[index]}
+                          className={`w-28 h-28 object-cover cursor-pointer rounded-full ${
+                            selectedIndex === index ? "border-[6px] border-[#67CCFF] rounded-full" : ""
+                          }`}
+                        />
+                        <p className="mt-2">{ttsNames[index]}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="flex flex-wrap justify-center gap-8">
+                    {ttsImages.slice(2).map((image, index) => (
+                      <div key={index + 2} onClick={() => handleImageClick(index + 2)}>
+                        <img
+                          src={image}
+                          alt={ttsNames[index + 2]}
+                          className={`w-28 h-28 object-cover cursor-pointer rounded-full ${
+                            selectedIndex === index + 2 ? "border-[6px] border-[#67CCFF] rounded-full" : ""
+                          }`}
+                        />
+                        <p className="mt-2">{ttsNames[index + 2]}</p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <div className="flex flex-wrap justify-center gap-8">
-                  {ttsImages.slice(2).map((image, index) => (
-                    <div key={index + 2} onClick={() => handleImageClick(index + 2)}>
-                      <img
-                        src={image}
-                        alt={ttsNames[index + 2]}
-                        className={`w-28 h-28 object-cover cursor-pointer rounded-full ${
-                          selectedIndex === index + 2 ? "border-[6px] border-[#67CCFF] rounded-full" : ""
-                        }`}
-                      />
-                      <p className="mt-2">{ttsNames[index + 2]}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              ) : (
+                <div className="mt-8 mb-8 text-lg text-center text-gray-500">학습된 TTS가 없어요.</div>
+              )}
             </>
           )}
 
+          {!readAloudEnabled && (
+            <div className="text-xl font-bold">
+              책 읽어주기 기능이 <span className="red-highlight">off 상태</span>에요.
+            </div>
+          )}
+
           {isReadIng ? (
-            <div className="flex gap-4 justify-center items-center">
+            <div className="mt-8 flex gap-4 justify-center items-center">
               <button
-                className="w-36 py-2 text-[#67CCFF] text-lg font-bold bg-white rounded-3xl border-2 border-[#67CCFF]"
+                className="w-36 py-2 text-[#67CCFF] text-lg font-bold bg-white rounded-3xl border-2 border-[#67CCFF] active:bg-[#e0f7ff]"
                 onClick={() => {
                   if (onContinueReading) onContinueReading();
                 }}
@@ -124,7 +134,7 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({
                 이어서 읽기
               </button>
               <button
-                className="w-36 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-3xl border-2 border-[#67CCFF]"
+                className="w-36 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-3xl border-2 border-[#67CCFF] active:bg-[#005f99]"
                 onClick={onClose}
               >
                 처음부터 읽기
@@ -133,7 +143,7 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({
           ) : (
             <div className="mt-8 text-lg">
               <button
-                className="w-36 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-3xl border-2 border-[#67CCFF]"
+                className="w-36 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-3xl border-2 border-[#67CCFF] active:bg-[#005f99]"
                 onClick={onClose}
               >
                 동화책 읽기

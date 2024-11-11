@@ -73,3 +73,7 @@
 .custom-toggle:disabled {
   background-color: #ffffff;
 }
+
+.book-cover-image {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
