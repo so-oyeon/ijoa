@@ -122,13 +122,13 @@ const Login: React.FC<LoginProps> = ({ onAssetsLoaded }) => {
         <div className="w-full flex flex-col items-center space-y-3">
           <button
             onClick={() => openModal("login")}
-            className="w-1/3 h-20 bg-yellow-400 text-black text-2xl font-bold rounded-full shadow-md border-4 border-white hover:shadow-lg transition-shadow duration-200"
+            className="w-1/3 h-20 bg-yellow-400 text-black text-2xl font-bold rounded-full shadow-md border-4 border-white hover:shadow-lg transition-shadow duration-200 active:scale-110"
           >
             로그인
           </button>
           <button
             onClick={() => openModal("signup")}
-            className="w-1/3 h-20 bg-orange-500 text-black text-2xl font-bold rounded-full shadow-md border-4 border-white hover:shadow-lg transition-shadow duration-200"
+            className="w-1/3 h-20 bg-orange-500 text-black text-2xl font-bold rounded-full shadow-md border-4 border-white hover:shadow-lg transition-shadow duration-200 active:scale-110"
           >
             회원가입
           </button>

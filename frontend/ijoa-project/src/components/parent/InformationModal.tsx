@@ -163,7 +163,7 @@ const InformationModal: React.FC<InformationModalProps> = ({ isOpen, onClose }) 
         <div className="flex justify-center mt-8">
           <button
             className={`w-1/2 h-[60px] py-3 mb-4 font-bold text-xl text-white rounded-full 
-    ${!newPassword || !confirmPassword ? "bg-gray-400 cursor-not-allowed" : "bg-[#67CCFF] active:bg-[#005f99]"}`}
+    ${!newPassword || !confirmPassword ? "bg-gray-400" : "bg-[#67CCFF] active:bg-[#005f99]"}`}
             onClick={handleComplete}
             disabled={!newPassword || !confirmPassword}
           >

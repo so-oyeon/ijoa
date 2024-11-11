@@ -199,7 +199,9 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
       {/* 이메일 인증 요청 버튼 - 이메일 형식이 유효할 때만 활성화 */}
       {!isVerificationRequested ? (
         <button
-          className="w-3/4 h-[60px] mb-2 py-3 rounded-xl font-bold bg-[#FFE0C1] hover:bg-red-200"
+          className={`w-3/4 h-[60px] mb-2 py-3 rounded-xl font-bold bg-[#FFE0C1] ${
+            !isEmailValid || isLoading ? "bg-orange-200 opacity-70" : "active:bg-red-200"
+          }`}
           onClick={handleEmailVerification}
           disabled={!isEmailValid || isLoading} // 이메일이 유효하고 로딩 중이 아닐 때만 활성화
         >
@@ -216,14 +218,14 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
           <input
             type="text"
             placeholder="인증번호 입력"
-            className="w-[230px] h-[60px] px-6 py-3 rounded-full bg-gray-100 border border-gray-300 text-gray-500 placeholder-gray-400 focus:outline-none"
+            className="w-[200px] h-[60px] px-6 py-3 rounded-full bg-gray-100 border border-gray-300 text-gray-500 placeholder-gray-400 focus:outline-none"
             value={verificationCode}
             onChange={(e) => setVerificationCode(e.target.value)}
             disabled={isVerified} // 인증 완료 시 입력 비활성화
           />
           <button
             className={`w-[60px] h-[50px] py-3 rounded-xl font-bold ${
-              isVerified ? "bg-gray-400 text-white" : "bg-[#FFC890] hover:bg-red-200"
+              isVerified ? "bg-gray-400 text-white" : "bg-[#FFC890] active:bg-red-200"
             }`}
             onClick={handleVerificationCodeConfirm}
             disabled={isVerified} // 인증 완료 시 버튼 비활성화
@@ -232,7 +234,7 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
           </button>
           <button
             className={`w-[80px] h-[50px] py-2 rounded-xl font-bold ${
-              isVerified ? "bg-gray-400 text-white" : "bg-blue-200 hover:bg-blue-300"
+              isVerified ? "bg-gray-400 text-white" : "bg-blue-200 active:bg-blue-300"
             }`}
             onClick={handleEmailVerification}
             disabled={isLoading || isVerified}
@@ -275,7 +277,7 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
       <button
         onClick={handleSubmit}
         className={`w-3/4 h-[60px] py-3 mb-4 rounded-full font-bold text-lg ${
-          isFormValid ? "bg-orange-400 hover:bg-orange-500" : "bg-orange-200 opacity-70"
+          isFormValid ? "bg-orange-400 active:bg-orange-500" : "bg-orange-200 opacity-70"
         }`}
         disabled={!isFormValid} // 이메일 인증 완료 전까지 비활성화
       >
