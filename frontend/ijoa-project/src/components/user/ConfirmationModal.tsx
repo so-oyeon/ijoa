@@ -15,7 +15,7 @@ const ConfirmationModal = ({ onClose }: Props) => {
       <p className="font-semibold">고객님의 메일로</p>
       <p className="font-semibold mb-6">비밀번호가 발송되었습니다.</p>
 
-      <button onClick={onClose} className="w-3/5 py-3 font-bold bg-yellow-400 rounded-full hover:bg-yellow-500">
+      <button onClick={onClose} className="w-3/5 py-3 font-bold bg-yellow-400 rounded-full active:bg-yellow-500">
         로그인
       </button>
     </>

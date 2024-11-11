@@ -73,6 +73,11 @@ spring:
       spring:
         json:
           trusted-packages: "*"
+
+  elasticsearch:
+    uris: ${ELASTIC_URI}
+    username: ${ELASTIC_USER}
+    password: ${ELASTIC_PW}
 # Log
 logging:
   level:
