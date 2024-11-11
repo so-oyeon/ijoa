@@ -12,7 +12,11 @@ import { useNavigate } from "react-router-dom";
 
 type ModalType = "login" | "signup" | "forgotPassword" | "confirmation" | "notFound" | null;
 
-const Login: React.FC = () => {
+interface LoginProps {
+  onAssetsLoaded: () => void;
+}
+
+const Login: React.FC<LoginProps> = ({ onAssetsLoaded }) => {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState<ModalType>(null);
@@ -26,6 +30,22 @@ const Login: React.FC = () => {
     setIsModalOpen(false);
     setModalType(null);
   };
+
+  useEffect(() => {
+    const images = [LoginPicture2, Bat, Bear, Cat, Lion, Monkey];
+    let loadedCount = 0;
+
+    images.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+      img.onload = () => {
+        loadedCount += 1;
+        if (loadedCount === images.length) {
+          onAssetsLoaded();
+        }
+      };
+    });
+  }, [onAssetsLoaded]);
 
   // 페이지 로딩 시 토큰 확인 후 부모 메인으로 이동
   useEffect(() => {

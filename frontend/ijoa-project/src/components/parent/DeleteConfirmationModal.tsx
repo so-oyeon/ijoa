@@ -22,7 +22,7 @@ const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({ isOpe
           title: "회원 탈퇴가 완료되었습니다",
           confirmButtonText: "확인",
         }).then(() => {
-          navigate("/home");
+          navigate("/");
         });
       } else {
         throw new Error("회원 탈퇴 실패");

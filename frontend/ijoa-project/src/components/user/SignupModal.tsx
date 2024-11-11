@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { userApi } from "../../api/userApi";
-import { useNavigate } from "react-router-dom";
 import Lottie from "react-lottie-player";
 import loadingAnimation from "../../lottie/airplane-loadingAnimation.json";
 
@@ -26,7 +25,6 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
   const [isVerified, setIsVerified] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [guideIdx, setGuideIdx] = useState(0);
-  const navigate = useNavigate();
 
   const isFormValid =
     email && password && confirmPassword && nickname && !emailError && !confirmPasswordError && isVerified;
@@ -158,7 +156,6 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
             confirmButtonColor: "#3085d6",
           }).then(() => {
             onClose();
-            navigate("/home"); // 회원가입 후 이동할 페이지
           });
         }
       } catch (error) {
