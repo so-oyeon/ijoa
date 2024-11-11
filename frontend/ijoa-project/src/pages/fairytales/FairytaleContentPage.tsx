@@ -13,6 +13,8 @@ import LeftArrow from "/assets/fairytales/buttons/left-arrow.png";
 import RightArrow from "/assets/fairytales/buttons/right-arrow.png";
 import { fairyTaleApi } from "../../api/fairytaleApi";
 import { FairyTaleContentResponse, FairyTalePageResponse, QuizQuestionResponse } from "../../types/fairytaleTypes";
+import Lottie from "react-lottie-player";
+import loadingAnimation from "../../lottie/footPrint-loadingAnimation.json"
 
 const FairyTaleContentPage: React.FC = () => {
   const { fairytaleId } = useParams<{ fairytaleId: string }>();
@@ -258,7 +260,7 @@ const FairyTaleContentPage: React.FC = () => {
             )}
 
             <div className="px-12 flex-1 text-4xl font-['MapleBold'] font-bold text-center whitespace-pre-line break-keep">
-                {fairytaleData.content}
+              {fairytaleData.content}
             </div>
           </div>
           {fairytaleCurrentPage > 0 && (
@@ -284,7 +286,7 @@ const FairyTaleContentPage: React.FC = () => {
         </>
       ) : (
         <div className="flex items-center justify-center h-full">
-          <p className="text-xl">Loading...</p>
+          <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
         </div>
       )}
 

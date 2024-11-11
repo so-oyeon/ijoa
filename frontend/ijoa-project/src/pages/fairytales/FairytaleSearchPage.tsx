@@ -19,7 +19,7 @@ const FairytaleSearchPage: React.FC = () => {
   useEffect(() => {
     const getAllFairyTales = async () => {
       try {
-        const response = await fairyTaleApi.getFairyTalesList(1, 11);
+        const response = await fairyTaleApi.getFairyTalesList(1, 33);
         if (response.status === 200) {
           setAllFairyTales(response.data);
           console.log(response.data);
