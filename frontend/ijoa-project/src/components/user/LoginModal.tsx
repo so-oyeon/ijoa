@@ -93,7 +93,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ openForgotPasswordModal }) => {
         />
       </div>
       <button
-        className="w-3/4 h-[60px] py-3 mb-4 font-bold text-lg bg-yellow-400 rounded-full hover:bg-yellow-500"
+        className="w-3/4 h-[60px] py-3 mb-4 font-bold text-lg bg-yellow-400 rounded-full active:bg-yellow-500"
         onClick={handleLogin}
         ref={loginButtonRef}
       >
