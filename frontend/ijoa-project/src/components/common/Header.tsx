@@ -85,10 +85,11 @@ const Header = () => {
       setSelectedTab(0); // "자녀" 탭 인덱스
       childClick();
     } else {
-      setSelectedTab(0); // "도서관" 탭 인덱스
+      setSelectedTab(null); // 자녀 화면일 경우 선택된 탭 없음
       fairytalelistClick();
     }
   };
+
   const parentMenu = [
     { img: "child-icon", text: "자녀", action: childClick, isSetting: false },
     { img: "tts-icon", text: "TTS", action: ttsClick, isSetting: false },
