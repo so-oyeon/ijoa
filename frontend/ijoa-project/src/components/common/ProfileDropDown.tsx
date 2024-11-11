@@ -28,7 +28,7 @@ const ProfileDropDown = () => {
         title: "로그아웃이 완료되었습니다",
         confirmButtonText: "확인",
       }).then(() => {
-        navigate("/home");
+        navigate("/");
       });
     } catch (error) {
       console.log("userApi의 logout : ", error);
@@ -76,7 +76,8 @@ const ProfileDropDown = () => {
 
       <ul
         tabIndex={0}
-        className="menu menu-sm dropdown-content w-60 p-2 mt-3 bg-base-100 rounded-box border-2 shadow-lg z-[1] grid gap-1">
+        className="menu menu-sm dropdown-content w-60 p-2 mt-3 bg-base-100 rounded-box border-2 shadow-lg z-[1] grid gap-1"
+      >
         <li className="h-14">
           <div className="w-full h-full flex items-center space-x-3 hover:bg-white">
             <MdChildCare className="text-2xl" />
