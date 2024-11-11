@@ -13,6 +13,7 @@ import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
@@ -21,6 +22,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Document(indexName = "fairytale")
+@ToString
 public class Fairytale {
     @Id
     @GeneratedValue
@@ -31,28 +33,36 @@ public class Fairytale {
     @Column(nullable = false)
     private String title;
 
+    @Field(type = FieldType.Text)
     @Column(nullable = false)
     private String author;
 
+    @Field(type = FieldType.Text)
     @Column(nullable = false)
     private String illustrator;
 
+    @Field(type = FieldType.Text)
     @Column(nullable = false)
     private String isbn;
 
+    @Field(type = FieldType.Text, name = "image_url")
     @Column(name = "image_url", nullable = false)
     private String imageUrl;
 
+    @Field(type = FieldType.Integer, name = "published_year")
     @Column(name = "published_year", nullable = false)
     private Integer publishedYear;
 
+    @Field(type = FieldType.Text)
     @Column(nullable = false)
     private String publisher;
 
+    @Field(type = FieldType.Text)
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private CATEGORY category;
 
+    @Field(type = FieldType.Integer, name = "total_pages")
     @Column(name = "total_pages", nullable = false)
     private Integer totalPages;
 
