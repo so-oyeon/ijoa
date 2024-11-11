@@ -89,6 +89,9 @@ public class ChildrenManagementService {
         }
 
         if (file != null && !file.isEmpty()) {
+
+            fileService.deleteFile(getKeyFromUrl(child.getProfile()));
+
             String profileUrl = determineProfileUrl(file, gender);
             child.setProfile(profileUrl);
         } else if (gender != null && (file == null || file.isEmpty())) {
@@ -114,6 +117,11 @@ public class ChildrenManagementService {
         Child child = childRepository.findById(childId)
                 .orElseThrow(() -> new CustomException(ErrorCode.CHILD_NOT_FOUND));
         verifyChildParentRelationship(child);
+
+        String profileUrl = child.getProfile();
+        if (!profileUrl.equals(GIRL_PROFILE_DEFAULT_URL) && !profileUrl.equals(BOY_PROFILE_DEFAULT_URL)) {
+            fileService.deleteFile(getKeyFromUrl(child.getProfile()));
+        }
 
         child.setBirth(null);
         child.setGender(null);
@@ -173,4 +181,7 @@ public class ChildrenManagementService {
         return (gender == Gender.MALE) ? BOY_PROFILE_DEFAULT_URL : GIRL_PROFILE_DEFAULT_URL;
     }
 
+    public String getKeyFromUrl(String url) {
+        return url.replace("https://checkitout-bucket.s3.ap-northeast-2.amazonaws.com/", "");
+    }
 }
