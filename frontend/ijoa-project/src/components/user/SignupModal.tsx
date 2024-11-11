@@ -11,11 +11,14 @@ interface Props {
 const guideText = ["인증번호를 생성하고 있어요", "이메일을 전송하고 있어요", "거의 다 됐어요"];
 
 const SignupModal: React.FC<Props> = ({ onClose }) => {
+  const inputStyle =
+    "w-full h-[50px] mb-2 px-4 py-2 rounded-full bg-gray-100 border border-gray-300 text-gray-500 placeholder-gray-400 focus:outline-none";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [nickname, setNickname] = useState("");
   const [emailError, setEmailError] = useState("");
+
   const [isEmailValid, setIsEmailValid] = useState(false);
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
@@ -185,25 +188,23 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
   }
 
   return (
-    <div className="modal-container">
-      {/* 이메일 입력 필드 및 오류 표시 */}
+    <div className="px-5 pt-10">
       <input
         type="email"
         placeholder="이메일을 입력해주세요"
-        className="w-3/4 h-[60px] mt-6 mb-2 px-6 py-3 rounded-full bg-gray-100 text-gray-500 border border-gray-300 placeholder-gray-400 focus:outline-none"
+        className={inputStyle}
         value={email}
         onChange={handleEmail}
       />
-      {emailError && <p className="text-red-500 text-xs mb-4">* {emailError}</p>}
+      {emailError && <p className="text-red-500 text-xs md:text-sm mb-4">* {emailError}</p>}
 
-      {/* 이메일 인증 요청 버튼 - 이메일 형식이 유효할 때만 활성화 */}
       {!isVerificationRequested ? (
         <button
-          className={`w-3/4 h-[60px] mb-2 py-3 rounded-xl font-bold bg-[#FFE0C1] ${
+          className={`w-full h-[50px] mb-2 py-2 rounded-xl font-bold bg-[#FFE0C1] ${
             !isEmailValid || isLoading ? "bg-orange-200 opacity-70" : "active:bg-red-200"
           }`}
           onClick={handleEmailVerification}
-          disabled={!isEmailValid || isLoading} // 이메일이 유효하고 로딩 중이 아닐 때만 활성화
+          disabled={!isEmailValid || isLoading}
         >
           {isLoading ? (
             <div className="flex justify-center">
@@ -214,26 +215,26 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
           )}
         </button>
       ) : (
-        <div className="flex w-full h-[60px] items-center justify-center mb-2 gap-2">
+        <div className=" w-full mb-2 grid lg:grid-cols-[4fr_1fr_1fr] sm:grid-cols-1 gap-2">
           <input
             type="text"
             placeholder="인증번호 입력"
-            className="w-[200px] h-[60px] px-6 py-3 rounded-full bg-gray-100 border border-gray-300 text-gray-500 placeholder-gray-400 focus:outline-none"
+            className="w-full h-[50px] px-4 rounded-full bg-gray-100 border border-gray-300 text-gray-500 placeholder-gray-400 focus:outline-none"
             value={verificationCode}
             onChange={(e) => setVerificationCode(e.target.value)}
-            disabled={isVerified} // 인증 완료 시 입력 비활성화
+            disabled={isVerified}
           />
           <button
-            className={`w-[60px] h-[50px] py-3 rounded-xl font-bold ${
+            className={`w-full h-[50px] rounded-xl font-bold ${
               isVerified ? "bg-gray-400 text-white" : "bg-[#FFC890] active:bg-red-200"
             }`}
             onClick={handleVerificationCodeConfirm}
-            disabled={isVerified} // 인증 완료 시 버튼 비활성화
+            disabled={isVerified}
           >
             {isVerified ? "완료" : "확인"}
           </button>
           <button
-            className={`w-[80px] h-[50px] py-2 rounded-xl font-bold ${
+            className={`w-full h-[50px] rounded-xl font-bold ${
               isVerified ? "bg-gray-400 text-white" : "bg-blue-200 active:bg-blue-300"
             }`}
             onClick={handleEmailVerification}
@@ -244,42 +245,40 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
         </div>
       )}
 
-      {/* 비밀번호 입력 및 오류 표시 */}
-
       <input
         type="password"
         placeholder="비밀번호를 입력해주세요"
-        className="w-3/4 h-[60px] mb-2 px-6 py-3 rounded-full bg-gray-100 border border-gray-300 text-gray-500 placeholder-gray-400 focus:outline-none"
+        className={inputStyle}
         value={password}
         onChange={handlePassword}
       />
-      {passwordError && <p className="text-red-500 text-xs mb-4">* {passwordError}</p>}
+      {passwordError && <p className="text-red-500 text-xs md:text-sm mb-4">* {passwordError}</p>}
 
       <input
         type="password"
         placeholder="비밀번호를 다시 입력해주세요"
-        className="w-3/4 h-[60px] mb-2 px-6 py-3 rounded-full bg-gray-100 border border-gray-300 text-gray-500 placeholder-gray-400 focus:outline-none"
+        className={inputStyle}
         value={confirmPassword}
         onChange={handleConfirmPassword}
       />
-      {confirmPasswordError && <p className="text-red-500 text-xs mb-4">* {confirmPasswordError}</p>}
+      {confirmPasswordError && <p className="text-red-500 text-xs md:text-sm mb-4">* {confirmPasswordError}</p>}
 
       <input
         type="text"
         placeholder="닉네임을 입력해주세요"
-        className="w-3/4 h-[60px] mb-2 px-6 py-3 rounded-full bg-gray-100 border border-gray-300 text-gray-500 placeholder-gray-400 focus:outline-none"
+        className={inputStyle}
         value={nickname}
         onChange={handleNickname}
       />
 
-      {generalError && <p className="text-red-500 font-bold text-xs mb-4">* {generalError}</p>}
+      {generalError && <p className="text-red-500 font-bold text-xs md:text-sm mb-4">* {generalError}</p>}
 
       <button
         onClick={handleSubmit}
-        className={`w-3/4 h-[60px] py-3 mb-4 rounded-full font-bold text-lg ${
+        className={`w-full h-[50px] py-2 mb-4 rounded-full font-bold text-base md:text-lg lg:text-xl ${
           isFormValid ? "bg-orange-400 active:bg-orange-500" : "bg-orange-200 opacity-70"
         }`}
-        disabled={!isFormValid} // 이메일 인증 완료 전까지 비활성화
+        disabled={!isFormValid}
       >
         회원가입
       </button>
