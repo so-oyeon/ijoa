@@ -80,7 +80,7 @@ const FairytaleListPage: React.FC = () => {
   };
 
   // 카테고리별 동화책 조회 함수
-  const getFairyTalesByCategory = async (category: string, page: number = 1, size: number = 5) => {
+  const getFairyTalesByCategory = async (category: string, page: number = 1, size: number = 10) => {
     try {
       const response = await fairyTaleApi.getFairyTalesListByCategory(category, page, size);
       if (response.status === 200) {
@@ -114,6 +114,7 @@ const FairytaleListPage: React.FC = () => {
         isCompleted: popularIsCompleted[index],
         currentPage: popularCurrentPage[index],
         totalPages: popularTotalPage[index],
+        from: "list"
       },
     });
   };
@@ -125,6 +126,7 @@ const FairytaleListPage: React.FC = () => {
         isCompleted: recommendedIsCompleted[index],
         currentPage: recommendedCurrentPage[index],
         totalPages: recommendedTotalPage[index],
+        from: "list"
       },
     });
   };
@@ -138,6 +140,7 @@ const FairytaleListPage: React.FC = () => {
           isCompleted: selectedFairyTale.isCompleted,
           currentPage: selectedFairyTale.currentPage,
           totalPages: selectedFairyTale.totalPages,
+          from: "list"
         },
       });
     }

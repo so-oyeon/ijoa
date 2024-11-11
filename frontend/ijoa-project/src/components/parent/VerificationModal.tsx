@@ -47,7 +47,7 @@ const VerificationModal: React.FC<VerificationModalProps> = ({ isOpen, onClose, 
           onChange={(e) => setPassword(e.target.value)}
         />
         <button
-          className="w-1/3 h-[60px] py-2 bg-[#67CCFF] text-white rounded-full font-bold hover:bg-blue-500"
+          className="w-1/3 h-[60px] py-2 bg-[#67CCFF] text-white rounded-full font-bold active:bg-[#005f99]"
           onClick={handleNext}
         >
           다음

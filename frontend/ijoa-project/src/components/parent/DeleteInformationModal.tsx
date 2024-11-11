@@ -65,13 +65,13 @@ const DeleteInformationModal: React.FC<DeleteInformationModalProps> = ({ isOpen,
         <div className="flex justify-center gap-4">
           <button
             onClick={onClose}
-            className="h-[50px] px-8 font-semibold bg-gray-300 text-gray-700 rounded-full hover:bg-gray-400"
+            className="h-[50px] px-8 font-semibold bg-gray-300 text-gray-700 rounded-full active:bg-gray-500 active:text-white"
           >
             뒤로가기
           </button>
           <button
             onClick={handleNext}
-            className={`h-[50px] px-8 bg-[#FF8067] font-semibold text-white rounded-full hover:bg-red-400 ${
+            className={`h-[50px] px-8 bg-[#FF8067] font-semibold text-white rounded-full active:bg-red-500 ${
               !isChecked ? "opacity-50 cursor-not-allowed" : ""
             }`}
             disabled={!isChecked}

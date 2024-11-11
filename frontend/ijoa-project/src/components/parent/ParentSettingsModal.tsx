@@ -66,20 +66,20 @@ const ParentSettingsModal: React.FC<ParentSettingsModalProps> = ({ isOpen, onClo
             <div className="flex flex-col justify-center items-center">
               {/* 회원 정보 수정 버튼 */}
               <button
-                className="w-1/2 h-[60px] mb-4 py-2 text-[#67CCFF] font-bold text-lg rounded-full border-2 border-[#67CCFF] hover:bg-blue-50"
+                className="w-1/2 h-[60px] mb-4 py-2 text-[#67CCFF] font-bold text-lg rounded-full border-2 border-[#67CCFF] active:bg-[#e0f7ff]"
                 onClick={() => setModalType("verification")}
               >
                 회원 정보 수정
               </button>
               {/* 로그아웃 버튼 */}
               <button
-                className="w-1/2 h-[60px] mb-4 py-2 bg-[#67CCFF] text-white text-lg font-bold rounded-full hover:bg-blue-500"
+                className="w-1/2 h-[60px] mb-4 py-2 bg-[#67CCFF] text-white text-lg font-bold rounded-full active:bg-[#005f99]"
                 onClick={handleLogout}
               >
                 로그아웃
               </button>
               <button
-                className="w-1/2 h-[60px] py-2 bg-[#FF8067] text-white font-bold text-lg rounded-full hover:bg-red-400"
+                className="w-1/2 h-[60px] py-2 bg-[#FF8067] text-white font-bold text-lg rounded-full active:bg-red-500"
                 onClick={() => setModalType("deleteinformation")}
               >
                 회원 탈퇴
