@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SettingsModal from "../../components/fairytales/SettingsModal";
 import ParentSettingsModal from "../../components/parent/ParentSettingsModal";
@@ -11,6 +11,11 @@ const Header = () => {
   const [selectedTab, setSelectedTab] = useState<number | null>(null);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // type이 변경될 때 selectedTab 기본값 설정
+    setSelectedTab(type === "parent" ? 0 : null);
+  }, [type]);
 
   const handleTabClick = (index: number, action: () => void, isSetting: boolean) => {
     if (!isSetting) {
@@ -121,17 +126,17 @@ const Header = () => {
             key={index}
             className={`w-14 flex flex-col justify-center items-center space-y-1 transform transition-transform duration-200 ${
               selectedTab === index && !menu.isSetting ? "text-[#67CCFF]" : "text-[#B27F44]"
-            } ${selectedTab === index && !menu.isSetting ? "" : "hover:scale-125"}`}
+            }`}
             onClick={() => handleTabClick(index, menu.action, menu.isSetting)}
           >
             <img
-              className="w-12 aspect-1 p-2 bg-white rounded-full shadow-[0_3px_3px_1px_rgba(0,0,0,0.1)]"
+              className={`w-12 aspect-1 p-2 bg-white rounded-full shadow-[0_3px_3px_1px_rgba(0,0,0,0.1)] ${
+                selectedTab === index ? "bg-[#f8ffab]" : ""
+              }`}
               src={`/assets/header/${type}/${menu.img}.png`}
               alt=""
             />
-            <p className={`text-sm text-[#B27F44] font-bold ${selectedTab === index ? "blue-highlight" : ""}`}>
-              {menu.text}
-            </p>
+            <p className={`text-sm text-[#B27F44] font-bold`}>{menu.text}</p>
           </button>
         ))}
 

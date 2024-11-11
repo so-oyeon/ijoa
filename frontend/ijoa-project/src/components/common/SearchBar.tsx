@@ -16,7 +16,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onInputChange }) => {
       <input
         className="w-full text-xl font-semibold outline-none"
         type="text"
-        placeholder="제목 또는 키워드로 검색해 보세요."
+        placeholder="동화책 제목으로 검색해 보세요."
         onChange={handleInputChange}
       />
     </div>
