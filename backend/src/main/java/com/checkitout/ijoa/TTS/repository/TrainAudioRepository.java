@@ -8,4 +8,6 @@ import java.util.List;
 public interface TrainAudioRepository extends JpaRepository<TrainAudio,Long> {
     TrainAudio findByTtsIdAndScriptId(Long ttsId, Long scriptId);
     Optional<List<TrainAudio>> findByTtsIdOrderByScriptId(Long ttsId);
+    List<TrainAudio> findByTtsId(Long ttsId);
+    boolean existsByTtsId(Long ttsId);
 }

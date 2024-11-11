@@ -25,6 +25,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import static org.apache.kafka.common.requests.DeleteAclsResponse.log;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -79,6 +81,24 @@ public class FileService {
             return;
         }
         LogUtil.error("File delete fail");
+    }
+
+    /**
+     * S3에 업로드된 파일 삭제
+     */
+    public void deleteFile(String key) {
+
+        try {
+            boolean isObjectExist = s3Client.doesObjectExist(bucket, key);
+            if (isObjectExist) {
+                s3Client.deleteObject(bucket, key);
+            } else {
+                key = "file not found";
+            }
+        } catch (Exception e) {
+            log.debug("Delete File failed", e);
+        }
+
     }
 
     // post 용 url반환
