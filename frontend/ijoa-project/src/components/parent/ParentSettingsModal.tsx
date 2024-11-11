@@ -31,7 +31,7 @@ const ParentSettingsModal: React.FC<ParentSettingsModalProps> = ({ isOpen, onClo
         title: "로그아웃이 완료되었습니다",
         confirmButtonText: "확인",
       }).then(() => {
-        navigate("/home");
+        navigate("/");
       });
     } catch (error) {
       console.log("userApi의 logout : ", error);
@@ -102,7 +102,11 @@ const ParentSettingsModal: React.FC<ParentSettingsModalProps> = ({ isOpen, onClo
 
         {/* DeleteInformationModal 호출 */}
         {modalType === "deleteinformation" && (
-          <DeleteInformationModal isOpen={true} onClose={() => setModalType("main")} onNext={() => setModalType("confirmation")}/>
+          <DeleteInformationModal
+            isOpen={true}
+            onClose={() => setModalType("main")}
+            onNext={() => setModalType("confirmation")}
+          />
         )}
 
         {/* ConfirmationModal 표시 */}

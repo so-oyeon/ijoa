@@ -4,20 +4,17 @@ import Elephant from "/assets/user/elephant.png";
 import Giraffe from "/assets/user/giraffe.png";
 import Tablet from "/assets/user/tablet.png";
 import "../../css/Login.css";
-import { useNavigate } from "react-router-dom";
 
 const SplashScreen: React.FC = () => {
   const [fadeOut, setFadeOut] = useState(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
-    // 1초 후에 fadeOut을 true로 설정하여 서서히 사라지도록 함
     const timer = setTimeout(() => {
       setFadeOut(true);
-      navigate("/home");
-    }, 2000); // 2초 동안 대기 후 fadeOut 상태 변경
+    }, 2000);
+
     return () => clearTimeout(timer);
-  });
+  }, []);
 
   return (
     <div
@@ -30,7 +27,9 @@ const SplashScreen: React.FC = () => {
           <span className="text-[#FF6666] ">조</span>
           <span className="text-[#339999] ">아</span>
         </div>
-        <p className="w-full font-['MapleBold'] text-center font-semibold text-[#565656] text-2xl tracking-widest">엄마, 아빠가 읽어주는 동화책</p>
+        <p className="w-full font-['MapleBold'] text-center font-semibold text-[#565656] text-2xl tracking-widest">
+          엄마, 아빠가 읽어주는 동화책
+        </p>
       </div>
 
       <div className="flex items-end absolute left-[10%] bottom-[15%] gap-[0vw] z-10">

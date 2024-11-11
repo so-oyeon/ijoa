@@ -38,7 +38,7 @@ const UserModal: React.FC<UserModalProps> = ({
         {modalType === "forgotPassword" && (
           <ForgotPasswordModal openConfirmationModal={openConfirmationModal} openNotFoundModal={openNotFoundModal} />
         )}
-        {modalType === "confirmation" && <ConfirmationModal />}
+        {modalType === "confirmation" && <ConfirmationModal onClose={onClose} />}
         {modalType === "notFound" && <NotFoundModal onClose={onClose} />}
       </div>
     </div>

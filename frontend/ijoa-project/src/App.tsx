@@ -1,10 +1,9 @@
 import { Routes, Route, useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Header from "./components/common/Header";
 import CreateChildProfile from "./pages/parent/ChildProfileList";
 import FairytaleListPage from "./pages/fairytales/FairytaleListPage";
 import FairyTaleContentPage from "./pages/fairytales/FairytaleContentPage";
-import SplashScreen from "./pages/users/SplashScreen";
 import Login from "./pages/users/Login";
 import TTSList from "./pages/parent/TTSList";
 import MyRoom from "./pages/child/MyRoom";
@@ -14,24 +13,57 @@ import VoiceAlbumDetail from "./pages/parent/VoiceAlbumDetail";
 import ReadingStatistics from "./pages/parent/ReadingStats";
 import FairytaleSearchPage from "./pages/fairytales/FairytaleSearchPage";
 import MusicManager from "./MusicManager";
+import SplashScreen from "./pages/users/SplashScreen";
 
 const App = () => {
   const location = useLocation();
+  const [isSplashFinished, setIsSplashFinished] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     const isBgmEnabled = localStorage.getItem("bgm") === "true";
 
-    if (location.pathname === "/home") {
-      MusicManager.playLoginBgm();
-    } else if (location.pathname.startsWith("/child") && isBgmEnabled) {
+    if (location.pathname.startsWith("/child") && isBgmEnabled) {
       MusicManager.playChildBgm();
+    } else if (location.pathname === "/") {
+      if (isSplashFinished) {
+        MusicManager.playLoginBgm();
+      } else {
+        MusicManager.stopBgm();
+      }
     } else {
       MusicManager.stopBgm();
     }
-  }, [location]);
+  }, [location, isSplashFinished]);
+
+   // 2초 타이머와 이미지 로딩 완료 상태를 모두 확인하여 SplashScreen 종료
+   useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsSplashFinished(true);
+    }, 3000); // 3초로 설정
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (isLoaded) {
+      setIsSplashFinished(true);
+    }
+  }, [isLoaded]);
 
   return (
     <Routes>
+      {/* 첫 화면에서 SplashScreen 또는 Login 표시 */}
+      <Route
+        path="/"
+        element={
+          isSplashFinished ? (
+            <Login onAssetsLoaded={() => setIsLoaded(true)} />
+          ) : (
+            <SplashScreen />
+          )
+        }
+      />
+
       {/* 페이지에 Header가 포함된 화면 */}
       <Route
         path="/*"
@@ -63,11 +95,6 @@ const App = () => {
           </>
         }
       />
-
-      {/* 스플래시 화면 */}
-      <Route path="/" element={<SplashScreen />} />
-      {/* 홈 화면 */}
-      <Route path="/home" element={<Login />} />
 
       {/* 동화 내용 */}
       <Route path="/fairytale/content/:fairytaleId" element={<FairyTaleContentPage />} />

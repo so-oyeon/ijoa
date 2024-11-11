@@ -14,10 +14,13 @@ import com.checkitout.ijoa.fairytale.repository.FairytalePageContentRepository;
 import com.checkitout.ijoa.fairytale.repository.FairytaleRepository;
 import com.checkitout.ijoa.file.service.FileService;
 import com.checkitout.ijoa.user.domain.User;
+import com.checkitout.ijoa.user.service.EmailServie;
 import com.checkitout.ijoa.util.LogUtil;
 import com.checkitout.ijoa.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.redisson.api.RBucket;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
@@ -30,12 +33,14 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class TTSService {
 
+    private final RedissonClient redissonClient;
     private final KafkaTemplate<String, AudioBookRequestDto> audioBookKafkaTemplate;
     private final KafkaTemplate<String, TrainAudioResponseDto> trainAudioKafkaTemplate;
     // 동화책 audio만들기
@@ -49,7 +54,9 @@ public class TTSService {
 
 
     private final SecurityUtil securityUtil;
+
     private final FileService fileService;
+    private final EmailServie emailServie;
 
     private final TTSRepository ttsRepository;
     private final ScriptRepository scriptRepository;
@@ -72,7 +79,7 @@ public class TTSService {
         TTS newTTS = TTSProfileRequestDto.of(requestDto,url,user);
 
         TTS savedTTS = ttsRepository.save(newTTS);
-        return TTSProfileResponseDto.fromTTS(savedTTS);
+        return TTSProfileResponseDto.fromTTS(savedTTS,false);
     }
 
     // TTS 삭제
@@ -85,6 +92,29 @@ public class TTSService {
         // 생성자인지 확인
         checkUser(deleteTTS,user.getId());
 
+        //s3 파일 삭제
+        // 프로필 이미지 삭제
+        fileService.deleteFile(deleteTTS.getImage());
+        // 학습 데이터 삭제
+        List<TrainAudio> trainAudios = trainAudioRepository.findByTtsId(deleteTTS.getId());
+        if(trainAudios!=null){
+            for(TrainAudio trainAudio : trainAudios){
+                fileService.deleteFile(trainAudio.getFile_path());
+            }
+        }
+
+        // 책 오디오 삭제
+        List<FairytaleTTS> fairytaleTTSList =  fairytaleTTSRepository.findByTtsId(deleteTTS.getId());
+        if(fairytaleTTSList!=null){
+            for(FairytaleTTS fairytaleTTS : fairytaleTTSList){
+                List<Audio> audioList = audioRepository.findByFairytaleTTS(fairytaleTTS);
+                if(audioList!=null){
+                    for(Audio audio : audioList){
+                        fileService.deleteFile(audio.getAudio());
+                    }
+                }
+            }
+        }
         ttsRepository.delete(deleteTTS);
     }
 
@@ -96,6 +126,9 @@ public class TTSService {
         checkUser(updateTTS,user.getId());
 
         if(requestDto.getImage() != null && !requestDto.getImage().isEmpty()){
+            //기존 이미지 s3삭제
+            fileService.deleteFile(updateTTS.getImage());
+
             String url = fileService.saveProfileImage(requestDto.getImage());
             updateTTS.setImage(url);
         }
@@ -106,7 +139,7 @@ public class TTSService {
 
         TTS updatedTTS = ttsRepository.save(updateTTS);
 
-        return TTSProfileResponseDto.fromTTS(updatedTTS);
+        return TTSProfileResponseDto.fromTTS(updatedTTS,trainAudioRepository.existsByTtsId(updateTTS.getId()));
     }
 
     // 부모 tts 목록
@@ -118,7 +151,7 @@ public class TTSService {
         List<TTS> ttsList = ttsRepository.findByUserId(user.getId()).orElseThrow(()-> new CustomException(ErrorCode.TTS_NO_CONTENT));
 
         for(TTS ts : ttsList){
-            responseDtos.add(TTSProfileResponseDto.fromTTS(ts));
+            responseDtos.add(TTSProfileResponseDto.fromTTS(ts,trainAudioRepository.existsByTtsId(ts.getId())));
         }
 
         return responseDtos;
@@ -148,12 +181,13 @@ public class TTSService {
             String key = "train/" + ttsId + "/" + currentTime + "/" + pair.getFileName();
             //url 발급
             String url = fileService.getPostS3Url(key);
-            // TODO  s3 기존 데이터 삭제 넣기
             // TODO  s3 저장기간 설정
 
             TrainAudio trainAudio = trainAudioRepository.findByTtsIdAndScriptId(ttsId, pair.getScriptId());
             // trainAudio가 존재하면 업데이트, 존재하지 않으면 새로운 객체 생성 후 저장
             if (trainAudio != null) {
+                // s3 학습 데이터 삭제
+                fileService.deleteFile(trainAudio.getFile_path());
                 trainAudio.update(key);
             } else {
                 trainAudio = TrainAudio.of(tts, script, key);
@@ -192,29 +226,45 @@ public class TTSService {
         Long ttsId = modelPathDto.getTtsId();
         TTS tts = ttsRepository.findById(ttsId).orElseThrow(()-> new CustomException(ErrorCode.TTS_NOT_FOUND));
         tts.setTTS(modelPath);
-        ttsRepository.save(tts);
+        TTS savedTts = ttsRepository.save(tts);
+
+        // 생성완료 이메일 전송
+        String email = savedTts.getUser().getEmail();
+        emailServie.sendCompleteEmail(email, savedTts.getName());
     }
 
     // 동화책 audio 생성
     public void createAudioBook(Long bookId, Long ttsId) {
 
+        List<FairytalePageContent> contents = fairytalePageContentRepository.findByfairytaleId(bookId).orElseThrow(() -> new CustomException(ErrorCode.FAIRYTALE_NOT_FOUND));
         TTS tts = ttsRepository.findById(ttsId).orElseThrow(() -> new CustomException(ErrorCode.TTS_NOT_FOUND));
 
-        List<FairytalePageContent> contents = fairytalePageContentRepository.findByfairytaleId(bookId).orElseThrow(() -> new CustomException(ErrorCode.FAIRYTALE_NOT_FOUND));
-        List<FairytalePageResponseDto> pages = new ArrayList<>();
-        for (FairytalePageContent content : contents) {
-            pages.add(FairytalePageResponseDto.from(content));
+        String lockKey = "createAudioBook:"+bookId+"_ttsId:"+ttsId;
+        RBucket<String> statusFlag = redissonClient.getBucket(lockKey);
+
+        // 상태 플래그가 없으면 플래그를 설정하고 true 반환, 이미 존재하면 false 반환
+        if(!statusFlag.setIfAbsent("IN_PROGRESS")){
+            throw new CustomException(ErrorCode.AUDIO_CREATION_ALREADY_IN_PROGRESS);
+        }else{
+            // 만료 시간 설정
+            statusFlag.expire(10, TimeUnit.MINUTES);
+
+            List<FairytalePageResponseDto> pages = new ArrayList<>();
+            for (FairytalePageContent content : contents) {
+                pages.add(FairytalePageResponseDto.from(content));
+            }
+
+            AudioBookRequestDto audioBookRequest = AudioBookRequestDto.builder()
+                    .bookId(bookId)
+                    .modelPath(tts.getTTS())
+                    .pages(pages)
+                    .ttsId(ttsId)
+                    .build();
+
+            // Kafka로 메시지 전송
+            audioBookKafkaTemplate.send(REQUEST_TOPIC, audioBookRequest);
+
         }
-
-        AudioBookRequestDto audioBookRequest = AudioBookRequestDto.builder()
-                .bookId(bookId)
-                .modelPath(tts.getTTS())
-                .pages(pages)
-                .ttsId(ttsId)
-                .build();
-
-        // Kafka로 메시지 전송
-        audioBookKafkaTemplate.send(REQUEST_TOPIC, audioBookRequest);
 
     }
 
@@ -249,6 +299,12 @@ public class TTSService {
                     .orElse(Audio.of(fairytaleTTS, pageContent, s3Path));
             audioRepository.save(audio);
         }
+
+        // 상태 변환
+        String lockKey = "createAudioBook:"+bookId+"_ttsId:"+ttsId;
+        RBucket<String> statusFlag = redissonClient.getBucket(lockKey);
+        statusFlag.delete();
+
     }
 
 
