@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
+import WaveSurfer from "wavesurfer.js";
+import MicrophonePlugin from "wavesurfer.js/src/plugin/microphone";
 import Elephant from "/assets/fairytales/images/elephant.png";
 import Fox from "/assets/fairytales/images/fox.png";
 import Giraffe from "/assets/fairytales/images/giraffe.png";
@@ -7,8 +9,10 @@ import Panda from "/assets/fairytales/images/panda.png";
 import Tiger from "/assets/fairytales/images/tiger.png";
 import Zebra from "/assets/fairytales/images/zebra.png";
 import Cloud from "/assets/fairytales/images/cloud.png";
-import Record from "/assets/fairytales/buttons/record.png";
+// import Record from "/assets/fairytales/buttons/record.png";
 import { fairyTaleApi } from "../../api/fairytaleApi";
+import Lottie from "react-lottie-player";
+import loadingAnimation from "../../lottie/footPrint-loadingAnimation.json";
 
 interface QuizModalProps {
   isOpen: boolean;
@@ -25,21 +29,47 @@ const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, quizData = "", q
   const [isRecorded, setIsRecorded] = useState(false);
   const [animalImage, setAnimalImage] = useState("");
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
-  const [audioURL, setAudioURL] = useState<string | null>(null); // 오디오 미리 듣기를 위한 url 변수
-  const audioPlayRef = useRef<HTMLAudioElement | null>(null); // 오디오 재생을 위한 참조 변수
+  const [audioURL, setAudioURL] = useState<string | null>(null);
+  const audioPlayRef = useRef<HTMLAudioElement | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
+  const waveSurferRef = useRef<WaveSurfer | null>(null);
+  const waveformContainerRef = useRef<HTMLDivElement | null>(null);
+  const [sentences, setSentences] = useState<string[]>([]);
+  const [isLoadingSentences, setIsLoadingSentences] = useState(true);
+
+  const initializeWaveSurfer = () => {
+    if (!waveformContainerRef.current) return;
+
+    waveSurferRef.current = WaveSurfer.create({
+      container: waveformContainerRef.current,
+      waveColor: "#D9DCFF",
+      progressColor: "#4353FF",
+      cursorWidth: 0,
+      interact: false,
+      plugins: [
+        MicrophonePlugin.create({
+          bufferSize: 4096,
+          sampleRate: 44100,
+          mediaStreamConstraints: {
+            audio: true,
+          },
+        }),
+      ],
+    });
+  };
 
   const startRecording = async () => {
-    if (isRecording) return; // 이미 녹음 중이면 리턴
+    if (isRecording) return;
 
-    // 기존 녹음 오디오 삭제
     setAudioURL(null);
-
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     const mediaRecorder = new MediaRecorder(stream);
     mediaRecorderRef.current = mediaRecorder;
     audioChunksRef.current = [];
+
+    initializeWaveSurfer();
+    waveSurferRef.current?.microphone?.start();
 
     mediaRecorder.ondataavailable = (event) => {
       audioChunksRef.current.push(event.data);
@@ -47,24 +77,30 @@ const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, quizData = "", q
 
     mediaRecorder.onstop = () => {
       const audioBlob = new Blob(audioChunksRef.current, { type: "audio/wav" });
-      setAudioBlob(audioBlob); // Blob이 생성되면 setAudioBlob 호출
-      console.log("녹음이 종료되었습니다.");
+      setAudioBlob(audioBlob);
 
       const audioURL = URL.createObjectURL(audioBlob);
       setAudioURL(audioURL);
+      waveSurferRef.current?.load(audioURL);
     };
 
     mediaRecorder.start();
     setIsRecording(true);
     setIsRecorded(false);
-    console.log("녹음이 시작되었습니다.");
+
+    stream.getTracks().forEach(() => {
+      waveSurferRef.current?.microphone?.start();
+    });
   };
 
   const stopRecording = async () => {
     if (mediaRecorderRef.current && isRecording) {
       mediaRecorderRef.current.stop();
-      setIsRecording(false); // 녹음 중지 후 상태 업데이트
+      setIsRecording(false);
       setIsRecorded(true);
+
+      waveSurferRef.current?.destroy();
+      waveSurferRef.current = null;
     } else {
       console.log("녹음이 시작되지 않았습니다.");
     }
@@ -90,7 +126,7 @@ const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, quizData = "", q
 
           if (uploadSuccess) {
             console.log("Audio uploaded successfully!");
-            onClose(); // 모달 닫기
+            onClose();
           } else {
             console.error("Audio upload failed.");
           }
@@ -116,7 +152,6 @@ const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, quizData = "", q
 
   useEffect(() => {
     if (!audioBlob || isRecording) return;
-
     console.log(audioBlob);
   }, [audioBlob]);
 
@@ -127,26 +162,25 @@ const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, quizData = "", q
       const randomAnimal = animalImages[Math.floor(Math.random() * animalImages.length)];
       setAnimalImage(randomAnimal);
       setAudioBlob(null);
+      setIsLoadingSentences(true);
+
+      setTimeout(() => {
+        setSentences(quizData ? quizData.split(/(?<=[.!?])\s+/) : []);
+        setIsLoadingSentences(false);
+      }, 1000); // 로딩 효과를 위해 임의의 지연 추가
     }
-  }, [isOpen]);
-
-  const splitTextIntoSentences = (quizData: string): string[] => {
-    return quizData.split(/(?<=[.!?])\s+/);
-  };
-
-  const sentences: string[] = splitTextIntoSentences(quizData);
+  }, [isOpen, quizData]);
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center h-screen z-50">
-      <div className="w-[700px] h-[450px] bg-white px-10 pb-10 rounded-2xl shadow-lg flex flex-col justify-center items-center relative">
-        {/* 오른쪽 상단의 답변 저장 버튼 */}
+    <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center h-screen z-50 overflow-hidden">
+      <div className="w-[700px] h-[450px] bg-white px-10 rounded-2xl shadow-lg flex flex-col justify-center items-center relative overflow-hidden">
         <button
           onClick={uploadAudioIfReady}
-          disabled={!isRecorded} // 녹음 완료 후에만 활성화
+          disabled={!isRecorded}
           className={`absolute top-4 right-4 px-6 py-2 text-white font-bold rounded-full active:bg-yellow-600 ${
-            isRecorded ? "bg-[#F7C548]" : "bg-[#F7C548] opacity-30" // 녹음 완료 시 활성화, 그렇지 않으면 비활성화
+            isRecorded ? "bg-[#F7C548]" : "bg-[#F7C548] opacity-30"
           }`}
         >
           답변 저장
@@ -157,28 +191,33 @@ const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, quizData = "", q
           <div className="relative w-full text-center">
             <img src={Cloud} alt="말풍선" className="w-[400px] mx-auto relative z-10" />
             <span className="w-[280px] absolute ml-4 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 fairytale-font z-20 flex flex-col items-center">
-              <img src={Record} alt="녹음 버튼" className="mb-2" />
-              <div>
-                {sentences.map((quiz, index) => (
-                  <p key={index} className="text-lg">
-                    {quiz}
-                  </p>
-                ))}
-              </div>
+              {isLoadingSentences ? (
+                <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
+              ) : (
+                <div>
+                  {sentences.map((quiz, index) => (
+                    <p key={index} className="text-lg">
+                      {quiz}
+                    </p>
+                  ))}
+                </div>
+              )}
             </span>
           </div>
         </div>
 
-        <div className="absolute bottom-10 justify-center flex">
+        <div ref={waveformContainerRef} className="absolute bottom-36 w-64 h-2 left-0 right-0 mx-auto"></div>
+        <div className="absolute bottom-5 justify-center flex">
           <button
             onClick={handleRecording}
-            className={`px-6 py-2 text-white font-bold rounded-full ${isRecording ? "bg-[#FF8067] active:bg-red-500" : "bg-[#0AC574] active:bg-green-700"}`}
+            className={`px-6 py-2 text-white font-bold rounded-full ${
+              isRecording ? "bg-[#FF8067] active:bg-red-500" : "bg-[#0AC574] active:bg-green-700"
+            }`}
           >
             {isRecording ? "녹음 완료" : "녹음 시작"}
           </button>
         </div>
 
-        {/* 오디오 재생 컨트롤바 */}
         {audioURL && <audio controls src={audioURL} className="hidden" ref={audioPlayRef}></audio>}
       </div>
     </div>
