@@ -13,6 +13,8 @@ import LeftArrow from "/assets/fairytales/buttons/left-arrow.png";
 import RightArrow from "/assets/fairytales/buttons/right-arrow.png";
 import { fairyTaleApi } from "../../api/fairytaleApi";
 import { FairyTaleContentResponse, FairyTalePageResponse, QuizQuestionResponse } from "../../types/fairytaleTypes";
+import Lottie from "react-lottie-player";
+import loadingAnimation from "../../lottie/footPrint-loadingAnimation.json";
 
 const FairyTaleContentPage: React.FC = () => {
   const { fairytaleId } = useParams<{ fairytaleId: string }>();
@@ -20,6 +22,7 @@ const FairyTaleContentPage: React.FC = () => {
   const title = location.state?.title;
   const currentPage = location.state?.currentPage;
   const totalPages = location.state?.totalPages;
+  const from = location.state?.from;
   const [fairytaleCurrentPage, setFairytaleCurrentPage] = useState(0);
   const [fairytaleData, setFairytaleData] = useState<FairyTaleContentResponse>();
   const [quizData, setQuizData] = useState<QuizQuestionResponse>();
@@ -251,32 +254,35 @@ const FairyTaleContentPage: React.FC = () => {
           <img src={fairytaleData.image} alt="동화책 내용 사진" className="w-screen h-screen object-cover" />
           <div className="w-[1100px] h-[160px] p-4 flex absolute bottom-10 left-1/2 transform -translate-x-1/2 justify-between items-center bg-white bg-opacity-70 rounded-2xl shadow-lg">
             {ttsId && (
-              <button className="items-center ml-5" onClick={handlePlayRecordingAudio}>
+              <button className="items-center ml-5 active:scale-110" onClick={handlePlayRecordingAudio}>
                 <img src={SoundOnButton} alt="다시 듣기 버튼" className="w-20 h-20" />
                 <p className="text-sm text-[#565656] font-bold">다시 듣기</p>
               </button>
             )}
 
             <div className="px-12 flex-1 text-4xl font-['MapleBold'] font-bold text-center whitespace-pre-line break-keep">
-                {fairytaleData.content}
+              {fairytaleData.content}
             </div>
           </div>
           {fairytaleCurrentPage > 0 && (
             <div className="absolute left-10 top-1/2 transform -translate-y-1/2">
-              <button className="bg-transparent border-none" onClick={handleLeftClick}>
+              <button className="bg-transparent border-none active:scale-125" onClick={handleLeftClick}>
                 <img src={LeftArrow} alt="왼쪽 화살표" />
               </button>
             </div>
           )}
           <div className="absolute right-10 top-1/2 transform -translate-y-1/2">
-            <button className="bg-transparent border-none" onClick={handleRightClick}>
+            <button className="bg-transparent border-none active:scale-125" onClick={handleRightClick}>
               <img src={RightArrow} alt="오른쪽 화살표" />
             </button>
           </div>
 
           {/* 메뉴 버튼 */}
           <div className="absolute top-[-12px] right-10">
-            <button className="px-3 py-4 bg-gray-700 bg-opacity-50 rounded-2xl shadow-md" onClick={handleOpenMenu}>
+            <button
+              className="px-3 py-4 bg-gray-700 bg-opacity-50 rounded-2xl shadow-md active:bg-gray-800"
+              onClick={handleOpenMenu}
+            >
               <img src={MenuButton} alt="메뉴 버튼" />
               <p className="text-xs text-white">메뉴</p>
             </button>
@@ -284,7 +290,7 @@ const FairyTaleContentPage: React.FC = () => {
         </>
       ) : (
         <div className="flex items-center justify-center h-full">
-          <p className="text-xl">Loading...</p>
+          <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
         </div>
       )}
 
@@ -304,7 +310,7 @@ const FairyTaleContentPage: React.FC = () => {
       {/* 레벨업 모달 */}
       <LevelUpModal isOpen={isLevelUpModalOpen} />
       {/* 독서완료 모달 */}
-      <ReadCompleteModal isOpen={isReadCompleteModalOpen} title={title} />
+      <ReadCompleteModal isOpen={isReadCompleteModalOpen} title={title} from={from}/>
       {/* 퀴즈 모달 */}
       <QuizModal
         isOpen={isQuizModalOpen && !isQuizDataLoading}

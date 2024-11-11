@@ -28,13 +28,13 @@ const ExitConfirmModal: React.FC<ExitConfirmModalProps> = ({ isOpen, onClose }) 
           <div className="flex gap-4 justify-center items-center">
             <button
               onClick={closeExitConfirmModal}
-              className="mt-6 w-28 py-2 text-white text-lg font-bold bg-[#FF8067] rounded-2xl border-2 border-[#FF8067]"
+              className="mt-6 w-28 py-2 text-white text-lg font-bold bg-[#FF8067] rounded-2xl border-2 border-[#FF8067] active:bg-red-500"
             >
               취소
             </button>
             <button
               onClick={handleExitClick}
-              className="mt-6 w-28 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-2xl border-2 border-[#67CCFF]"
+              className="mt-6 w-28 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-2xl border-2 border-[#67CCFF] active:bg-[#005f99]"
             >
               나가기
             </button>

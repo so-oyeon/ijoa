@@ -193,7 +193,7 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
       <input
         type="email"
         placeholder="이메일을 입력해주세요"
-        className="w-3/4 h-[60px] mt-6 mb-2 px-6 py-3 rounded-full bg-gray-100 text-gray-500 placeholder-gray-400 focus:outline-none"
+        className="w-3/4 h-[60px] mt-6 mb-2 px-6 py-3 rounded-full bg-gray-100 text-gray-500 border border-gray-300 placeholder-gray-400 focus:outline-none"
         value={email}
         onChange={handleEmail}
       />
@@ -215,11 +215,11 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
           )}
         </button>
       ) : (
-        <div className="flex w-full items-center justify-center mb-2 gap-2">
+        <div className="flex w-full h-[60px] items-center justify-center mb-2 gap-2">
           <input
             type="text"
             placeholder="인증번호 입력"
-            className="w-[200px] h-[50px] px-6 py-3 rounded-full bg-gray-100 text-gray-500 placeholder-gray-400 focus:outline-none"
+            className="w-[230px] h-[60px] px-6 py-3 rounded-full bg-gray-100 border border-gray-300 text-gray-500 placeholder-gray-400 focus:outline-none"
             value={verificationCode}
             onChange={(e) => setVerificationCode(e.target.value)}
             disabled={isVerified} // 인증 완료 시 입력 비활성화

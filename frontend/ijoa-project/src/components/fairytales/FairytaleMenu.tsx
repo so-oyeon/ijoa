@@ -67,7 +67,7 @@ const FairytaleMenu: React.FC<FairytaleMenuProps> = ({
       {/* 버튼 */}
       <div className="flex gap-36 mb-10">
         {(ttsId !== null || previousTTSId !== null) && (
-          <button className="px-6 py-3 text-white rounded-lg" onClick={toggleSound}>
+          <button className="px-6 py-3 text-white rounded-lg active:scale-110" onClick={toggleSound}>
             <img
               src={isSoundOn ? SoundButton : MuteButton}
               alt={isSoundOn ? "소리 켜기 버튼" : "소리 끄기 버튼"}
@@ -77,7 +77,7 @@ const FairytaleMenu: React.FC<FairytaleMenuProps> = ({
           </button>
         )}
 
-        <button className="px-6 py-3 text-white rounded-lg" onClick={handleOpenExitConfirmModal}>
+        <button className="px-6 py-3 text-white rounded-lg active:scale-110" onClick={handleOpenExitConfirmModal}>
           <img src={ExitButton} alt="나가기 버튼" className="w-40" />
           <p className="mt-3 text-xl font-semibold">나가기</p>
         </button>

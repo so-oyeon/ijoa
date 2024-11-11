@@ -42,7 +42,7 @@ const FocusAlertModal: React.FC<FocusAlertModalProps> = ({ isOpen, onClose }) =>
           </div>
           <button
             onClick={onClose}
-            className="mb-4 absolute bottom-4 left-1/2 transform -translate-x-1/2 w-28 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-3xl border-2 border-[#67CCFF]"
+            className="mb-4 absolute bottom-4 left-1/2 transform -translate-x-1/2 w-28 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-3xl border-2 border-[#67CCFF] active:bg-[#005f99]"
           >
             확인
           </button>
