@@ -145,7 +145,7 @@ const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, quizData = "", q
         <button
           onClick={uploadAudioIfReady}
           disabled={!isRecorded} // 녹음 완료 후에만 활성화
-          className={`absolute top-4 right-4 px-6 py-2 text-white font-bold rounded-full ${
+          className={`absolute top-4 right-4 px-6 py-2 text-white font-bold rounded-full active:bg-yellow-600 ${
             isRecorded ? "bg-[#F7C548]" : "bg-[#F7C548] opacity-30" // 녹음 완료 시 활성화, 그렇지 않으면 비활성화
           }`}
         >
@@ -172,7 +172,7 @@ const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, quizData = "", q
         <div className="absolute bottom-10 justify-center flex">
           <button
             onClick={handleRecording}
-            className={`px-6 py-2 text-white font-bold rounded-full ${isRecording ? "bg-[#FF8067]" : "bg-[#0AC574]"}`}
+            className={`px-6 py-2 text-white font-bold rounded-full ${isRecording ? "bg-[#FF8067] active:bg-red-500" : "bg-[#0AC574] active:bg-green-700"}`}
           >
             {isRecording ? "녹음 완료" : "녹음 시작"}
           </button>

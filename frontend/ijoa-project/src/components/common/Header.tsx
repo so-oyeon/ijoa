@@ -8,7 +8,16 @@ const Header = () => {
   const type = localStorage.getItem("userType");
   const [isChildSettingsModalOpen, setIsChildSettingsModalOpen] = useState(false); // 자녀 헤더 설정 모달창 열림 여부 상태 변수
   const [isParentSettingsModalOpen, setIsParentSettingsModalOpen] = useState(false); // 부모 헤더 설정 모달창 열림 여부 상태 변수
+  const [selectedTab, setSelectedTab] = useState<number | null>(null);
+
   const navigate = useNavigate();
+
+  const handleTabClick = (index: number, action: () => void, isSetting: boolean) => {
+    if (!isSetting) {
+      setSelectedTab(index);
+    }
+    action();
+  };
 
   // 부모 자녀 라우팅
   const childClick = () => {
@@ -73,25 +82,26 @@ const Header = () => {
   // 로고 클릭 시, 사용자 타입에 맞게 메인으로 리다이렉트
   const handleGoToMain = () => {
     if (type === "parent") {
+      setSelectedTab(0); // "자녀" 탭 인덱스
       childClick();
     } else {
+      setSelectedTab(0); // "도서관" 탭 인덱스
       fairytalelistClick();
     }
   };
-
   const parentMenu = [
-    { img: "child-icon", text: "자녀", action: childClick },
-    { img: "tts-icon", text: "TTS", action: ttsClick },
-    { img: "stats-icon", text: "통계", action: statsClick },
-    { img: "voice-album-icon", text: "음성앨범", action: voiceAlbumClick },
-    { img: "setting-icon", text: "설정", action: openParentSettingsModal },
+    { img: "child-icon", text: "자녀", action: childClick, isSetting: false },
+    { img: "tts-icon", text: "TTS", action: ttsClick, isSetting: false },
+    { img: "stats-icon", text: "통계", action: statsClick, isSetting: false },
+    { img: "voice-album-icon", text: "음성앨범", action: voiceAlbumClick, isSetting: false },
+    { img: "setting-icon", text: "설정", action: openParentSettingsModal, isSetting: true },
   ];
 
   const childMenu = [
-    { img: "library-icon", text: "도서관", action: libraryClick },
-    { img: "bookcase-icon", text: "내 책장", action: myRoomBookShelvesClick },
-    { img: "myroom-icon", text: "내 방", action: myRoomClick },
-    { img: "setting-icon", text: "설정", action: openSettingsModal },
+    { img: "library-icon", text: "도서관", action: libraryClick, isSetting: false },
+    { img: "bookcase-icon", text: "내 책장", action: myRoomBookShelvesClick, isSetting: false },
+    { img: "myroom-icon", text: "내 방", action: myRoomClick, isSetting: false },
+    { img: "setting-icon", text: "설정", action: openSettingsModal, isSetting: true },
   ];
 
   const menuToDisplay = type === "parent" ? parentMenu : childMenu;
@@ -107,15 +117,20 @@ const Header = () => {
         {/* 메뉴 */}
         {menuToDisplay.map((menu, index) => (
           <button
-            className="w-14 flex flex-col justify-center items-center space-y-1"
             key={index}
-            onClick={menu.action}>
+            className={`w-14 flex flex-col justify-center items-center space-y-1 transform transition-transform duration-200 ${
+              selectedTab === index && !menu.isSetting ? "text-[#67CCFF]" : "text-[#B27F44]"
+            } ${selectedTab === index && !menu.isSetting ? "" : "hover:scale-125"}`}
+            onClick={() => handleTabClick(index, menu.action, menu.isSetting)}
+          >
             <img
               className="w-12 aspect-1 p-2 bg-white rounded-full shadow-[0_3px_3px_1px_rgba(0,0,0,0.1)]"
               src={`/assets/header/${type}/${menu.img}.png`}
               alt=""
             />
-            <p className="text-sm text-[#B27F44] font-bold">{menu.text}</p>
+            <p className={`text-sm text-[#B27F44] font-bold ${selectedTab === index ? "blue-highlight" : ""}`}>
+              {menu.text}
+            </p>
           </button>
         ))}
 

@@ -42,7 +42,7 @@ const ReadCompleteModal: React.FC<ReadCompleteModalProps> = ({ isOpen, title = "
           </div>
           <div className="text-2xl font-bold text-center fairytale-font whitespace-pre-line">{message}</div>
           <button
-            className="mt-6 px-8 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-2xl border-2 border-[#67CCFF]"
+            className="mt-6 px-8 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-2xl border-2 border-[#67CCFF] active:bg-[#005f99]"
             onClick={toHome}
           >
             목록 화면으로
