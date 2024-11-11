@@ -41,7 +41,7 @@ const FairytaleSearchPage: React.FC = () => {
   const handleSearch = async (searchQuery: string) => {
     if (searchQuery.trim()) {
       try {
-        const response = await fairyTaleApi.getFairyTalesBySearch(searchQuery, 0);
+        const response = await fairyTaleApi.getFairyTalesBySearch(searchQuery, 1, 1);
         if (response.status === 200) {
           const data = response.data;
           setSearchResults(data);
