@@ -73,11 +73,12 @@ public interface FairytaleListApiDocumentation {
 
     @Operation(summary = "도서 검색 ", description = "키워드로 제목 검색을 할 수 있습니다. ")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "조회 성공"),
-            @ApiResponse(responseCode = "400", description = "잘못된 요청"),
-            @ApiResponse(responseCode = "500", description = "서버 오류")
+            @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(array = @ArraySchema(schema = @Schema(implementation = FairytaleListResponseDto.class)))),
+            @ApiResponse(responseCode = "204", description = "동화책 없음", content = @Content),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
     })
-    public Page<FairytaleListResponseDto> searchFairytale(@RequestParam("word") String word,
-                                                          @RequestParam("page") int page);
+    public ResponseEntity<Page<FairytaleListResponseDto>> searchFairytale(@RequestParam String title,
+                                                                          @Valid @ModelAttribute PageRequestDto requestDto);
 
 }
