@@ -68,28 +68,28 @@ const Login: React.FC<LoginProps> = ({ onAssetsLoaded }) => {
         <motion.img
           src={Bat}
           alt="박쥐"
-          className="absolute -ml-5 bottom-40 w-[200px]"
+          className="absolute bottom-[20%] w-[15vw] md:w-[12vw] -ml-[2vw] lg:w-[15vw]"
           animate={{ y: ["0%", "-5%", "0%"] }}
           transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.img
           src={Lion}
           alt="사자"
-          className="absolute -ml-5 bottom-4 w-[180px]"
+          className="absolute bottom-[0%] w-[13vw] md:w-[10vw] -ml-[2vw] lg:w-[13vw]"
           animate={{ y: ["0%", "-3%", "0%"] }}
           transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.img
           src={Cat}
           alt="고양이"
-          className="absolute right-0 -mr-3 bottom-40 w-[180px]"
+          className="absolute bottom-[20%] w-[13vw] md:w-[11vw] lg:w-[13vw] right-0 -mr-8"
           animate={{ y: ["0%", "-5%", "0%"] }}
           transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.img
           src={Bear}
           alt="곰"
-          className="absolute right-2 -mr-9 bottom-4 w-[200px]"
+          className="absolute bottom-[0%] w-[13vw] md:w-[11vw] lg:w-[13vw] right-0 -mr-8"
           animate={{ y: ["0%", "-4%", "0%"] }}
           transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
         />
@@ -98,7 +98,7 @@ const Login: React.FC<LoginProps> = ({ onAssetsLoaded }) => {
         <motion.img
           src={Monkey}
           alt="원숭이"
-          className="absolute top-1/4 left-[15%] transform -translate-y-1/2 w-[180px]"
+          className="absolute top-[25%] left-[15%] w-[13vw] md:w-[11vw] lg:w-[13vw]"
           animate={{
             y: ["0%", "10%", "0%"],
             rotate: ["0deg", "-10deg", "10deg", "0deg"],
@@ -112,7 +112,7 @@ const Login: React.FC<LoginProps> = ({ onAssetsLoaded }) => {
       </div>
 
       <div className="h-full flex flex-col justify-center items-center relative z-50">
-        <div className="flex space-x-2 text-[140px] font-['SDGothic'] text-white-stroke">
+        <div className="flex space-x-2 text-[10vw] md:text-[7vw] lg:text-[10vw] font-['SDGothic'] text-white-stroke">
           <span className="text-[#FFCC00] ">아</span>
           <span className="text-[#99CC66] ">이</span>
           <span className="text-[#FF6666] ">조</span>
@@ -122,13 +122,13 @@ const Login: React.FC<LoginProps> = ({ onAssetsLoaded }) => {
         <div className="w-full flex flex-col items-center space-y-3">
           <button
             onClick={() => openModal("login")}
-            className="w-1/3 h-20 bg-yellow-400 text-black text-2xl font-bold rounded-full shadow-md border-4 border-white hover:shadow-lg transition-shadow duration-200 active:scale-110"
+           className="w-[30vw] md:w-[30vw] lg:w-[30vw] h-12 md:h-16 lg:h-20 bg-yellow-400 text-black text-lg md:text-xl lg:text-2xl font-bold rounded-full shadow-md border-4 border-white hover:shadow-lg transition-shadow duration-200 active:scale-110"
           >
             로그인
           </button>
           <button
             onClick={() => openModal("signup")}
-            className="w-1/3 h-20 bg-orange-500 text-black text-2xl font-bold rounded-full shadow-md border-4 border-white hover:shadow-lg transition-shadow duration-200 active:scale-110"
+            className="w-[30vw] md:w-[30vw] lg:w-[30vw] h-12 md:h-16 lg:h-20 bg-orange-500 text-black text-lg md:text-xl lg:text-2xl font-bold rounded-full shadow-md border-4 border-white hover:shadow-lg transition-shadow duration-200 active:scale-110"
           >
             회원가입
           </button>
