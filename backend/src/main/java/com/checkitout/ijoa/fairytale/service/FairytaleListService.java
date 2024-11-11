@@ -120,7 +120,6 @@ public class FairytaleListService {
      */
     public Page<FairytaleListResponseDto> searchFairytaleList(String title, PageRequestDto requestDto) {
 
-//        init();
         Long childId = securityUtil.getChildByToken().getId();
         Pageable pageable = PageRequest.of(requestDto.getPage() - 1, requestDto.getSize());
 
@@ -134,11 +133,4 @@ public class FairytaleListService {
         return new PageImpl<>(responseDtos, pageable, fairytales.getTotalElements());
     }
 
-    /**
-     * elastic search 인덱스 초기화
-     */
-    public void init() {
-
-        fairytaleSearchRepository.saveAll(fairytaleRepository.findAll());
-    }
 }
