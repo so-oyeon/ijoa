@@ -125,7 +125,6 @@ const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, quizData = "", q
           const uploadSuccess = await uploadAudioToS3(presignedUrl, audioBlob);
 
           if (uploadSuccess) {
-            console.log("Audio uploaded successfully!");
             onClose();
           } else {
             console.error("Audio upload failed.");
@@ -152,7 +151,6 @@ const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, quizData = "", q
 
   useEffect(() => {
     if (!audioBlob || isRecording) return;
-    console.log(audioBlob);
   }, [audioBlob]);
 
   useEffect(() => {
@@ -196,7 +194,7 @@ const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, quizData = "", q
               ) : (
                 <div>
                   {sentences.map((quiz, index) => (
-                    <p key={index} className="text-lg">
+                    <p key={index} className="text-lg flex justify-center px-8 break-keep">
                       {quiz}
                     </p>
                   ))}
