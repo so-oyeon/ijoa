@@ -93,22 +93,33 @@ public class QuizService {
 
     public AnswerUrlResponseDto getAnswerUrl(AnswerRequestDto requestDto) {
 
-        String currentTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
-
-        String key = "anwer/" + requestDto.getChildId() + "/"+requestDto.getQuizId() + "/" + currentTime + requestDto.getFileName();
-
-        //url 발급
-        String url = fileService.getPostS3Url(key);
         Quiz quiz = quizRepository.findById(requestDto.getQuizId()).orElseThrow(() -> new CustomException(ErrorCode.QUIZ_NOT_FOUND));
         Child child = securityUtil.getChildByToken();
 
+        // 답변한 책 추가
         QuizBook quizBook = quizBookRepository.findByChildIdAndFairytaleId(child.getId(),quiz.getFairytale().getId());
         if(quizBook==null){
             quizBook= QuizBook.of(child,quiz.getFairytale());
             quizBook = quizBookRepository.save(quizBook);
         }
+        String currentTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
 
-        Answer answer = Answer.of(key,quiz,quizBook);
+        String key = "anwer/" + requestDto.getChildId() + "/"+requestDto.getQuizId() + "/" + currentTime+"_" + requestDto.getFileName();
+
+        //url 발급
+        String url = fileService.getPostS3Url(key);
+
+        // 기존 답변 찾
+        Answer answer = answerRepository.findByChildIdAndQuizId(child.getId(),quiz.getId());
+
+        // 없으면 새로 만듦
+        if(answer ==null){
+            answer = Answer.of(key,quiz,quizBook);
+        }
+        else{ // 있으면 업데이트
+            fileService.deleteFile(answer.getAnswer());
+            answer.setAnswer(key);
+        }
 
         answer =answerRepository.save(answer);
 
