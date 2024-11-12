@@ -1,0 +1,85 @@
+/* Tutorial.css */
+
+/* 클릭 방지 오버레이 */
+.overlay-click-prevent {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0); /* 투명한 오버레이 */
+  z-index: 9998; /* 튜토리얼 모달 아래, 다른 요소 위 */
+}
+
+/* 전체 화면을 어둡게 처리하는 오버레이 */
+.overlay-dark {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(255, 255, 255, 0.1);
+  z-index: 9999;
+}
+
+/* 강조할 요소만 밝게 보이는 오버레이 */
+.overlay-highlight {
+  position: fixed;
+  pointer-events: none;
+  z-index: 10000;
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.7);
+  background-color: transparent;
+  border-radius: 8px;
+}
+
+/* 튜토리얼 모달 */
+.tutorial-modal {
+  position: absolute;
+  z-index: 10001;
+  background-color: white;
+  padding: 32px; /* 모달의 전체 padding을 키움 */
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+  max-width: 400px; /* 모달 너비 확대 */
+  text-align: center;
+  line-height: 2; /* 텍스트 줄 간격 */
+}
+
+/* 닫기 버튼 스타일 */
+.tutorial-close-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  color: gray;
+  font-size: 1.2rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* 기본 버튼 스타일 */
+.tutorial-btn {
+  padding: 8px 16px;
+  border-radius: 5px;
+  font-weight: bold; /* 폰트 굵기 */
+  font-size: 1rem; /* text-xl 크기 */
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+/* 이전 버튼 스타일 */
+.tutorial-prev-btn {
+  background-color: #ccc;
+  color: white;
+}
+
+/* 다음 버튼 스타일 */
+.tutorial-next-btn {
+  background-color: #67ccff; /* 기본 배경색 */
+  color: white;
+}
+
+.tutorial-next-btn:active {
+  background-color: #005f99; /* 클릭 시 배경색 */
+}
+
+/* 완료 버튼 스타일 */
+.tutorial-complete-btn {
+  background-color: #4caf50;
+  color: white;
+}

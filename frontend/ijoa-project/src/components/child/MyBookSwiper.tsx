@@ -4,6 +4,7 @@ import "swiper/css/free-mode";
 import { Autoplay, FreeMode } from "swiper/modules";
 import { FairyTaleReadCheckItem } from "../../types/fairytaleTypes";
 import bookclip from "/assets/fairytales/images/bookclip.png"; // 뱃지 이미지 import
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   direction: string;
@@ -15,6 +16,12 @@ interface Props {
 const MyBookSwiper = ({ direction, myBookLists, myBookReadOrNot, progress }: Props) => {
   const myBookCovers = myBookLists.map((book) => book.image);
   const myBookTitles = myBookLists.map((book) => book.title);
+  const myBookIds = myBookLists.map((book) => book.fairytaleId);
+  const navigate = useNavigate();
+
+  const toContentPage = (id: number) => {
+    navigate(`/fairytale/content/${id}`);
+  };
 
   return (
     <Swiper
@@ -45,6 +52,7 @@ const MyBookSwiper = ({ direction, myBookLists, myBookReadOrNot, progress }: Pro
               <img
                 src={cover}
                 alt={`동화책 ${index + 1}`}
+                onClick={() => toContentPage(myBookIds[index])}
                 className="book-cover-image w-full h-[210px] object-cover rounded-lg"
               />
 

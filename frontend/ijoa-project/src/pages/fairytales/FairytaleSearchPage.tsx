@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { fairyTaleApi } from "../../api/fairytaleApi";
 import { FairyTaleSearchResponse, FairyTaleListResponse, FairyTaleListItem } from "../../types/fairytaleTypes";
-import BookCoverGrid from "../../components/fairytales/BookCoverGrid";
+import BookCoverGrid from "../../components/child/BookCoverGrid";
 import SearchBar from "../../components/common/SearchBar";
 import Lottie from "react-lottie-player";
 import "../../css/FairytaleContentPage.css";
@@ -26,7 +26,6 @@ const FairytaleSearchPage: React.FC = () => {
         if (response.status === 200) {
           setAllFairyTales(response.data);
           setTotalPages(3);
-          console.log(response.data);
         } else {
           console.error("유효하지 않은 응답 상태 :", response.status);
         }
@@ -100,8 +99,8 @@ const FairytaleSearchPage: React.FC = () => {
               bookCovers={searchResults.content.map((item) => item.image)}
               titles={searchResults.content.map((item) => item.title)}
               onBookClick={handleBookClick}
-              myBookReadOrNot={myBookReadOrNot}
-              progress={allFairyTales?.content.map((book) => book.progressRate || 0)}
+              myBookReadOrNot={searchResults.content.map((book) => book.isCompleted)}
+              progress={searchResults?.content.map((book) => book.progressRate || 0)}
             />
           ) : query ? (
             <p className="p-4 text-gray-500">검색 결과가 없습니다.</p>
@@ -114,7 +113,9 @@ const FairytaleSearchPage: React.FC = () => {
               progress={allFairyTales?.content.map((book) => book.progressRate || 0)}
             />
           ) : (
-            <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
+            <div className="mt-48 mb-48 flex justify-center items-center">
+              <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
+            </div>
           )}
         </div>
 

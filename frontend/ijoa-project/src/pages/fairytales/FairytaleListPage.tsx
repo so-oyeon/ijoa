@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "../../css/FairytaleContentPage.css";
 import { useNavigate } from "react-router-dom";
-import Swiper from "../../components/fairytales/Swiper"; // 스와이퍼 컴포넌트 import
-import ChoiceTab from "../../components/fairytales/ChoiceTab"; // 선택탭 컴포넌트 import
+import Swiper from "../../components/fairytales/main/Swiper"; // 스와이퍼 컴포넌트 import
+import ChoiceTab from "../../components/fairytales/main/ChoiceTab"; // 선택탭 컴포넌트 import
 import { fairyTaleApi } from "../../api/fairytaleApi";
 import { parentApi } from "../../api/parentApi";
 import {
@@ -151,20 +151,27 @@ const FairytaleListPage: React.FC = () => {
   };
 
   useEffect(() => {
-    getChildProfile();
-    getRecommendedFairyTales(); // 사용자 맞춤 추천 데이터 가져오기
-    getFairyTalesByCategory(selectedCategory); // 선택된 카테고리 동화책 데이터 가져오기
-  }, [selectedCategory]); // categoryId가 변경될 때마다 호출
+    const loadInitialData = async () => {
+      try {
+        await getPopularFairyTalesByAge();
+        await getChildProfile();
+        await getRecommendedFairyTales();
+      } catch (error) {
+        console.error("Error loading data:", error);
+      }
+    };
+
+    loadInitialData();
+  }, []);
 
   useEffect(() => {
-    if (!childInfo) return;
-    getPopularFairyTalesByAge();
-  }, [childInfo]);
+    getFairyTalesByCategory(selectedCategory);
+  }, [selectedCategory]);
 
   return (
     <div>
       <div className="pt-24 pb-24 px-10 text-xl">
-        <div className="h-[300px] mb-10">
+        <div className="h-[310px] mb-10 overflow-hidden">
           <div className="mb-5 text-2xl font-bold font-['MapleBold']">🏆 {childInfo?.age}살 인기 동화책</div>
           {popularFairyTales.length > 0 ? (
             <Swiper
@@ -178,7 +185,7 @@ const FairytaleListPage: React.FC = () => {
             <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
           )}
         </div>
-        <div className="h-[300px] mb-10">
+        <div className="h-[310px] mb-10 overflow-hidden">
           <div className="mb-5 text-2xl font-bold font-['MapleBold']">🧸 이런 책 어때요?</div>
           {recommendedFairyTales.length > 0 ? (
             <Swiper
@@ -192,7 +199,7 @@ const FairytaleListPage: React.FC = () => {
             <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
           )}
         </div>
-        <div className="h-[300px]">
+        <div className="h-[310px] overflow-hidden">
           <div className="flex flex-col md:flex-row justify-between mb-5">
             <div className="text-2xl font-bold font-['MapleBold']">🌟 카테고리 별 동화책</div>
             <ChoiceTab tabs={tabItems} onTabClick={handleCategoryChange} />

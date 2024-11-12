@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion, MotionProps } from "framer-motion";
 import LevelModal from "./LevelModal";
 import { parentApi } from "../../api/parentApi";
+import profile from "/assets/profile-img-boy.png"
 
 interface LevelTemplateProps {
   bgImage: string;
@@ -75,7 +76,7 @@ const LevelTemplate: React.FC<LevelTemplateProps> = ({
         animate={loopAnimation ? infiniteVerticalAnimation : profileAnimation?.animate}
         className={`absolute ${profileCss}`}
       >
-        <img src={profileImage} alt="프로필 이미지" className="w-[170px] h-[170px] rounded-full object-cover" />
+        <img src={profileImage || profile} alt="프로필 이미지" className="w-[170px] h-[170px] rounded-full object-cover" />
       </motion.div>
 
       {/* 아기 이미지 애니메이션 */}

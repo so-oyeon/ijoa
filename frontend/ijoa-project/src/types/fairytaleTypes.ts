@@ -72,6 +72,7 @@ export interface FairyTaleSearchItem {
   totalPages: number;
   currentPage: number;
   isCompleted: boolean;
+  progressRate: number;
 }
 
 export interface FairyTaleSearchResponse {

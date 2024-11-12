@@ -77,3 +77,7 @@
 .book-cover-image {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
+/* 
+.text-shadow {
+  text-shadow: -2px 0px white, 0px 2px white, 2px 0px white, 0px -2px white;
+} */

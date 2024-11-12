@@ -1,18 +1,24 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import "../../css/FairytaleContentPage.css";
-import ReadCompleteModal from "../../components/fairytales/ReadCompleteModal";
-import LevelUpModal from "../../components/fairytales/LevelUpModal";
-import TTSChoiceModal from "../../components/fairytales/TTSChoiceModal";
-import QuizModal from "../../components/fairytales/QuizModal";
-import FocusAlertModal from "../../components/fairytales/FocusAlertModal";
-import FairytaleMenu from "../../components/fairytales/FairytaleMenu";
+
+import ReadCompleteModal from "../../components/fairytales/contents/ReadCompleteModal";
+import LevelUpModal from "../../components/fairytales/contents/LevelUpModal";
+import TTSChoiceModal from "../../components/fairytales/contents/TTSChoiceModal";
+import QuizModal from "../../components/fairytales/contents/QuizModal";
+import FocusAlertModal from "../../components/fairytales/contents/FocusAlertModal";
+import FairytaleMenu from "../../components/fairytales/contents/FairytaleMenu";
+import SeesoComponent from "../../components/seeso/SeesoComponent";
+
 import MenuButton from "/assets/fairytales/buttons/menu-button.png";
 import SoundOnButton from "/assets/fairytales/buttons/sound-on-button.png";
 import LeftArrow from "/assets/fairytales/buttons/left-arrow.png";
 import RightArrow from "/assets/fairytales/buttons/right-arrow.png";
+
 import { fairyTaleApi } from "../../api/fairytaleApi";
 import { FairyTaleContentResponse, FairyTalePageResponse, QuizQuestionResponse } from "../../types/fairytaleTypes";
+import { WordPositionInfo } from "../../types/seesoTypes";
+
 import Lottie from "react-lottie-player";
 import loadingAnimation from "../../lottie/footPrint-loadingAnimation.json";
 
@@ -43,6 +49,9 @@ const FairyTaleContentPage: React.FC = () => {
 
   const bookId = fairytaleId ? parseInt(fairytaleId, 10) : 0;
   const isReading = currentPage > 0 && currentPage != totalPages;
+
+  // Seeso eye-tracking 글자 추출을 위한 word 배열
+  const [wordPositions, setWordPositions] = useState<WordPositionInfo[]>([]);
 
   // 동화책 내용(이미지, 텍스트)을 가져오는 api 통신 함수
   const getFairyTaleContent = useCallback(
@@ -214,6 +223,36 @@ const FairyTaleContentPage: React.FC = () => {
     setIsTTSChoiceModalOpen(false); // 모달 닫기
   };
 
+  // 단어 위치 추출 함수
+  const extractWordPositions = () => {
+    const textContainer = document.querySelector(".seeso-text-container") as HTMLElement;
+    if (!textContainer) {
+      console.error("text-container element not found");
+      return;
+    }
+
+    const words = textContainer.innerText.split(" ");
+    textContainer.innerText = ""; // 기존 텍스트를 지움
+
+    const positions = words.map((word) => {
+      const span = document.createElement("span");
+      span.innerText = word + " ";
+      textContainer.appendChild(span);
+
+      const rect = span.getBoundingClientRect();
+      return {
+        word,
+        x: rect.left,
+        y: rect.top,
+        width: rect.width,
+        height: rect.height,
+      };
+    });
+
+    setWordPositions(positions);
+    console.log("Extracted word positions:", positions); // 좌표 정보 확인
+  };
+
   // 레벨업 모달이 열릴 때 일정 시간 후에 독서 완료 모달 열기
   useEffect(() => {
     if (isLevelUpModalOpen) {
@@ -247,33 +286,44 @@ const FairyTaleContentPage: React.FC = () => {
     }
   }, [isQuizModalOpen, isTTSChoiceModalOpen, fairytaleCurrentPage]);
 
+  // 단어 위치 정보 추출
+  useEffect(() => {
+    if (!fairytaleData) return;
+
+    extractWordPositions();
+  }, [fairytaleData]);
+
   return (
     <div className="relative h-screen">
       {fairytaleData ? (
         <>
           <img src={fairytaleData.image} alt="동화책 내용 사진" className="w-screen h-screen object-cover" />
-          <div className="w-[1100px] h-[160px] p-4 flex absolute bottom-10 left-1/2 transform -translate-x-1/2 justify-between items-center bg-white bg-opacity-70 rounded-2xl shadow-lg">
+          <div className="w-[320px] sm:w-[600px] lg:w-[1100px] h-auto p-4 py-6 flex flex-col sm:flex-row absolute bottom-10 left-1/2 transform -translate-x-1/2 justify-center sm:justify-between items-center bg-white bg-opacity-70 rounded-2xl shadow-lg">
             {ttsId && (
-              <button className="items-center ml-5 active:scale-110" onClick={handlePlayRecordingAudio}>
-                <img src={SoundOnButton} alt="다시 듣기 버튼" className="w-20 h-20" />
-                <p className="text-sm text-[#565656] font-bold">다시 듣기</p>
+              <button className="items-center active:scale-110 mb-4 sm:mb-0" onClick={handlePlayRecordingAudio}>
+                <img src={SoundOnButton} alt="다시 듣기 버튼" className="w-12 h-12 sm:w-20 sm:h-20" />
+                {/* sm 이하에서는 텍스트를 숨깁니다 */}
+                <p className="text-sm text-[#565656] font-bold hidden sm:block">다시 듣기</p>
               </button>
             )}
 
-            <div className="px-12 flex-1 text-4xl font-['MapleBold'] font-bold text-center whitespace-pre-line break-keep">
+            {/* Seeso 시선 추적 글자 처리를 위해 seeso-text-container 클래스명 필요 */}
+            <div className="seeso-text-container px-2 sm:px-12 flex-1 text-sm sm:text-2xl lg:text-4xl font-['MapleBold'] font-bold text-center whitespace-pre-line break-keep">
               {fairytaleData.content}
             </div>
           </div>
+
           {fairytaleCurrentPage > 0 && (
-            <div className="absolute left-10 top-1/2 transform -translate-y-1/2">
+            <div className="absolute left-4 md:left-10 top-1/2 transform -translate-y-1/2">
               <button className="bg-transparent border-none active:scale-125" onClick={handleLeftClick}>
-                <img src={LeftArrow} alt="왼쪽 화살표" />
+                <img src={LeftArrow} alt="왼쪽 화살표" className="w-16 md:w-32" />
               </button>
             </div>
           )}
-          <div className="absolute right-10 top-1/2 transform -translate-y-1/2">
+
+          <div className="absolute right-4 md:right-10 top-1/2 transform -translate-y-1/2">
             <button className="bg-transparent border-none active:scale-125" onClick={handleRightClick}>
-              <img src={RightArrow} alt="오른쪽 화살표" />
+              <img src={RightArrow} alt="오른쪽 화살표" className="w-16 md:w-32" />
             </button>
           </div>
 
@@ -281,8 +331,7 @@ const FairyTaleContentPage: React.FC = () => {
           <div className="absolute top-[-12px] right-10">
             <button
               className="px-3 py-4 bg-gray-700 bg-opacity-50 rounded-2xl shadow-md active:bg-gray-800"
-              onClick={handleOpenMenu}
-            >
+              onClick={handleOpenMenu}>
               <img src={MenuButton} alt="메뉴 버튼" />
               <p className="text-xs text-white">메뉴</p>
             </button>
@@ -310,7 +359,7 @@ const FairyTaleContentPage: React.FC = () => {
       {/* 레벨업 모달 */}
       <LevelUpModal isOpen={isLevelUpModalOpen} />
       {/* 독서완료 모달 */}
-      <ReadCompleteModal isOpen={isReadCompleteModalOpen} title={title} from={from}/>
+      <ReadCompleteModal isOpen={isReadCompleteModalOpen} title={title} from={from} />
       {/* 퀴즈 모달 */}
       <QuizModal
         isOpen={isQuizModalOpen && !isQuizDataLoading}
@@ -333,6 +382,9 @@ const FairyTaleContentPage: React.FC = () => {
       />
       {/* 집중 알람 모달 */}
       <FocusAlertModal isOpen={isFocusAlertModalOpen} onClose={handleCloseFocusAlertModal} />
+
+      {/* Seeso eye-tracking 컴포넌트 호출 */}
+      <SeesoComponent wordPositions={wordPositions} />
     </div>
   );
 };
