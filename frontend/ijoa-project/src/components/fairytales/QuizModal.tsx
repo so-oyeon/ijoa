@@ -194,7 +194,7 @@ const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, quizData = "", q
               ) : (
                 <div>
                   {sentences.map((quiz, index) => (
-                    <p key={index} className="text-lg flex justify-center px-8 break-keep">
+                    <p key={index} className="text-lg flex justify-center px-6 break-keep">
                       {quiz}
                     </p>
                   ))}

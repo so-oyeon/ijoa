@@ -7,7 +7,7 @@ interface BookCoverGridProps {
   titles: string[];
   onBookClick: (index: number) => void;
   myBookReadOrNot?: boolean[];
-  progress?: number[]; // 진행률
+  progress?: number[];
 }
 
 const BookCoverGrid: React.FC<BookCoverGridProps> = ({
@@ -19,28 +19,30 @@ const BookCoverGrid: React.FC<BookCoverGridProps> = ({
 }) => {
   return (
     <div className="w-full h-full flex justify-center items-center px-2">
-      <div className="w-full grid grid-cols-4 gap-5 justify-center">
+      <div className="w-full grid gap-3 sm:gap-4 md:gap-5 lg:gap-6 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 justify-center">
         {bookCovers.map((cover, index) => (
           <div key={index} onClick={() => onBookClick(index)} className="relative cursor-pointer">
-            <img src={cover} alt="동화책 표지 사진" className="book-cover-image relative w-full h-[200px] object-cover rounded-lg" />
+            <div className="relative w-[150px] sm:w-[160px] md:w-[180px] h-[200px] mx-auto">
+              <img
+                src={cover}
+                alt="동화책 표지 사진"
+                className="book-cover-image w-full h-full object-cover rounded-lg"
+              />
 
-            {/* 진행 상태바 */}
-            {progress && progress[index] > 0 && progress[index] < 100 && (
-              <div className="absolute bottom-[36px] left-0 w-full h-2 bg-gray-300 rounded-b">
-                <div
-                  className="h-full bg-red-400 rounded"
-                  style={{ width: `${progress[index]}%` }}
-                ></div>
-              </div>
-            )}
+              {/* 진행 상태바 */}
+              {progress && progress[index] > 0 && progress[index] < 100 && (
+                <div className="absolute bottom-0 left-0 w-full h-2 bg-gray-300 rounded-b">
+                  <div className="h-full bg-red-400 rounded-b" style={{ width: `${progress[index]}%` }}></div>
+                </div>
+              )}
 
-            {/* 읽음 여부에 따라 우측 상단에 bookclip 이미지 표시 */}
-            {myBookReadOrNot && myBookReadOrNot[index] && (
-              <img src={bookclip} alt="읽음 표시" className="absolute -top-7 -right-3 w-20 h-20 z-10" />
-            )}
+              {myBookReadOrNot && myBookReadOrNot[index] && (
+                <img src={bookclip} alt="읽음 표시" className="absolute -top-4 -right-2 w-16 h-16 z-10" />
+              )}
+            </div>
 
-            <div className="mt-2 ml-2">
-              <span className="text-xl font-semibold font-['MapleLight']">{titles[index]}</span>
+            <div className="mt-2 text-center">
+              <span className="text-lg md:text-xl font-semibold font-['MapleLight']">{titles[index]}</span>
             </div>
           </div>
         ))}

@@ -9,7 +9,7 @@ interface Props {
   direction: string;
   myBookLists: FairyTaleReadCheckItem[];
   myBookReadOrNot: boolean[];
-  progress: number[]; // progress 추가
+  progress: number[];
 }
 
 const MyBookSwiper = ({ direction, myBookLists, myBookReadOrNot, progress }: Props) => {
@@ -19,8 +19,6 @@ const MyBookSwiper = ({ direction, myBookLists, myBookReadOrNot, progress }: Pro
   return (
     <Swiper
       dir={`${direction === "reverse" ? "rtl" : "ltr"}`}
-      slidesPerView={3.5}
-      spaceBetween={30}
       autoplay={{
         delay: 1,
         disableOnInteraction: false,
@@ -31,12 +29,24 @@ const MyBookSwiper = ({ direction, myBookLists, myBookReadOrNot, progress }: Pro
       modules={[FreeMode, Autoplay]}
       className="mySwiper"
       style={{ overflow: "visible" }}
+      breakpoints={{
+        320: { slidesPerView: 2, spaceBetween: 10 },
+        640: { slidesPerView: 3, spaceBetween: 15 },
+        768: { slidesPerView: 3.5, spaceBetween: 20 },
+        1024: { slidesPerView: 4.5, spaceBetween: 25 },
+        1280: { slidesPerView: 5.5, spaceBetween: 30 },
+        1536: { slidesPerView: 6, spaceBetween: 30 },
+      }}
     >
       {myBookCovers.map((cover, index) => (
         <SwiperSlide key={index} style={{ overflow: "visible" }}>
           <div className="block text-center cursor-pointer gap-10">
-            <div className="relative">
-              <img src={cover} alt={`동화책 ${index + 1}`} className="book-cover-image w-full h-[210px] object-cover rounded-lg" />
+            <div className="relative w-[200px] h-[220px] mx-auto">
+              <img
+                src={cover}
+                alt={`동화책 ${index + 1}`}
+                className="book-cover-image w-full h-[210px] object-cover rounded-lg"
+              />
 
               {/* 읽음 여부에 따라 우측 상단에 뱃지 이미지 표시 */}
               {myBookReadOrNot[index] && (
@@ -45,13 +55,13 @@ const MyBookSwiper = ({ direction, myBookLists, myBookReadOrNot, progress }: Pro
 
               {/* 진행 상태바 */}
               {progress[index] > 0 && progress[index] < 100 && (
-                <div dir="ltr" className="absolute bottom-0 left-0 w-full h-2 bg-gray-300 rounded">
-                  <div className="h-full bg-red-400 rounded" style={{ width: `${progress[index]}%` }}></div>
+                <div dir="ltr" className="absolute bottom-2 left-0 w-full h-2 bg-gray-300 rounded-b">
+                  <div className="h-full bg-red-400 rounded-b" style={{ width: `${progress[index]}%` }}></div>
                 </div>
               )}
             </div>
-            <div dir="ltr" className="mt-2 text-left">
-              <span className="text-xl text-white line-clamp-1">{myBookTitles[index]}</span>
+            <div dir="ltr" className="text-center mx-auto w-[200px]">
+              <span className="text-lg md:text-xl text-white line-clamp-1">{myBookTitles[index]}</span>
             </div>
           </div>
         </SwiperSlide>
