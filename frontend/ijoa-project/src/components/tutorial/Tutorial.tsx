@@ -32,6 +32,12 @@ const tutorialPositions: { [key: number]: React.CSSProperties } = {
     left: "auto",
     transform: "none", // 세 번째 단계: 헤더 아래 우측
   },
+  5: {
+    top: "100px",
+    right: "120px",
+    left: "auto",
+    transform: "none", // 세 번째 단계: 헤더 아래 우측
+  },
   // 추가 단계가 필요한 경우 여기에 추가
 };
 
@@ -55,6 +61,12 @@ const highlightPositions: { [key: number]: React.CSSProperties } = {
     width: "5%",
     height: "90px", // 세 번째 단계에서 특정 헤더 영역 강조
   },
+  5: {
+    top: "5px",
+    right: "20px",
+    width: "28%",
+    height: "90px",
+  },
   // 추가 단계가 필요한 경우 여기에 추가
 };
 
@@ -73,8 +85,12 @@ const Tutorial: React.FC = () => {
         return (
           <div className="font-['MapleLight']">
             <h2 className="text-2xl font-bold mb-2 blue-highlight">튜토리얼 안내</h2>
-            <p>아이조아에 오신 것을 환영해요! <br /> 기본 사용법을 안내합니다.</p>
-            <button onClick={nextStep} className="tutorial-btn tutorial-next-btn mt-4">다음</button>
+            <p>
+              아이조아에 오신 것을 환영해요! <br /> 기본 사용법을 안내합니다.
+            </p>
+            <button onClick={nextStep} className="tutorial-btn tutorial-next-btn mt-4">
+              다음
+            </button>
           </div>
         );
       case 2:
@@ -83,8 +99,12 @@ const Tutorial: React.FC = () => {
             <h2 className="text-2xl font-bold mb-2 blue-highlight">헤더 기능 안내</h2>
             <p>주요 기능에 접근할 수 있습니다.</p>
             <div className="flex justify-between">
-              <button onClick={prevStep} className="tutorial-btn tutorial-prev-btn mt-4">이전</button>
-              <button onClick={nextStep} className="tutorial-btn tutorial-next-btn mt-4">다음</button>
+              <button onClick={prevStep} className="tutorial-btn tutorial-prev-btn mt-4">
+                이전
+              </button>
+              <button onClick={nextStep} className="tutorial-btn tutorial-next-btn mt-4">
+                다음
+              </button>
             </div>
           </div>
         );
@@ -94,24 +114,49 @@ const Tutorial: React.FC = () => {
             <h2 className="text-2xl font-bold mb-2 blue-highlight">자녀</h2>
             <p>자녀를 선택해서 책 읽기를 시작하세요!</p>
             <div className="flex justify-between">
-              <button onClick={prevStep} className="tutorial-btn tutorial-prev-btn mt-4">이전</button>
-              <button onClick={nextStep} className="tutorial-btn tutorial-next-btn mt-4">다음</button>
+              <button onClick={prevStep} className="tutorial-btn tutorial-prev-btn mt-4">
+                이전
+              </button>
+              <button onClick={nextStep} className="tutorial-btn tutorial-next-btn mt-4">
+                다음
+              </button>
             </div>
           </div>
         );
       case 4:
-        return(
-        <div className="font-['MapleLight']">
-          <h2 className="text-2xl font-bold mb-2 blue-highlight">TTS</h2>
-          <p>자녀에게 들려주고 싶은 <br />목소리를 녹음하세요!</p>
-          <div className="flex justify-between">
-            <button onClick={prevStep} className="tutorial-btn tutorial-prev-btn mt-4">이전</button>
-            <button onClick={nextStep} className="tutorial-btn tutorial-next-btn mt-4">다음</button>
+        return (
+          <div className="font-['MapleLight']">
+            <h2 className="text-2xl font-bold mb-2 blue-highlight">TTS</h2>
+            <p>
+              자녀에게 들려주고 싶은 <br />
+              목소리를 녹음하세요!
+            </p>
+            <div className="flex justify-between">
+              <button onClick={prevStep} className="tutorial-btn tutorial-prev-btn mt-4">
+                이전
+              </button>
+              <button onClick={nextStep} className="tutorial-btn tutorial-next-btn mt-4">
+                다음
+              </button>
+            </div>
           </div>
-        </div>
-
         );
-        
+      case 5:
+        return (
+          <div className="font-['MapleLight']">
+            <h2 className="text-2xl font-bold mb-2 blue-highlight">완료</h2>
+            <p>이상으로 튜토리얼을 완료합니다!</p>
+            <div className="flex justify-between">
+              <button onClick={prevStep} className="tutorial-btn tutorial-prev-btn mt-4">
+                이전
+              </button>
+              <button onClick={close} className="tutorial-btn tutorial-complete-btn mt-4">
+                완료
+              </button>
+            </div>
+          </div>
+        );
+
       default:
         return null;
     }
