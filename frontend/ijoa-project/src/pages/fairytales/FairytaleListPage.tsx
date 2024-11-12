@@ -171,7 +171,7 @@ const FairytaleListPage: React.FC = () => {
   return (
     <div>
       <div className="pt-24 pb-24 px-10 text-xl">
-        <div className="h-[300px] mb-10">
+        <div className="h-[310px] mb-10 overflow-hidden">
           <div className="mb-5 text-2xl font-bold font-['MapleBold']">🏆 {childInfo?.age}살 인기 동화책</div>
           {popularFairyTales.length > 0 ? (
             <Swiper
@@ -185,7 +185,7 @@ const FairytaleListPage: React.FC = () => {
             <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
           )}
         </div>
-        <div className="h-[300px] mb-10">
+        <div className="h-[310px] mb-10 overflow-hidden">
           <div className="mb-5 text-2xl font-bold font-['MapleBold']">🧸 이런 책 어때요?</div>
           {recommendedFairyTales.length > 0 ? (
             <Swiper
@@ -199,7 +199,7 @@ const FairytaleListPage: React.FC = () => {
             <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
           )}
         </div>
-        <div className="h-[300px]">
+        <div className="h-[310px] overflow-hidden">
           <div className="flex flex-col md:flex-row justify-between mb-5">
             <div className="text-2xl font-bold font-['MapleBold']">🌟 카테고리 별 동화책</div>
             <ChoiceTab tabs={tabItems} onTabClick={handleCategoryChange} />
