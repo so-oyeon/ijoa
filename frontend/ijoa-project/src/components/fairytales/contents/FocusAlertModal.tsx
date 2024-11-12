@@ -17,7 +17,7 @@ const FocusAlertModal: React.FC<FocusAlertModalProps> = ({ isOpen, onClose }) =>
       <div className="relative w-full h-[350px] max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl text-center bg-white rounded-2xl shadow-lg mx-4">
         <div className="pt-3">
           <div className="flex justify-center items-center">
-            <img src={Attention} alt="집중 아이콘" className="w-20 sm:w-28 md:w-36 absolute top-2" />
+            <img src={Attention} alt="집중 아이콘" className="w-20 sm:w-32 md:w-36 absolute top-2" />
           </div>
           <div className="flex justify-center items-center mt-12 sm:mt-14">
             {/* 사자 이미지에 애니메이션 적용 */}
@@ -28,7 +28,7 @@ const FocusAlertModal: React.FC<FocusAlertModalProps> = ({ isOpen, onClose }) =>
               animate={{ y: ["0%", "-10%", "0%"] }}
               transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
             />
-            <div className="flex flex-col items-center justify-center mt-16 sm:mt-20 h-full">
+            <div className="flex flex-col items-center justify-center mt-20 h-full">
               <p className="text-md sm:text-md lg:text-xl font-semibold whitespace-pre-line text-center">
                 {"집중력이 떨어지고 있어요😅\n잠깐 스트레칭하고 올까요?"}
               </p>

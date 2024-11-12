@@ -8,7 +8,7 @@ interface LevelUpModalProps {
 
 const LevelUpModal: React.FC<LevelUpModalProps> = ({ isOpen }) => {
   useEffect(() => {
-    if (isOpen) { 
+    if (isOpen) {
       firework(); // 모달이 열리면 폭죽 효과 실행
     }
   }, [isOpen]);
@@ -30,16 +30,16 @@ const LevelUpModal: React.FC<LevelUpModalProps> = ({ isOpen }) => {
       }
 
       const particleCount = 50 * (timeLeft / duration);
-      
+
       confetti({
         ...defaults,
         particleCount,
-        origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
+        origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
       });
       confetti({
         ...defaults,
         particleCount,
-        origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
+        origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
       });
     }, 250);
   };
@@ -48,13 +48,13 @@ const LevelUpModal: React.FC<LevelUpModalProps> = ({ isOpen }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
-      <div className="w-1/3 text-center bg-white rounded-2xl shadow-lg">
-        <div className="px-4 py-8">
-          <div className="mb-8 text-2xl font-bold text-center fairytale-font whitespace-pre-line">
+      <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg text-center bg-white rounded-2xl shadow-lg mx-4">
+        <div className="px-4 py-6 md:py-8">
+          <div className="mb-6 md:mb-8 text-lg sm:text-xl md:text-2xl font-bold text-center fairytale-font whitespace-pre-line">
             {"와~ 한 단계 성장했어요!\n나는야 책아장 🙌"}
           </div>
         </div>
-        <img src={Animals2} alt="동물들" className="w-full" />
+        <img src={Animals2} alt="동물들" className="w-full h-auto rounded-b-2xl" />
       </div>
     </div>
   );
