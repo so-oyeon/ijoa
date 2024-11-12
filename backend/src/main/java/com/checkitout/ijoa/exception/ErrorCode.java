@@ -56,6 +56,7 @@ public enum ErrorCode {
     // quiz
     QUIZ_NOT_FOUND(HttpStatus.NOT_FOUND, "QUIZ-001", "quiz를 찾을 수 없습니다."),
     ANSWER_NO_CONTENT(HttpStatus.NO_CONTENT, "QUIZ-002", "답변을 찾을 수 없습니다."),
+    ANSWER_NOT_FOUND(HttpStatus.NOT_FOUND, "QUIZ-003", "답변이 존재하지 않습니다."),
 
     // statistics
     INVALID_INTERVAL(HttpStatus.BAD_REQUEST, "STATISTICS-001", "주기는 date, day, hour 중 하나여야 합니다."),
