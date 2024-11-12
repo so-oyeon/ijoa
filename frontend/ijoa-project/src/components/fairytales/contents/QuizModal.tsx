@@ -10,9 +10,9 @@ import Tiger from "/assets/fairytales/images/tiger.png";
 import Zebra from "/assets/fairytales/images/zebra.png";
 import Cloud from "/assets/fairytales/images/cloud.png";
 // import Record from "/assets/fairytales/buttons/record.png";
-import { fairyTaleApi } from "../../api/fairytaleApi";
+import { fairyTaleApi } from "../../../api/fairytaleApi";
 import Lottie from "react-lottie-player";
-import loadingAnimation from "../../lottie/footPrint-loadingAnimation.json";
+import loadingAnimation from "../../../lottie/footPrint-loadingAnimation.json";
 
 interface QuizModalProps {
   isOpen: boolean;
@@ -173,7 +173,7 @@ const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, quizData = "", q
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center h-screen z-50 overflow-hidden">
-      <div className="w-[700px] h-[450px] bg-white px-10 rounded-2xl shadow-lg flex flex-col justify-center items-center relative overflow-hidden">
+      <div className="w-full max-w-lg md:max-w-xl lg:max-w-2xl h-[500px] md:h-[450px] bg-white px-6 md:px-10 py-6 md:py-10 rounded-2xl shadow-lg flex flex-col justify-center items-center relative overflow-hidden">
         <button
           onClick={uploadAudioIfReady}
           disabled={!isRecorded}
@@ -185,16 +185,20 @@ const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, quizData = "", q
         </button>
 
         <div className="flex items-center gap-8">
-          <img src={animalImage} alt="Animal Character" className="w-[300px] h-auto mt-10" />
+          <img
+            src={animalImage}
+            alt="Animal Character"
+            className="hidden md:block w-36 md:w-[300px] h-auto mt-4 md:mt-10"
+          />
           <div className="relative w-full text-center">
-            <img src={Cloud} alt="말풍선" className="w-[400px] mx-auto relative z-10" />
+            <img src={Cloud} alt="말풍선" className="w-[400px] relative z-10" />
             <span className="w-[280px] absolute ml-4 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 fairytale-font z-20 flex flex-col items-center">
               {isLoadingSentences ? (
                 <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
               ) : (
                 <div>
                   {sentences.map((quiz, index) => (
-                    <p key={index} className="text-lg flex justify-center px-6 break-keep">
+                    <p key={index} className="text-lg flex justify-center px-2 break-keep">
                       {quiz}
                     </p>
                   ))}

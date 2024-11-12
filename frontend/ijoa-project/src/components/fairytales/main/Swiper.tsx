@@ -1,7 +1,7 @@
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-import "../../css/FairytaleContentPage.css";
+import "../../../css/FairytaleContentPage.css";
 import bookclip from "/assets/fairytales/images/bookclip.png";
 
 interface BookCoverSwiperProps {

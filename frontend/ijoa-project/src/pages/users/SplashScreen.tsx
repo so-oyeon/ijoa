@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Tiger from "/assets/user/tiger.png";
-import Elephant from "/assets/user/elephant.png";
-import Giraffe from "/assets/user/giraffe.png";
-import Tablet from "/assets/user/tablet.png";
+import Tablet from "/assets/user/tablet2.png";
 import "../../css/Login.css";
 
 const SplashScreen: React.FC = () => {
@@ -20,31 +17,23 @@ const SplashScreen: React.FC = () => {
     <div
       className={`splash-screen relative w-screen h-screen bg-[#f3fbff] overflow-hidden ${fadeOut ? "fade-out" : ""}`}
     >
-      {/* 로고 텍스트 */}
-      <div className="absolute top-[25%] right-[10%] w-[40vw] md:w-[30vw] lg:w-[40vw] flex flex-col items-center">
-        <div className="flex space-x-2 text-[10vw] font-['SDGothic'] text-white-stroke">
+      <div className="absolute top-[10%] sm:top-[30%] right-[10%] sm:right-[15%] w-[70vw] sm:w-[50vw] md:w-[30vw] flex flex-col items-center">
+        <div className="flex space-x-1 sm:space-x-2 text-[60px] sm:text-[100px] lg:text-[140px] font-['SDGothic'] text-white-stroke">
           <span className="text-[#FFCC00]">아</span>
           <span className="text-[#99CC66]">이</span>
           <span className="text-[#FF6666]">조</span>
           <span className="text-[#339999]">아</span>
         </div>
-        <p className="w-full font-['MapleBold'] text-center font-semibold text-[#565656] md:text-xl lg:text-2xl tracking-widest">
+        <p className="w-full font-['MapleBold'] text-center font-semibold text-[#565656] text-md sm:text-lg md:text-2xl tracking-widest mt-4 whitespace-nowrap">
           엄마, 아빠가 읽어주는 동화책
         </p>
       </div>
 
-      {/* 태블릿 및 동물 이미지 컨테이너 */}
-      <div className="relative flex items-end justify-center w-full h-full">
-        {/* 동물 이미지 */}
-        <div className="flex items-end absolute left-[22%] bottom-[16%] transform -translate-x-1/2 z-20">
-          <img src={Tiger} alt="호랑이" className="w-1/3 mb-[18vw]" />
-          <img src={Elephant} alt="코끼리" className="w-1/3 mb-[21vw]" />
-          <img src={Giraffe} alt="기린" className="w-1/3 mb-[25vw]" />
-        </div>
-
-        {/* 태블릿 이미지 */}
-        <img src={Tablet} alt="태블릿 화면" className="absolute left-0 bottom-10 w-1/2 translate-y-[10%]" />
-      </div>
+      <img
+        src={Tablet}
+        alt="태블릿 화면"
+        className="absolute -bottom-[10%] sm:-bottom-[20%] -left-[10%] sm:-left-[5%] w-[80vw] sm:w-[60vw] md:w-[40vw] translate-y-[10%]"
+      />
     </div>
   );
 };

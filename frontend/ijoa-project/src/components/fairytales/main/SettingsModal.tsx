@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import SettingToggle from "../../components/fairytales/SettingToggle";
+import SettingToggle from "./SettingToggle";
 import SettingsIcon from "/assets/fairytales/buttons/settings-icon.png";
-import MusicManager from "../../MusicManager";
+import MusicManager from "../../../MusicManager";
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -10,8 +10,8 @@ interface SettingsModalProps {
 
 const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
   const [isLoaded, setIsLoaded] = useState(false);
+  const [initialToggleOptions, setInitialToggleOptions] = useState<{ label: string; checked: boolean }[]>([]);
 
-  // 초기 로드 시 localStorage에서 설정 값을 불러오기
   const [toggleOptions, setToggleOptions] = useState<{ label: string; checked: boolean }[]>(() => [
     { label: "책 읽어주기", checked: localStorage.getItem("readAloudEnabled") === "true" || false },
     { label: "퀴즈", checked: localStorage.getItem("quizEnabled") === "true" || false },
@@ -20,22 +20,29 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
 
   useEffect(() => {
     if (isOpen && !isLoaded) {
-      setToggleOptions((prevOptions) =>
-        prevOptions.map((option) => {
-          const storedValue = localStorage.getItem(option.label === "퀴즈" ? "quizEnabled" : option.label === "책 읽어주기" ? "readAloudEnabled" : "bgm");
-          if (storedValue !== null) {
-            return { ...option, checked: storedValue === "true" };
-          }
-          return { ...option, checked: true }; // 기본값을 true로 설정
-        })
-      );
+      const initialOptions = [
+        { label: "책 읽어주기", checked: localStorage.getItem("readAloudEnabled") === "true" || false },
+        { label: "퀴즈", checked: localStorage.getItem("quizEnabled") === "true" || false },
+        { label: "bgm", checked: localStorage.getItem("bgm") === "true" || false },
+      ];
+      setInitialToggleOptions(initialOptions); // 초기 상태 저장
+      setToggleOptions(initialOptions);
       setIsLoaded(true);
     }
   }, [isOpen, isLoaded]);
 
-  useEffect(() => {
-    if (!isOpen) return;
+  const handleToggle = (index: number) => {
+    const newOptions = [...toggleOptions];
+    newOptions[index].checked = !newOptions[index].checked;
+    setToggleOptions(newOptions);
+  };
 
+  const handleCancel = () => {
+    setToggleOptions(initialToggleOptions); // 초기 상태로 복원
+    handleClose();
+  };
+
+  const handleSave = () => {
     toggleOptions.forEach((option) => {
       if (option.label === "bgm") {
         if (option.checked) {
@@ -53,22 +60,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
         localStorage.setItem("readAloudEnabled", option.checked.toString());
       }
     });
-  }, [toggleOptions, isOpen]);
-
-  const handleToggle = (index: number) => {
-    const newOptions = [...toggleOptions];
-    newOptions[index].checked = !newOptions[index].checked;
-    setToggleOptions(newOptions);
-
-    // 변경된 옵션을 localStorage에 업데이트
-    const optionLabel = newOptions[index].label;
-    if (optionLabel === "책 읽어주기") {
-      localStorage.setItem("readAloudEnabled", newOptions[index].checked.toString());
-    } else if (optionLabel === "퀴즈") {
-      localStorage.setItem("quizEnabled", newOptions[index].checked.toString());
-    } else if (optionLabel === "bgm") {
-      localStorage.setItem("bgm", newOptions[index].checked.toString());
-    }
+    handleClose();
   };
 
   const handleClose = () => {
@@ -80,26 +72,26 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
-      <div className="w-1/3 py-8 text-center bg-white rounded-2xl shadow-lg">
-        <div className="flex justify-center items-center mb-6">
-          <img src={SettingsIcon} alt="설정 아이콘" className="w-12 h-12" />
+      <div className="w-[300px] md:w-[400px] py-6 sm:py-8 text-center bg-white rounded-2xl shadow-lg mx-4">
+        <div className="flex justify-center items-center mb-4 sm:mb-6">
+          <img src={SettingsIcon} alt="설정 아이콘" className="w-10 h-10 sm:w-12 sm:h-12" />
         </div>
-        <div className="text-xl font-bold">
+        <div className="text-lg sm:text-xl font-bold mb-4 sm:mb-6">
           <span className="blue-highlight">기본 설정</span>을 선택해 주세요.
         </div>
 
         <SettingToggle options={toggleOptions} onToggle={handleToggle} />
 
-        <div className="flex gap-4 justify-center items-center">
+        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-6">
           <button
-            onClick={handleClose}
-            className="mt-6 px-8 py-2 text-[#67CCFF] text-lg font-bold bg-white rounded-3xl border-2 border-[#67CCFF] active:bg-[#e0f7ff]"
+            onClick={handleCancel}
+            className="w-32 px-6 py-2 sm:px-8 text-[#67CCFF] text-base sm:text-lg font-bold bg-white rounded-3xl border-2 border-[#67CCFF] active:bg-[#e0f7ff]"
           >
             취소
           </button>
           <button
-            onClick={handleClose}
-            className="mt-6 px-8 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-3xl border-2 border-[#67CCFF] active:bg-[#005f99]"
+            onClick={handleSave}
+            className="w-32 px-6 py-2 sm:px-8 text-white text-base sm:text-lg font-bold bg-[#67CCFF] rounded-3xl border-2 border-[#67CCFF] active:bg-[#005f99]"
           >
             완료
           </button>

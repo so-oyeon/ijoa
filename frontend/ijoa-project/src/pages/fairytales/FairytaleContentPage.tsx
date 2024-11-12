@@ -2,12 +2,12 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import "../../css/FairytaleContentPage.css";
 
-import ReadCompleteModal from "../../components/fairytales/ReadCompleteModal";
-import LevelUpModal from "../../components/fairytales/LevelUpModal";
-import TTSChoiceModal from "../../components/fairytales/TTSChoiceModal";
-import QuizModal from "../../components/fairytales/QuizModal";
-import FocusAlertModal from "../../components/fairytales/FocusAlertModal";
-import FairytaleMenu from "../../components/fairytales/FairytaleMenu";
+import ReadCompleteModal from "../../components/fairytales/contents/ReadCompleteModal";
+import LevelUpModal from "../../components/fairytales/contents/LevelUpModal";
+import TTSChoiceModal from "../../components/fairytales/contents/TTSChoiceModal";
+import QuizModal from "../../components/fairytales/contents/QuizModal";
+import FocusAlertModal from "../../components/fairytales/contents/FocusAlertModal";
+import FairytaleMenu from "../../components/fairytales/contents/FairytaleMenu";
 import SeesoComponent from "../../components/seeso/SeesoComponent";
 
 import MenuButton from "/assets/fairytales/buttons/menu-button.png";
@@ -298,29 +298,32 @@ const FairyTaleContentPage: React.FC = () => {
       {fairytaleData ? (
         <>
           <img src={fairytaleData.image} alt="동화책 내용 사진" className="w-screen h-screen object-cover" />
-          <div className="w-[1100px] h-[160px] p-4 flex absolute bottom-10 left-1/2 transform -translate-x-1/2 justify-between items-center bg-white bg-opacity-70 rounded-2xl shadow-lg">
+          <div className="w-[320px] sm:w-[600px] lg:w-[1100px] h-auto p-4 py-6 flex flex-col sm:flex-row absolute bottom-10 left-1/2 transform -translate-x-1/2 justify-center sm:justify-between items-center bg-white bg-opacity-70 rounded-2xl shadow-lg">
             {ttsId && (
-              <button className="items-center ml-5 active:scale-110" onClick={handlePlayRecordingAudio}>
-                <img src={SoundOnButton} alt="다시 듣기 버튼" className="w-20 h-20" />
-                <p className="text-sm text-[#565656] font-bold">다시 듣기</p>
+              <button className="items-center active:scale-110 mb-4 sm:mb-0" onClick={handlePlayRecordingAudio}>
+                <img src={SoundOnButton} alt="다시 듣기 버튼" className="w-12 h-12 sm:w-20 sm:h-20" />
+                {/* sm 이하에서는 텍스트를 숨깁니다 */}
+                <p className="text-sm text-[#565656] font-bold hidden sm:block">다시 듣기</p>
               </button>
             )}
 
             {/* Seeso 시선 추적 글자 처리를 위해 seeso-text-container 클래스명 필요 */}
-            <div className="seeso-text-container px-12 flex-1 text-4xl font-['MapleBold'] font-bold text-center whitespace-pre-line break-keep">
+            <div className="seeso-text-container px-2 sm:px-12 flex-1 text-sm sm:text-2xl lg:text-4xl font-['MapleBold'] font-bold text-center whitespace-pre-line break-keep">
               {fairytaleData.content}
             </div>
           </div>
+
           {fairytaleCurrentPage > 0 && (
-            <div className="absolute left-10 top-1/2 transform -translate-y-1/2">
+            <div className="absolute left-4 md:left-10 top-1/2 transform -translate-y-1/2">
               <button className="bg-transparent border-none active:scale-125" onClick={handleLeftClick}>
-                <img src={LeftArrow} alt="왼쪽 화살표" />
+                <img src={LeftArrow} alt="왼쪽 화살표" className="w-16 md:w-32" />
               </button>
             </div>
           )}
-          <div className="absolute right-10 top-1/2 transform -translate-y-1/2">
+
+          <div className="absolute right-4 md:right-10 top-1/2 transform -translate-y-1/2">
             <button className="bg-transparent border-none active:scale-125" onClick={handleRightClick}>
-              <img src={RightArrow} alt="오른쪽 화살표" />
+              <img src={RightArrow} alt="오른쪽 화살표" className="w-16 md:w-32" />
             </button>
           </div>
 
