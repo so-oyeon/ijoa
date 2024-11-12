@@ -155,4 +155,16 @@ public class QuizService {
 
         return responseDtos;
     }
+
+    public void deleteAnswer(Long answerId){
+        Child child = securityUtil.getChildByToken();
+        Answer answer =answerRepository.findById(answerId).orElseThrow(() -> new CustomException(ErrorCode.ANSWER_NOT_FOUND));
+
+        if(child.getId() != answer.getChild().getId()){
+            throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
+        }
+        fileService.deleteFile(answer.getAnswer());
+        answerRepository.delete(answer);
+
+    }
 }
