@@ -1,6 +1,6 @@
 package com.checkitout.ijoa.fairytale.dto;
 
-import com.checkitout.ijoa.fairytale.domain.FairytalePageImage;
+import com.checkitout.ijoa.fairytale.domain.FairytalePageContent;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,10 +16,10 @@ public class FairytalePageListResponse {
     @Schema(description = "페이지 삽화 링크", example = "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2F20141001_272%2Fjh83com_1412142177092obzc7_JPEG%2FSAM_7159.JPG&type=a340")
     private final String image;
 
-    public static FairytalePageListResponse from(FairytalePageImage fairytalePageImages) {
+    public static FairytalePageListResponse from(FairytalePageContent fairytalePageContent) {
         return FairytalePageListResponse.builder()
-                .pageNumber(fairytalePageImages.getFirstFairytalePageContent().getPageNumber())
-                .image(fairytalePageImages.getImageUrl())
+                .pageNumber(fairytalePageContent.getPageNumber())
+                .image(fairytalePageContent.getFairytalePageImage().getImageUrl())
                 .build();
     }
 }
