@@ -131,7 +131,7 @@ const Header = () => {
           >
             <img
               className={`w-12 aspect-1 p-2 bg-white rounded-full shadow-[0_3px_3px_1px_rgba(0,0,0,0.1)] ${
-                selectedTab === index ? "bg-[#f8ffab]" : ""
+                selectedTab === index ? "bg-[#F8FFAB]" : ""
               }`}
               src={`/assets/header/${type}/${menu.img}.png`}
               alt=""

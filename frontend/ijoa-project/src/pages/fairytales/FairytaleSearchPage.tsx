@@ -87,7 +87,7 @@ const FairytaleSearchPage: React.FC = () => {
   return (
     <div>
       <div className="relative w-full h-screen overflow-y-auto bg-gradient-to-b from-white">
-        <div className="pt-[96px] px-10 pb-5 flex justify-between items-center mb-6 sticky top-0 bg-white z-40">
+        <div className="pt-[96px] px-10 flex justify-between items-center mb-6 sticky top-0 bg-white z-40">
           <div className="text-2xl font-bold flex items-center font-['MapleBold']">
             {query ? "🔎 검색 결과 ..." : "📚 전체 동화 목록"}
           </div>
