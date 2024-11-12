@@ -31,7 +31,7 @@ const VoiceAlbumList = ({ topSize, partBookList, childId }: Props) => {
 
               {/* 동화책 제목 */}
               <div className="w-full h-2/5 bg-white rounded-b-2xl flex justify-center items-center">
-                <p className="w-full px-3 text-[#B27F44] text-center break-keep line-clamp-2">{book.title}</p>
+                <p className="w-full px-3 text-[#B27F44] text-center break-keep line-clamp-2 font-['MapleBold']">{book.title}</p>
               </div>
             </div>
 

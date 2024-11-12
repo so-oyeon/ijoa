@@ -58,7 +58,7 @@ const MyBookSwiper = ({ direction, myBookLists, myBookReadOrNot, progress }: Pro
 
               {/* 읽음 여부에 따라 우측 상단에 뱃지 이미지 표시 */}
               {myBookReadOrNot[index] && (
-                <img src={bookclip} alt="읽음 표시" className="absolute -top-7 -right-3 w-20 h-20 z-10" />
+                <img src={bookclip} alt="읽음 표시" className="absolute -top-7 -right-3 w-20 h-20 z-50" />
               )}
 
               {/* 진행 상태바 */}

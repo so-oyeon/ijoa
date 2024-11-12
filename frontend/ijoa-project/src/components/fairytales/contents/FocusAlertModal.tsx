@@ -13,7 +13,7 @@ const FocusAlertModal: React.FC<FocusAlertModalProps> = ({ isOpen, onClose }) =>
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 font-['MapleLight']">
       <div className="relative w-full h-[350px] max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl text-center bg-white rounded-2xl shadow-lg mx-4">
         <div className="pt-3">
           <div className="flex justify-center items-center">

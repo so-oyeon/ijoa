@@ -55,7 +55,7 @@ const FairytaleMenu: React.FC<FairytaleMenuProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-60 flex flex-col justify-center items-center h-screen z-50 p-4">
+    <div className="fixed inset-0 bg-black bg-opacity-60 flex flex-col justify-center items-center h-screen z-50 p-4 font-['MapleLight']">
       {/* 창 닫기 버튼 */}
       <button onClick={onClose} className="absolute top-4 right-4 md:top-10 md:right-16 text-white text-2xl">
         <img src={CloseButton} alt="닫기 버튼" className="w-8 md:w-12" />
