@@ -94,7 +94,8 @@ public class TTSService {
 
         //s3 파일 삭제
         // 프로필 이미지 삭제
-        fileService.deleteFile(deleteTTS.getImage());
+        String key = getKeyFromUrl(deleteTTS.getImage());
+        fileService.deleteFile(key);
         // 학습 데이터 삭제
         List<TrainAudio> trainAudios = trainAudioRepository.findByTtsId(deleteTTS.getId());
         if(trainAudios!=null){
@@ -127,7 +128,8 @@ public class TTSService {
 
         if(requestDto.getImage() != null && !requestDto.getImage().isEmpty()){
             //기존 이미지 s3삭제
-            fileService.deleteFile(updateTTS.getImage());
+            String key = getKeyFromUrl(updateTTS.getImage());
+            fileService.deleteFile(key);
 
             String url = fileService.saveProfileImage(requestDto.getImage());
             updateTTS.setImage(url);
@@ -312,6 +314,7 @@ public class TTSService {
             // DB에 S3 파일 경로 업데이트
             Audio audio = audioRepository.findByFairytaleTTSAndPage(fairytaleTTS, pageContent)
                     .map(existingAudio -> {
+                        fileService.deleteFile(existingAudio.getAudio());
                         existingAudio.setAudio(s3Path); // 경로 업데이트
                         return existingAudio;
                     })
@@ -367,4 +370,7 @@ public class TTSService {
         }
     }
 
+    public String getKeyFromUrl(String url) {
+        return url.replace("https://checkitout-bucket.s3.ap-northeast-2.amazonaws.com/", "");
+    }
 }
