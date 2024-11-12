@@ -114,7 +114,9 @@ const FairytaleSearchPage: React.FC = () => {
               progress={allFairyTales?.content.map((book) => book.progressRate || 0)}
             />
           ) : (
-            <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
+            <div className="mt-8 mb-8 flex justify-center items-center">
+              <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
+            </div>
           )}
         </div>
 

@@ -10,8 +10,8 @@ interface SettingsModalProps {
 
 const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
   const [isLoaded, setIsLoaded] = useState(false);
+  const [initialToggleOptions, setInitialToggleOptions] = useState<{ label: string; checked: boolean }[]>([]);
 
-  // 초기 로드 시 localStorage에서 설정 값을 불러오기
   const [toggleOptions, setToggleOptions] = useState<{ label: string; checked: boolean }[]>(() => [
     { label: "책 읽어주기", checked: localStorage.getItem("readAloudEnabled") === "true" || false },
     { label: "퀴즈", checked: localStorage.getItem("quizEnabled") === "true" || false },
@@ -20,22 +20,29 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
 
   useEffect(() => {
     if (isOpen && !isLoaded) {
-      setToggleOptions((prevOptions) =>
-        prevOptions.map((option) => {
-          const storedValue = localStorage.getItem(option.label === "퀴즈" ? "quizEnabled" : option.label === "책 읽어주기" ? "readAloudEnabled" : "bgm");
-          if (storedValue !== null) {
-            return { ...option, checked: storedValue === "true" };
-          }
-          return { ...option, checked: true }; // 기본값을 true로 설정
-        })
-      );
+      const initialOptions = [
+        { label: "책 읽어주기", checked: localStorage.getItem("readAloudEnabled") === "true" || false },
+        { label: "퀴즈", checked: localStorage.getItem("quizEnabled") === "true" || false },
+        { label: "bgm", checked: localStorage.getItem("bgm") === "true" || false },
+      ];
+      setInitialToggleOptions(initialOptions); // 초기 상태 저장
+      setToggleOptions(initialOptions);
       setIsLoaded(true);
     }
   }, [isOpen, isLoaded]);
 
-  useEffect(() => {
-    if (!isOpen) return;
+  const handleToggle = (index: number) => {
+    const newOptions = [...toggleOptions];
+    newOptions[index].checked = !newOptions[index].checked;
+    setToggleOptions(newOptions);
+  };
 
+  const handleCancel = () => {
+    setToggleOptions(initialToggleOptions); // 초기 상태로 복원
+    handleClose();
+  };
+
+  const handleSave = () => {
     toggleOptions.forEach((option) => {
       if (option.label === "bgm") {
         if (option.checked) {
@@ -53,22 +60,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
         localStorage.setItem("readAloudEnabled", option.checked.toString());
       }
     });
-  }, [toggleOptions, isOpen]);
-
-  const handleToggle = (index: number) => {
-    const newOptions = [...toggleOptions];
-    newOptions[index].checked = !newOptions[index].checked;
-    setToggleOptions(newOptions);
-
-    // 변경된 옵션을 localStorage에 업데이트
-    const optionLabel = newOptions[index].label;
-    if (optionLabel === "책 읽어주기") {
-      localStorage.setItem("readAloudEnabled", newOptions[index].checked.toString());
-    } else if (optionLabel === "퀴즈") {
-      localStorage.setItem("quizEnabled", newOptions[index].checked.toString());
-    } else if (optionLabel === "bgm") {
-      localStorage.setItem("bgm", newOptions[index].checked.toString());
-    }
+    handleClose();
   };
 
   const handleClose = () => {
@@ -92,13 +84,13 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
 
         <div className="flex gap-4 justify-center items-center">
           <button
-            onClick={handleClose}
+            onClick={handleCancel}
             className="mt-6 px-8 py-2 text-[#67CCFF] text-lg font-bold bg-white rounded-3xl border-2 border-[#67CCFF] active:bg-[#e0f7ff]"
           >
             취소
           </button>
           <button
-            onClick={handleClose}
+            onClick={handleSave}
             className="mt-6 px-8 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-3xl border-2 border-[#67CCFF] active:bg-[#005f99]"
           >
             완료
