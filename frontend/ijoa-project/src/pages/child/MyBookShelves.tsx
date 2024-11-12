@@ -59,7 +59,7 @@ const MyBookShelves: React.FC = () => {
       {isCurtainOpen && (
         <>
           <p className="w-full absolute top-[80px] mb-10 text-3xl text-white text-center">📚 내가 읽은 책들이야!</p>
-          <div className="w-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
+          <div className="w-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-40">
             {myBookLists.length === 0 ? (
               <p className="text-[#f1f440] text-2xl text-center whitespace-pre-line">
                 {"아직 읽은 동화책이 없어요!\n동화책을 읽으러 가볼까요?"}

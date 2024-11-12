@@ -173,7 +173,7 @@ const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, quizData = "", q
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center h-screen z-50 overflow-hidden">
+    <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center h-screen z-50 overflow-hidden font-['MapleLight']">
       <div className="w-full max-w-lg md:max-w-xl lg:max-w-2xl h-[500px] md:h-[450px] bg-white px-6 md:px-8 py-6 md:py-8 rounded-2xl shadow-lg flex flex-col justify-center items-center relative overflow-hidden">
         <button
           onClick={onClose}
@@ -199,7 +199,7 @@ const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, quizData = "", q
           />
           <div className="relative w-full text-center">
             <img src={Cloud} alt="말풍선" className="w-[400px] relative z-10" />
-            <span className="w-[280px] absolute ml-4 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 fairytale-font z-20 flex flex-col items-center">
+            <span className="w-[280px] absolute ml-4 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 flex flex-col items-center">
               {isLoadingSentences ? (
                 <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
               ) : (
@@ -216,7 +216,7 @@ const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, quizData = "", q
         </div>
 
         <div ref={waveformContainerRef} className="absolute bottom-36 w-64 h-2 right-20 mx-auto"></div>
-        <div className="absolute bottom-5 right-52 flex">
+        <div className="absolute bottom-5 right-56 flex">
           <button
             onClick={handleRecording}
             className={`px-6 py-2 text-white font-bold rounded-full ${

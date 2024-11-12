@@ -52,7 +52,7 @@ const LevelModal: React.FC<LevelModalProps> = ({ minLevel, maxLevel, totalCount,
       );
 
     return (
-      <div className="text-center">
+      <div className="text-center font-['MapleLight']">
         <div className="relative inline-block w-64 h-64">
         <p className="mt-5 font-semibold text-lg whitespace-pre-line">{"읽은 책 수에 따라\n나의 레벨이 올라가요!"}</p>
           <img
@@ -72,7 +72,7 @@ const LevelModal: React.FC<LevelModalProps> = ({ minLevel, maxLevel, totalCount,
   };
 
   return (
-    <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20">
+    <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20 font-['MapleLight']">
       <div className="relative bg-[#FCFFEA] p-10 rounded-2xl shadow-lg w-1/2 max-w-2xl text-center">
        
         <p className="mt-3 font-bold text-black text-2xl yellow-highlight">

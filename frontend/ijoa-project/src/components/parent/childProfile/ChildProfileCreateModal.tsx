@@ -73,7 +73,7 @@ const ChildProfileCreateModal = ({ setIsCreateModal, getChildInfoList }: Props) 
   };
 
   return (
-    <div className="py-8 bg-black bg-opacity-60 flex justify-center items-center fixed inset-0 z-50">
+    <div className="py-8 bg-black bg-opacity-60 flex justify-center items-center fixed inset-0 z-50 font-['MapleLight']">
       <div className="px-16 py-10 bg-white rounded-2xl shadow-lg flex flex-col items-center space-y-8">
         {/* 타이틀 텍스트 */}
         <div className="text-xl font-bold">

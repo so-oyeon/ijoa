@@ -55,10 +55,10 @@ const TTSList = () => {
   }
 
   return (
-    <div className="min-h-screen pt-24 bg-[#EAF8FF] relative">
+    <div className="min-h-screen pt-24 bg-[#EAF8FF] relative font-['IMBold']">
       <div className="p-20 grid gap-10">
         {/* 상단 타이틀 */}
-        <div className="flex flex-col justify-center items-center space-y-3 font-['IMBold']">
+        <div className="flex flex-col justify-center items-center space-y-3">
           <div className="flex space-x-3">
             <img className="w-10 aspect-1" src="/assets/header/parent/tts-icon.png" alt="" />
             <p className="text-[30px] font-semibold">

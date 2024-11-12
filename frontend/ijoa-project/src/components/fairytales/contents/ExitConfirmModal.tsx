@@ -21,7 +21,7 @@ const ExitConfirmModal: React.FC<ExitConfirmModalProps> = ({ isOpen, onClose }) 
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 font-['MapleLight']">
       <div className="w-full max-w-xs md:max-w-md lg:max-w-lg text-center bg-white rounded-2xl shadow-lg mx-4">
         <div className="px-4 py-8">
           <div className="text-xl md:text-2xl font-bold">정말로 나가시겠습니까?</div>

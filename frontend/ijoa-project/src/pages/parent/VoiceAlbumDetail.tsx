@@ -55,7 +55,7 @@ const VoiceAlbumDetail = () => {
   }, []);
 
   return (
-    <div className="voice-album-font w-full h-screen px-10 pt-10 pb-5 flex flex-col space-y-3">
+    <div className="font-['MapleLight'] w-full h-screen px-10 pt-10 pb-5 flex flex-col space-y-3">
       <div className="flex-grow flex flex-col">
         <div className="flex justify-between items-center">
           {/* 파일 책갈피 */}
