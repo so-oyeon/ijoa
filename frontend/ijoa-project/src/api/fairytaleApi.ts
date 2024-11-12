@@ -47,10 +47,8 @@ export const fairyTaleApi = {
   },
 
   // 동화 제목 검색 조회
-  getFairyTalesBySearch: (word: string, page: number) => {
-    return api.get<FairyTaleSearchResponse>(`/fairytales/search`, {
-      params: { word, page },
-    });
+  getFairyTalesBySearch: (title: string, page: number, size: number) => {
+    return api.get<FairyTaleSearchResponse>(`/fairytales/search?title=${title}&page=${page}&size=${size}`);
   },
 
   // 동화책 퀴즈 답변 조회

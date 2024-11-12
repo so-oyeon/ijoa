@@ -36,11 +36,11 @@ const FairytaleListPage: React.FC = () => {
 
   // 카테고리 이름과 ID 매핑
   const tabItems = [
-    { id: "COMMUNICATION", name: "의사소통" },
-    { id: "NATURE_EXPLORATION", name: "자연탐구" },
-    { id: "SOCIAL_RELATIONSHIPS", name: "사회관계" },
-    { id: "ART_EXPERIENCE", name: "예술경험" },
-    { id: "PHYSICAL_ACTIVITY_HEALTH", name: "신체운동 / 건강" },
+    { id: "COMMUNICATION", name: "의사소통", shortName: "소통" },
+    { id: "NATURE_EXPLORATION", name: "자연탐구", shortName: "자연" },
+    { id: "SOCIAL_RELATIONSHIPS", name: "사회관계", shortName: "사회" },
+    { id: "ART_EXPERIENCE", name: "예술경험", shortName: "예술" },
+    { id: "PHYSICAL_ACTIVITY_HEALTH", name: "신체운동 / 건강", shortName: "신체" },
   ];
 
   // 인기 동화책 api 통신 함수
@@ -114,7 +114,7 @@ const FairytaleListPage: React.FC = () => {
         isCompleted: popularIsCompleted[index],
         currentPage: popularCurrentPage[index],
         totalPages: popularTotalPage[index],
-        from: "list"
+        from: "list",
       },
     });
   };
@@ -126,7 +126,7 @@ const FairytaleListPage: React.FC = () => {
         isCompleted: recommendedIsCompleted[index],
         currentPage: recommendedCurrentPage[index],
         totalPages: recommendedTotalPage[index],
-        from: "list"
+        from: "list",
       },
     });
   };
@@ -140,7 +140,7 @@ const FairytaleListPage: React.FC = () => {
           isCompleted: selectedFairyTale.isCompleted,
           currentPage: selectedFairyTale.currentPage,
           totalPages: selectedFairyTale.totalPages,
-          from: "list"
+          from: "list",
         },
       });
     }
@@ -193,7 +193,7 @@ const FairytaleListPage: React.FC = () => {
           )}
         </div>
         <div className="h-[300px]">
-          <div className="flex justify-between mb-5">
+          <div className="flex flex-col md:flex-row justify-between mb-5">
             <div className="text-2xl font-bold font-['MapleBold']">🌟 카테고리 별 동화책</div>
             <ChoiceTab tabs={tabItems} onTabClick={handleCategoryChange} />
           </div>

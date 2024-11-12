@@ -41,7 +41,7 @@ const FairytaleSearchPage: React.FC = () => {
   const handleSearch = async (searchQuery: string) => {
     if (searchQuery.trim()) {
       try {
-        const response = await fairyTaleApi.getFairyTalesBySearch(searchQuery, 0);
+        const response = await fairyTaleApi.getFairyTalesBySearch(searchQuery, 1, 10);
         if (response.status === 200) {
           const data = response.data;
           setSearchResults(data);
@@ -72,7 +72,7 @@ const FairytaleSearchPage: React.FC = () => {
           isCompleted: allFairyTales?.content[index].isCompleted,
           currentPage: allFairyTales?.content[index].currentPage,
           totalPages: allFairyTales?.content[index].totalPages,
-          from: "search"
+          from: "search",
         },
       });
     }
@@ -87,7 +87,7 @@ const FairytaleSearchPage: React.FC = () => {
   return (
     <div>
       <div className="relative w-full h-screen overflow-y-auto bg-gradient-to-b from-white">
-        <div className="pt-[96px] px-10 flex justify-between items-center mb-6">
+        <div className="pt-[96px] px-10 flex justify-between items-center mb-6 sticky top-0 bg-white z-40">
           <div className="text-2xl font-bold flex items-center font-['MapleBold']">
             {query ? "🔎 검색 결과 ..." : "📚 전체 동화 목록"}
           </div>
@@ -118,26 +118,27 @@ const FairytaleSearchPage: React.FC = () => {
           )}
         </div>
 
-        {/* 페이지네이션 */}
-        <div className="flex justify-center items-center my-4 space-x-4 font-['MapleLight']">
-          <button
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-            className="px-4 py-2 text-white bg-[#67CCFF] rounded-3xl disabled:bg-gray-300"
-          >
-            이전
-          </button>
-          <span className="text-lg font-semibold">
-            {currentPage} / {totalPages}
-          </span>
-          <button
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
-            className="px-4 py-2 text-white bg-[#67CCFF] rounded-3xl disabled:bg-gray-300"
-          >
-            다음
-          </button>
-        </div>
+        {!query && (
+          <div className="flex justify-center items-center my-4 space-x-4 font-['MapleLight']">
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="px-4 py-2 text-white bg-[#67CCFF] rounded-3xl disabled:bg-gray-300"
+            >
+              이전
+            </button>
+            <span className="text-lg font-semibold">
+              {currentPage} / {totalPages}
+            </span>
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="px-4 py-2 text-white bg-[#67CCFF] rounded-3xl disabled:bg-gray-300"
+            >
+              다음
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

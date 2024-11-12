@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { fairyTaleApi } from "../../api/fairytaleApi";
 import { ChildrenTTSListResponse } from "../../types/fairytaleTypes";
 import closebutton from "/assets/close-button.png";
+import Lottie from "react-lottie-player";
+import loadingAnimation from "../../lottie/footPrint-loadingAnimation.json";
 
 interface TTSChoiceModalProps {
   isOpen: boolean;
@@ -24,6 +26,7 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({
 }) => {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [ttsList, setTtsList] = useState<ChildrenTTSListResponse[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const readAloudEnabled = JSON.parse(localStorage.getItem("readAloudEnabled") || "false");
 
@@ -37,11 +40,14 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({
         const response = await fairyTaleApi.getChildrenTTSList(bookId);
         if (response.status === 200 && Array.isArray(response.data)) {
           setTtsList(response.data);
+          setIsLoading(false); // 데이터 로딩 완료 후 로딩 상태 해제
         }
       } catch (error) {
         console.error("fairyTaleApi의 getChildrenTTSList :", error);
+        setIsLoading(false);
       }
     };
+
 
     getChildTTSList();
   }, [isOpen, bookId]);
@@ -67,20 +73,20 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({
     <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
       <div className="w-1/3 text-center bg-white rounded-2xl shadow-lg relative">
         <div className="px-4 py-12">
-          {/* readAloudEnabled가 true일 때만 헤더와 TTS 선택 섹션 표시 */}
           {readAloudEnabled && (
             <>
-              <button
-                onClick={handleClose}
-                className="absolute top-4 right-4 text-2xl font-bold"
-              >
+              <button onClick={handleClose} className="absolute top-4 right-4 text-2xl font-bold">
                 <img src={closebutton} alt="닫기 버튼" />
               </button>
               <div className="text-xl font-bold">
                 <span className="blue-highlight">누구 목소리</span>로 책을 읽어줄까요?
               </div>
 
-              {ttsImages.length > 0 ? (
+              {isLoading ? (
+                <div className="mt-8 mb-8 flex justify-center items-center">
+                  <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
+                </div>
+              ) : ttsImages.length > 0 ? (
                 <div className="mt-8 mb-8 text-lg">
                   <div className="flex flex-wrap justify-center gap-8">
                     {ttsImages.slice(0, 2).map((image, index) => (
@@ -91,6 +97,7 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({
                           className={`w-28 h-28 object-cover cursor-pointer rounded-full ${
                             selectedIndex === index ? "border-[6px] border-[#67CCFF] rounded-full" : ""
                           }`}
+                          onLoad={() => setIsLoading(false)} // 이미지 로드 완료 시 로딩 해제
                         />
                         <p className="mt-2">{ttsNames[index]}</p>
                       </div>
@@ -105,6 +112,7 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({
                           className={`w-28 h-28 object-cover cursor-pointer rounded-full ${
                             selectedIndex === index + 2 ? "border-[6px] border-[#67CCFF] rounded-full" : ""
                           }`}
+                          onLoad={() => setIsLoading(false)} // 이미지 로드 완료 시 로딩 해제
                         />
                         <p className="mt-2">{ttsNames[index + 2]}</p>
                       </div>

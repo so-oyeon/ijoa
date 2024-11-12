@@ -27,7 +27,7 @@ const MyBookShelves: React.FC = () => {
       if (response.status === 200) {
         const data = response.data;
         if (data && Array.isArray(data.content)) {
-          setMyBookLists(data.content); // progressRate 값을 포함한 데이터를 상태로 설정
+          setMyBookLists(data.content);
         }
       }
     } catch (error) {
@@ -35,10 +35,14 @@ const MyBookShelves: React.FC = () => {
     }
   };
 
-  // 컴포넌트가 마운트될 때 책 목록 가져오기
   useEffect(() => {
     getMyBookLists();
   }, []);
+
+  // myBookLists 배열을 반으로 나누기
+  const halfwayIndex = Math.ceil(myBookLists.length / 2);
+  const firstHalf = myBookLists.slice(0, halfwayIndex);
+  const secondHalf = myBookLists.slice(halfwayIndex);
 
   return (
     <div className="w-full h-screen relative font-['MapleLight'] overflow-hidden">
@@ -48,35 +52,39 @@ const MyBookShelves: React.FC = () => {
       </div>
       {isCurtainOpen && (
         <>
-          <p className="w-full absolute top-[100px] mb-10 text-3xl text-white text-center">📚 내가 읽은 책들이야!</p>
+          <p className="w-full absolute top-[80px] mb-10 text-3xl text-white text-center">📚 내가 읽은 책들이야!</p>
           <div className="w-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
-            {myBookLists.length >= 5 ? (
+            {myBookLists.length === 0 ? (
+              <p className="text-[#f1f440] text-2xl text-center whitespace-pre-line">
+                {"아직 읽은 동화책이 없어요!\n동화책을 읽으러 가볼까요?"}
+              </p>
+            ) : myBookLists.length >= 13 ? ( 
               <>
                 <div className="mb-5 mt-32">
                   <MyBookSwiper
-                    direction={""}
-                    myBookLists={myBookLists}
-                    myBookReadOrNot={myBookReadOrNot}
-                    progress={myBookLists.map((book) => book.progressRate || 0)} // progress 추가
+                    direction=""
+                    myBookLists={firstHalf}
+                    myBookReadOrNot={firstHalf.map((book) => book.isCompleted)}
+                    progress={firstHalf.map((book) => book.progressRate || 0)}
                   />
                 </div>
                 <div>
                   <MyBookSwiper
-                    direction={"reverse"}
-                    myBookLists={myBookLists}
-                    myBookReadOrNot={myBookReadOrNot}
-                    progress={myBookLists.map((book) => book.progressRate || 0)} // progress 추가
+                    direction="reverse"
+                    myBookLists={secondHalf}
+                    myBookReadOrNot={secondHalf.map((book) => book.isCompleted)}
+                    progress={secondHalf.map((book) => book.progressRate || 0)}
                   />
                 </div>
               </>
             ) : (
-              <div className="text-white">
+              <div className="text-white mt-32">
                 <BookCoverGrid
                   bookCovers={myBookLists.map((book) => book.image || "")}
                   titles={myBookLists.map((book) => book.title || "")}
                   onBookClick={(index) => console.log(`Clicked book index: ${index}`)}
                   myBookReadOrNot={myBookReadOrNot}
-                  progress={myBookLists.map((book) => book.progressRate || 0)} // progressRate 사용
+                  progress={myBookLists.map((book) => book.progressRate || 0)}
                 />
               </div>
             )}

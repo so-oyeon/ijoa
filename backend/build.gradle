@@ -76,6 +76,9 @@ dependencies {
     // 통계 패키지
     implementation 'org.apache.commons:commons-math3:3.6.1'
 
+    // elastic search
+    implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
+    
     // redisson
     implementation 'org.redisson:redisson-spring-boot-starter:3.18.0'
 }
