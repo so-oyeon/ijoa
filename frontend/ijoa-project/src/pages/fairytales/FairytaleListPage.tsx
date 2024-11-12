@@ -151,15 +151,22 @@ const FairytaleListPage: React.FC = () => {
   };
 
   useEffect(() => {
-    getChildProfile();
-    getRecommendedFairyTales(); // 사용자 맞춤 추천 데이터 가져오기
-    getFairyTalesByCategory(selectedCategory); // 선택된 카테고리 동화책 데이터 가져오기
-  }, [selectedCategory]); // categoryId가 변경될 때마다 호출
+    const loadInitialData = async () => {
+      try {
+        await getPopularFairyTalesByAge();
+        await getChildProfile();
+        await getRecommendedFairyTales();
+      } catch (error) {
+        console.error("Error loading data:", error);
+      }
+    };
+
+    loadInitialData();
+  }, []);
 
   useEffect(() => {
-    if (!childInfo) return;
-    getPopularFairyTalesByAge();
-  }, [childInfo]);
+    getFairyTalesByCategory(selectedCategory);
+  }, [selectedCategory]);
 
   return (
     <div>

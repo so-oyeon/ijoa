@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import SettingToggle from "./SettingToggle"
+import SettingToggle from "./SettingToggle";
 import SettingsIcon from "/assets/fairytales/buttons/settings-icon.png";
 import MusicManager from "../../../MusicManager";
 
@@ -72,26 +72,26 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
-      <div className="w-1/3 py-8 text-center bg-white rounded-2xl shadow-lg">
-        <div className="flex justify-center items-center mb-6">
-          <img src={SettingsIcon} alt="설정 아이콘" className="w-12 h-12" />
+      <div className="w-[300px] md:w-[400px] py-6 sm:py-8 text-center bg-white rounded-2xl shadow-lg mx-4">
+        <div className="flex justify-center items-center mb-4 sm:mb-6">
+          <img src={SettingsIcon} alt="설정 아이콘" className="w-10 h-10 sm:w-12 sm:h-12" />
         </div>
-        <div className="text-xl font-bold">
+        <div className="text-lg sm:text-xl font-bold mb-4 sm:mb-6">
           <span className="blue-highlight">기본 설정</span>을 선택해 주세요.
         </div>
 
         <SettingToggle options={toggleOptions} onToggle={handleToggle} />
 
-        <div className="flex gap-4 justify-center items-center">
+        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-6">
           <button
             onClick={handleCancel}
-            className="mt-6 px-8 py-2 text-[#67CCFF] text-lg font-bold bg-white rounded-3xl border-2 border-[#67CCFF] active:bg-[#e0f7ff]"
+            className="w-32 px-6 py-2 sm:px-8 text-[#67CCFF] text-base sm:text-lg font-bold bg-white rounded-3xl border-2 border-[#67CCFF] active:bg-[#e0f7ff]"
           >
             취소
           </button>
           <button
             onClick={handleSave}
-            className="mt-6 px-8 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-3xl border-2 border-[#67CCFF] active:bg-[#005f99]"
+            className="w-32 px-6 py-2 sm:px-8 text-white text-base sm:text-lg font-bold bg-[#67CCFF] rounded-3xl border-2 border-[#67CCFF] active:bg-[#005f99]"
           >
             완료
           </button>
