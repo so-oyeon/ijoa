@@ -99,8 +99,8 @@ const FairytaleSearchPage: React.FC = () => {
               bookCovers={searchResults.content.map((item) => item.image)}
               titles={searchResults.content.map((item) => item.title)}
               onBookClick={handleBookClick}
-              myBookReadOrNot={myBookReadOrNot}
-              progress={allFairyTales?.content.map((book) => book.progressRate || 0)}
+              myBookReadOrNot={searchResults.content.map((book) => book.isCompleted)}
+              progress={searchResults?.content.map((book) => book.progressRate || 0)}
             />
           ) : query ? (
             <p className="p-4 text-gray-500">검색 결과가 없습니다.</p>
