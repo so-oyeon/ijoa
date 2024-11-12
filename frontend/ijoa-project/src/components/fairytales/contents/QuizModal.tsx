@@ -10,6 +10,7 @@ import Tiger from "/assets/fairytales/images/tiger.png";
 import Zebra from "/assets/fairytales/images/zebra.png";
 import Cloud from "/assets/fairytales/images/cloud.png";
 // import Record from "/assets/fairytales/buttons/record.png";
+import CloseButton from "/assets/close-button.png";
 import { fairyTaleApi } from "../../../api/fairytaleApi";
 import Lottie from "react-lottie-player";
 import loadingAnimation from "../../../lottie/footPrint-loadingAnimation.json";
@@ -173,11 +174,17 @@ const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, quizData = "", q
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center h-screen z-50 overflow-hidden">
-      <div className="w-full max-w-lg md:max-w-xl lg:max-w-2xl h-[500px] md:h-[450px] bg-white px-6 md:px-10 py-6 md:py-10 rounded-2xl shadow-lg flex flex-col justify-center items-center relative overflow-hidden">
+      <div className="w-full max-w-lg md:max-w-xl lg:max-w-2xl h-[500px] md:h-[450px] bg-white px-6 md:px-8 py-6 md:py-8 rounded-2xl shadow-lg flex flex-col justify-center items-center relative overflow-hidden">
+        <button
+          onClick={onClose}
+          className="absolute top-5 right-5 text-gray-500 hover:text-gray-700 focus:outline-none"
+        >
+          <img src={CloseButton} alt="닫기 버튼" className="w-8 h-8" />
+        </button>
         <button
           onClick={uploadAudioIfReady}
           disabled={!isRecorded}
-          className={`absolute top-4 right-4 px-6 py-2 text-white font-bold rounded-full active:bg-yellow-600 ${
+          className={`absolute bottom-5 right-20 px-6 py-2 text-white font-bold rounded-full active:bg-yellow-600 ${
             isRecorded ? "bg-[#F7C548]" : "bg-[#F7C548] opacity-30"
           }`}
         >
@@ -208,8 +215,8 @@ const QuizModal: React.FC<QuizModalProps> = ({ isOpen, onClose, quizData = "", q
           </div>
         </div>
 
-        <div ref={waveformContainerRef} className="absolute bottom-36 w-64 h-2 left-0 right-0 mx-auto"></div>
-        <div className="absolute bottom-5 justify-center flex">
+        <div ref={waveformContainerRef} className="absolute bottom-36 w-64 h-2 right-20 mx-auto"></div>
+        <div className="absolute bottom-5 right-52 flex">
           <button
             onClick={handleRecording}
             className={`px-6 py-2 text-white font-bold rounded-full ${
