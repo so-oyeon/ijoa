@@ -8,9 +8,16 @@ import { userApi } from "../../api/userApi";
 import { parentApi } from "../../api/parentApi";
 import { ChildInfo } from "../../types/parentTypes";
 import LoadingAnimation from "../../components/common/LoadingAnimation";
+import { openTutorial} from "../../redux/tutorialSlice";
+import Tutorial from "../../components/tutorial/Tutorial"
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, AppDispatch } from "../../redux/store"
 
 const ChildProfileList = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
+  const isTutorialOpen = useSelector((state: RootState) => state.tutorial.isOpen); 
+
   const [isCreateModal, setIsCreateModal] = useState(false);
   const [isUpdateModal, setIsUpdateModal] = useState(false);
   const [childList, setChildList] = useState<ChildInfo[] | null>(null);
@@ -65,6 +72,11 @@ const ChildProfileList = () => {
     getChildInfoList();
   }, []);
 
+    // 페이지 진입 시 튜토리얼 오버레이 자동 열기 (필요 시)
+    useEffect(() => {
+      dispatch(openTutorial());
+    }, [dispatch]);
+
   // childList가 null이면 loading 화면 출력
   if (!childList) {
     return <LoadingAnimation />;
@@ -74,7 +86,7 @@ const ChildProfileList = () => {
     <div className="min-h-screen pt-24 bg-[#EAF8FF] relative">
       <div className="px-40 py-10 grid gap-10">
         {/* 상단 타이틀 */}
-        <div className="flex justify-center items-center space-x-3 font-['IMBold']">
+        <div className="flex justify-center items-center space-x-3 font-['IMBold'] header-element">
           <img className="w-10 aspect-1" src="/assets/header/parent/child-icon.png" alt="" />
           <p className="text-[30px] font-semibold">
             {childList.length === 0 ? "자녀 프로필을 만들어주세요" : "자녀 프로필을 선택해 주세요"}
@@ -116,6 +128,9 @@ const ChildProfileList = () => {
           )}
         </div>
       </div>
+
+      {/* 튜토리얼 오버레이 */}
+      {isTutorialOpen && <Tutorial/>}
 
       {isCreateModal && (
         <ChildProfileCreateModal setIsCreateModal={setIsCreateModal} getChildInfoList={getChildInfoList} />
