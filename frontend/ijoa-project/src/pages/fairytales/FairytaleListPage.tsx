@@ -185,9 +185,10 @@ const FairytaleListPage: React.FC = () => {
             <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
           )}
         </div>
-        <div className="h-[310px] mb-10 overflow-hidden">
-          <div className="mb-5 text-2xl font-bold font-['MapleBold']">🧸 이런 책 어때요?</div>
-          {recommendedFairyTales.length > 0 ? (
+  
+        {recommendedFairyTales.length > 0 && (
+          <div className="h-[310px] mb-10 overflow-hidden">
+            <div className="mb-5 text-2xl font-bold font-['MapleBold']">🧸 이런 책 어때요?</div>
             <Swiper
               bookCovers={recommendedCovers}
               titles={recommendedTitles}
@@ -195,10 +196,9 @@ const FairytaleListPage: React.FC = () => {
               onBookClick={handleRecommendedBookClick}
               progress={recommendedFairyTales?.map((book) => book.progressRate || 0)}
             />
-          ) : (
-            <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
-          )}
-        </div>
+          </div>
+        )}
+  
         <div className="h-[310px] overflow-hidden">
           <div className="flex flex-col md:flex-row justify-between mb-5">
             <div className="text-2xl font-bold font-['MapleBold']">🌟 카테고리 별 동화책</div>
@@ -219,6 +219,7 @@ const FairytaleListPage: React.FC = () => {
       </div>
     </div>
   );
+  
 };
 
 export default FairytaleListPage;
