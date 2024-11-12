@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface AnswerRepository extends JpaRepository<Answer, Long> {
     Optional<List<Answer>> findByChildIdAndQuizBookFairytaleId(Long childId, Long fairytaleId);
+    Answer findByChildIdAndQuizId(Long childId, Long quizId);
 }
