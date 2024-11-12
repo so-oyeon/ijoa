@@ -95,7 +95,7 @@ public class FairytaleService {
 
     // 동화책 페이지 목록 DTO 변환
     private List<FairytalePageListResponse> convertToFairytalePageListResponse(Fairytale fairytale) {
-        return fairytale.getFairytalePageImages().stream()
+        return fairytale.getFairytalePageContents().stream()
                 .map(FairytalePageListResponse::from)
                 .toList();
     }
