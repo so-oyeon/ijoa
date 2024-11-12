@@ -116,7 +116,7 @@ const SeesoComponent = ({ wordPositions }: Props) => {
   // 캘리브레이션 버튼 클릭 핸들러
   const onClickCalibrationBtn = () => {
     const userId = "a1234";
-    const redirectUrl = "http://localhost:5173/fairytale/content/1";
+    const redirectUrl = "https://k11d105.p.ssafy.io/fairytale/content/1";
     const calibrationPoint = 5;
     Seeso.openCalibrationPage(licenseKey ?? "", userId, redirectUrl, calibrationPoint);
   };
