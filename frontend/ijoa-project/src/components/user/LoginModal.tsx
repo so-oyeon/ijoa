@@ -13,32 +13,26 @@ const LoginModal: React.FC<LoginModalProps> = ({ openForgotPasswordModal }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  // 로그인 버튼에 대한 Ref 생성
   const loginButtonRef = useRef<HTMLButtonElement>(null);
 
-  // 로그인 api 통신 함수
   const handleLogin = async () => {
-    // request 데이터 객체 선언
     const data = {
       email: email,
       password: password,
     };
 
-    // api 함수 호출
     try {
       const response = await userApi.login(data);
-      // 로그인 성공 시(200)
       if (response.status === 200) {
         localStorage.setItem("accessToken", response.data.accessToken);
         localStorage.setItem("refreshToken", response.data.refreshToken);
         localStorage.setItem("userId", response.data.userId);
         localStorage.setItem("userType", "parent");
+        // 로그인할때 어짜피 데이터들이 넘어오니까 이걸 토대로 tutorialComplted가 true인지 false인지 확인.
         navigate("/parent/child/list");
       }
     } catch (error) {
-      // error가 AxiosError 타입인지 확인
       if (axios.isAxiosError(error)) {
-        // 오류의 상태 코드에 따라 알림을 표시
         if (error.response?.status === 400) {
           Swal.fire({
             icon: "error",
@@ -66,7 +60,6 @@ const LoginModal: React.FC<LoginModalProps> = ({ openForgotPasswordModal }) => {
     }
   };
 
-  // 비밀번호 필드에서 Enter 키를 눌렀을 때 로그인 버튼 클릭되게하는 함수
   const handlePasswordKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       loginButtonRef.current?.click();
@@ -79,28 +72,28 @@ const LoginModal: React.FC<LoginModalProps> = ({ openForgotPasswordModal }) => {
         <input
           type="email"
           placeholder="이메일을 입력해주세요"
-          className="w-3/4 h-[60px] mb-4 px-6 py-3 rounded-full bg-gray-100 text-gray-500 placeholder-gray-400 focus:outline-none"
+          className="w-[25vw] h-[50px] md:w-[25vw] md:h-[50px] lg:w-[25vw] lg:h-[60px] mb-4 px-4 py-3 rounded-full bg-gray-100 text-gray-500 placeholder-gray-400 focus:outline-none"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
         <input
           type="password"
           placeholder="비밀번호를 입력해주세요"
-          className="w-3/4 h-[60px] mb-4 px-6 py-3 rounded-full bg-gray-100 text-gray-500 placeholder-gray-400 focus:outline-none"
+          className="w-[25vw] h-[50px] md:w-[25vw] md:h-[50px] lg:w-[25vw] lg:h-[60px] mb-4 px-4 py-3 rounded-full bg-gray-100 text-gray-500 placeholder-gray-400 focus:outline-none"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           onKeyDown={handlePasswordKeyDown}
         />
       </div>
       <button
-        className="w-3/4 h-[60px] py-3 mb-4 font-bold text-lg bg-yellow-400 rounded-full active:bg-yellow-500"
+        className="w-[25vw] h-[50px] md:w-[25vw] md:h-[50px] lg:w-[25vw] lg:h-[60px]  py-3 mb-4 font-bold text-base md:text-lg lg:text-xl bg-yellow-400 rounded-full active:bg-yellow-500"
         onClick={handleLogin}
         ref={loginButtonRef}
       >
         로그인
       </button>
       <div className="text-right mr-8">
-        <button onClick={openForgotPasswordModal} className="text-sm text-[#565656]">
+        <button onClick={openForgotPasswordModal} className="text-sm md:text-base text-[#565656]">
           비밀번호 찾기
         </button>
       </div>
