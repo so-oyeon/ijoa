@@ -205,6 +205,7 @@ public class TTSService {
     public void startTrain(Long ttsId) {
         // 학습데이터
         List<TrainAudio> trainAudios = trainAudioRepository.findByTtsIdOrderByScriptId(ttsId).orElseThrow(()-> new CustomException(ErrorCode.TRAINAUDIO_NOT_FOUND));
+
         //s3경로
         List<String> paths = new ArrayList<>();
 
@@ -213,7 +214,20 @@ public class TTSService {
         }
 
         TrainAudioResponseDto responseDto = TrainAudioResponseDto.from(ttsId, paths);
-        trainAudioKafkaTemplate.send(TTS_CREATE_TOPIC, responseDto);
+
+        String lockKey = "createTTSModel:"+ttsId;
+        RBucket<String> statusFlag = redissonClient.getBucket(lockKey);
+
+        // 상태 플래그가 없으면 플래그를 설정하고 true 반환, 이미 존재하면 false 반환
+        if(!statusFlag.setIfAbsent("IN_PROGRESS")){
+            throw new CustomException(ErrorCode.TTS_CREATION_ALREADY_IN_PROGRESS);
+        }else{
+            // 만료 시간 설정
+            statusFlag.expire(2, TimeUnit.HOURS);
+
+            trainAudioKafkaTemplate.send(TTS_CREATE_TOPIC, responseDto);
+
+        }
     }
 
 
@@ -231,6 +245,11 @@ public class TTSService {
         // 생성완료 이메일 전송
         String email = savedTts.getUser().getEmail();
         emailServie.sendCompleteEmail(email, savedTts.getName());
+
+        // 상태 변환
+        String lockKey = "createTTSModel:"+ttsId;
+        RBucket<String> statusFlag = redissonClient.getBucket(lockKey);
+        statusFlag.delete();
     }
 
     // 동화책 audio 생성
