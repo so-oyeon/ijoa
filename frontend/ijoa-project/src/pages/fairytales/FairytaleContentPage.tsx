@@ -1,18 +1,24 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import "../../css/FairytaleContentPage.css";
+
 import ReadCompleteModal from "../../components/fairytales/ReadCompleteModal";
 import LevelUpModal from "../../components/fairytales/LevelUpModal";
 import TTSChoiceModal from "../../components/fairytales/TTSChoiceModal";
 import QuizModal from "../../components/fairytales/QuizModal";
 import FocusAlertModal from "../../components/fairytales/FocusAlertModal";
 import FairytaleMenu from "../../components/fairytales/FairytaleMenu";
+import SeesoComponent from "../../components/seeso/SeesoComponent";
+
 import MenuButton from "/assets/fairytales/buttons/menu-button.png";
 import SoundOnButton from "/assets/fairytales/buttons/sound-on-button.png";
 import LeftArrow from "/assets/fairytales/buttons/left-arrow.png";
 import RightArrow from "/assets/fairytales/buttons/right-arrow.png";
+
 import { fairyTaleApi } from "../../api/fairytaleApi";
 import { FairyTaleContentResponse, FairyTalePageResponse, QuizQuestionResponse } from "../../types/fairytaleTypes";
+import { WordPositionInfo } from "../../types/seesoTypes";
+
 import Lottie from "react-lottie-player";
 import loadingAnimation from "../../lottie/footPrint-loadingAnimation.json";
 
@@ -43,6 +49,9 @@ const FairyTaleContentPage: React.FC = () => {
 
   const bookId = fairytaleId ? parseInt(fairytaleId, 10) : 0;
   const isReading = currentPage > 0 && currentPage != totalPages;
+
+  // Seeso eye-tracking 글자 추출을 위한 word 배열
+  const [wordPositions, setWordPositions] = useState<WordPositionInfo[]>([]);
 
   // 동화책 내용(이미지, 텍스트)을 가져오는 api 통신 함수
   const getFairyTaleContent = useCallback(
@@ -214,6 +223,36 @@ const FairyTaleContentPage: React.FC = () => {
     setIsTTSChoiceModalOpen(false); // 모달 닫기
   };
 
+  // 단어 위치 추출 함수
+  const extractWordPositions = () => {
+    const textContainer = document.querySelector(".seeso-text-container") as HTMLElement;
+    if (!textContainer) {
+      console.error("text-container element not found");
+      return;
+    }
+
+    const words = textContainer.innerText.split(" ");
+    textContainer.innerText = ""; // 기존 텍스트를 지움
+
+    const positions = words.map((word) => {
+      const span = document.createElement("span");
+      span.innerText = word + " ";
+      textContainer.appendChild(span);
+
+      const rect = span.getBoundingClientRect();
+      return {
+        word,
+        x: rect.left,
+        y: rect.top,
+        width: rect.width,
+        height: rect.height,
+      };
+    });
+
+    setWordPositions(positions);
+    console.log("Extracted word positions:", positions); // 좌표 정보 확인
+  };
+
   // 레벨업 모달이 열릴 때 일정 시간 후에 독서 완료 모달 열기
   useEffect(() => {
     if (isLevelUpModalOpen) {
@@ -247,6 +286,13 @@ const FairyTaleContentPage: React.FC = () => {
     }
   }, [isQuizModalOpen, isTTSChoiceModalOpen, fairytaleCurrentPage]);
 
+  // 단어 위치 정보 추출
+  useEffect(() => {
+    if (!fairytaleData) return;
+
+    extractWordPositions();
+  }, [fairytaleData]);
+
   return (
     <div className="relative h-screen">
       {fairytaleData ? (
@@ -260,7 +306,8 @@ const FairyTaleContentPage: React.FC = () => {
               </button>
             )}
 
-            <div className="px-12 flex-1 text-4xl font-['MapleBold'] font-bold text-center whitespace-pre-line break-keep">
+            {/* Seeso 시선 추적 글자 처리를 위해 seeso-text-container 클래스명 필요 */}
+            <div className="seeso-text-container px-12 flex-1 text-4xl font-['MapleBold'] font-bold text-center whitespace-pre-line break-keep">
               {fairytaleData.content}
             </div>
           </div>
@@ -281,8 +328,7 @@ const FairyTaleContentPage: React.FC = () => {
           <div className="absolute top-[-12px] right-10">
             <button
               className="px-3 py-4 bg-gray-700 bg-opacity-50 rounded-2xl shadow-md active:bg-gray-800"
-              onClick={handleOpenMenu}
-            >
+              onClick={handleOpenMenu}>
               <img src={MenuButton} alt="메뉴 버튼" />
               <p className="text-xs text-white">메뉴</p>
             </button>
@@ -310,7 +356,7 @@ const FairyTaleContentPage: React.FC = () => {
       {/* 레벨업 모달 */}
       <LevelUpModal isOpen={isLevelUpModalOpen} />
       {/* 독서완료 모달 */}
-      <ReadCompleteModal isOpen={isReadCompleteModalOpen} title={title} from={from}/>
+      <ReadCompleteModal isOpen={isReadCompleteModalOpen} title={title} from={from} />
       {/* 퀴즈 모달 */}
       <QuizModal
         isOpen={isQuizModalOpen && !isQuizDataLoading}
@@ -333,6 +379,9 @@ const FairyTaleContentPage: React.FC = () => {
       />
       {/* 집중 알람 모달 */}
       <FocusAlertModal isOpen={isFocusAlertModalOpen} onClose={handleCloseFocusAlertModal} />
+
+      {/* Seeso eye-tracking 컴포넌트 호출 */}
+      <SeesoComponent wordPositions={wordPositions} />
     </div>
   );
 };
