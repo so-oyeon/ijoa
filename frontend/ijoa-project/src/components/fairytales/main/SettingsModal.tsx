@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import SettingToggle from "../../components/fairytales/SettingToggle";
+import SettingToggle from "./SettingToggle"
 import SettingsIcon from "/assets/fairytales/buttons/settings-icon.png";
-import MusicManager from "../../MusicManager";
+import MusicManager from "../../../MusicManager";
 
 interface SettingsModalProps {
   isOpen: boolean;

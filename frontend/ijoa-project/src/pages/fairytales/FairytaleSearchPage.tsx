@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { fairyTaleApi } from "../../api/fairytaleApi";
 import { FairyTaleSearchResponse, FairyTaleListResponse, FairyTaleListItem } from "../../types/fairytaleTypes";
-import BookCoverGrid from "../../components/fairytales/BookCoverGrid";
+import BookCoverGrid from "../../components/child/BookCoverGrid";
 import SearchBar from "../../components/common/SearchBar";
 import Lottie from "react-lottie-player";
 import "../../css/FairytaleContentPage.css";
@@ -26,7 +26,6 @@ const FairytaleSearchPage: React.FC = () => {
         if (response.status === 200) {
           setAllFairyTales(response.data);
           setTotalPages(3);
-          console.log(response.data);
         } else {
           console.error("유효하지 않은 응답 상태 :", response.status);
         }

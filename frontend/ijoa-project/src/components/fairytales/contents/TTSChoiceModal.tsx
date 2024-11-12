@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { fairyTaleApi } from "../../api/fairytaleApi";
-import { ChildrenTTSListResponse } from "../../types/fairytaleTypes";
+import { fairyTaleApi } from "../../../api/fairytaleApi";
+import { ChildrenTTSListResponse } from "../../../types/fairytaleTypes";
 import closebutton from "/assets/close-button.png";
 import Lottie from "react-lottie-player";
-import loadingAnimation from "../../lottie/footPrint-loadingAnimation.json";
+import loadingAnimation from "../../../lottie/footPrint-loadingAnimation.json";
 
 interface TTSChoiceModalProps {
   isOpen: boolean;
@@ -48,7 +48,6 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({
       }
     };
 
-
     getChildTTSList();
   }, [isOpen, bookId]);
 
@@ -71,7 +70,7 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
-      <div className="w-1/3 text-center bg-white rounded-2xl shadow-lg relative">
+      <div className="w-full max-w-xl mx-4 md:w-1/2 lg:w-1/3 text-center bg-white rounded-2xl shadow-lg relative">
         <div className="px-4 py-12">
           {readAloudEnabled && (
             <>

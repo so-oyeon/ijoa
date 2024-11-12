@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "../../css/FairytaleContentPage.css";
 import { useNavigate } from "react-router-dom";
-import Swiper from "../../components/fairytales/Swiper"; // 스와이퍼 컴포넌트 import
-import ChoiceTab from "../../components/fairytales/ChoiceTab"; // 선택탭 컴포넌트 import
+import Swiper from "../../components/fairytales/main/Swiper"; // 스와이퍼 컴포넌트 import
+import ChoiceTab from "../../components/fairytales/main/ChoiceTab"; // 선택탭 컴포넌트 import
 import { fairyTaleApi } from "../../api/fairytaleApi";
 import { parentApi } from "../../api/parentApi";
 import {

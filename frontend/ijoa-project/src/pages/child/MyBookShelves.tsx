@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import hall from "/assets/child/bookCaseImage.jpg";
 import MyBookSwiper from "../../components/child/MyBookSwiper";
-import CurtainAnimation from "../../components/fairytales/CurtainAnimation";
+import CurtainAnimation from "../../components/child/CurtainAnimation";
 import { fairyTaleApi } from "../../api/fairytaleApi";
 import { FairyTaleReadCheckItem } from "../../types/fairytaleTypes";
-import BookCoverGrid from "../../components/fairytales/BookCoverGrid";
+import BookCoverGrid from "../../components/child/BookCoverGrid";
 
 const MyBookShelves: React.FC = () => {
   const [isCurtainOpen, setIsCurtainOpen] = useState(false);
@@ -58,7 +58,7 @@ const MyBookShelves: React.FC = () => {
               <p className="text-[#f1f440] text-2xl text-center whitespace-pre-line">
                 {"아직 읽은 동화책이 없어요!\n동화책을 읽으러 가볼까요?"}
               </p>
-            ) : myBookLists.length >= 13 ? ( 
+            ) : myBookLists.length >= 13 ? (
               <>
                 <div className="mb-5 mt-32">
                   <MyBookSwiper

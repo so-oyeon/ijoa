@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import "../../css/FairytaleContentPage.css";
-import ReadCompleteModal from "../../components/fairytales/ReadCompleteModal";
-import LevelUpModal from "../../components/fairytales/LevelUpModal";
-import TTSChoiceModal from "../../components/fairytales/TTSChoiceModal";
-import QuizModal from "../../components/fairytales/QuizModal";
-import FocusAlertModal from "../../components/fairytales/FocusAlertModal";
-import FairytaleMenu from "../../components/fairytales/FairytaleMenu";
+import ReadCompleteModal from "../../components/fairytales/contents/ReadCompleteModal";
+import LevelUpModal from "../../components/fairytales/contents/LevelUpModal";
+import TTSChoiceModal from "../../components/fairytales/contents/TTSChoiceModal";
+import QuizModal from "../../components/fairytales/contents/QuizModal";
+import FocusAlertModal from "../../components/fairytales/contents/FocusAlertModal";
+import FairytaleMenu from "../../components/fairytales/contents/FairytaleMenu";
 import MenuButton from "/assets/fairytales/buttons/menu-button.png";
 import SoundOnButton from "/assets/fairytales/buttons/sound-on-button.png";
 import LeftArrow from "/assets/fairytales/buttons/left-arrow.png";
@@ -310,7 +310,7 @@ const FairyTaleContentPage: React.FC = () => {
       {/* 레벨업 모달 */}
       <LevelUpModal isOpen={isLevelUpModalOpen} />
       {/* 독서완료 모달 */}
-      <ReadCompleteModal isOpen={isReadCompleteModalOpen} title={title} from={from}/>
+      <ReadCompleteModal isOpen={isReadCompleteModalOpen} title={title} from={from} />
       {/* 퀴즈 모달 */}
       <QuizModal
         isOpen={isQuizModalOpen && !isQuizDataLoading}
