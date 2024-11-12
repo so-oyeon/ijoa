@@ -24,6 +24,7 @@ import com.checkitout.ijoa.quiz.dto.response.QuizResponseDto;
 import com.checkitout.ijoa.quiz.repository.AnswerRepository;
 import com.checkitout.ijoa.quiz.repository.QuizBookRepository;
 import com.checkitout.ijoa.quiz.repository.QuizRepository;
+import com.checkitout.ijoa.user.domain.User;
 import com.checkitout.ijoa.util.LogUtil;
 import com.checkitout.ijoa.util.SecurityUtil;
 import jakarta.transaction.Transactional;
@@ -157,10 +158,10 @@ public class QuizService {
     }
 
     public void deleteAnswer(Long answerId){
-        Child child = securityUtil.getChildByToken();
+        User user  = securityUtil.getUserByToken();
         Answer answer =answerRepository.findById(answerId).orElseThrow(() -> new CustomException(ErrorCode.ANSWER_NOT_FOUND));
 
-        if(child.getId() != answer.getChild().getId()){
+        if(user.getId() != answer.getChild().getParent().getId()){
             throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
         }
         fileService.deleteFile(answer.getAnswer());
