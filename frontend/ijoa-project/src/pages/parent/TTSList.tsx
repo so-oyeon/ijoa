@@ -43,6 +43,9 @@ const TTSList = () => {
         setTTSId(ttsId);
         setIsCreateGuideModal(true);
       }
+    } else { // S3 없을 때
+      setTTSId(ttsId);
+      setIsCreateGuideModal(true);
     }
   };
 
