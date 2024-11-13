@@ -4,6 +4,7 @@ import com.checkitout.ijoa.common.dto.ResponseDto;
 import com.checkitout.ijoa.user.docs.UserApiDocumentation;
 import com.checkitout.ijoa.user.dto.request.UserSignupRequestDto;
 import com.checkitout.ijoa.user.dto.request.UserUpdateRequestDto;
+import com.checkitout.ijoa.user.dto.response.TutorialDto;
 import com.checkitout.ijoa.user.dto.response.UserDto;
 import com.checkitout.ijoa.user.service.UserService;
 import jakarta.validation.Valid;
@@ -67,5 +68,19 @@ public class UserController implements UserApiDocumentation {
 
         ResponseDto response = userService.resetUserPassword(email);
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @Override
+    @PostMapping("/tutorial")
+    public ResponseEntity<ResponseDto> tutorial() {
+        userService.completeTutorial();
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Override
+    @GetMapping("/tutorial")
+    public ResponseEntity<TutorialDto> getTutorial() {
+        TutorialDto tutorialDto = userService.getTutorial();
+        return ResponseEntity.status(HttpStatus.OK).body(tutorialDto);
     }
 }

@@ -204,21 +204,21 @@ const TTSCreateModal = ({ setIsCreateModal, ttsId }: Props) => {
             <button
               onClick={isRecording ? stopRecording : startRecording}
               className={`${buttonStyle} ${
-                isRecording ? "text-white bg-[#FF8067] border-[#FF8067]" : "text-[#FF8067] border-[#FF8067]"
+                isRecording ? "text-white bg-[#FF8067] border-[#FF8067] active:bg-red-300" : "text-[#FF8067] border-[#FF8067] active:bg-red-500 active:text-white"
               }`}>
               {isRecording ? "녹음 중지" : "녹음 시작"}
             </button>
             <button
               onClick={handlePlayRecordingAudio}
               disabled={!audioURL}
-              className={`${buttonStyle} text-[#67CCFF] border-[#67CCFF] ${!audioURL ? "opacity-50" : ""}`}>
+              className={`${buttonStyle} text-[#67CCFF] border-[#67CCFF] ${!audioURL ? "opacity-50" : "active:bg-[#e0f7ff]"}`}>
               결과 확인
             </button>
             <button
               onClick={scriptCurrentIdx === 20 ? handleCompleteRecording : handleNextRecording}
               disabled={isRecording || !audioURL}
               className={`${buttonStyle} text-white bg-[#67CCFF] border-[#67CCFF] ${
-                isRecording || !audioURL ? "opacity-50" : ""
+                isRecording || !audioURL ? "opacity-50" : "active:bg-[#005f99]"
               }`}>
               {scriptCurrentIdx === 20 ? "완료" : "다음"}
             </button>
