@@ -24,7 +24,7 @@ const SplashScreen: React.FC = () => {
           <span className="text-[#FF6666]">조</span>
           <span className="text-[#339999]">아</span>
         </div>
-        <p className="w-full font-['MapleBold'] text-center font-semibold text-[#565656] text-md sm:text-lg md:text-2xl tracking-widest mt-4 whitespace-nowrap">
+        <p className="w-full font-['MapleBold'] text-center font-semibold text-[#565656] text-md sm:text-lg md:text-xl lg:text-4xl tracking-widest whitespace-nowrap">
           엄마, 아빠가 읽어주는 동화책
         </p>
       </div>
