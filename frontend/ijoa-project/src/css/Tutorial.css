@@ -2,7 +2,7 @@
 .overlay-click-prevent {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0); /* 투명한 오버레이 */
+  background-color: rgba(0, 0, 0, 0);
   z-index: 9998; /* 튜토리얼 모달 아래, 다른 요소 위 */
 }
 
@@ -30,12 +30,12 @@
   position: absolute;
   z-index: 10001;
   background-color: white;
-  padding: 32px; /* 모달의 전체 padding을 키움 */
+  padding: 32px;
   border-radius: 8px;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
-  max-width: 400px; /* 모달 너비 확대 */
+  max-width: 400px;
   text-align: center;
-  line-height: 2; /* 텍스트 줄 간격 */
+  line-height: 2;
 }
 
 /* 닫기 버튼 스타일 */
@@ -54,8 +54,8 @@
 .tutorial-btn {
   padding: 8px 16px;
   border-radius: 5px;
-  font-weight: bold; /* 폰트 굵기 */
-  font-size: 1rem; /* text-xl 크기 */
+  font-weight: bold;
+  font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.2s;
 }
@@ -68,12 +68,12 @@
 
 /* 다음 버튼 스타일 */
 .tutorial-next-btn {
-  background-color: #67ccff; /* 기본 배경색 */
+  background-color: #67ccff;
   color: white;
 }
 
 .tutorial-next-btn:active {
-  background-color: #005f99; /* 클릭 시 배경색 */
+  background-color: #005f99;
 }
 
 /* 완료 버튼 스타일 */
@@ -84,7 +84,7 @@
 
 .confirm-modal {
   position: fixed;
-   z-index: 10001;
+  z-index: 10001;
   top: 0;
   left: 0;
   right: 0;
@@ -123,3 +123,68 @@
   background-color: #ccc;
 }
 
+/* 웹 화면 (데스크탑) 스타일 */
+@media screen and (min-width: 1280px) {
+  /* 단계별 위치 */
+  .tutorial-position-1 { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+  .tutorial-position-2 { top: 100px; right: 20px; left: auto; transform: none; }
+  .tutorial-position-3 { top: 100px; right: 180px; left: auto; transform: none; }
+  .tutorial-position-4 { top: 100px; right: 100px; left: auto; transform: none; }
+  .tutorial-position-5 { top: 100px; right: 80px; left: auto; transform: none; }
+  .tutorial-position-6 { top: 100px; right: 60px; left: auto; transform: none; }
+  .tutorial-position-7 { top: 210px; left: 270px; right: auto; transform: none; }
+  .tutorial-position-8 { top: 100px; right: 170px; left: auto; transform: none; }
+  .tutorial-position-9 { top: 100px; right: 110px; left: auto; transform: none; }
+  .tutorial-position-10 { top: 100px; right: 90px; left: auto; transform: none; }
+  .tutorial-position-11 { top: 100px; right: 60px; left: auto; transform: none; }
+  .tutorial-position-12 { top: 100px; right: 30px; left: auto; transform: none; }
+  .tutorial-position-13 { top: 100px; left: 20px; right: auto; transform: none; }
+
+  /* 단계별 강조 영역 */
+  .highlight-position-1 { top: 50%; width: 0%; height: 0%; }
+  .highlight-position-2 { top: 5px; right: 21px; width: 25%; height: 90px; }
+  .highlight-position-3 { top: 5px; right: 21%; width: 5%; height: 90px; }
+  .highlight-position-4 { top: 5px; right: 16.5%; width: 5%; height: 90px; }
+  .highlight-position-5 { top: 5px; right: 11.8%; width: 5%; height: 90px; }
+  .highlight-position-6 { top: 5px; right: 7%; width: 5%; height: 90px; }
+  .highlight-position-7 { top: 210px; left: 44%; width: 12%; height: 170px; }
+  .highlight-position-8 { top: 5px; right: 21.3%; width: 5%; height: 90px; }
+  .highlight-position-9 { top: 5px; right: 16.5%; width: 5%; height: 90px; }
+  .highlight-position-10 { top: 5px; right: 11.8%; width: 5%; height: 90px; }
+  .highlight-position-11 { top: 5px; right: 7%; width: 5%; height: 90px; }
+  .highlight-position-12 { top: 5px; right: 2.2%; width: 5%; height: 90px; }
+  .highlight-position-13 { top: 5px; left: 20px; width: 20%; height: 90px; }
+}
+
+/* 패드 화면 (고해상도 디스플레이) 스타일 */
+@media screen and (max-width: 1279px)  {
+  /* 단계별 위치 */
+  .tutorial-position-1 { top: 40%; left: 50%; transform: translate(-50%, -50%); }
+  .tutorial-position-2 { top: 80px; right: 15px; left: auto; transform: none; }
+  .tutorial-position-3 { top: 80px; right: 140px; left: auto; transform: none; }
+  .tutorial-position-4 { top: 80px; right: 90px; left: auto; transform: none; }
+  .tutorial-position-5 { top: 80px; right: 70px; left: auto; transform: none; }
+  .tutorial-position-6 { top: 80px; right: 50px; left: auto; transform: none; }
+  .tutorial-position-7 { top: 180px; left: 220px; right: auto; transform: none; }
+  .tutorial-position-8 { top: 80px; right: 140px; left: auto; transform: none; }
+  .tutorial-position-9 { top: 80px; right: 90px; left: auto; transform: none; }
+  .tutorial-position-10 { top: 80px; right: 70px; left: auto; transform: none; }
+  .tutorial-position-11 { top: 80px; right: 50px; left: auto; transform: none; }
+  .tutorial-position-12 { top: 80px; right: 20px; left: auto; transform: none; }
+  .tutorial-position-13 { top: 80px; left: 10px; right: auto; transform: none; }
+
+  /* 단계별 강조 영역 */
+  .highlight-position-1 { top: 40%; width: 0%; height: 0%; }
+  .highlight-position-2 { top: 10px; right: 16px; width: 20%; height: 80px; }
+  .highlight-position-3 { top: 10px; right: 18%; width: 5%; height: 80px; }
+  .highlight-position-4 { top: 10px; right: 14%; width: 5%; height: 80px; }
+  .highlight-position-5 { top: 10px; right: 10%; width: 5%; height: 80px; }
+  .highlight-position-6 { top: 10px; right: 6%; width: 5%; height: 80px; }
+  .highlight-position-7 { top: 180px; left: 40%; width: 10%; height: 150px; }
+  .highlight-position-8 { top: 10px; right: 18%; width: 5%; height: 80px; }
+  .highlight-position-9 { top: 10px; right: 14%; width: 5%; height: 80px; }
+  .highlight-position-10 { top: 10px; right: 10%; width: 5%; height: 80px; }
+  .highlight-position-11 { top: 10px; right: 6%; width: 5%; height: 80px; }
+  .highlight-position-12 { top: 10px; right: 2%; width: 5%; height: 80px; }
+  .highlight-position-13 { top: 10px; left: 18px; width: 20%; height: 80px; }
+}
