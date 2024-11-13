@@ -23,6 +23,8 @@ const PieChart = ({ childId, setMaxCategory }: Props) => {
       const response = await parentApi.getCategoriesData(childId);
       if (response.status === 200) {
         setData(response.data);
+      } else if (response.status === 204) {
+        setData([]);
       }
     } catch (error) {
       console.log("parentApi의 getCategoriesData : ", error);
@@ -34,14 +36,13 @@ const PieChart = ({ childId, setMaxCategory }: Props) => {
   // 렌더링 시, 통계 데이터 조회
   useEffect(() => {
     getCategoriesData();
-  }, []);
+  }, [childId]);
 
   useEffect(() => {
     if (!data) return;
 
     // 각 데이터의 값
     setSeries(data.map((item) => item.count));
-    console.log(data.map((item) => item.count));
   }, [data]);
 
   useEffect(() => {
@@ -53,8 +54,18 @@ const PieChart = ({ childId, setMaxCategory }: Props) => {
 
   if (!series || isLoading) {
     return (
-      <div className="grow border-4 border-[#F5F5F5] rounded-2xl flex justify-center items-center">
+      <div className="grow border-4 border-[#F5F5F5] rounded-2xl flex flex-col justify-center items-center">
         <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
+        <p>데이터를 조회하고 있어요.</p>
+      </div>
+    );
+  }
+
+  if (series.length === 0) {
+    return (
+      <div className="grow border-4 border-[#F5F5F5] rounded-2xl flex flex-col justify-center items-center">
+        <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
+        <p>조회된 데이터가 없습니다.</p>
       </div>
     );
   }
@@ -64,7 +75,7 @@ const PieChart = ({ childId, setMaxCategory }: Props) => {
     chart: {
       type: "donut",
     },
-    labels: ["의사소통", "자연과학", "사회관계", "예술경험", "신체운동/건강"],
+    labels: ["의사소통", "자연탐구", "사회관계", "예술경험", "신체운동/건강"],
     responsive: [
       {
         breakpoint: 480,

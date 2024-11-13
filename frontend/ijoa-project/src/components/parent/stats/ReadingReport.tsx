@@ -12,16 +12,19 @@ interface Props {
 const ReadingReport = ({ childId }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [reportData, setReportData] = useState<ReadingReportInfo | null>(null);
+  const [responseStatus, setResponseStatus] = useState<number | null>(null);
 
   // 독서 분석 보고서 조회 통신 함수
   const getReadingReportData = async () => {
     try {
       setIsLoading(true);
       const response = await parentApi.getReadingReport(childId);
-      console.log(response);
       if (response.status === 200) {
         setReportData(response.data);
+      } else if (response.status === 204) {
+        setReportData(null);
       }
+      setResponseStatus(response.status);
     } catch (error) {
       console.log("parentApi의 parentApi : ", error);
     } finally {
@@ -31,12 +34,15 @@ const ReadingReport = ({ childId }: Props) => {
 
   useEffect(() => {
     getReadingReportData();
-  }, []);
+  }, [childId]);
 
   if (!reportData || isLoading) {
     return (
-      <div className="grow border-4 border-[#F5F5F5] rounded-2xl flex justify-center items-center">
+      <div className="grow border-4 border-[#F5F5F5] rounded-2xl flex flex-col justify-center items-center">
         <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
+        <p>
+          {responseStatus === 204 ? "조회된 데이터가 없습니다. 책을 먼저 읽어주세요!" : "데이터를 조회하고 있어요."}
+        </p>
       </div>
     );
   }
