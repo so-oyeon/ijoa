@@ -238,6 +238,7 @@ public class TTSService {
     // 모델경로 db 저장
     @KafkaListener(topics = TTS_MODEL_TOPIC, groupId = "tts_group", containerFactory = "modelPathKafkaListenerContainerFactory")
     public void saveModelPath(ModelPathDto modelPathDto) {
+        LogUtil.info("saveModelPath");
         String modelPath = modelPathDto.getModelPath();
         Long ttsId = modelPathDto.getTtsId();
         TTS tts = ttsRepository.findById(ttsId).orElseThrow(()-> new CustomException(ErrorCode.TTS_NOT_FOUND));

@@ -3,6 +3,7 @@ import { CiCamera } from "react-icons/ci";
 import { TbPencilMinus } from "react-icons/tb";
 import { parentApi } from "../../../api/parentApi";
 import { ParentTTSInfo } from "../../../types/parentTypes";
+import TTSProfileDeleteConfirmModal from "./TTSProfileDeleteConfirmModal";
 
 interface Props {
   setIsProfileUpdateModal: (state: boolean) => void;
@@ -14,6 +15,7 @@ const TTSProfileUpdateeModal = ({ setIsProfileUpdateModal, updateTTSInfo, getPar
   const [ttsName, setTTSName] = useState(updateTTSInfo.name);
   const [ttsProfileImg, setTTSProfileImg] = useState<File | null>(null);
   const [ttsProfileImgString, setTTSProfileImgString] = useState(updateTTSInfo.image_url);
+  const [isDeleteConfirmModalOpen, setIsDeleteConfirmModalOpen] = useState(false);
   const ttsProfileImgRef = useRef<HTMLInputElement | null>(null);
 
   // 카메라 아이콘 클릭 시, 이미지 업로드 창 열기
@@ -59,19 +61,23 @@ const TTSProfileUpdateeModal = ({ setIsProfileUpdateModal, updateTTSInfo, getPar
     }
   };
 
-  // TTS 프로필 삭제 통신 함수
-  const handleDeleteTTS = async () => {
-    const confirmFlag = confirm("정말 TTS 프로필을 삭제할까요?");
-    if (confirmFlag) {
-      try {
-        const response = await parentApi.deleteTTSProfile(updateTTSInfo.id);
-        if (response.status === 200) {
-          setIsProfileUpdateModal(false);
-          getParentTTSList();
-        }
-      } catch (error) {
-        console.log("parentApi의 deleteTTSProfile : ", error);
+  // 삭제 확인 모달 열기
+  const handleDeleteTTS = () => {
+    setIsDeleteConfirmModalOpen(true);
+  };
+
+  // 삭제 확인 후 실제 삭제 요청
+  const handleDeleteConfirm = async () => {
+    try {
+      const response = await parentApi.deleteTTSProfile(updateTTSInfo.id);
+      if (response.status === 200) {
+        setIsProfileUpdateModal(false);
+        getParentTTSList();
       }
+    } catch (error) {
+      console.log("parentApi의 deleteTTSProfile : ", error);
+    } finally {
+      setIsDeleteConfirmModalOpen(false);
     }
   };
 
@@ -98,7 +104,8 @@ const TTSProfileUpdateeModal = ({ setIsProfileUpdateModal, updateTTSInfo, getPar
           {/* 프로필 사진 선택 */}
           <div
             className="w-20 h-20 border-4 border-[#9E9E9E] rounded-full flex justify-center items-center relative"
-            onClick={handleUploadClick}>
+            onClick={handleUploadClick}
+          >
             {ttsProfileImgString ? (
               <img className="w-full aspect-1 rounded-full object-cover" src={`${ttsProfileImgString}`} alt="" />
             ) : (
@@ -128,15 +135,23 @@ const TTSProfileUpdateeModal = ({ setIsProfileUpdateModal, updateTTSInfo, getPar
           <div className="flex gap-4 justify-center items-center">
             <button
               className="px-8 py-2 text-[#FF8067] text-lg font-bold bg-white rounded-3xl border-2 border-[#FF8067] active:bg-red-500 active:text-white"
-              onClick={handleDeleteTTS}>
+              onClick={handleDeleteTTS}
+            >
               삭제
             </button>
             <button
               className="px-8 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-3xl border-2 border-[#67CCFF] active:bg-[#005f99]"
-              onClick={handleUpdateTTS}>
+              onClick={handleUpdateTTS}
+            >
               완료
             </button>
           </div>
+
+          <TTSProfileDeleteConfirmModal
+            isOpen={isDeleteConfirmModalOpen}
+            onClose={() => setIsDeleteConfirmModalOpen(false)}
+            onDeleteConfirm={handleDeleteConfirm}
+          />
         </div>
       </div>
     </div>
