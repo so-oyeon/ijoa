@@ -46,7 +46,7 @@ const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({ isOpe
         <div className="flex justify-center">
           <img src={Attention} alt="주의 아이콘" className="w-36" />
         </div>
-        <div className="text-xl font-bold text-gray-700 mb-4">회원 탈퇴</div>
+        <div className="text-3xl font-bold text-gray-700 mb-4">회원 탈퇴</div>
         <p className="text-gray-600 font-semibold mb-6 whitespace-pre-line">
           {"정말로 회원 탈퇴를 진행하시겠습니까?\n이 작업은 되돌릴 수 없습니다."}
         </p>
