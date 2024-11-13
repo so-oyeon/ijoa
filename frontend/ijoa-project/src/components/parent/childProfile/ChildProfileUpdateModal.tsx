@@ -53,8 +53,7 @@ const ChildProfileCreateModal = ({ updateChildInfo, setIsUpdateModal, getChildIn
   // 자녀 프로필 수정 API 함수 호출
   const handleUpdateChild = async () => {
     if (!childName || !childBirth || !childGender) return;
-    console.log("11");
-
+    
     const formData = new FormData();
     formData.append("name", childName);
     formData.append("birth", childBirth);
@@ -119,8 +118,7 @@ const ChildProfileCreateModal = ({ updateChildInfo, setIsUpdateModal, getChildIn
           {/* 프로필 사진 선택 */}
           <div
             className="w-20 h-20 border-4 border-[#9E9E9E] rounded-full flex justify-center items-center relative"
-            onClick={handleUploadClick}
-          >
+            onClick={handleUploadClick}>
             {childProfileImgString ? (
               <img className="w-full aspect-1 rounded-full object-cover" src={`${childProfileImgString}`} alt="" />
             ) : (
@@ -173,8 +171,7 @@ const ChildProfileCreateModal = ({ updateChildInfo, setIsUpdateModal, getChildIn
               ) : (
                 <p
                   className={`col-start-2 px-3 py-1 text-sm text-[#FF8067]
-              }`}
-                >
+              }`}>
                   생년월일 형식을 지켜주세요
                 </p>
               )}
@@ -217,8 +214,7 @@ const ChildProfileCreateModal = ({ updateChildInfo, setIsUpdateModal, getChildIn
           <div className="flex gap-4 justify-center items-center">
             <button
               className="px-8 py-2 text-[#FF8067] text-lg font-bold bg-white rounded-3xl border-2 border-[#FF8067] active:bg-red-500 active:text-white"
-              onClick={handleDeleteChild}
-            >
+              onClick={handleDeleteChild}>
               삭제
             </button>
             <button
@@ -228,8 +224,7 @@ const ChildProfileCreateModal = ({ updateChildInfo, setIsUpdateModal, getChildIn
                   : "active:bg-[#005f99]"
               }`}
               disabled={!childName || !childBirth || !childGender || !checkBirthValidation(childBirth)}
-              onClick={handleUpdateChild}
-            >
+              onClick={handleUpdateChild}>
               수정
             </button>
           </div>
