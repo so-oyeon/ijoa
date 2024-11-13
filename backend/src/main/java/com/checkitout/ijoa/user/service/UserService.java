@@ -8,6 +8,7 @@ import com.checkitout.ijoa.exception.ErrorCode;
 import com.checkitout.ijoa.user.domain.User;
 import com.checkitout.ijoa.user.dto.request.UserSignupRequestDto;
 import com.checkitout.ijoa.user.dto.request.UserUpdateRequestDto;
+import com.checkitout.ijoa.user.dto.response.TutorialDto;
 import com.checkitout.ijoa.user.dto.response.UserDto;
 import com.checkitout.ijoa.user.mapper.UserMapper;
 import com.checkitout.ijoa.user.repository.UserRepository;
@@ -161,5 +162,12 @@ public class UserService {
         User user = securityUtil.getUserByToken();
         user.setCompleteTutorial(true);
         userRepository.save(user);
+    }
+
+    public TutorialDto getTutorial(){
+        User user = securityUtil.getUserByToken();
+        TutorialDto tutorialDto = new TutorialDto();
+        tutorialDto.setCompleteTutorial(user.isCompleteTutorial());
+        return tutorialDto;
     }
 }
