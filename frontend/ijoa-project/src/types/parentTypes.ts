@@ -42,6 +42,7 @@ export interface ParentTTSInfo {
   name: string;
   tts: string;
   image_url: string;
+  trainData: boolean;
 }
 
 // TTS 학습 스크립트 목록 조회 응답 데이터

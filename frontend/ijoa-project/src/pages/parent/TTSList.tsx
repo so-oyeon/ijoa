@@ -9,6 +9,8 @@ import LoadingAnimation from "../../components/common/LoadingAnimation";
 import TTSProfileCreateModal from "../../components/parent/tts/TTSProfileCreateModal";
 import TTSCreateCompleteModal from "../../components/parent/tts/TTSCreateCompleteModal";
 import TTSProfileUpdateeModal from "../../components/parent/tts/TTSProfileUpdateModal";
+import { AxiosError } from "axios";
+import TTSAlreadyLearning from "../../components/parent/tts/TTSAlreadyLearning";
 
 const TTSList = () => {
   const [isProfileCreateModal, setIsProfileCreateModal] = useState(false);
@@ -20,16 +22,28 @@ const TTSList = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [ttsId, setTTSId] = useState<number | null>(null);
   const [updateTTSInfo, setUpdateTTSInfo] = useState<ParentTTSInfo | null>(null);
+  const [isAlreadyLearning, setIsAlreadyLearning] = useState(false);
 
   // TTS 프로필 수정 모달 열기
   const handleUpdateTTS = (ttsInfo: ParentTTSInfo) => {
     setUpdateTTSInfo(ttsInfo);
   };
 
-  // TTS 학습 모달 열기
-  const handleCreateTTS = (ttsId: number) => {
-    setTTSId(ttsId);
-    setIsCreateGuideModal(true);
+  // TTS 학습 모달 열기 (tts 모델 없을 때만 호출)
+  const handleCreateTTS = async (ttsInfo: ParentTTSInfo) => {
+    // S3 있을 때, 학습 중인지 확인
+    if (ttsInfo.trainData) {
+      const responseStatus = await handleTrainTTS(ttsInfo.id);
+      // 학습 중일 때 (409)
+      if (responseStatus === 409) {
+        setIsAlreadyLearning(true);
+      }
+      // 학습 중이 아닐 때
+      else {
+        setTTSId(ttsId);
+        setIsCreateGuideModal(true);
+      }
+    }
   };
 
   // TTS 프로필 목록 조회 API 통신 함수
@@ -37,6 +51,7 @@ const TTSList = () => {
     try {
       setIsLoading(true);
       const response = await parentApi.getParentTTSList();
+      console.log(response);
       if (response.status === 200) {
         setParentTTSList(response.data);
       }
@@ -44,6 +59,20 @@ const TTSList = () => {
       console.log("parentApi의 getParentTTSList : ", error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  // 녹음한 음성파일로 TTS 학습 중인지 확인
+  const handleTrainTTS = async (ttsId: number) => {
+    try {
+      const response = await parentApi.getTrainTTS(ttsId);
+      return response.status;
+    } catch (error) {
+      console.log("parentApi의 getTrainTTS : ", error);
+      const axiosError = error as AxiosError;
+      if (axiosError.response && axiosError.response.status) {
+        return axiosError.response.status;
+      }
     }
   };
 
@@ -98,7 +127,7 @@ const TTSList = () => {
               <button
                 className={`w-40 px-3 py-2 text-lg text-white bg-[#67CCFF] rounded-full ${tts.tts ? "opacity-50" : ""}`}
                 disabled={tts.tts !== null}
-                onClick={() => handleCreateTTS(tts.id)}>
+                onClick={() => handleCreateTTS(tts)}>
                 {tts.tts ? "학습 완료" : "목소리 학습하기"}
               </button>
             </div>
@@ -161,7 +190,18 @@ const TTSList = () => {
       )}
 
       {/* TTS 학습 모달 */}
-      {isCreateModal ? <TTSCreateModal setIsCreateModal={setIsCreateModal} ttsId={ttsId ? ttsId : 0} /> : <></>}
+      {isCreateModal ? (
+        <TTSCreateModal
+          setIsCreateModal={setIsCreateModal}
+          ttsId={ttsId ? ttsId : 0}
+          getParentTTSList={getParentTTSList}
+        />
+      ) : (
+        <></>
+      )}
+
+      {/* TTS 학습 중 안내 모달 */}
+      {isAlreadyLearning ? <TTSAlreadyLearning setIsAlreadyLearning={setIsAlreadyLearning} /> : <></>}
     </div>
   );
 };
