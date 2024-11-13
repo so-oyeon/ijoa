@@ -70,7 +70,7 @@ const VoiceAlbumDetail = () => {
 
           {/* 목록으로 버튼 */}
           <button
-            className="px-5 py-2 text-2xl text-white bg-[#FFA64A] rounded-full flex items-center space-x-3"
+            className="px-5 py-2 text-2xl text-white bg-[#FFA64A] rounded-full flex items-center space-x-3 active:scale-110"
             onClick={handleGoToList}>
             <FaArrowLeft />
             <span>목록으로</span>
@@ -122,14 +122,14 @@ const VoiceAlbumDetail = () => {
           {/* 화살표 및 쪽수 */}
           <div className="flex justify-center items-center space-x-5">
             <TbArrowBigLeftFilled
-              className={`text-6xl text-[#FBCA4E] ${isBeginning ? "opacity-50" : ""}`}
+              className={`text-6xl text-[#FBCA4E] ${isBeginning ? "opacity-50" : "active:scale-110"}`}
               onClick={handlePrev}
             />
             <p className="w-24 text-4xl text-center font-semibold text-[#5E3200]">
               {currentSlideIdx + 1} / {voiceList.length}
             </p>
             <TbArrowBigRightFilled
-              className={`text-6xl text-[#FBCA4E] ${isEnd ? "opacity-50" : ""}`}
+              className={`text-6xl text-[#FBCA4E] ${isEnd ? "opacity-50" : "active:scale-110"}`}
               onClick={handleNext}
             />
           </div>

@@ -22,7 +22,7 @@ const VoiceAlbumList = ({ topSize, partBookList, childId }: Props) => {
         style={{ top: `${topSize}%` }}>
         {partBookList.map((book, index) => (
           <div
-            className="w-40 h-48 p-3 relative"
+            className="w-40 h-48 p-3 relative active:scale-110"
             key={index}
             onClick={() => handleGoToVoiceAlbumDetail(book.book_id, book.title)}>
             <div className="w-full h-full rounded-2xl shadow-[0_5px_3px_1px_rgba(0,0,0,0.2)]">

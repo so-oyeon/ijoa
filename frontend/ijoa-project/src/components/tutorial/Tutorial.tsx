@@ -1,165 +1,133 @@
-// src/components/tutorial/Tutorial.tsx
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "../../redux/store";
-import { closeTutorial } from "../../redux/tutorialSlice";
+import { closeTutorial, setStep } from "../../redux/tutorialSlice";
 import Portal from "../../components/tutorial/Portal";
+import { userApi } from "../../api/userApi";
 import "../../css/Tutorial.css";
 import closeButton from "/assets/close-button.png";
 
 // 단계별 위치 스타일
 const tutorialPositions: { [key: number]: React.CSSProperties } = {
-  1: {
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)", // 첫 번째 단계: 화면 중앙
-  },
-  2: {
-    top: "100px",
-    right: "20px",
-    left: "auto",
-    transform: "none", // 두 번째 단계: 헤더 아래
-  },
-  3: {
-    top: "100px",
-    right: "200px",
-    left: "auto",
-    transform: "none", // 세 번째 단계: 헤더 아래 우측
-  },
-  4: {
-    top: "100px",
-    right: "120px",
-    left: "auto",
-    transform: "none", // 세 번째 단계: 헤더 아래 우측
-  },
-  5: {
-    top: "100px",
-    right: "120px",
-    left: "auto",
-    transform: "none", // 세 번째 단계: 헤더 아래 우측
-  },
-  // 추가 단계가 필요한 경우 여기에 추가
+  1: { top: "50%", left: "50%", transform: "translate(-50%, -50%)" },
+  2: { top: "100px", right: "20px", left: "auto", transform: "none" },
+  3: { top: "100px", right: "200px", left: "auto", transform: "none" },
+  4: { top: "100px", right: "120px", left: "auto", transform: "none" },
+  5: { top: "100px", right: "90px", left: "auto", transform: "none" },
+  6: { top: "100px", right: "60px", left: "auto", transform: "none" },
+  7: { top: "210px", left: "270px", right: "auto", transform: "none" },
+  8: { top: "100px", right: "200px", left: "auto", transform: "none" },
+  9: { top: "100px", right: "120px", left: "auto", transform: "none" },
+  10: { top: "100px", right: "90px", left: "auto", transform: "none" },
+  11: { top: "100px", right: "60px", left: "auto", transform: "none" },
+  12: { top: "100px", right: "28px", left: "auto", transform: "none" },
+  13: { top: "100px", left: "20px", right: "auto", transform: "none" },
 };
 
 // 강조할 영역 위치
 const highlightPositions: { [key: number]: React.CSSProperties } = {
-  2: {
-    top: "5px",
-    right: "20px",
-    width: "28%",
-    height: "90px", // 두 번째 단계에서 헤더 부분 강조
-  },
-  3: {
-    top: "5px",
-    right: "21%",
-    width: "5%",
-    height: "90px", // 세 번째 단계에서 특정 헤더 영역 강조
-  },
-  4: {
-    top: "5px",
-    right: "16%",
-    width: "5%",
-    height: "90px", // 세 번째 단계에서 특정 헤더 영역 강조
-  },
-  5: {
-    top: "5px",
-    right: "20px",
-    width: "28%",
-    height: "90px",
-  },
-  // 추가 단계가 필요한 경우 여기에 추가
+  1: { top: "50%", width: "0%", height: "0%" },
+  2: { top: "5px", right: "20px", width: "28%", height: "90px" },
+  3: { top: "5px", right: "21%", width: "5%", height: "90px" },
+  4: { top: "5px", right: "16%", width: "5%", height: "90px" },
+  5: { top: "5px", right: "12%", width: "5%", height: "90px" },
+  6: { top: "5px", right: "7%", width: "5%", height: "90px" },
+  7: { top: "210px", left: "44%", width: "12%", height: "170px" },
+  8: { top: "5px", right: "21%", width: "5%", height: "90px" },
+  9: { top: "5px", right: "16%", width: "5%", height: "90px" },
+  10: { top: "5px", right: "12%", width: "5%", height: "90px" },
+  11: { top: "5px", right: "7%", width: "5%", height: "90px" },
+  12: { top: "5px", right: "2%", width: "5%", height: "90px" },
+  13: { top: "5px", left: "20px", width: "20%", height: "90px" },
+} as const;
+
+// 단계별 콘텐츠
+const stepContents = {
+  1: { title: "튜토리얼 안내", text: "아이조아에 오신 것을 환영해요!" },
+  2: { title: "헤더 기능 안내", text: "주요 기능에 접근할 수 있습니다." },
+  3: { title: "자녀", text: "등록한 자녀들을 확인하고 선택할 수 있어요!" },
+  4: { title: "TTS", text: "자녀에게 들려주고 싶은 목소리를 녹음하세요!" },
+  5: { title: "통계", text: "자녀 독서 습관을 알아보아요!" },
+  6: { title: "음성앨범", text: "자녀의 대답을 들어볼 수 있어요!" },
+  7: { title: "자녀", text: "등록한 자녀들을 확인하고 선택할 수 있어요!\n지금 바로 등록하러 가볼까요?" },
+  8: { title: "도서관", text: "자녀에게 들려주고 싶은 목소리를 녹음하세요!" },
+  9: { title: "내 책장", text: "내가 읽은 책과 읽고 있는 책을 볼 수 있어요!" },
+  10: { title: "내 방", text: "내 캐릭터의 레벨과 모습을 볼 수 있어요!" },
+  11: { title: "설정", text: "읽어주기, 퀴즈, bgm을 껏다 켰다 할 수 있어요!" },
+  12: { title: "프로필", text: "부모로 전환, 로그아웃이 가능해요!" },
+  13: { title: "튜토리얼 끝", text: "이제부터 아이조아와 함께 해볼까요?" },
 };
 
 const Tutorial: React.FC = () => {
   const isOpen = useSelector((state: RootState) => state.tutorial.isOpen);
   const dispatch = useDispatch<AppDispatch>();
-  const [step, setStep] = useState(1);
+  const step = useSelector((state: RootState) => state.tutorial.step);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
-  const close = () => dispatch(closeTutorial());
-  const nextStep = () => setStep(step + 1);
-  const prevStep = () => setStep(step - 1);
+  // 튜토리얼 완료 함수 api
+  const completeTutorial = async () => {
+    try {
+      const response = await userApi.completeTutorial();
+      if (response.status === 200) {
+        dispatch(closeTutorial());
+      }
+    } catch (error) {
+      console.log("completeTutorial 오류: ", error);
+    }
+  };
+
+  const nextStep = () => {
+    if (step === 7) {
+      // 튜토리얼을 일시적으로 닫기
+      dispatch(closeTutorial());
+    } else {
+      dispatch(setStep(step + 1));
+    }
+  };
+  const prevStep = () => dispatch(setStep(step - 1));
+
+  const closeTutorialModal = () => {
+    setShowConfirmModal(false); // 확인 모달 닫기
+  };
+
+  const confirmCloseTutorial = () => {
+    completeTutorial(); // 튜토리얼 완료 처리
+    setShowConfirmModal(false); // 확인 모달 닫기
+  };
+
+  // 공통 버튼 컴포넌트
+  const TutorialButton = ({ onClick, label }: { onClick: () => void; label: string }) => (
+    <button
+      onClick={onClick}
+      className={`tutorial-btn ${
+        label === "완료" ? "tutorial-complete-btn" : label === "이전" ? "tutorial-prev-btn" : "tutorial-next-btn"
+      } mt-4`}
+    >
+      {label}
+    </button>
+  );
 
   const renderContent = () => {
-    switch (step) {
-      case 1:
-        return (
-          <div className="font-['MapleLight']">
-            <h2 className="text-2xl font-bold mb-2 blue-highlight">튜토리얼 안내</h2>
-            <p>
-              아이조아에 오신 것을 환영해요! <br /> 기본 사용법을 안내합니다.
-            </p>
-            <button onClick={nextStep} className="tutorial-btn tutorial-next-btn mt-4">
-              다음
-            </button>
-          </div>
-        );
-      case 2:
-        return (
-          <div className="font-['MapleLight']">
-            <h2 className="text-2xl font-bold mb-2 blue-highlight">헤더 기능 안내</h2>
-            <p>주요 기능에 접근할 수 있습니다.</p>
-            <div className="flex justify-between">
-              <button onClick={prevStep} className="tutorial-btn tutorial-prev-btn mt-4">
-                이전
-              </button>
-              <button onClick={nextStep} className="tutorial-btn tutorial-next-btn mt-4">
-                다음
-              </button>
-            </div>
-          </div>
-        );
-      case 3:
-        return (
-          <div className="font-['MapleLight']">
-            <h2 className="text-2xl font-bold mb-2 blue-highlight">자녀</h2>
-            <p>자녀를 선택해서 책 읽기를 시작하세요!</p>
-            <div className="flex justify-between">
-              <button onClick={prevStep} className="tutorial-btn tutorial-prev-btn mt-4">
-                이전
-              </button>
-              <button onClick={nextStep} className="tutorial-btn tutorial-next-btn mt-4">
-                다음
-              </button>
-            </div>
-          </div>
-        );
-      case 4:
-        return (
-          <div className="font-['MapleLight']">
-            <h2 className="text-2xl font-bold mb-2 blue-highlight">TTS</h2>
-            <p>
-              자녀에게 들려주고 싶은 <br />
-              목소리를 녹음하세요!
-            </p>
-            <div className="flex justify-between">
-              <button onClick={prevStep} className="tutorial-btn tutorial-prev-btn mt-4">
-                이전
-              </button>
-              <button onClick={nextStep} className="tutorial-btn tutorial-next-btn mt-4">
-                다음
-              </button>
-            </div>
-          </div>
-        );
-      case 5:
-        return (
-          <div className="font-['MapleLight']">
-            <h2 className="text-2xl font-bold mb-2 blue-highlight">완료</h2>
-            <p>이상으로 튜토리얼을 완료합니다!</p>
-            <div className="flex justify-between">
-              <button onClick={prevStep} className="tutorial-btn tutorial-prev-btn mt-4">
-                이전
-              </button>
-              <button onClick={close} className="tutorial-btn tutorial-complete-btn mt-4">
-                완료
-              </button>
-            </div>
-          </div>
-        );
+    const { title, text } = stepContents[step as keyof typeof stepContents];
 
-      default:
-        return null;
-    }
+    return (
+      <div className="font-['MapleLight']">
+        <h2 className="text-2xl font-bold mb-2 blue-highlight">{title}</h2>
+        <p className="whitespace-pre-line">{text}</p>
+        <div className={`flex ${step === 1 || step === 8 ? "justify-center" : "justify-between"} mt-4`}>
+          {step > 1 && step !== 8 && <TutorialButton onClick={prevStep} label="이전" />}
+
+          {/* 7단계일 경우에만 "등록" 버튼 표시 */}
+          {step === 7 ? (
+            <TutorialButton onClick={nextStep} label="등록" />
+          ) : step < 13 ? (
+            <TutorialButton onClick={nextStep} label="다음" />
+          ) : (
+            <TutorialButton onClick={completeTutorial} label="완료" />
+          )}
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -171,21 +139,36 @@ const Tutorial: React.FC = () => {
         {/* 단계별 강조 오버레이 */}
         {highlightPositions[step] && (
           <>
-            {/* 전체 화면을 어둡게 처리하는 오버레이 */}
             <div className="overlay-dark"></div>
-
-            {/* 강조할 영역을 밝게 처리 */}
             <div className="overlay-highlight" style={highlightPositions[step]}></div>
           </>
         )}
 
         {/* 튜토리얼 모달 */}
         <div className="tutorial-modal" style={tutorialPositions[step]}>
-          <button onClick={close} className="tutorial-close-btn">
+          <button onClick={() => setShowConfirmModal(true)} className="tutorial-close-btn">
             <img src={closeButton} alt="Close" />
           </button>
           {renderContent()}
         </div>
+
+        {/* 확인 모달 */}
+        {showConfirmModal && (
+          <div className="confirm-modal font-['MapleLight']">
+            <div className="confirm-modal-content">
+              <p className="text-2xl font-bold white red-highlight">튜토리얼을 다시는 볼 수 없습니다. </p>
+              <p className="text-xl white mt-4">그래도 종료하시겠습니까?</p>
+              <div className="confirm-modal-buttons">
+                <button onClick={confirmCloseTutorial} className="confirm-btn">
+                  예
+                </button>
+                <button onClick={closeTutorialModal} className="cancel-btn">
+                  아니오
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </Portal>
     )
   );

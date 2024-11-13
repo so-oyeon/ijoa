@@ -76,14 +76,14 @@ const VoiceAlbumList = ({ selectStartDate, selectEndDate, childId }: Props) => {
         ) : (
           <div className="py-3 flex justify-between items-center space-x-3">
             <BiSolidLeftArrow
-              className={`text-2xl text-[#FF5B5B] ${currentPage === 1 ? "opacity-0" : ""}`}
+              className={`text-2xl text-[#FF5B5B] ${currentPage === 1 ? "opacity-0" : "active:scale-110"}`}
               onClick={handlePrev}
             />
             <p className="w-20 text-xl text-center font-semibold text-[#5E3200]">
               {currentPage} / {totalPage}
             </p>
             <BiSolidRightArrow
-              className={`text-2xl text-[#6E78FF] ${totalPage === currentPage ? "opacity-0" : ""}`}
+              className={`text-2xl text-[#6E78FF] ${totalPage === currentPage ? "opacity-0" : "active:scale-110"}`}
               onClick={handleNext}
             />
           </div>

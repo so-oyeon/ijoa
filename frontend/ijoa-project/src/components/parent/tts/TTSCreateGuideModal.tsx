@@ -38,7 +38,7 @@ const TTSCreateModal = ({ setIsCreateGuideModal, setIsCreateModal }: Props) => {
 
           {/* 녹음 시작하기 버튼 */}
           <button
-            className="w-full px-8 py-2 text-white text-xl font-bold bg-[#67CCFF] rounded-3xl border-2 border-[#67CCFF]"
+            className="w-full px-8 py-2 text-white text-xl font-bold bg-[#67CCFF] rounded-3xl border-2 border-[#67CCFF] active:bg-[#005f99]"
             onClick={handleStartRecording}>
             녹음 시작하기
           </button>

@@ -13,9 +13,15 @@ import {
 import { ChildInfo } from "../../types/parentTypes";
 import Lottie from "react-lottie-player";
 import loadingAnimation from "../../lottie/footPrint-loadingAnimation.json";
+import { useDispatch } from "react-redux";
+import { openTutorial, setStep } from "../../redux/tutorialSlice";
+import Tutorial from "../../components/tutorial/Tutorial";
+import { userApi } from "../../api/userApi";
 
 const FairytaleListPage: React.FC = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [popularFairyTales, setPopularFairyTales] = useState<FairyTaleRankByAgeItem[]>([]);
   const [recommendedFairyTales, setRecommendedFairyTales] = useState<FairyTaleRecommendationItem[]>([]);
   const [categoryFairyTales, setCategoryFairyTales] = useState<FairyTaleByCategoryListResponse | null>(null);
@@ -151,6 +157,25 @@ const FairytaleListPage: React.FC = () => {
   };
 
   useEffect(() => {
+    const getTutorialStatus = async () => {
+      try {
+        const response = await userApi.getTutorialInfo();
+        if (response.status === 200) {
+          // 튜토리얼이 완료되지 않았다면 8단계부터 이어서 시작
+          if (!response.data.completeTutorial) {
+            dispatch(openTutorial());
+            dispatch(setStep(8)); // 8단계로 설정
+          }
+        }
+      } catch (error) {
+        console.log("getTutorialInfo API 오류: ", error);
+      }
+    };
+  
+    getTutorialStatus();
+  }, [dispatch]);
+
+  useEffect(() => {
     const loadInitialData = async () => {
       try {
         await getPopularFairyTalesByAge();
@@ -217,6 +242,7 @@ const FairytaleListPage: React.FC = () => {
           )}
         </div>
       </div>
+      <Tutorial />
     </div>
   );
   

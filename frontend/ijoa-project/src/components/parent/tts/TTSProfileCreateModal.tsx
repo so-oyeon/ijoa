@@ -101,12 +101,12 @@ const TTSProfileCreateModal = ({ setIsProfileCreateModal, setIsCreateCompleted, 
         {/* 버튼 */}
         <div className="flex gap-4 justify-center items-center">
           <button
-            className="px-8 py-2 text-[#67CCFF] text-lg font-bold bg-white rounded-3xl border-2 border-[#67CCFF]"
+            className="px-8 py-2 text-[#67CCFF] text-lg font-bold bg-white rounded-3xl border-2 border-[#67CCFF] active:bg-[#e0f7ff]"
             onClick={() => setIsProfileCreateModal(false)}>
             취소
           </button>
           <button
-            className="px-8 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-3xl border-2 border-[#67CCFF]"
+            className="px-8 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-3xl border-2 border-[#67CCFF active:bg-[#005f99]"
             onClick={handleCreateTTS}>
             완료
           </button>

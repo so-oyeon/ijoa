@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { BiSolidRightArrow } from "react-icons/bi";
+import { BiSolidRightArrow, BiSolidVolumeFull } from "react-icons/bi";
+import WaveSurfer from "wavesurfer.js";
 import { VoiceAlbumBookDetailInfo } from "../../../types/voiceAlbumTypes";
 import { parentApi } from "../../../api/parentApi";
 import { ChildInfo } from "../../../types/parentTypes";
@@ -16,9 +17,10 @@ const VoiceAlbumDetailCard = ({ voiceInfo, childId, voiceListLength }: Props) =>
   const animalImages = ["elephant", "fox", "giraffe", "hippo", "tiger", "zebra"];
   const [animalImage, setAnimalImage] = useState("");
   const [childInfo, setChildInfo] = useState<ChildInfo | null>(null);
-  const audioPlayRef = useRef<HTMLAudioElement | null>(null); // 오디오 재생을 위한 참조 변수
+  const [isPlaying, setIsPlaying] = useState(false);
+  const waveSurferRef = useRef<WaveSurfer | null>(null);
+  const waveContainerRef = useRef<HTMLDivElement | null>(null);
 
-  // 자녀 프로필을 가져오는 api 통신 함수
   const getChildProfile = async () => {
     try {
       const response = await parentApi.getChildProfile(childId);
@@ -30,18 +32,67 @@ const VoiceAlbumDetailCard = ({ voiceInfo, childId, voiceListLength }: Props) =>
     }
   };
 
-  // 녹음본 자동 재생 함수
   const handlePlayRecordingAudio = () => {
-    audioPlayRef.current?.play();
+    if (waveSurferRef.current) {
+      if (isPlaying) {
+        waveSurferRef.current.pause();
+        setIsPlaying(false);
+      } else {
+        waveSurferRef.current.play();
+        setIsPlaying(true);
+      }
+    }
   };
 
-  // 동물 이미지를 랜덤으로 설정
+  const handleAudioEnded = () => {
+    setIsPlaying(false);
+  };
+
   useEffect(() => {
     const randomAnimal = animalImages[Math.floor(Math.random() * animalImages.length)];
-    setAnimalImage(randomAnimal); // 랜덤 동물 이미지 설정
-
+    setAnimalImage(randomAnimal);
     getChildProfile();
-  }, []);
+
+    const initializeWaveSurfer = () => {
+      if (waveSurferRef.current) {
+        waveSurferRef.current.destroy();
+        waveSurferRef.current = null;
+      }
+
+      if (waveContainerRef.current) {
+        waveSurferRef.current = WaveSurfer.create({
+          container: waveContainerRef.current,
+          waveColor: "#ddd",
+          progressColor: "#FFCA75",
+          cursorColor: "#FFCA75",
+          barWidth: 2,
+          height: 30,
+          responsive: true,
+          normalize: true,
+          interact: false,
+          backend: "MediaElement", // MediaElement 사용
+        });
+
+        waveSurferRef.current.load(voiceInfo.answer);
+        waveSurferRef.current.on("finish", handleAudioEnded);
+      }
+    };
+
+    // 비동기로 지연 로드
+    const loadAudioAndInitialize = async () => {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      initializeWaveSurfer();
+    };
+
+    loadAudioAndInitialize();
+
+    return () => {
+      if (waveSurferRef.current) {
+        waveSurferRef.current.destroy();
+        waveSurferRef.current = null;
+      }
+    };
+  }, [voiceInfo.answer]);
 
   if (!childInfo)
     return (
@@ -55,27 +106,25 @@ const VoiceAlbumDetailCard = ({ voiceInfo, childId, voiceListLength }: Props) =>
       className={`${
         voiceListLength === 1 ? "w-1/3" : "w-full"
       } h-full p-5 bg-white rounded-2xl flex flex-col justify-between space-y-5`}>
-      {/* 동화책 그림 이미지 */}
       <img className="w-full aspect-2 rounded-xl object-cover" src={voiceInfo.image} alt="" />
 
-      {/* 퀴즈 질문 */}
       <div className="grow grid grid-cols-[1fr_4fr] gap-5 place-items-center">
         <img className="w-14" src={`/assets/fairytales/images/${animalImage}.png`} alt="" />
         <p className="text-lg text-left break-keep">{voiceInfo.questionText}</p>
       </div>
 
-      {/* 퀴즈 답변 */}
       <div className="flex justify-end items-center space-x-3">
-        {/* 재생 버튼 */}
         <div className="w-10 aspect-1 bg-[#FFCA75] flex justify-center items-center rounded-full">
-          <BiSolidRightArrow className="text-2xl text-white" onClick={handlePlayRecordingAudio} />
-
-          {/* 오디오 재생 컨트롤바 */}
-          <audio controls src={voiceInfo.answer} className="hidden" ref={audioPlayRef}></audio>
+          {isPlaying ? (
+            <BiSolidVolumeFull className="text-2xl text-white" onClick={handlePlayRecordingAudio} />
+          ) : (
+            <BiSolidRightArrow className="text-2xl text-white" onClick={handlePlayRecordingAudio} />
+          )}
         </div>
-        {/* 음성 그래프 */}
-        <img src="/assets/parent/voiceAlbum/voice-graph.png" alt="" />
-        {/* 자녀 프로필 이미지 */}
+
+        {/* WaveSurfer 파형 그래프 */}
+        <div ref={waveContainerRef} className="w-24 h-2 pb-8"></div>
+
         <img className="w-14 h-14 border rounded-full" src={childInfo.profileUrl} alt="" />
       </div>
     </div>
