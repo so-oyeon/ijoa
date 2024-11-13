@@ -209,13 +209,13 @@ const ChildProfileCreateModal = ({ updateChildInfo, setIsUpdateModal, getChildIn
           {/* 버튼 */}
           <div className="flex gap-4 justify-center items-center">
             <button
-              className="px-8 py-2 text-[#FF8067] text-lg font-bold bg-white rounded-3xl border-2 border-[#FF8067]"
+              className="px-8 py-2 text-[#FF8067] text-lg font-bold bg-white rounded-3xl border-2 border-[#FF8067] active:bg-red-500 active:text-white"
               onClick={handleDeleteChild}>
               삭제
             </button>
             <button
               className={`px-8 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-3xl border-2 border-[#67CCFF] ${
-                !childName || !childBirth || !childGender || !checkBirthValidation(childBirth) ? "opacity-50" : ""
+                !childName || !childBirth || !childGender || !checkBirthValidation(childBirth) ? "opacity-50" : "active:bg-[#005f99]"
               }`}
               disabled={!childName || !childBirth || !childGender || !checkBirthValidation(childBirth)}
               onClick={handleUpdateChild}>

@@ -32,7 +32,7 @@ const TTSCreateCompleteModal = ({ setIsCreateCompleted, setIsCreateGuideModal }:
           <img className="w-14 aspect-1" src="/assets/header/parent/tts-icon.png" alt="" />
 
           <button
-            className="w-full px-8 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-xl border-2 border-[#67CCFF]"
+            className="w-full px-8 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-xl border-2 border-[#67CCFF] active:bg-[#005f99]"
             onClick={handleCreateTTS}>
             목소리 TTS 만들기
           </button>

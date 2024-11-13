@@ -81,7 +81,7 @@ const TTSList = () => {
                   alt=""
                 />
                 <div
-                  className="w-10 aspect-1 bg-white rounded-full bg-opacity-50 shadow-[1px_3px_2px_0_rgba(0,0,0,0.2)] flex justify-center items-center absolute top-0 right-0"
+                  className="w-10 aspect-1 bg-white rounded-full bg-opacity-50 shadow-[1px_3px_2px_0_rgba(0,0,0,0.2)] flex justify-center items-center absolute top-0 right-0 active:scale-110"
                   onClick={() => handleUpdateTTS(tts)}>
                   <TbPencilMinus className="text-2xl" />
                 </div>
@@ -93,7 +93,7 @@ const TTSList = () => {
 
           {/* TTS 추가 버튼 */}
           {parentTTSList.length < 4 ? (
-            <button className="flex justify-center items-center">
+            <button className="flex justify-center items-center active:scale-110">
               <IoIosAdd
                 className="text-[100px] text-white bg-[#D9D9D9] rounded-full"
                 onClick={() => setIsProfileCreateModal(true)}
