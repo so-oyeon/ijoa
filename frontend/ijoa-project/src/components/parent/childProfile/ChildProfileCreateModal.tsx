@@ -47,6 +47,14 @@ const ChildProfileCreateModal = ({ setIsCreateModal, getChildInfoList }: Props) 
     return pattern.test(text);
   };
 
+  // YYYYMMDD를 YYYY-MM-DD로 자동 변환하는 함수
+  const formatBirthDate = (text: string) => {
+    if (/^\d{8}$/.test(text)) {
+      return `${text.slice(0, 4)}-${text.slice(4, 6)}-${text.slice(6, 8)}`;
+    }
+    return text; // 이미 YYYY-MM-DD 형식이면 그대로 반환
+  };
+
   const checkBirthAvailableValidation = (text: string) => {
     const inputDate = new Date(text);
     const today = new Date();
@@ -134,7 +142,7 @@ const ChildProfileCreateModal = ({ setIsCreateModal, getChildInfoList }: Props) 
               id="birth"
               placeholder="ex) 2024-01-01"
               value={childBirth ? childBirth : ""}
-              onChange={(e) => setChildBirth(e.target.value)}
+              onChange={(e) => setChildBirth(formatBirthDate(e.target.value))}
             />
 
             {childBirth &&
