@@ -69,7 +69,7 @@ const MyBookSwiper = ({ direction, myBookLists, myBookReadOrNot, progress }: Pro
               )}
             </div>
             <div dir="ltr" className="text-center mx-auto w-[200px]">
-              <span className="text-lg md:text-xl text-white line-clamp-1">{myBookTitles[index]}</span>
+              <span className="text-lg md:text-xl font-bold text-black line-clamp-1">{myBookTitles[index]}</span>
             </div>
           </div>
         </SwiperSlide>
