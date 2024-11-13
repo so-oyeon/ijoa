@@ -59,8 +59,8 @@ const TTSList = () => {
       <div className="p-20 grid gap-10">
         {/* 상단 타이틀 */}
         <div className="flex flex-col justify-center items-center space-y-3">
-          <div className="flex space-x-3">
-            <img className="w-10 aspect-1" src="/assets/header/parent/tts-icon.png" alt="" />
+          <div className="flex justify-center items-center space-x-3">
+            <img className="w-10" src="/assets/header/parent/tts-icon.png" alt="" />
             <p className="text-[30px] font-semibold">
               {TTSList.length === 0
                 ? "사용자의 목소리로 TTS를 만들어주세요"
