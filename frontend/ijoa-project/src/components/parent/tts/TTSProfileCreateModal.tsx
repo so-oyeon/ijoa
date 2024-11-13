@@ -50,7 +50,6 @@ const TTSProfileCreateModal = ({ setIsProfileCreateModal, setIsCreateCompleted, 
     try {
       const response = await parentApi.createTTSProfile(formData);
       if (response.status === 201) {
-        console.log(response);
         setTTSId(response.data.id);
         setIsProfileCreateModal(false);
         setIsCreateCompleted(true);
