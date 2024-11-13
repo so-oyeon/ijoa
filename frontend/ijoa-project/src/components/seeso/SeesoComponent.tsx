@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Seeso, { UserStatusOption, InitializationErrorType } from "seeso";
 import { GazeInfo, WordPositionInfo } from "../../types/seesoTypes";
 
@@ -7,9 +7,11 @@ interface Props {
 }
 
 const SeesoComponent = ({ wordPositions }: Props) => {
-  const outputCanvasRef = useRef<HTMLCanvasElement>(null);
-  const gazeInfoRef = useRef<HTMLHeadingElement>(null);
-  const [gazeInfo, setGazeInfo] = useState<GazeInfo | null>(null);
+  // 트래킹점 표시 관련 변수 (빨간점)
+  // const outputCanvasRef = useRef<HTMLCanvasElement>(null);
+  // const gazeInfoRef = useRef<HTMLHeadingElement>(null);
+  // const [gazeInfo, setGazeInfo] = useState<GazeInfo | null>(null);
+
   const [lastTimestamp, setLastTimestamp] = useState<number>(0);
   const licenseKey = import.meta.env.VITE_SEESO_SDK_KEY;
   let seeSoInstance: Seeso | null = null;
@@ -58,7 +60,8 @@ const SeesoComponent = ({ wordPositions }: Props) => {
       console.log(`시선 좌표 : (${gazeInfo.x}, ${gazeInfo.y})`);
     }
 
-    setGazeInfo(gazeInfo);
+    // 트래킹점 표시 셋팅 (빨간점)
+    // setGazeInfo(gazeInfo);
 
     const gazeX = gazeInfo.x;
     const gazeY = gazeInfo.y;
@@ -71,42 +74,43 @@ const SeesoComponent = ({ wordPositions }: Props) => {
     }
   };
 
-  const showGazeDotOnDom = (gazeInfo: GazeInfo) => {
-    const canvas = outputCanvasRef.current;
-    if (canvas) {
-      const ctx = canvas.getContext("2d");
-      if (ctx) {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = "#FF0000";
-        ctx.beginPath();
-        ctx.arc(gazeInfo.x, gazeInfo.y, 10, 0, Math.PI * 2, true);
-        ctx.fill();
-      }
-    }
-  };
+  // 트래킹점 표시 관련 함수 (빨간점)
+  // const showGazeDotOnDom = (gazeInfo: GazeInfo) => {
+  //   const canvas = outputCanvasRef.current;
+  //   if (canvas) {
+  //     const ctx = canvas.getContext("2d");
+  //     if (ctx) {
+  //       canvas.width = window.innerWidth;
+  //       canvas.height = window.innerHeight;
+  //       ctx.clearRect(0, 0, canvas.width, canvas.height);
+  //       ctx.fillStyle = "#FF0000";
+  //       ctx.beginPath();
+  //       ctx.arc(gazeInfo.x, gazeInfo.y, 10, 0, Math.PI * 2, true);
+  //       ctx.fill();
+  //     }
+  //   }
+  // };
 
-  const hideGazeInfoOnDom = () => {
-    if (gazeInfoRef.current) {
-      gazeInfoRef.current.innerText = "";
-    }
-  };
+  // const hideGazeInfoOnDom = () => {
+  //   if (gazeInfoRef.current) {
+  //     gazeInfoRef.current.innerText = "";
+  //   }
+  // };
 
-  const hideGazeDotOnDom = () => {
-    const canvas = outputCanvasRef.current;
-    if (canvas) {
-      const ctx = canvas.getContext("2d");
-      if (ctx) {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-      }
-    }
-  };
+  // const hideGazeDotOnDom = () => {
+  //   const canvas = outputCanvasRef.current;
+  //   if (canvas) {
+  //     const ctx = canvas.getContext("2d");
+  //     if (ctx) {
+  //       ctx.clearRect(0, 0, canvas.width, canvas.height);
+  //     }
+  //   }
+  // };
 
-  const hideGaze = () => {
-    hideGazeInfoOnDom();
-    hideGazeDotOnDom();
-  };
+  // const hideGaze = () => {
+  //   hideGazeInfoOnDom();
+  //   hideGazeDotOnDom();
+  // };
 
   // 디버그 콜백 함수
   const onDebug = (FPS: number, latency_min: number, latency_max: number, latency_avg: number) => {
@@ -116,7 +120,7 @@ const SeesoComponent = ({ wordPositions }: Props) => {
   // 캘리브레이션 버튼 클릭 핸들러
   const onClickCalibrationBtn = () => {
     const userId = "a1234";
-    const redirectUrl = "https://k11d105.p.ssafy.io/fairytale/content/1";
+    const redirectUrl = "https://k11d105.p.ssafy.io/fairytale/content/1"; // seeso 초기화 후 리다이렉트 주소
     const calibrationPoint = 5;
     Seeso.openCalibrationPage(licenseKey ?? "", userId, redirectUrl, calibrationPoint);
   };
@@ -139,31 +143,26 @@ const SeesoComponent = ({ wordPositions }: Props) => {
     };
   }, []);
 
-  useEffect(() => {
-    if (gazeInfo) {
-      // 트래킹점 표시
-      showGazeDotOnDom(gazeInfo);
-    } else {
-      hideGaze();
-    }
-  }, [gazeInfo]);
+  // 트래킹점 표시 관련 useEffect (빨간점)
+  // useEffect(() => {
+  //   if (gazeInfo) {
+  //     // 트래킹점 표시
+  //     showGazeDotOnDom(gazeInfo);
+  //   } else {
+  //     // 트래킹점 제거
+  //     hideGaze();
+  //   }
+  // }, [gazeInfo]);
 
   return (
-    <div style={{ position: "relative", height: "100vh" }}>
-      <canvas id="output" ref={outputCanvasRef} style={{ position: "fixed", top: 0, left: 0 }}></canvas>
-      <h1 style={{ textAlign: "center", zIndex: -1 }}>Calibration Service</h1>
-      <h2 style={{ textAlign: "center" }}></h2>
-      <div
-        style={{
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-around",
-        }}>
-        <button onClick={onClickCalibrationBtn} style={{ margin: "0 auto" }}>
-          Click me to use calibration service
-        </button>
-      </div>
+    <div className="p-3 bg-white rounded-xl grid place-content-center absolute top-0 left-1/2 transform -translate-x-1/2 z-50">
+      {/* 트래킹점 표시 관련 캔버스 (빨간점) */}
+      {/* <canvas id="output" ref={outputCanvasRef} style={{ position: "fixed", top: 0, left: 0 }}></canvas> */}
+
+      <p>집중도 분석을 위해 아이트래킹을 설정해주세요 !</p>
+      <button className="bg-yellow-300" onClick={onClickCalibrationBtn}>
+        아이트래킹 설정 바로가기 click!
+      </button>
     </div>
   );
 };
