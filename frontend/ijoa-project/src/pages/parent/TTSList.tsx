@@ -26,6 +26,12 @@ const TTSList = () => {
     setUpdateTTSInfo(ttsInfo);
   };
 
+  // TTS 학습 모달 열기
+  const handleCreateTTS = (ttsId: number) => {
+    setTTSId(ttsId);
+    setIsCreateGuideModal(true);
+  };
+
   // TTS 프로필 목록 조회 API 통신 함수
   const getParentTTSList = async () => {
     try {
@@ -88,6 +94,13 @@ const TTSList = () => {
               </div>
 
               <p className="text-2xl font-bold">{tts.name}</p>
+
+              <button
+                className={`w-40 px-3 py-2 text-lg text-white bg-[#67CCFF] rounded-full ${tts.tts ? "opacity-50" : ""}`}
+                disabled={tts.tts !== null}
+                onClick={() => handleCreateTTS(tts.id)}>
+                {tts.tts ? "학습 완료" : "목소리 학습하기"}
+              </button>
             </div>
           ))}
 
@@ -103,6 +116,8 @@ const TTSList = () => {
             <></>
           )}
         </div>
+
+        <p className="text-center">* TTS 프로필을 만들고 목소리를 반드시 학습시켜주세요!</p>
       </div>
 
       {/* TTS 프로필 생성 모달 */}
