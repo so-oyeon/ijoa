@@ -23,6 +23,8 @@ const HistogramChart = ({ childId, filter }: Props) => {
       const response = await parentApi.getFocusTimeData(childId, dataType);
       if (response.status === 200) {
         setData(response.data);
+      } else if (response.status === 204) {
+        setData([]);
       }
     } catch (error) {
       console.log("parentApi의 getFocusTimeData : ", error);
@@ -35,7 +37,7 @@ const HistogramChart = ({ childId, filter }: Props) => {
     if (!dataType) return;
 
     getFocusTimeData();
-  }, [dataType]);
+  }, [dataType, childId]);
 
   useEffect(() => {
     switch (filter) {
@@ -53,8 +55,18 @@ const HistogramChart = ({ childId, filter }: Props) => {
 
   if (!data || isLoading) {
     return (
-      <div className="grow border-4 border-[#F5F5F5] rounded-2xl flex justify-center items-center">
+      <div className="grow border-4 border-[#F5F5F5] rounded-2xl flex flex-col justify-center items-center">
         <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
+        <p>데이터를 조회하고 있어요.</p>
+      </div>
+    );
+  }
+
+  if (data.length === 0) {
+    return (
+      <div className="grow border-4 border-[#F5F5F5] rounded-2xl flex flex-col justify-center items-center">
+        <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
+        <p>조회된 데이터가 없습니다. 책을 먼저 읽어주세요!</p>
       </div>
     );
   }

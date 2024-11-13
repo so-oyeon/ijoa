@@ -73,6 +73,11 @@ export const parentApi = {
     return api.post(`/tts/train/${ttsId}`, data);
   },
 
+  // TTS 학습 시작
+  getTrainTTS: (ttsId: number) => {
+    return api.get(`/tts/train/${ttsId}`);
+  },
+
   // 음성 앨범 답변한 책 목록 조회
   getVoiceAlbumBookList: (childId: number, page: number, data: VoiceAlbumDateRange) => {
     return api.post(`/quiz/answer/list/${childId}?page=${page}`, data);

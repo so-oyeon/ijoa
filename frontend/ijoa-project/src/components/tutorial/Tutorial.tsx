@@ -7,40 +7,6 @@ import { userApi } from "../../api/userApi";
 import "../../css/Tutorial.css";
 import closeButton from "/assets/close-button.png";
 
-// 단계별 위치 스타일
-const tutorialPositions: { [key: number]: React.CSSProperties } = {
-  1: { top: "50%", left: "50%", transform: "translate(-50%, -50%)" },
-  2: { top: "100px", right: "20px", left: "auto", transform: "none" },
-  3: { top: "100px", right: "200px", left: "auto", transform: "none" },
-  4: { top: "100px", right: "120px", left: "auto", transform: "none" },
-  5: { top: "100px", right: "90px", left: "auto", transform: "none" },
-  6: { top: "100px", right: "60px", left: "auto", transform: "none" },
-  7: { top: "210px", left: "270px", right: "auto", transform: "none" },
-  8: { top: "100px", right: "200px", left: "auto", transform: "none" },
-  9: { top: "100px", right: "120px", left: "auto", transform: "none" },
-  10: { top: "100px", right: "90px", left: "auto", transform: "none" },
-  11: { top: "100px", right: "60px", left: "auto", transform: "none" },
-  12: { top: "100px", right: "28px", left: "auto", transform: "none" },
-  13: { top: "100px", left: "20px", right: "auto", transform: "none" },
-};
-
-// 강조할 영역 위치
-const highlightPositions: { [key: number]: React.CSSProperties } = {
-  1: { top: "50%", width: "0%", height: "0%" },
-  2: { top: "5px", right: "20px", width: "28%", height: "90px" },
-  3: { top: "5px", right: "21%", width: "5%", height: "90px" },
-  4: { top: "5px", right: "16%", width: "5%", height: "90px" },
-  5: { top: "5px", right: "12%", width: "5%", height: "90px" },
-  6: { top: "5px", right: "7%", width: "5%", height: "90px" },
-  7: { top: "210px", left: "44%", width: "12%", height: "170px" },
-  8: { top: "5px", right: "21%", width: "5%", height: "90px" },
-  9: { top: "5px", right: "16%", width: "5%", height: "90px" },
-  10: { top: "5px", right: "12%", width: "5%", height: "90px" },
-  11: { top: "5px", right: "7%", width: "5%", height: "90px" },
-  12: { top: "5px", right: "2%", width: "5%", height: "90px" },
-  13: { top: "5px", left: "20px", width: "20%", height: "90px" },
-} as const;
-
 // 단계별 콘텐츠
 const stepContents = {
   1: { title: "튜토리얼 안내", text: "아이조아에 오신 것을 환영해요!" },
@@ -135,17 +101,11 @@ const Tutorial: React.FC = () => {
       <Portal>
         {/* 클릭 방지 오버레이 */}
         <div className="overlay-click-prevent"></div>
-
-        {/* 단계별 강조 오버레이 */}
-        {highlightPositions[step] && (
-          <>
-            <div className="overlay-dark"></div>
-            <div className="overlay-highlight" style={highlightPositions[step]}></div>
-          </>
-        )}
+        <div className="overlay-dark"></div>
+        <div className={`overlay-highlight highlight-position-${step}`}></div>
 
         {/* 튜토리얼 모달 */}
-        <div className="tutorial-modal" style={tutorialPositions[step]}>
+        <div className={`tutorial-modal tutorial-position-${step}`}>
           <button onClick={() => setShowConfirmModal(true)} className="tutorial-close-btn">
             <img src={closeButton} alt="Close" />
           </button>

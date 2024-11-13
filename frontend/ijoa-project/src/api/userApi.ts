@@ -37,6 +37,11 @@ export const userApi = {
     return api.post(`/user/signup`, userInfo);
   },
 
+  // 이메일 중복 확인
+  checkEmailDuplication: (email: string) => {
+    return api.get(`/user/check-email/${email}`);
+  },
+
   // 자녀 프로필로 전환
   switchChild: (childId: number) => {
     return api.patch(`/auth/switch-child/${childId}`);
@@ -63,7 +68,7 @@ export const userApi = {
   },
 
   // 튜토리얼 진행 완료 처리
-  completeTutorial:() => {
-    return api.post(`/user/tutorial`)
+  completeTutorial: () => {
+    return api.post(`/user/tutorial`);
   },
 };

@@ -3,6 +3,7 @@ import { CiCamera } from "react-icons/ci";
 import { parentApi } from "../../../api/parentApi";
 import { TbPencilMinus } from "react-icons/tb";
 import { ChildInfo } from "../../../types/parentTypes";
+import ChildProfileDeleteConfirmModal from "./ChildProfileDeleteCofirmModal";
 
 interface Props {
   updateChildInfo: ChildInfo;
@@ -24,6 +25,7 @@ const ChildProfileCreateModal = ({ updateChildInfo, setIsUpdateModal, getChildIn
   );
   const childProfileImgRef = useRef<HTMLInputElement | null>(null);
   const childId = updateChildInfo.childId;
+  const [isDeleteConfirmModalOpen, setIsDeleteConfirmModalOpen] = useState(false);
 
   console.log(updateChildInfo);
 
@@ -51,8 +53,7 @@ const ChildProfileCreateModal = ({ updateChildInfo, setIsUpdateModal, getChildIn
   // 자녀 프로필 수정 API 함수 호출
   const handleUpdateChild = async () => {
     if (!childName || !childBirth || !childGender) return;
-    console.log("11");
-
+    
     const formData = new FormData();
     formData.append("name", childName);
     formData.append("birth", childBirth);
@@ -80,22 +81,25 @@ const ChildProfileCreateModal = ({ updateChildInfo, setIsUpdateModal, getChildIn
     return pattern.test(text);
   };
 
-  // 자녀 프로필 삭제 API 함수 호출
-  const handleDeleteChild = async () => {
-    const confirmFlag = confirm("정말 자녀 프로필을 삭제할까요?");
-    if (confirmFlag) {
-      try {
-        const response = await parentApi.deleteChildProfile(childId);
-        if (response.status === 200) {
-          setIsUpdateModal(false);
-          getChildInfoList();
-        }
-      } catch (error) {
-        console.log("parentApi의 deleteChildProfile : ", error);
-      }
-    }
+  // 삭제 확인 모달 열기
+  const handleDeleteChild = () => {
+    setIsDeleteConfirmModalOpen(true);
   };
 
+  // 자녀 프로필 삭제 API 함수 호출
+  const handleDeleteConfirm = async () => {
+    try {
+      const response = await parentApi.deleteChildProfile(childId);
+      if (response.status === 200) {
+        setIsUpdateModal(false);
+        getChildInfoList();
+      }
+    } catch (error) {
+      console.log("parentApi의 deleteChildProfile : ", error);
+    } finally {
+      setIsDeleteConfirmModalOpen(false);
+    }
+  };
   return (
     <div className="py-8 bg-black bg-opacity-60 flex justify-center items-center fixed inset-0 z-50 font-['MapleLight']">
       <div className="p-10 bg-white rounded-2xl shadow-lg">
@@ -215,13 +219,21 @@ const ChildProfileCreateModal = ({ updateChildInfo, setIsUpdateModal, getChildIn
             </button>
             <button
               className={`px-8 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-3xl border-2 border-[#67CCFF] ${
-                !childName || !childBirth || !childGender || !checkBirthValidation(childBirth) ? "opacity-50" : "active:bg-[#005f99]"
+                !childName || !childBirth || !childGender || !checkBirthValidation(childBirth)
+                  ? "opacity-50"
+                  : "active:bg-[#005f99]"
               }`}
               disabled={!childName || !childBirth || !childGender || !checkBirthValidation(childBirth)}
               onClick={handleUpdateChild}>
               수정
             </button>
           </div>
+
+          <ChildProfileDeleteConfirmModal
+            isOpen={isDeleteConfirmModalOpen}
+            onClose={() => setIsDeleteConfirmModalOpen(false)}
+            onDeleteConfirm={handleDeleteConfirm}
+          />
         </div>
       </div>
     </div>

@@ -16,7 +16,7 @@ public enum ErrorCode {
     PASSWORD_MISMATCH(HttpStatus.BAD_REQUEST, "AUTH-002", "비밀번호가 일치하지 않습니다."),
 
     //email
-    EMAIL_ALREADY_EXISTS(HttpStatus.CONFLICT, "EMAIL-001", "이미 사용 중인 이메일입니다."),
+    EMAIL_ALREADY_EXISTS(HttpStatus.ACCEPTED, "EMAIL-001", "이미 사용 중인 이메일입니다."),
     EMAIL_VERIFICATION_SEND_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "EMAIL-002", "인증번호 발송에 실패했습니다."),
     EMAIL_VERIFICATION_NOT_FOUND(HttpStatus.NOT_FOUND, "EMAIL-003", "유효하지 않은 이메일입니다."),
     INVALID_EMAIL_VERIFICATION_CODE(HttpStatus.BAD_REQUEST, "EMAIL-004", "유효하지 않은 인증 코드입니다."),
@@ -41,7 +41,7 @@ public enum ErrorCode {
     // TrainAudio
     TRAINAUDIO_NOT_FOUND(HttpStatus.NOT_FOUND, "TRAIN-001", "TRIANDATA를 찾을 수 없습니다."),
     AUDIO_NOT_FOUND(HttpStatus.NOT_FOUND, "AUDIO-001", "AUDIO를 찾을 수 없습니다."),
-    AUDIO_CREATION_ALREADY_IN_PROGRESS(HttpStatus.CONFLICT,"AUDIO-002","동화책 AUDIO를 생성 중 입니다."),
+    AUDIO_CREATION_ALREADY_IN_PROGRESS(HttpStatus.CONFLICT, "AUDIO-002", "동화책 AUDIO를 생성 중 입니다."),
 
     //script
     SCRIPT_NOT_FOUND(HttpStatus.NOT_FOUND, "SCRIPT-001", "SCRIPT를 찾을 수 없습니다."),
@@ -51,7 +51,7 @@ public enum ErrorCode {
     TTS_NO_CONTENT(HttpStatus.NO_CONTENT, "TTS-002", "TTS가 없습니다. "),
     TTS_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, "TTS-003", "TTS는 4개까지 생성할 수 있습니다."),
     UNAUTHORIZED_USER(HttpStatus.FORBIDDEN, "UU-001", "권한이 없습니다."),
-    TTS_CREATION_ALREADY_IN_PROGRESS(HttpStatus.CONFLICT,"TTS-004","TTS를 생성 중 입니다."),
+    TTS_CREATION_ALREADY_IN_PROGRESS(HttpStatus.CONFLICT, "TTS-004", "TTS를 생성 중 입니다."),
 
     // quiz
     QUIZ_NOT_FOUND(HttpStatus.NOT_FOUND, "QUIZ-001", "quiz를 찾을 수 없습니다."),

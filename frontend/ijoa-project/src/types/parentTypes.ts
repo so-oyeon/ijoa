@@ -28,12 +28,21 @@ export interface CategoriesUnitInfo {
   count: number;
 }
 
+// 독서 분석 보고서 조회 응답 데이터
+export interface ReadingReportInfo {
+  gazeDistributionAnalysis: string;
+  timeOfDayAttentionAnalysis: string;
+  textLengthAnalysis: string;
+  conclusion: string;
+}
+
 // 부모 TTS 목록 조회 응답 데이터
 export interface ParentTTSInfo {
   id: number;
   name: string;
   tts: string;
   image_url: string;
+  trainData: boolean;
 }
 
 // TTS 학습 스크립트 목록 조회 응답 데이터
