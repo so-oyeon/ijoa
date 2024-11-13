@@ -9,9 +9,10 @@ import MicrophonePlugin from "wavesurfer.js/src/plugin/microphone";
 interface Props {
   setIsCreateModal: (state: boolean) => void;
   ttsId: number;
+  getParentTTSList: () => void;
 }
 
-const TTSCreateModal = ({ setIsCreateModal, ttsId }: Props) => {
+const TTSCreateModal = ({ setIsCreateModal, ttsId, getParentTTSList }: Props) => {
   const buttonStyle = "w-full px-8 py-2 text-xl rounded-xl border-2 ";
   const [scriptList, setScriptList] = useState<TTSScriptInfo[] | null>(null);
   const [scriptCurrentIdx, setScriptCurrentIdx] = useState(0);
@@ -29,6 +30,7 @@ const TTSCreateModal = ({ setIsCreateModal, ttsId }: Props) => {
 
   const [S3UrlList, setS3UrlList] = useState<S3UrlInfo[] | null>(null); // 전체 녹음본 목록
 
+  // 음성 그래프 표시
   const initializeWaveSurfer = () => {
     if (!waveformContainerRef.current) return;
 
@@ -139,7 +141,6 @@ const TTSCreateModal = ({ setIsCreateModal, ttsId }: Props) => {
     };
 
     try {
-      console.log(ttsId);
       const response = await parentApi.getTTSFileStorageUrlList(ttsId, data);
       if (response.status === 201) {
         setS3UrlList(response.data);
@@ -182,13 +183,26 @@ const TTSCreateModal = ({ setIsCreateModal, ttsId }: Props) => {
       const allUploadsSuccessful = results.every((result) => result);
 
       if (allUploadsSuccessful) {
-        window.location.href = "/parent/tts/list";
+        handleTrainTTS();
       } else {
         alert("일부 파일 업로드에 실패했습니다.");
       }
     } catch (error) {
       console.error("파일 업로드 중 오류가 발생했습니다:", error);
       alert("파일 업로드 중 에러가 발생했습니다.");
+    }
+  };
+
+  // 녹음한 음성파일로 TTS 학습을 시작합니다.
+  const handleTrainTTS = async () => {
+    try {
+      const response = await parentApi.getTrainTTS(ttsId);
+      if (response.status === 200) {
+        getParentTTSList();
+        setIsCreateModal(false);
+      }
+    } catch (error) {
+      console.log("parentApi의 getTrainTTS : ", error);
     }
   };
 
