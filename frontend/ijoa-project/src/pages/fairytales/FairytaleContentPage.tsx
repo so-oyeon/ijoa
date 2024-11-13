@@ -21,6 +21,7 @@ import { WordPositionInfo } from "../../types/seesoTypes";
 
 import Lottie from "react-lottie-player";
 import loadingAnimation from "../../lottie/footPrint-loadingAnimation.json";
+import { childApi } from "../../api/childApi";
 
 const FairyTaleContentPage: React.FC = () => {
   const { fairytaleId } = useParams<{ fairytaleId: string }>();
@@ -46,6 +47,7 @@ const FairyTaleContentPage: React.FC = () => {
   const [previousTTSId, setPreviousTTSId] = useState<number | null>(null);
   const [ttsId, setTTSId] = useState<number | null>(null);
   const [shownQuizPages, setShownQuizPages] = useState<number[]>([]);
+  const [levelUpMessage, setLevelUpMessage] = useState("");
 
   const bookId = fairytaleId ? parseInt(fairytaleId, 10) : 0;
   const isReading = currentPage > 0 && currentPage != totalPages;
@@ -146,27 +148,62 @@ const FairyTaleContentPage: React.FC = () => {
     }
   };
 
+  // 자녀의 현재 레벨을 불러오는 함수
+  const ChildLevel = async (): Promise<boolean> => {
+    try {
+      const response = await childApi.getLevel();
+      const data = response.data;
+
+      if ([2, 6, 11].includes(data.totalCount)) {
+        let message = "";
+        if (data.totalCount === 2) {
+          message = "와~ 한 단계 성장했어요!\n나는야 책아장 🙌";
+        } else if (data.totalCount === 6) {
+          message = "와~ 한 단계 성장했어요!\n나는야 책린이 🙌";
+        } else if (data.totalCount === 11) {
+          message = "와~ 한 단계 성장했어요!\n나는야 독서왕 🙌";
+        }
+        setLevelUpMessage(message);
+        setIsLevelUpModalOpen(true);
+        return true; // 레벨업 모달이 열리는 경우 true 반환
+      } else {
+        return false; // 레벨업 모달 조건을 충족하지 않으면 false 반환
+      }
+    } catch (error) {
+      console.error("childApi의 ChildLevel:", error);
+      return false;
+    }
+  };
+
   const handleRightClick = () => {
     if (fairytaleData) {
       const isLastPage = fairytaleCurrentPage === fairytaleData.totalPages - 1;
 
       if (isLastPage) {
-        setIsLevelUpModalOpen(true);
+        ChildLevel().then((isLevelUp) => {
+          if (isLevelUp) {
+            // 레벨업 모달이 열린 경우 3초 후에 독서 완료 모달 열기
+            const timer = setTimeout(() => {
+              setIsLevelUpModalOpen(false);
+              setIsReadCompleteModalOpen(true); // 독서 완료 모달 열기
+            }, 3000);
+            return () => clearTimeout(timer);
+          } else {
+            // 레벨업 모달이 열리지 않는 경우 즉시 독서 완료 모달 열기
+            setIsReadCompleteModalOpen(true);
+          }
+        });
       } else if (fairytaleCurrentPage < fairytaleData.totalPages - 1) {
         const newPage = fairytaleCurrentPage + 1;
         setFairytaleCurrentPage(newPage);
         getFairyTaleContent(newPage);
 
         const quizEnabled = localStorage.getItem("quizEnabled") === "true";
-        if (
-          quizEnabled &&
-          (newPage + 1) % 5 === 0 &&
-          !shownQuizPages.includes(newPage) // 이미 나온 페이지가 아닌 경우에만 퀴즈 모달 열기
-        ) {
+        if (quizEnabled && (newPage + 1) % 5 === 0 && !shownQuizPages.includes(newPage)) {
           const quizPageNumber = (newPage + 1) / 5;
-          getQuizData(quizPageNumber); // 퀴즈 데이터 요청
-          setIsQuizModalOpen(true); // 로딩 상태에 따라 모달 표시
-          setShownQuizPages((prevPages) => [...prevPages, newPage]); // 페이지 기록
+          getQuizData(quizPageNumber);
+          setIsQuizModalOpen(true);
+          setShownQuizPages((prevPages) => [...prevPages, newPage]);
         } else if (newPage === Math.floor(fairytaleData.totalPages / 2)) {
           setIsFocusAlertModalOpen(true);
         }
@@ -253,17 +290,6 @@ const FairyTaleContentPage: React.FC = () => {
     console.log("Extracted word positions:", positions); // 좌표 정보 확인
   };
 
-  // 레벨업 모달이 열릴 때 일정 시간 후에 독서 완료 모달 열기
-  useEffect(() => {
-    if (isLevelUpModalOpen) {
-      const timer = setTimeout(() => {
-        setIsLevelUpModalOpen(false);
-        setIsReadCompleteModalOpen(true); // 레벨업 모달 닫고 독서 완료 모달 열기
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [isLevelUpModalOpen]);
-
   useEffect(() => {
     getFairyTaleContent(fairytaleCurrentPage); // 페이지 내용 로드
   }, [fairytaleCurrentPage, getFairyTaleContent, isTTSChoiceModalOpen, isQuizModalOpen]);
@@ -331,7 +357,8 @@ const FairyTaleContentPage: React.FC = () => {
           <div className="absolute top-[-12px] right-10">
             <button
               className="px-3 py-4 bg-gray-700 bg-opacity-50 rounded-2xl shadow-md active:bg-gray-800"
-              onClick={handleOpenMenu}>
+              onClick={handleOpenMenu}
+            >
               <img src={MenuButton} alt="메뉴 버튼" />
               <p className="text-xs text-white">메뉴</p>
             </button>
@@ -357,7 +384,7 @@ const FairyTaleContentPage: React.FC = () => {
         />
       )}
       {/* 레벨업 모달 */}
-      <LevelUpModal isOpen={isLevelUpModalOpen} />
+      <LevelUpModal isOpen={isLevelUpModalOpen} message={levelUpMessage} />
       {/* 독서완료 모달 */}
       <ReadCompleteModal isOpen={isReadCompleteModalOpen} title={title} from={from} />
       {/* 퀴즈 모달 */}
