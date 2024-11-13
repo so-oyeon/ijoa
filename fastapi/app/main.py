@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException
 from models.user_request import BookRecommendationRequest
 from services.recommend_service import recommend_books_for_target_user
 
-app = FastAPI()
+app = FastAPI(root_path="/fastapi")
 
 @app.post("/recommend_books/")
 def get_recommendations(request: BookRecommendationRequest):
