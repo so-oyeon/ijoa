@@ -104,8 +104,7 @@ const TTSProfileUpdateeModal = ({ setIsProfileUpdateModal, updateTTSInfo, getPar
           {/* 프로필 사진 선택 */}
           <div
             className="w-20 h-20 border-4 border-[#9E9E9E] rounded-full flex justify-center items-center relative"
-            onClick={handleUploadClick}
-          >
+            onClick={handleUploadClick}>
             {ttsProfileImgString ? (
               <img className="w-full aspect-1 rounded-full object-cover" src={`${ttsProfileImgString}`} alt="" />
             ) : (
@@ -126,6 +125,8 @@ const TTSProfileUpdateeModal = ({ setIsProfileUpdateModal, updateTTSInfo, getPar
               className="w-full p-3 border-2 border-[#C7C7C7] rounded-[30px] outline-none"
               type="text"
               id="name"
+              placeholder="2~10자"
+              maxLength={10}
               value={ttsName ? ttsName : ""}
               onChange={(e) => setTTSName(e.target.value)}
             />
@@ -135,14 +136,15 @@ const TTSProfileUpdateeModal = ({ setIsProfileUpdateModal, updateTTSInfo, getPar
           <div className="flex gap-4 justify-center items-center">
             <button
               className="px-8 py-2 text-[#FF8067] text-lg font-bold bg-white rounded-3xl border-2 border-[#FF8067] active:bg-red-500 active:text-white"
-              onClick={handleDeleteTTS}
-            >
+              onClick={handleDeleteTTS}>
               삭제
             </button>
             <button
-              className="px-8 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-3xl border-2 border-[#67CCFF] active:bg-[#005f99]"
+              className={`px-8 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-3xl border-2 border-[#67CCFF] ${
+                !ttsName || ttsName.length < 2 ? "opacity-50" : "active:bg-[#005f99]"
+              }`}
               onClick={handleUpdateTTS}
-            >
+              disabled={!ttsName || ttsName.length < 2}>
               완료
             </button>
           </div>

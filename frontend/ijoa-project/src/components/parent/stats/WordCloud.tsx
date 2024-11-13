@@ -9,8 +9,9 @@ const WordCloud = () => {
           이런 책이 재밌어요
         </p>
 
-        <div className="w-full h-full flex justify-center items-center">
+        <div className="w-full h-full flex flex-col justify-center items-center">
           <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
+          <p>조회된 데이터가 없습니다.</p>
         </div>
       </div>
     </div>
