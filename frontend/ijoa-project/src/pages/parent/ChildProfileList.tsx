@@ -100,13 +100,13 @@ const ChildProfileList = () => {
             <div className="flex flex-col items-center space-y-3" key={index}>
               <div className="w-52 aspect-1 relative">
                 <img
-                  className="w-full aspect-1 bg-white rounded-full border object-cover"
+                  className="w-full aspect-1 bg-white rounded-full border object-cover active:scale-110"
                   src={child.profileUrl}
                   alt=""
                   onClick={() => handleGoToChildAccount(child.childId)}
                 />
                 <div
-                  className="w-12 aspect-1 bg-white rounded-full bg-opacity-50 shadow-[1px_3px_2px_0_rgba(0,0,0,0.2)] flex justify-center items-center absolute top-0 right-0"
+                  className="w-12 aspect-1 bg-white rounded-full bg-opacity-50 shadow-[1px_3px_2px_0_rgba(0,0,0,0.2)] flex justify-center items-center absolute top-0 right-0 active:scale-110"
                   onClick={() => handleUpdateChild(child)}>
                   <TbPencilMinus className="text-2xl" />
                 </div>
@@ -121,7 +121,7 @@ const ChildProfileList = () => {
           {/* 자녀 추가 버튼 */}
           {childList.length < 9 ? (
             <button className="flex justify-center items-center" onClick={() => setIsCreateModal(true)}>
-              <IoIosAdd className="text-[150px] text-white bg-[#D9D9D9] rounded-full" />
+              <IoIosAdd className="text-[150px] text-white bg-[#D9D9D9] rounded-full active:scale-110" />
             </button>
           ) : (
             <></>
