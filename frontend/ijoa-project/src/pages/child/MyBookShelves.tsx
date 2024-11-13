@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import hall from "/assets/child/bookCaseImage.jpg";
+import bookshelfEmpty from "/assets/child/bookshelf_none.jpg"
+import bookshelfRead from "/assets/child/bookshelf_read.jpg"
 import MyBookSwiper from "../../components/child/MyBookSwiper";
 import CurtainAnimation from "../../components/child/CurtainAnimation";
 import { fairyTaleApi } from "../../api/fairytaleApi";
@@ -50,15 +51,18 @@ const MyBookShelves: React.FC = () => {
     navigate(`/fairytale/content/${id}`);
   };
 
+   // 읽은 책이 있을 때와 없을 때의 배경 이미지 설정
+   const backgroundImage = myBookLists.length === 0 ? bookshelfEmpty : bookshelfRead;
+
   return (
     <div className="w-full h-screen relative font-['MapleLight'] overflow-hidden">
-      <img src={hall} alt="배경" className="fixed top-0 left-0 w-full h-full object-cover opacity-80" />
+       <img src={backgroundImage} alt="배경" className="fixed top-0 left-0 w-full h-full object-cover opacity-70" />
       <div className="absolute z-20">
         <CurtainAnimation />
       </div>
       {isCurtainOpen && (
         <>
-          <p className="w-full absolute top-[80px] mb-10 text-3xl text-white text-center">📚 내가 읽은 책들이야!</p>
+          <p className="w-full absolute top-[95px] font-bold mb-10 text-3xl text-black text-center">📚 내가 읽은 책들이야!</p>
           <div className="w-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-40">
             {myBookLists.length === 0 ? (
               <p className="text-[#f1f440] text-2xl text-center whitespace-pre-line">
@@ -84,7 +88,7 @@ const MyBookShelves: React.FC = () => {
                 </div>
               </>
             ) : (
-              <div className="text-white mt-32">
+              <div className="text-black mt-32 font-bold">
                 <BookCoverGrid
                   bookCovers={myBookLists.map((book) => book.image || "")}
                   titles={myBookLists.map((book) => book.title || "")}
