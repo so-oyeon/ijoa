@@ -79,7 +79,6 @@ const ChildProfileList = () => {
         const response = await userApi.getTutorialInfo();
         if (response.status === 200 && !response.data.completeTutorial) {
           dispatch(openTutorial());
-          console.log(response.data)
         }
       } catch (error) {
         console.log("getTutorialInfo API 오류: ", error);

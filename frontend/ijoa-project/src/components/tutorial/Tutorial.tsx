@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "../../redux/store";
 import { closeTutorial, setStep } from "../../redux/tutorialSlice";
 import Portal from "../../components/tutorial/Portal";
+import { userApi } from "../../api/userApi";
 import "../../css/Tutorial.css";
 import closeButton from "/assets/close-button.png";
 
@@ -61,8 +62,20 @@ const Tutorial: React.FC = () => {
   const isOpen = useSelector((state: RootState) => state.tutorial.isOpen);
   const dispatch = useDispatch<AppDispatch>();
   const step = useSelector((state: RootState) => state.tutorial.step);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
-  const close = () => dispatch(closeTutorial());
+  // 튜토리얼 완료 함수 api
+  const completeTutorial = async () => {
+    try {
+      const response = await userApi.completeTutorial();
+      if (response.status === 200) {
+        dispatch(closeTutorial());
+      }
+    } catch (error) {
+      console.log("completeTutorial 오류: ", error);
+    }
+  };
+
   const nextStep = () => {
     if (step === 7) {
       // 튜토리얼을 일시적으로 닫기
@@ -72,6 +85,15 @@ const Tutorial: React.FC = () => {
     }
   };
   const prevStep = () => dispatch(setStep(step - 1));
+
+  const closeTutorialModal = () => {
+    setShowConfirmModal(false); // 확인 모달 닫기
+  };
+
+  const confirmCloseTutorial = () => {
+    completeTutorial(); // 튜토리얼 완료 처리
+    setShowConfirmModal(false); // 확인 모달 닫기
+  };
 
   // 공통 버튼 컴포넌트
   const TutorialButton = ({ onClick, label }: { onClick: () => void; label: string }) => (
@@ -87,21 +109,21 @@ const Tutorial: React.FC = () => {
 
   const renderContent = () => {
     const { title, text } = stepContents[step as keyof typeof stepContents];
-    
+
     return (
       <div className="font-['MapleLight']">
         <h2 className="text-2xl font-bold mb-2 blue-highlight">{title}</h2>
         <p className="whitespace-pre-line">{text}</p>
         <div className={`flex ${step === 1 || step === 8 ? "justify-center" : "justify-between"} mt-4`}>
           {step > 1 && step !== 8 && <TutorialButton onClick={prevStep} label="이전" />}
-  
+
           {/* 7단계일 경우에만 "등록" 버튼 표시 */}
           {step === 7 ? (
             <TutorialButton onClick={nextStep} label="등록" />
           ) : step < 13 ? (
             <TutorialButton onClick={nextStep} label="다음" />
           ) : (
-            <TutorialButton onClick={close} label="완료" />
+            <TutorialButton onClick={completeTutorial} label="완료" />
           )}
         </div>
       </div>
@@ -124,11 +146,29 @@ const Tutorial: React.FC = () => {
 
         {/* 튜토리얼 모달 */}
         <div className="tutorial-modal" style={tutorialPositions[step]}>
-          <button onClick={close} className="tutorial-close-btn">
+          <button onClick={() => setShowConfirmModal(true)} className="tutorial-close-btn">
             <img src={closeButton} alt="Close" />
           </button>
           {renderContent()}
         </div>
+
+        {/* 확인 모달 */}
+        {showConfirmModal && (
+          <div className="confirm-modal font-['MapleLight']">
+            <div className="confirm-modal-content">
+              <p className="text-2xl font-bold white red-highlight">튜토리얼을 다시는 볼 수 없습니다. </p>
+              <p className="text-xl white mt-4">그래도 종료하시겠습니까?</p>
+              <div className="confirm-modal-buttons">
+                <button onClick={confirmCloseTutorial} className="confirm-btn">
+                  예
+                </button>
+                <button onClick={closeTutorialModal} className="cancel-btn">
+                  아니오
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </Portal>
     )
   );

@@ -61,4 +61,9 @@ export const userApi = {
   getTutorialInfo: () => {
     return api.get(`/user/tutorial`);
   },
+
+  // 튜토리얼 진행 완료 처리
+  completeTutorial:() => {
+    return api.post(`/user/tutorial`)
+  },
 };

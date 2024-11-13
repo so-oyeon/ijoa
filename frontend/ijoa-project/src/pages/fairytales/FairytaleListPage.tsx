@@ -16,6 +16,7 @@ import loadingAnimation from "../../lottie/footPrint-loadingAnimation.json";
 import { useDispatch } from "react-redux";
 import { openTutorial, setStep } from "../../redux/tutorialSlice";
 import Tutorial from "../../components/tutorial/Tutorial";
+import { userApi } from "../../api/userApi";
 
 const FairytaleListPage: React.FC = () => {
   const navigate = useNavigate();
@@ -156,9 +157,22 @@ const FairytaleListPage: React.FC = () => {
   };
 
   useEffect(() => {
-    // 페이지 로드 시 튜토리얼을 다시 시작하고, 8단계로 설정
-    dispatch(openTutorial());
-    dispatch(setStep(8)); // 8단계로 설정
+    const getTutorialStatus = async () => {
+      try {
+        const response = await userApi.getTutorialInfo();
+        if (response.status === 200) {
+          // 튜토리얼이 완료되지 않았다면 8단계부터 이어서 시작
+          if (!response.data.completeTutorial) {
+            dispatch(openTutorial());
+            dispatch(setStep(8)); // 8단계로 설정
+          }
+        }
+      } catch (error) {
+        console.log("getTutorialInfo API 오류: ", error);
+      }
+    };
+  
+    getTutorialStatus();
   }, [dispatch]);
 
   useEffect(() => {
