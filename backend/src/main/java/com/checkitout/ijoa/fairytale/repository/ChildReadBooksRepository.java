@@ -28,4 +28,6 @@ public interface ChildReadBooksRepository extends JpaRepository<ChildReadBooks, 
     Optional<ChildReadBooks> findByChildIdAndFairytaleId(Long childId, Long bookId);
 
     Page<ChildReadBooks> findByChildIdOrderByFairytaleIdAsc(Long childId, Pageable pageable);
+
+    Long countByChildAndIsCompletedTrue(Child child);
 }

@@ -4,7 +4,6 @@ import com.checkitout.ijoa.child.domain.Child;
 import com.checkitout.ijoa.child.dto.response.ChildLevelResponseDto;
 import com.checkitout.ijoa.fairytale.repository.ChildReadBooksRepository;
 import com.checkitout.ijoa.util.SecurityUtil;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -37,11 +36,8 @@ public class ChildService {
 
     public long calculateTotalCategoryCount() {
         Child child = securityUtil.getChildByToken();
-        List<Object[]> results = readBooksRepository.countByCategoryAndChild(child);
 
-        return results.stream()
-                .mapToLong(result -> (Long) result[1]) // count 값 추출
-                .sum();
+        return readBooksRepository.countByChildAndIsCompletedTrue(child);
     }
 
     public int determineLevel(long totalCount) {
