@@ -1,12 +1,18 @@
 interface Props {
   setIsCreateCompleted: (state: boolean) => void;
   setIsCreateGuideModal: (state: boolean) => void;
+  getParentTTSList: () => void;
 }
 
-const TTSCreateCompleteModal = ({ setIsCreateCompleted, setIsCreateGuideModal }: Props) => {
+const TTSCreateCompleteModal = ({ setIsCreateCompleted, setIsCreateGuideModal, getParentTTSList }: Props) => {
   const handleCreateTTS = () => {
     setIsCreateCompleted(false);
     setIsCreateGuideModal(true);
+  };
+
+  const handleCloseCreateTTS = () => {
+    getParentTTSList();
+    setIsCreateCompleted(false);
   };
 
   return (
@@ -14,12 +20,7 @@ const TTSCreateCompleteModal = ({ setIsCreateCompleted, setIsCreateGuideModal }:
       <div className="w-1/3 px-10 py-10 bg-white rounded-2xl shadow-lg flex flex-col justify-between items-center">
         {/* 닫기 버튼 */}
         <div className="w-full flex justify-end">
-          <img
-            className="w-10 h-10"
-            src="/assets/close-button.png"
-            alt=""
-            onClick={() => setIsCreateCompleted(false)}
-          />
+          <img className="w-10 h-10" src="/assets/close-button.png" alt="" onClick={handleCloseCreateTTS} />
         </div>
 
         <div className="w-full flex flex-col justify-between items-center space-y-8">

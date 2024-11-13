@@ -132,6 +132,7 @@ const TTSList = () => {
         <TTSCreateCompleteModal
           setIsCreateCompleted={setIsCreateCompleted}
           setIsCreateGuideModal={setIsCreateGuideModal}
+          getParentTTSList={getParentTTSList}
         />
       ) : (
         <></>
