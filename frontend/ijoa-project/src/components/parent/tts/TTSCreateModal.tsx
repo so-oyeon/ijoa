@@ -3,6 +3,8 @@ import { parentApi } from "../../../api/parentApi";
 import { S3UrlInfo, TTSScriptInfo } from "../../../types/parentTypes";
 import Lottie from "react-lottie-player";
 import loadingAnimation from "../../../lottie/footPrint-loadingAnimation.json";
+import WaveSurfer from "wavesurfer.js";
+import MicrophonePlugin from "wavesurfer.js/src/plugin/microphone";
 
 interface Props {
   setIsCreateModal: (state: boolean) => void;
@@ -21,7 +23,31 @@ const TTSCreateModal = ({ setIsCreateModal, ttsId }: Props) => {
   const audioChunksRef = useRef<Blob[]>([]); // 오디오 저장을 위한 청크 배열(작은 데이터 조각) 참조 변수
   const [recordingList, setRecordingList] = useState<Blob[]>([]); // 전체 녹음본 목록
 
+  const waveSurferRef = useRef<WaveSurfer | null>(null);
+  const waveformContainerRef = useRef<HTMLDivElement | null>(null);
+
   const [S3UrlList, setS3UrlList] = useState<S3UrlInfo[] | null>(null); // 전체 녹음본 목록
+
+  const initializeWaveSurfer = () => {
+    if (!waveformContainerRef.current) return;
+
+    waveSurferRef.current = WaveSurfer.create({
+      container: waveformContainerRef.current,
+      waveColor: "#D9DCFF",
+      progressColor: "#4353FF",
+      cursorWidth: 0,
+      interact: false,
+      plugins: [
+        MicrophonePlugin.create({
+          bufferSize: 4096,
+          sampleRate: 44100,
+          mediaStreamConstraints: {
+            audio: true,
+          },
+        }),
+      ],
+    });
+  };
 
   // 녹음 시작
   const startRecording = async () => {
@@ -33,6 +59,9 @@ const TTSCreateModal = ({ setIsCreateModal, ttsId }: Props) => {
       const mediaRecorder = new MediaRecorder(stream);
       mediaRecorderRef.current = mediaRecorder;
       audioChunksRef.current = [];
+
+      initializeWaveSurfer();
+      waveSurferRef.current?.microphone?.start();
 
       mediaRecorder.ondataavailable = (event) => {
         audioChunksRef.current.push(event.data);
@@ -54,6 +83,10 @@ const TTSCreateModal = ({ setIsCreateModal, ttsId }: Props) => {
 
       mediaRecorder.start();
       setIsRecording(true);
+
+      stream.getTracks().forEach(() => {
+        waveSurferRef.current?.microphone?.start();
+      });
     }
   };
 
@@ -62,6 +95,9 @@ const TTSCreateModal = ({ setIsCreateModal, ttsId }: Props) => {
     if (mediaRecorderRef.current && isRecording) {
       mediaRecorderRef.current.stop();
       setIsRecording(false);
+
+      waveSurferRef.current?.destroy();
+      waveSurferRef.current = null;
     }
   };
 
@@ -187,40 +223,49 @@ const TTSCreateModal = ({ setIsCreateModal, ttsId }: Props) => {
 
         <div className="flex flex-col items-center space-y-8">
           {/* 안내 멘트 */}
-          <div className="text-xl text-[#565656] text-center font-bold grid gap-5">
-            <div>
+          <div className="text-[#565656] text-center font-bold grid gap-5">
+            <div className="text-2xl">
               <span className="underline underline-offset-1 decoration-8 decoration-[#67CCFF]">
                 다음 문장을 녹음해주세요
               </span>
-              <span>({scriptCurrentIdx + 1}/21)</span>
+              <span>
+                &nbsp;({scriptCurrentIdx + 1} / {scriptList.length})
+              </span>
             </div>
-            <p>{scriptList[scriptCurrentIdx].script}</p>
+            <p className="text-xl break-keep">{scriptList[scriptCurrentIdx].script}</p>
           </div>
 
           <img className="w-32" src="/assets/parent/tts-mic-icon.png" alt="" />
+
+          {/* 음성 그래프 */}
+          <div ref={waveformContainerRef} className="w-64 h-2 relative -top-40"></div>
 
           {/* 버튼 */}
           <div className="grid grid-cols-3 gap-3">
             <button
               onClick={isRecording ? stopRecording : startRecording}
               className={`${buttonStyle} ${
-                isRecording ? "text-white bg-[#FF8067] border-[#FF8067] active:bg-red-300" : "text-[#FF8067] border-[#FF8067] active:bg-red-500 active:text-white"
+                isRecording
+                  ? "text-white bg-[#FF8067] border-[#FF8067] active:bg-red-300"
+                  : "text-[#FF8067] border-[#FF8067] active:bg-red-500 active:text-white"
               }`}>
               {isRecording ? "녹음 중지" : "녹음 시작"}
             </button>
             <button
               onClick={handlePlayRecordingAudio}
               disabled={!audioURL}
-              className={`${buttonStyle} text-[#67CCFF] border-[#67CCFF] ${!audioURL ? "opacity-50" : "active:bg-[#e0f7ff]"}`}>
+              className={`${buttonStyle} text-[#67CCFF] border-[#67CCFF] ${
+                !audioURL ? "opacity-50" : "active:bg-[#e0f7ff]"
+              }`}>
               결과 확인
             </button>
             <button
-              onClick={scriptCurrentIdx === 20 ? handleCompleteRecording : handleNextRecording}
+              onClick={scriptCurrentIdx === scriptList.length ? handleCompleteRecording : handleNextRecording}
               disabled={isRecording || !audioURL}
               className={`${buttonStyle} text-white bg-[#67CCFF] border-[#67CCFF] ${
                 isRecording || !audioURL ? "opacity-50" : "active:bg-[#005f99]"
               }`}>
-              {scriptCurrentIdx === 20 ? "완료" : "다음"}
+              {scriptCurrentIdx === scriptList.length ? "완료" : "다음"}
             </button>
           </div>
 
