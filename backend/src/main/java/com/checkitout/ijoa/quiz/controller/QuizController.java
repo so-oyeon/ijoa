@@ -63,8 +63,9 @@ public class QuizController implements QuizApiDocumentation {
 
     @Override
     @DeleteMapping("/answer/{answerId}")
-    public void deleteAnswer(@PathVariable("answerId") Long answerId) {
-
+    public ResponseEntity<?> deleteAnswer(@PathVariable("answerId") Long answerId) {
+        quizService.deleteAnswer(answerId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

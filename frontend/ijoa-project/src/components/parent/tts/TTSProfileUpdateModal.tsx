@@ -76,7 +76,7 @@ const TTSProfileUpdateeModal = ({ setIsProfileUpdateModal, updateTTSInfo, getPar
   };
 
   return (
-    <div className="py-8 bg-black bg-opacity-60 flex justify-center items-center fixed inset-0 z-50">
+    <div className="py-8 bg-black bg-opacity-60 flex justify-center items-center fixed inset-0 z-50 font-['MapleLight']">
       <div className="p-10 bg-white rounded-2xl shadow-lg">
         {/* 닫기 버튼 */}
         <div className="w-full flex justify-end">
@@ -91,7 +91,7 @@ const TTSProfileUpdateeModal = ({ setIsProfileUpdateModal, updateTTSInfo, getPar
         <div className="flex flex-col items-center space-y-8">
           {/* 타이틀 텍스트 */}
           <div className="text-xl font-bold">
-            <span className="underline underline-offset-0 decoration-8 decoration-[#67CCFF]">TTS 정보</span>
+            <span className="blue-highlight">TTS 정보</span>
             <span>를 입력해 주세요</span>
           </div>
 

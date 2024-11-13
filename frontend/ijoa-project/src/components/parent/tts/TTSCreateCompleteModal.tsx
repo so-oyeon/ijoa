@@ -10,7 +10,7 @@ const TTSCreateCompleteModal = ({ setIsCreateCompleted, setIsCreateGuideModal }:
   };
 
   return (
-    <div className="py-8 bg-black bg-opacity-60 flex justify-center items-center fixed inset-0 z-50">
+    <div className="py-8 bg-black bg-opacity-60 flex justify-center items-center fixed inset-0 z-50  font-['MapleLight']">
       <div className="w-1/3 px-10 py-10 bg-white rounded-2xl shadow-lg flex flex-col justify-between items-center">
         {/* 닫기 버튼 */}
         <div className="w-full flex justify-end">

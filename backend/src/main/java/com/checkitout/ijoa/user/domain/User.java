@@ -40,6 +40,8 @@ public class User {
 
     private boolean isDeactivated;
 
+    private boolean isCompleteTutorial;
+
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Child> children;
 
@@ -51,6 +53,7 @@ public class User {
         user.createdAt = now;
         user.updatedAt = now;
         user.isDeactivated = false;
+        user.isCompleteTutorial = false;
         return user;
     }
 }

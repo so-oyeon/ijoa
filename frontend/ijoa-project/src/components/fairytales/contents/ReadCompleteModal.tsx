@@ -38,13 +38,13 @@ const ReadCompleteModal: React.FC<ReadCompleteModalProps> = ({ isOpen, title = "
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 font-['MapleLight']">
       <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg text-center bg-white rounded-2xl shadow-lg mx-4">
         <div className="px-4 py-6 md:py-8">
           <div className="mb-6 flex justify-center items-center">
             <img src={CompleteBadge} alt="독서 완료 뱃지" className="w-16 sm:w-20 md:w-24 h-auto" />
           </div>
-          <div className="text-lg sm:text-xl md:text-2xl font-bold text-center fairytale-font whitespace-pre-line">
+          <div className="text-lg sm:text-xl md:text-2xl font-bold text-center whitespace-pre-line">
             {message}
           </div>
           <button

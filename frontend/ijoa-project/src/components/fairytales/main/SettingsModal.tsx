@@ -71,7 +71,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
   if (!isOpen || !isLoaded) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 font-['MapleLight']">
       <div className="w-[300px] md:w-[400px] py-6 sm:py-8 text-center bg-white rounded-2xl shadow-lg mx-4">
         <div className="flex justify-center items-center mb-4 sm:mb-6">
           <img src={SettingsIcon} alt="설정 아이콘" className="w-10 h-10 sm:w-12 sm:h-12" />

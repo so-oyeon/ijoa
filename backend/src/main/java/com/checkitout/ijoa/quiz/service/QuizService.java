@@ -24,6 +24,7 @@ import com.checkitout.ijoa.quiz.dto.response.QuizResponseDto;
 import com.checkitout.ijoa.quiz.repository.AnswerRepository;
 import com.checkitout.ijoa.quiz.repository.QuizBookRepository;
 import com.checkitout.ijoa.quiz.repository.QuizRepository;
+import com.checkitout.ijoa.user.domain.User;
 import com.checkitout.ijoa.util.LogUtil;
 import com.checkitout.ijoa.util.SecurityUtil;
 import jakarta.transaction.Transactional;
@@ -93,22 +94,33 @@ public class QuizService {
 
     public AnswerUrlResponseDto getAnswerUrl(AnswerRequestDto requestDto) {
 
-        String currentTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
-
-        String key = "anwer/" + requestDto.getChildId() + "/"+requestDto.getQuizId() + "/" + currentTime + requestDto.getFileName();
-
-        //url 발급
-        String url = fileService.getPostS3Url(key);
         Quiz quiz = quizRepository.findById(requestDto.getQuizId()).orElseThrow(() -> new CustomException(ErrorCode.QUIZ_NOT_FOUND));
         Child child = securityUtil.getChildByToken();
 
+        // 답변한 책 추가
         QuizBook quizBook = quizBookRepository.findByChildIdAndFairytaleId(child.getId(),quiz.getFairytale().getId());
         if(quizBook==null){
             quizBook= QuizBook.of(child,quiz.getFairytale());
             quizBook = quizBookRepository.save(quizBook);
         }
+        String currentTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
 
-        Answer answer = Answer.of(key,quiz,quizBook);
+        String key = "anwer/" + requestDto.getChildId() + "/"+requestDto.getQuizId() + "/" + currentTime+"_" + requestDto.getFileName();
+
+        //url 발급
+        String url = fileService.getPostS3Url(key);
+
+        // 기존 답변 찾
+        Answer answer = answerRepository.findByChildIdAndQuizId(child.getId(),quiz.getId());
+
+        // 없으면 새로 만듦
+        if(answer ==null){
+            answer = Answer.of(key,quiz,quizBook);
+        }
+        else{ // 있으면 업데이트
+            fileService.deleteFile(answer.getAnswer());
+            answer.setAnswer(key);
+        }
 
         answer =answerRepository.save(answer);
 
@@ -143,5 +155,17 @@ public class QuizService {
         }
 
         return responseDtos;
+    }
+
+    public void deleteAnswer(Long answerId){
+        User user  = securityUtil.getUserByToken();
+        Answer answer =answerRepository.findById(answerId).orElseThrow(() -> new CustomException(ErrorCode.ANSWER_NOT_FOUND));
+
+        if(user.getId() != answer.getChild().getParent().getId()){
+            throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
+        }
+        fileService.deleteFile(answer.getAnswer());
+        answerRepository.delete(answer);
+
     }
 }

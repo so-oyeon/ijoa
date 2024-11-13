@@ -57,7 +57,7 @@ const PageSwiper: React.FC<PageSwiperProps> = ({
               }`}
             />
             <div className="mt-2 text-center">
-              <span className="text-xl md:text-2xl font-semibold font-['IMRegular']">{pageNums[index]}</span>
+              <span className="text-xl md:text-2xl font-semibold font-['MapleLight']">{pageNums[index]}</span>
             </div>
           </div>
         </SwiperSlide>

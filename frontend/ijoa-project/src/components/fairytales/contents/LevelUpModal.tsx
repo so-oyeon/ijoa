@@ -50,7 +50,7 @@ const LevelUpModal: React.FC<LevelUpModalProps> = ({ isOpen }) => {
     <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
       <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg text-center bg-white rounded-2xl shadow-lg mx-4">
         <div className="px-4 py-6 md:py-8">
-          <div className="mb-6 md:mb-8 text-lg sm:text-xl md:text-2xl font-bold text-center fairytale-font whitespace-pre-line">
+          <div className="mb-6 md:mb-8 text-lg sm:text-xl md:text-2xl font-bold text-center whitespace-pre-line font-['MapleLight']">
             {"와~ 한 단계 성장했어요!\n나는야 책아장 🙌"}
           </div>
         </div>

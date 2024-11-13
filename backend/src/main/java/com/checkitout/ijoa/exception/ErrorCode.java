@@ -51,10 +51,12 @@ public enum ErrorCode {
     TTS_NO_CONTENT(HttpStatus.NO_CONTENT, "TTS-002", "TTS가 없습니다. "),
     TTS_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, "TTS-003", "TTS는 4개까지 생성할 수 있습니다."),
     UNAUTHORIZED_USER(HttpStatus.FORBIDDEN, "UU-001", "권한이 없습니다."),
+    TTS_CREATION_ALREADY_IN_PROGRESS(HttpStatus.CONFLICT,"TTS-004","TTS를 생성 중 입니다."),
 
     // quiz
     QUIZ_NOT_FOUND(HttpStatus.NOT_FOUND, "QUIZ-001", "quiz를 찾을 수 없습니다."),
     ANSWER_NO_CONTENT(HttpStatus.NO_CONTENT, "QUIZ-002", "답변을 찾을 수 없습니다."),
+    ANSWER_NOT_FOUND(HttpStatus.NOT_FOUND, "QUIZ-003", "답변이 존재하지 않습니다."),
 
     // statistics
     INVALID_INTERVAL(HttpStatus.BAD_REQUEST, "STATISTICS-001", "주기는 date, day, hour 중 하나여야 합니다."),

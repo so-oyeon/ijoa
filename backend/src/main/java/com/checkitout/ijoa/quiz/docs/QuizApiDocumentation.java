@@ -55,6 +55,6 @@ public interface QuizApiDocumentation {
             @ApiResponse(responseCode = "200", description = "답변 삭제 성공"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    public void deleteAnswer(@PathVariable Long answerId);
+    public ResponseEntity<?> deleteAnswer(@PathVariable Long answerId);
 
 }
