@@ -233,6 +233,7 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
         className={inputStyle}
         value={email}
         onChange={handleEmail}
+        disabled={isVerified}
       />
       {emailError && <p className="text-red-500 text-xs md:text-sm mb-4">* {emailError}</p>}
 
