@@ -12,7 +12,7 @@ interface Props {
 }
 
 const TTSCreateModal = ({ setIsCreateModal, ttsId }: Props) => {
-  const buttonStyle = "w-full px-8 py-2 text-xl font-bold rounded-xl border-2 ";
+  const buttonStyle = "w-full px-8 py-2 text-xl rounded-xl border-2 ";
   const [scriptList, setScriptList] = useState<TTSScriptInfo[] | null>(null);
   const [scriptCurrentIdx, setScriptCurrentIdx] = useState(0);
   const [isRecording, setIsRecording] = useState(false); // 녹음 진행 상태 변수
@@ -129,7 +129,10 @@ const TTSCreateModal = ({ setIsCreateModal, ttsId }: Props) => {
 
   // 녹음 완료 후 오디오 저장 s3 url 목록 조회 통신 함수
   const handleCompleteRecording = async () => {
-    const temp = Array.from(Array(21), (_, index) => ({ fileName: `audio${index + 1}.wav`, scriptId: index + 1 }));
+    const temp = Array.from(Array(scriptList?.length), (_, index) => ({
+      fileName: `audio${index + 1}.wav`,
+      scriptId: index + 1,
+    }));
     const data = {
       fileScriptPairs: temp,
     };
@@ -260,12 +263,12 @@ const TTSCreateModal = ({ setIsCreateModal, ttsId }: Props) => {
               결과 확인
             </button>
             <button
-              onClick={scriptCurrentIdx === scriptList.length ? handleCompleteRecording : handleNextRecording}
+              onClick={scriptCurrentIdx + 1 === scriptList.length ? handleCompleteRecording : handleNextRecording}
               disabled={isRecording || !audioURL}
               className={`${buttonStyle} text-white bg-[#67CCFF] border-[#67CCFF] ${
                 isRecording || !audioURL ? "opacity-50" : "active:bg-[#005f99]"
               }`}>
-              {scriptCurrentIdx === scriptList.length ? "완료" : "다음"}
+              {scriptCurrentIdx + 1 === scriptList.length ? "완료" : "다음"}
             </button>
           </div>
 
