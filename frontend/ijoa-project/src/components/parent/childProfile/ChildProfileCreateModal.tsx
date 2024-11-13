@@ -47,6 +47,13 @@ const ChildProfileCreateModal = ({ setIsCreateModal, getChildInfoList }: Props) 
     return pattern.test(text);
   };
 
+  const checkBirthAvailableValidation = (text: string) => {
+    const inputDate = new Date(text);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // 오늘 날짜의 시간을 자정으로 설정하여 비교
+    return inputDate < today;
+  };
+
   // 자녀 프로필 생성 API 함수 호출
   const handleCreateChild = async () => {
     if (!childName || !childBirth || !childGender) return;
@@ -84,7 +91,8 @@ const ChildProfileCreateModal = ({ setIsCreateModal, getChildInfoList }: Props) 
         {/* 프로필 사진 선택 */}
         <div
           className="w-20 h-20 border-4 border-[#9E9E9E] rounded-full flex justify-center items-center relative"
-          onClick={handleUploadClick}>
+          onClick={handleUploadClick}
+        >
           {childProfileImgString ? (
             <img className="w-full aspect-1 rounded-full" src={`${childProfileImgString}`} alt="" />
           ) : (
@@ -129,15 +137,12 @@ const ChildProfileCreateModal = ({ setIsCreateModal, getChildInfoList }: Props) 
               onChange={(e) => setChildBirth(e.target.value)}
             />
 
-            {childBirth && checkBirthValidation(childBirth) ? (
-              <></>
-            ) : (
-              <p
-                className={`col-start-2 px-3 py-1 text-sm text-[#FF8067]
-              }`}>
-                생년월일 형식을 지켜주세요
-              </p>
-            )}
+            {childBirth &&
+              (!checkBirthValidation(childBirth) ? (
+                <p className="col-start-2 px-3 py-1 text-sm text-[#FF8067]">생년월일 형식을 지켜주세요</p>
+              ) : !checkBirthAvailableValidation(childBirth) ? (
+                <p className="col-start-2 px-3 py-1 text-sm text-[#FF8067]">오늘 날짜보다 이전이어야 합니다</p>
+              ) : null)}
           </div>
 
           {/* 성별 입력 */}
@@ -177,15 +182,19 @@ const ChildProfileCreateModal = ({ setIsCreateModal, getChildInfoList }: Props) 
         <div className="flex gap-4 justify-center items-center">
           <button
             className="px-8 py-2 text-[#67CCFF] text-lg font-bold bg-white rounded-3xl border-2 border-[#67CCFF] active:bg-[#e0f7ff]"
-            onClick={() => setIsCreateModal(false)}>
+            onClick={() => setIsCreateModal(false)}
+          >
             취소
           </button>
           <button
             className={`px-8 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-3xl border-2 border-[#67CCFF] ${
-              !childName || !childBirth || !childGender || !checkBirthValidation(childBirth) ? "opacity-50" : "active:bg-[#005f99]"
+              !childName || !childBirth || !childGender || !checkBirthValidation(childBirth)
+                ? "opacity-50"
+                : "active:bg-[#005f99]"
             }`}
             disabled={!childName || !childBirth || !childGender || !checkBirthValidation(childBirth)}
-            onClick={handleCreateChild}>
+            onClick={handleCreateChild}
+          >
             완료
           </button>
         </div>
