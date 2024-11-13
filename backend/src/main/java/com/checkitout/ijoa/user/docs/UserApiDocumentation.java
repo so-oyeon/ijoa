@@ -70,4 +70,13 @@ public interface UserApiDocumentation {
             @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
     })
     public ResponseEntity<ResponseDto> resetUserPassword(@PathVariable String email);
+
+    @Operation(summary = "튜토리얼 진행 완료 처리", description = "튜토리얼 진행여부를 true로 바꿉니다")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "튜토리얼 완료 성공 "),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+    })
+    public ResponseEntity<ResponseDto> tutorial();
+
+
 }

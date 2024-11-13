@@ -68,4 +68,11 @@ public class UserController implements UserApiDocumentation {
         ResponseDto response = userService.resetUserPassword(email);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+    @Override
+    @PostMapping("/tutorial")
+    public ResponseEntity<ResponseDto> tutorial() {
+        userService.completeTutorial();
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

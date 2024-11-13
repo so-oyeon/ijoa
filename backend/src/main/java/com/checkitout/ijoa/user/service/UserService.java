@@ -155,4 +155,11 @@ public class UserService {
         }
         return password.toString();
     }
+
+    // 튜토리얼 완료 처리
+    public void completeTutorial(){
+        User user = securityUtil.getUserByToken();
+        user.setCompleteTutorial(true);
+        userRepository.save(user);
+    }
 }
