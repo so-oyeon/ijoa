@@ -16,6 +16,7 @@ const TTSCreateModal = ({ setIsCreateModal, ttsId }: Props) => {
   const [scriptList, setScriptList] = useState<TTSScriptInfo[] | null>(null);
   const [scriptCurrentIdx, setScriptCurrentIdx] = useState(0);
   const [isRecording, setIsRecording] = useState(false); // 녹음 진행 상태 변수
+  const [isLoadingBySaveAudioToS3, setIsLoadingBySaveAudioToS3] = useState(false);
 
   const [audioURL, setAudioURL] = useState<string | null>(null); // 오디오 미리 듣기를 위한 url 변수
   const mediaRecorderRef = useRef<MediaRecorder | null>(null); // 녹음 제어를 위한 참조 변수
@@ -138,6 +139,7 @@ const TTSCreateModal = ({ setIsCreateModal, ttsId }: Props) => {
     };
 
     try {
+      console.log(ttsId);
       const response = await parentApi.getTTSFileStorageUrlList(ttsId, data);
       if (response.status === 201) {
         setS3UrlList(response.data);
@@ -149,6 +151,7 @@ const TTSCreateModal = ({ setIsCreateModal, ttsId }: Props) => {
 
   // S3에 단일 녹음본을 저장하는 통신 함수
   const handleSaveAudioToS3 = async (presignedUrl: string, file: Blob) => {
+    setIsLoadingBySaveAudioToS3(true);
     try {
       const response = await fetch(presignedUrl, {
         method: "PUT",
@@ -163,6 +166,8 @@ const TTSCreateModal = ({ setIsCreateModal, ttsId }: Props) => {
     } catch (error) {
       console.error("파일 업로드 중 에러 발생:", error);
       return false;
+    } finally {
+      setIsLoadingBySaveAudioToS3(false);
     }
   };
 
@@ -206,7 +211,7 @@ const TTSCreateModal = ({ setIsCreateModal, ttsId }: Props) => {
     handleAllSaveAudioToS3();
   }, [S3UrlList]);
 
-  if (!scriptList) {
+  if (!scriptList || isLoadingBySaveAudioToS3) {
     return (
       <div className="py-8 bg-black bg-opacity-60 flex justify-center items-center fixed inset-0 z-50">
         <div className="w-1/2 p-10 bg-white rounded-2xl shadow-lg flex justify-center items-center">
