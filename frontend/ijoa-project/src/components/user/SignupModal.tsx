@@ -52,9 +52,47 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
     }
   };
 
+  // 이메일 중복 검사 함수
+  const checkEmail = async (e: string) => {
+    try {
+      const response = await userApi.checkEmailDuplication(e);
+
+      // 이메일 사용 가능할 경우
+      if (response.status === 202) {
+        Swal.fire({
+          icon: "error",
+          title: "이 이메일은 이미 사용 중입니다!",
+        });
+      }
+
+      if (response.status === 200) {
+        Swal.fire({
+          icon: "success",
+          title: "사용 가능한 이메일 입니다!",
+        });
+        return true; // 이메일 중복이 없는 경우 true 반환
+      }
+    } catch (error) {
+      console.log("이메일 중복 검사 오류: ", error);
+      Swal.fire({
+        icon: "error",
+        title: "이메일 중복",
+        text: "이 이메일은 이미 사용 중입니다.",
+      });
+      return false;
+    }
+  };
+
   // 이메일 전송 api 통신 함수
   const handleEmailVerification = async () => {
     setIsLoading(true);
+
+    // 이메일 중복 검사
+    const isEmailAvailable = await checkEmail(email);
+    if (!isEmailAvailable) {
+      setIsLoading(false); // 이메일 중복인 경우 로딩 종료
+      return;
+    }
     // api 함수 호출
     try {
       const response = await userApi.sendVerificationCode(email);

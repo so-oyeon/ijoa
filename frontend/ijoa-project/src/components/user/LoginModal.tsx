@@ -28,7 +28,6 @@ const LoginModal: React.FC<LoginModalProps> = ({ openForgotPasswordModal }) => {
         localStorage.setItem("refreshToken", response.data.refreshToken);
         localStorage.setItem("userId", response.data.userId);
         localStorage.setItem("userType", "parent");
-        // 로그인할때 어짜피 데이터들이 넘어오니까 이걸 토대로 tutorialComplted가 true인지 false인지 확인.
         navigate("/parent/child/list");
       }
     } catch (error) {
