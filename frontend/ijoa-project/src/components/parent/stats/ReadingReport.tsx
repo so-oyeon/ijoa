@@ -3,6 +3,7 @@ import { GoDotFill } from "react-icons/go";
 import { parentApi } from "../../../api/parentApi";
 import Lottie from "react-lottie-player";
 import loadingAnimation from "../../../lottie/footPrint-loadingAnimation.json";
+import { ReadingReportInfo } from "../../../types/parentTypes";
 
 interface Props {
   childId: number;
@@ -10,19 +11,19 @@ interface Props {
 
 const ReadingReport = ({ childId }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [reportData, setReportData] = useState<string | null>(null);
-  const [reportDataList, setReportDataList] = useState<string[] | null>(null);
+  const [reportData, setReportData] = useState<ReadingReportInfo | null>(null);
 
   // 독서 분석 보고서 조회 통신 함수
   const getReadingReportData = async () => {
     try {
       setIsLoading(true);
       const response = await parentApi.getReadingReport(childId);
+      console.log(response);
       if (response.status === 200) {
-        setReportData(response.data.report);
+        setReportData(response.data);
       }
     } catch (error) {
-      console.log("");
+      console.log("parentApi의 parentApi : ", error);
     } finally {
       setIsLoading(false);
     }
@@ -32,13 +33,7 @@ const ReadingReport = ({ childId }: Props) => {
     getReadingReportData();
   }, []);
 
-  useEffect(() => {
-    if (!reportData) return;
-
-    setReportDataList(reportData.split("- ").filter((item) => item !== ""));
-  }, [reportData]);
-
-  if (!reportDataList || isLoading) {
+  if (!reportData || isLoading) {
     return (
       <div className="grow border-4 border-[#F5F5F5] rounded-2xl flex justify-center items-center">
         <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
@@ -47,27 +42,46 @@ const ReadingReport = ({ childId }: Props) => {
   }
 
   return (
-    <div className="grow p-5 border-4 border-[#F5F5F5] rounded-2xl flex flex-col justify-between">
-      <p className="text-xl font-semibold">
+    <div className="grow px-5 border-4 border-[#F5F5F5] rounded-2xl overflow-y-auto">
+      <p className="py-3 text-xl font-semibold bg-white sticky top-0 z-50">
         <span className="underline underline-offset-[-3px] decoration-8 decoration-[#FDC94F]">독서 분석</span>
         &nbsp;보고서
       </p>
 
       <div className="grid gap-1">
-        {reportDataList.map((text, index) => (
-          <div className="text-[#565656] grid grid-cols-[1fr_19fr]" key={index}>
+        <div className="grid gap-1">
+          <div className="text-[#565656] grid grid-cols-[1fr_19fr]">
             <div className="flex items-center">
               <GoDotFill />
             </div>
-            <p className="font-semibold">{text}</p>
+            <p className="font-semibold">{reportData.gazeDistributionAnalysis}</p>
           </div>
-        ))}
+        </div>
+
+        <div className="grid gap-1">
+          <div className="text-[#565656] grid grid-cols-[1fr_19fr]">
+            <div className="flex items-center">
+              <GoDotFill />
+            </div>
+            <p className="font-semibold">{reportData.timeOfDayAttentionAnalysis}</p>
+          </div>
+        </div>
+
+        <div className="grid gap-1">
+          <div className="text-[#565656] grid grid-cols-[1fr_19fr]">
+            <div className="flex items-center">
+              <GoDotFill />
+            </div>
+            <p className="font-semibold">{reportData.textLengthAnalysis}</p>
+          </div>
+        </div>
       </div>
 
-      <p className="px-5 py-3 text-[#565656] text-center font-semibold bg-[#FFEEC6] rounded-full">
-        짧고 흥미로운 문장을 읽을 때 집중력이 높으니, 5세 대상의 동화책을 추천합니다.
-        <br /> 주로 오전 시간대에 집중력이 높으므로, 어려운 내용의 책은 오전에 읽도록 유도해 주세요.
+      <p className="mt-3 px-10 py-5 text-[#565656] text-justify font-semibold bg-[#FFEEC6] rounded-full break-keep">
+        {reportData.conclusion}
       </p>
+
+      <div className="pb-3 bg-white sticky bottom-0 z-50"></div>
     </div>
   );
 };
