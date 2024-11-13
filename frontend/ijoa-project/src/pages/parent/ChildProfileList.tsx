@@ -8,15 +8,15 @@ import { userApi } from "../../api/userApi";
 import { parentApi } from "../../api/parentApi";
 import { ChildInfo } from "../../types/parentTypes";
 import LoadingAnimation from "../../components/common/LoadingAnimation";
-import { openTutorial} from "../../redux/tutorialSlice";
-import Tutorial from "../../components/tutorial/Tutorial"
+import { openTutorial } from "../../redux/tutorialSlice";
+import Tutorial from "../../components/tutorial/Tutorial";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, AppDispatch } from "../../redux/store"
+import { RootState, AppDispatch } from "../../redux/store";
 
 const ChildProfileList = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-  const isTutorialOpen = useSelector((state: RootState) => state.tutorial.isOpen); 
+  const isTutorialOpen = useSelector((state: RootState) => state.tutorial.isOpen);
 
   const [isCreateModal, setIsCreateModal] = useState(false);
   const [isUpdateModal, setIsUpdateModal] = useState(false);
@@ -72,10 +72,22 @@ const ChildProfileList = () => {
     getChildInfoList();
   }, []);
 
-    // 페이지 진입 시 튜토리얼 오버레이 자동 열기 (필요 시)
-    useEffect(() => {
-      dispatch(openTutorial());
-    }, [dispatch]);
+  // 튜토리얼이 true인지 false인지 확인 후, false면 tutorial 창 띄우기
+  useEffect(() => {
+    const getTutorialStatus = async () => {
+      try {
+        const response = await userApi.getTutorialInfo();
+        if (response.status === 200 && !response.data.completeTutorial) {
+          dispatch(openTutorial());
+          console.log(response.data)
+        }
+      } catch (error) {
+        console.log("getTutorialInfo API 오류: ", error);
+      }
+    };
+
+    getTutorialStatus();
+  }, [dispatch]);
 
   // childList가 null이면 loading 화면 출력
   if (!childList) {
@@ -94,7 +106,8 @@ const ChildProfileList = () => {
         </div>
 
         <div
-          className={`${childList.length === 0 ? "flex justify-center" : "grid grid-cols-3"} gap-y-12 font-['IMBold']`}>
+          className={`${childList.length === 0 ? "flex justify-center" : "grid grid-cols-3"} gap-y-12 font-['IMBold']`}
+        >
           {/* 자녀 목록 */}
           {childList.map((child, index) => (
             <div className="flex flex-col items-center space-y-3" key={index}>
@@ -107,7 +120,8 @@ const ChildProfileList = () => {
                 />
                 <div
                   className="w-12 aspect-1 bg-white rounded-full bg-opacity-50 shadow-[1px_3px_2px_0_rgba(0,0,0,0.2)] flex justify-center items-center absolute top-0 right-0"
-                  onClick={() => handleUpdateChild(child)}>
+                  onClick={() => handleUpdateChild(child)}
+                >
                   <TbPencilMinus className="text-2xl" />
                 </div>
               </div>
@@ -130,7 +144,7 @@ const ChildProfileList = () => {
       </div>
 
       {/* 튜토리얼 오버레이 */}
-      {isTutorialOpen && <Tutorial/>}
+      {isTutorialOpen && <Tutorial />}
 
       {isCreateModal && (
         <ChildProfileCreateModal setIsCreateModal={setIsCreateModal} getChildInfoList={getChildInfoList} />

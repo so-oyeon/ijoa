@@ -13,9 +13,14 @@ import {
 import { ChildInfo } from "../../types/parentTypes";
 import Lottie from "react-lottie-player";
 import loadingAnimation from "../../lottie/footPrint-loadingAnimation.json";
+import { useDispatch } from "react-redux";
+import { openTutorial, setStep } from "../../redux/tutorialSlice";
+import Tutorial from "../../components/tutorial/Tutorial";
 
 const FairytaleListPage: React.FC = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [popularFairyTales, setPopularFairyTales] = useState<FairyTaleRankByAgeItem[]>([]);
   const [recommendedFairyTales, setRecommendedFairyTales] = useState<FairyTaleRecommendationItem[]>([]);
   const [categoryFairyTales, setCategoryFairyTales] = useState<FairyTaleByCategoryListResponse | null>(null);
@@ -151,6 +156,12 @@ const FairytaleListPage: React.FC = () => {
   };
 
   useEffect(() => {
+    // 페이지 로드 시 튜토리얼을 다시 시작하고, 8단계로 설정
+    dispatch(openTutorial());
+    dispatch(setStep(8)); // 8단계로 설정
+  }, [dispatch]);
+
+  useEffect(() => {
     const loadInitialData = async () => {
       try {
         await getPopularFairyTalesByAge();
@@ -217,6 +228,7 @@ const FairytaleListPage: React.FC = () => {
           )}
         </div>
       </div>
+      <Tutorial />
     </div>
   );
 };

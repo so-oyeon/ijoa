@@ -53,8 +53,12 @@ export const userApi = {
   },
 
   // 회원 탈퇴
-  deleteUserInfo : () => {
+  deleteUserInfo: () => {
     return api.delete(`/user`);
-  }
-};
+  },
 
+  // 튜토리얼 진행 여부 조회
+  getTutorialInfo: () => {
+    return api.get(`/user/tutorial`);
+  },
+};
