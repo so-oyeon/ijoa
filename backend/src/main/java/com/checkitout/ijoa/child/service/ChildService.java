@@ -28,13 +28,13 @@ public class ChildService {
 
     public ChildLevelResponseDto getChildLevel() {
 
-        long totalCount = calculateTotalCategoryCount();
+        long totalCount = calculateTotalFairytaleCount();
         int level = determineLevel(totalCount);
 
         return ChildLevelResponseDto.of(totalCount, level);
     }
 
-    public long calculateTotalCategoryCount() {
+    public long calculateTotalFairytaleCount() {
         Child child = securityUtil.getChildByToken();
 
         return readBooksRepository.countByChildAndIsCompletedTrue(child);
