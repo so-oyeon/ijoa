@@ -4,9 +4,10 @@ import Animals2 from "/assets/fairytales/images/animals2.png";
 
 interface LevelUpModalProps {
   isOpen: boolean;
+  message: string; // 메시지 prop 추가
 }
 
-const LevelUpModal: React.FC<LevelUpModalProps> = ({ isOpen }) => {
+const LevelUpModal: React.FC<LevelUpModalProps> = ({ isOpen, message }) => {
   useEffect(() => {
     if (isOpen) {
       firework(); // 모달이 열리면 폭죽 효과 실행
@@ -51,7 +52,7 @@ const LevelUpModal: React.FC<LevelUpModalProps> = ({ isOpen }) => {
       <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg text-center bg-white rounded-2xl shadow-lg mx-4">
         <div className="px-4 py-6 md:py-8">
           <div className="mb-6 md:mb-8 text-lg sm:text-xl md:text-2xl font-bold text-center whitespace-pre-line font-['MapleLight']">
-            {"와~ 한 단계 성장했어요!\n나는야 책아장 🙌"}
+            {message} {/* 동적으로 전달받은 메시지 표시 */}
           </div>
         </div>
         <img src={Animals2} alt="동물들" className="w-full h-auto rounded-b-2xl" />

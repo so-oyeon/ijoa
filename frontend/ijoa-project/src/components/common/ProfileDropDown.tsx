@@ -79,20 +79,25 @@ const ProfileDropDown = () => {
         className="menu menu-sm dropdown-content w-60 p-2 mt-3 bg-base-100 rounded-box border-2 shadow-lg z-[1] grid gap-1"
       >
         <li className="h-14">
-          <div className="w-full h-full flex items-center space-x-3 hover:bg-white">
+          <div className="w-full h-full flex items-center space-x-3 active:bg-white btn-disabled">
             <MdChildCare className="text-2xl" />
-            <p className="text-lg">{childInfo ? `${childInfo.name} (만 ${childInfo.age}세)` : "Loading..."}</p>
+            <p
+              className="text-lg"
+              style={{ whiteSpace: childInfo && childInfo.name.length >= 5 ? "pre-line" : "nowrap" }}
+            >
+              {childInfo ? `${childInfo.name}\n(만 ${childInfo.age}세)` : "Loading..."}
+            </p>
           </div>
         </li>
         <hr className="h-[0.5px] bg-[#9e9e9e]" />
         <li className="h-14" onClick={handleChangeToParent}>
-          <div className="w-full h-full flex items-center space-x-3 hover:bg-[#FFF0CA] rounded-2xl">
+          <div className="w-full h-full flex items-center space-x-3 active:bg-[#FFF0CA] rounded-2xl">
             <PiUserSwitch className="text-2xl" />
             <p className="text-lg">부모로 전환</p>
           </div>
         </li>
         <li className="h-14" onClick={handleLogout}>
-          <div className="w-full h-full flex items-center space-x-3 hover:bg-[#FFF0CA] rounded-2xl">
+          <div className="w-full h-full flex items-center space-x-3 active:bg-[#FFF0CA] rounded-2xl">
             <MdLogout className="text-2xl" />
             <p className="text-lg">로그아웃</p>
           </div>
