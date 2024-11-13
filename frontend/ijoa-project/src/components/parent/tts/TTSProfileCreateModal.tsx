@@ -102,6 +102,8 @@ const TTSProfileCreateModal = ({ setIsProfileCreateModal, setIsCreateCompleted, 
                 className="w-full p-3 border-2 border-[#C7C7C7] rounded-[30px] outline-none"
                 type="text"
                 id="name"
+                placeholder="2~10자"
+                maxLength={10}
                 value={ttsName ? ttsName : ""}
                 onChange={(e) => setTTSName(e.target.value)}
               />
@@ -115,8 +117,11 @@ const TTSProfileCreateModal = ({ setIsProfileCreateModal, setIsCreateCompleted, 
                 취소
               </button>
               <button
-                className="px-8 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-3xl border-2 border-[#67CCFF active:bg-[#005f99]"
-                onClick={handleCreateTTS}>
+                className={`px-8 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-3xl border-2 border-[#67CCFF active:bg-[#005f99] ${
+                  !ttsName || ttsName.length < 2 ? "opacity-50" : "active:bg-[#005f99]"
+                }`}
+                onClick={handleCreateTTS}
+                disabled={!ttsName || ttsName.length < 2}>
                 완료
               </button>
             </div>
