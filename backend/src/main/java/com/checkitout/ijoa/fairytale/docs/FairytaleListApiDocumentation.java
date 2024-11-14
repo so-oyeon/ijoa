@@ -68,8 +68,7 @@ public interface FairytaleListApiDocumentation {
             @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content),
             @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
     })
-    public ResponseEntity<Page<FairytaleListResponseDto>> recommendFairytale(
-            @Valid @ModelAttribute PageRequestDto requestDto);
+    public ResponseEntity<Page<FairytaleListResponseDto>> recommendFairytale();
 
     @Operation(summary = "도서 검색 ", description = "키워드로 제목 검색을 할 수 있습니다. ")
     @ApiResponses(value = {

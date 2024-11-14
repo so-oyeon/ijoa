@@ -15,7 +15,6 @@ body {
   overflow: hidden;
   margin-top: -300px;
   margin-left: -600px;
-  box-shadow: 0 0 0 2px white inset;
 }
 #curtain {
   top: 0;
@@ -54,7 +53,6 @@ body {
   height: 10000px;
   margin-left: -5000px;
   border-radius: 100%;
-  box-shadow: 0 0 100px 100px white;
 }
 
 h1 {
@@ -78,7 +76,6 @@ h1 {
   width: 140%;
   left: -20%;
   margin-left: 0;
-  box-shadow: 0 0 0 0 white inset;
   animation-fill-mode: forwards;
   animation-name: expand-scene-horizontaly, expand-scene-verticaly;
   animation-duration: 2.5s, 1.5s;
@@ -144,13 +141,11 @@ h1 {
     width: 1200px;
     left: 50%;
     margin-left: -600px;
-    box-shadow: 0 0 0 2px white inset;
   }
   to {
     width: 140%;
     left: -20%;
     margin-left: 0;
-    box-shadow: 0 0 0 0 white inset;
   }
 }
 
