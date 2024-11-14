@@ -1,4 +1,3 @@
-// TTSChoiceModal.tsx
 import React, { useEffect, useState } from "react";
 import { fairyTaleApi } from "../../../api/fairytaleApi";
 import { ChildrenTTSListResponse } from "../../../types/fairytaleTypes";
@@ -30,6 +29,7 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({
   const [ttsList, setTtsList] = useState<ChildrenTTSListResponse[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [creationMessage, setCreationMessage] = useState("");
   const [downloadInterval, setDownloadInterval] = useState<NodeJS.Timeout | null>(null);
 
   const readAloudEnabled = JSON.parse(localStorage.getItem("readAloudEnabled") || "false");
@@ -65,11 +65,19 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({
 
   const startDownloadCheck = async (ttsId: number) => {
     try {
+      if (isDownloading) {
+        setCreationMessage("열심히 다운로드 중이에요! 조금만 더 기다려주세요! 🔥");
+
+        setTimeout(() => {
+          setCreationMessage("");
+        }, 3000);
+        return;
+      }
+
       const response = await fairyTaleApi.getTTSAudioBook(bookId, ttsId);
       if (response.status === 200) {
         setIsDownloading(true);
 
-        // 30초 간격으로 getChildrenTTSList 호출하여 다운로드 완료 여부 확인
         const interval = setInterval(async () => {
           const ttsResponse = await fairyTaleApi.getChildrenTTSList(bookId);
           if (ttsResponse.status === 200 && Array.isArray(ttsResponse.data)) {
@@ -82,11 +90,19 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({
               setDownloadInterval(null);
             }
           }
-        }, 30000); // 30초 간격으로 확인
+        }, 30000);
         setDownloadInterval(interval);
       }
     } catch (error) {
-      console.error("다운로드 시작 중 에러:", error);
+      if (error instanceof Error && error.message.includes("409")) {
+        setCreationMessage("열심히 다운로드 중이에요! 조금만 더 기다려주세요! 🔥");
+
+        setTimeout(() => {
+          setCreationMessage("");
+        }, 3000);
+      } else {
+        console.error("다운로드 시작 중 에러:", error);
+      }
     }
   };
 
@@ -159,6 +175,7 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({
             </div>
           )}
 
+          <p className="text-center text-blue-500">{creationMessage}</p>
           {isReadIng ? (
             <div className="mt-8 flex gap-4 justify-center items-center">
               <button
