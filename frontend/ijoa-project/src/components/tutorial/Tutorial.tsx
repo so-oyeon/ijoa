@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "../../redux/store";
 import { closeTutorial, setStep } from "../../redux/tutorialSlice";
@@ -6,6 +6,17 @@ import Portal from "../../components/tutorial/Portal";
 import { userApi } from "../../api/userApi";
 import "../../css/Tutorial.css";
 import closeButton from "/assets/close-button.png";
+
+interface Position {
+  top: number;
+  left: number;
+  width: number;
+  height: number;
+}
+
+interface TutorialProps {
+  menuPositions: Position[];
+}
 
 // 단계별 콘텐츠
 const stepContents = {
@@ -24,11 +35,157 @@ const stepContents = {
   13: { title: "튜토리얼 끝", text: "이제부터 아이조아와 함께 해볼까요?" },
 };
 
-const Tutorial: React.FC = () => {
+const Tutorial: React.FC<TutorialProps> = ({ menuPositions }) => {
   const isOpen = useSelector((state: RootState) => state.tutorial.isOpen);
   const dispatch = useDispatch<AppDispatch>();
   const step = useSelector((state: RootState) => state.tutorial.step);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [highlightStyle, setHighlightStyle] = useState<React.CSSProperties>({});
+  const [modalPosition, setModalPosition] = useState<React.CSSProperties>({
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+  });
+
+  useEffect(() => {
+    if (menuPositions && menuPositions.length === 5) {
+      let newHighlightStyle = {};
+      switch (step) {
+        case 1:
+          newHighlightStyle = { top: "50%", left: "50%", width: "0%", height: "0%" };
+          break;
+        case 2: {
+          const leftMost = menuPositions[0].left;
+          const rightMost = menuPositions[4].left + menuPositions[4].width;
+          newHighlightStyle = {
+            top: menuPositions[0].top,
+            left: leftMost,
+            width: rightMost - leftMost,
+            height: menuPositions[0].height,
+          };
+          break;
+        }
+        case 3:
+          newHighlightStyle = {
+            top: menuPositions[0].top,
+            left: menuPositions[0].left,
+            width: menuPositions[0].width,
+            height: menuPositions[0].height,
+          };
+          break;
+        case 4:
+          newHighlightStyle = {
+            top: menuPositions[1].top,
+            left: menuPositions[1].left,
+            width: menuPositions[1].width,
+            height: menuPositions[1].height,
+          };
+          break;
+        case 5:
+          newHighlightStyle = {
+            top: menuPositions[2].top,
+            left: menuPositions[2].left,
+            width: menuPositions[2].width,
+            height: menuPositions[2].height,
+          };
+          break;
+        case 6:
+          newHighlightStyle = {
+            top: menuPositions[3].top,
+            left: menuPositions[3].left,
+            width: menuPositions[3].width,
+            height: menuPositions[3].height,
+          };
+          break;
+        case 7:
+          newHighlightStyle = {
+            top: "210px",
+            left: "630px",
+            width: "12%",
+            height: "170px",
+          };
+          break;
+        case 8:
+          newHighlightStyle = {
+            top: menuPositions[0].top,
+            left: menuPositions[0].left - 15,
+            width: menuPositions[0].width,
+            height: menuPositions[0].height,
+          };
+          break;
+        case 9:
+          newHighlightStyle = {
+            top: menuPositions[1].top,
+            left: menuPositions[1].left - 15,
+            width: menuPositions[1].width,
+            height: menuPositions[1].height,
+          };
+          break;
+        case 10:
+          newHighlightStyle = {
+            top: menuPositions[2].top,
+            left: menuPositions[2].left - 15,
+            width: menuPositions[2].width,
+            height: menuPositions[2].height,
+          };
+          break;
+        case 11:
+          newHighlightStyle = {
+            top: menuPositions[3].top,
+            left: menuPositions[3].left - 15,
+            width: menuPositions[3].width,
+            height: menuPositions[3].height,
+          };
+          break;
+        case 12:
+          newHighlightStyle = {
+            top: menuPositions[4].top,
+            left: menuPositions[4].left - 15,
+            width: menuPositions[4].width,
+            height: menuPositions[4].height,
+          };
+          break;
+        case 13:
+          newHighlightStyle = { top: "50%", left: "50%", width: "0%", height: "0%" };
+          break;
+        default:
+          newHighlightStyle = {};
+          break;
+      }
+      // 강조 효과를 조정
+      setHighlightStyle({
+        ...newHighlightStyle,
+      });
+    }
+  }, [step, menuPositions]);
+
+  // 단계별로 모달 위치 설정
+  useEffect(() => {
+    let newPosition: React.CSSProperties = { top: "50%", left: "50%", transform: "translate(-50%, -50%)" };
+    switch (step) {
+      case 2:
+      case 3:
+      case 4:
+      case 5:
+      case 6:
+      case 8:
+      case 9:
+      case 10:
+      case 11:
+      case 12:
+        newPosition = { top: "100px", right: "40px", left: "auto", transform: "none" };
+        break;
+      case 7:
+        newPosition = { top: "45%", left: "30%", transform: "translate(-50%, -50%)" };
+        break;
+      case 13:
+        newPosition = { top: "50%", left: "50%", transform: "translate(-50%, -50%)" };
+        break;
+      default:
+        break;
+    }
+    setModalPosition(newPosition);
+  }, [step]);
 
   // 튜토리얼 완료 함수 api
   const completeTutorial = async () => {
@@ -102,10 +259,12 @@ const Tutorial: React.FC = () => {
         {/* 클릭 방지 오버레이 */}
         <div className="overlay-click-prevent"></div>
         <div className="overlay-dark"></div>
-        <div className={`overlay-highlight highlight-position-${step}`}></div>
+
+        {/* 단계별 위치 강조 영역 */}
+        <div className="overlay-highlight" style={highlightStyle}></div>
 
         {/* 튜토리얼 모달 */}
-        <div className={`tutorial-modal tutorial-position-${step}`}>
+        <div className="tutorial-modal" style={modalPosition}>
           <button onClick={() => setShowConfirmModal(true)} className="tutorial-close-btn">
             <img src={closeButton} alt="Close" />
           </button>
