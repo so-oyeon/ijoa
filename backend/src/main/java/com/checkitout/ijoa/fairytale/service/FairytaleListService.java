@@ -148,7 +148,7 @@ public class FairytaleListService {
         List<Long> recommendedFairytaleIds = webClient.post()
                 .uri(uriBuilder -> uriBuilder
                         .path("/recommend")
-                        .queryParam("child_id", childId)
+                        .queryParam("childId", childId)
                         .build())
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<Map<String, List<Long>>>() {
