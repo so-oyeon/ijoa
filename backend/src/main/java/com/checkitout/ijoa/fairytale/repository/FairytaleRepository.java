@@ -12,7 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface FairytaleRepository extends JpaRepository<Fairytale, Long> {
+public interface FairytaleRepository extends JpaRepository<Fairytale, Long>, FairytaleRepositoryCustom {
 
     Page<Fairytale> findAllBy(Pageable pageable);
 
