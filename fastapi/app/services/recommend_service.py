@@ -1,7 +1,7 @@
 import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity
 from typing import Dict
-from models.user_request import BookRecommendationRequest
+from ..models.user_request import BookRecommendationRequest
 from decouple import config
 from dotenv import load_dotenv
 import os
