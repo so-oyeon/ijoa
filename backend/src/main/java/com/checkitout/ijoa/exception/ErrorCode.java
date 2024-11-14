@@ -42,6 +42,7 @@ public enum ErrorCode {
     TRAINAUDIO_NOT_FOUND(HttpStatus.NOT_FOUND, "TRAIN-001", "TRIANDATA를 찾을 수 없습니다."),
     AUDIO_NOT_FOUND(HttpStatus.NOT_FOUND, "AUDIO-001", "AUDIO를 찾을 수 없습니다."),
     AUDIO_CREATION_ALREADY_IN_PROGRESS(HttpStatus.CONFLICT, "AUDIO-002", "동화책 AUDIO를 생성 중 입니다."),
+    AUDIO_ALREADY_EXISTS(HttpStatus.CONFLICT, "AUDIO-003", "이미 동화책 AUDIO를 생성했습니다."),
 
     //script
     SCRIPT_NOT_FOUND(HttpStatus.NOT_FOUND, "SCRIPT-001", "SCRIPT를 찾을 수 없습니다."),

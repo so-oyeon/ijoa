@@ -291,9 +291,13 @@ public class TTSService {
 
     // 동화책 audio 생성
     public void createAudioBook(Long bookId, Long ttsId) {
+        Fairytale fairytale = fairytaleRepository.findById(bookId).orElseThrow(()-> new CustomException(ErrorCode.FAIRYTALE_NOT_FOUND));
+        TTS tts = ttsRepository.findById(ttsId).orElseThrow(()-> new CustomException(ErrorCode.TTS_NOT_FOUND));
 
+        if(fairytaleTTSRepository.existsByFairytaleAndTts(fairytale, tts)){
+            throw new CustomException(ErrorCode.AUDIO_ALREADY_EXISTS);
+        }
         List<FairytalePageContent> contents = fairytalePageContentRepository.findByfairytaleId(bookId).orElseThrow(() -> new CustomException(ErrorCode.FAIRYTALE_NOT_FOUND));
-        TTS tts = ttsRepository.findById(ttsId).orElseThrow(() -> new CustomException(ErrorCode.TTS_NOT_FOUND));
 
         String lockKey = "createAudioBook:"+bookId+"_ttsId:"+ttsId;
         RBucket<String> statusFlag = redissonClient.getBucket(lockKey);
