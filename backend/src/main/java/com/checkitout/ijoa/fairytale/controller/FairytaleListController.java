@@ -68,10 +68,9 @@ public class FairytaleListController implements FairytaleListApiDocumentation {
 
     // 책 추천
     @GetMapping("/recommendations")
-    public ResponseEntity<Page<FairytaleListResponseDto>> recommendFairytale(
-            @Valid @ModelAttribute PageRequestDto requestDto) {
+    public ResponseEntity<Page<FairytaleListResponseDto>> recommendFairytale() {
 
-        Page<FairytaleListResponseDto> response = fairytaleListService.getAllFairytale(requestDto);
+        Page<FairytaleListResponseDto> response = fairytaleListService.recommendFairytaleList();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
