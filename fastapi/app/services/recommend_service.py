@@ -1,16 +1,22 @@
 import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity
 from typing import Dict
-from models.user_request import BookReadersRequest, BookRecommendationRequest
+from models.user_request import BookRecommendationRequest
+from decouple import config
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+RECOMMEND_LIMIT = int(os.getenv("RECOMMEND_LIMIT"))
 
 def recommend_books_for_target_user(request: BookRecommendationRequest) -> Dict:
     target_user_id = request.target_user_id
-    limit = request.limit
 
     # 책을 기준으로 사용자-책 매트릭스 생성
-    book_data = {book.book_id: [1 if user in book.user_ids else 0 for user in {user for book in request.books for user in book.user_ids}]
-                 for book in request.books}
-    
+    book_data = {
+        book.book_id: [1 if user in book.user_ids else 0 for user in {user for book in request.books for user in book.user_ids}]
+        for book in request.books
+    }
     user_ids = list({user for book in request.books for user in book.user_ids})
     user_book_matrix = pd.DataFrame(book_data, index=user_ids)
 
@@ -23,7 +29,7 @@ def recommend_books_for_target_user(request: BookRecommendationRequest) -> Dict:
     if user_read_books.sum() == 0:
         # 사용자가 읽은 책이 없을 경우, 인기 책 추천
         popular_books = user_book_matrix.sum().sort_values(ascending=False).index.tolist()
-        return {"recommended_books": popular_books[:limit] if limit else popular_books}
+        return {"recommended_books": popular_books[:RECOMMEND_LIMIT]}
     else:
         # 사용자 간 유사도 계산
         user_similarity = cosine_similarity(user_book_matrix)
@@ -36,12 +42,11 @@ def recommend_books_for_target_user(request: BookRecommendationRequest) -> Dict:
         recommended_books = weighted_scores.loc[unread_books].sort_values(ascending=False).index.tolist()
 
         # 부족한 추천 수를 인기 책으로 보충
-        if limit:
-            recommended_books = recommended_books[:limit]
-            if len(recommended_books) < limit:
-                popular_books = user_book_matrix.sum().sort_values(ascending=False).index.tolist()
-                for book in popular_books:
-                    if book not in recommended_books and len(recommended_books) < limit:
-                        recommended_books.append(book)
+        recommended_books = recommended_books[:RECOMMEND_LIMIT]
+        if len(recommended_books) < RECOMMEND_LIMIT:
+            popular_books = user_book_matrix.sum().sort_values(ascending=False).index.tolist()
+            for book in popular_books:
+                if book not in recommended_books and len(recommended_books) < RECOMMEND_LIMIT:
+                    recommended_books.append(book)
 
         return {"recommended_books": recommended_books}

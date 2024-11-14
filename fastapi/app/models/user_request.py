@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import List, Optional
+from typing import List
 
 class BookReadersRequest(BaseModel):
     book_id: int
@@ -7,6 +7,4 @@ class BookReadersRequest(BaseModel):
 
 class BookRecommendationRequest(BaseModel):
     target_user_id: int
-    limit: Optional[int] = None
     books: List[BookReadersRequest]
-    
