@@ -60,19 +60,19 @@ const BookCoverSwiper: React.FC<BookCoverSwiperProps> = ({
               <img
                 src={cover}
                 alt="동화책 표지 사진"
-                className="book-cover-image w-full h-full object-cover rounded-xl"
+                className="w-full h-full object-cover rounded-xl"
               />
               {progress && progress[index] > 0 && progress[index] < 100 && (
-                <div className="absolute bottom-[0px] left-0 w-full h-2 bg-gray-300 rounded-b">
-                  <div className="h-full bg-red-400 rounded-b" style={{ width: `${progress[index]}%` }}></div>
+                <div className="absolute bottom-[0px] left-0 w-full h-2 bg-gray-300">
+                  <div className="h-full bg-red-400" style={{ width: `${progress[index]}%` }}></div>
                 </div>
               )}
               {isCompleted && isCompleted[index] && (
                 <img src={bookclip} alt="책 완료 표시" className="absolute -top-4 -right-2 w-16 h-16 z-10" />
               )}
-            </div>
-            <div className="mt-2 ml-2 font-bold text-left font-['MapleLight']">
-              <span className="text-xl">{titles[index]}</span>
+              <div className="absolute -bottom- left-0 text-lg md:text-xl font-semibold font-['MapleLight'] text-black bg-white bg-opacity-50 rounded-b-lg w-full py-1 shadow-md line-clamp-1 text-center">
+                <span>{titles[index]}</span>
+              </div>
             </div>
           </div>
         </SwiperSlide>
