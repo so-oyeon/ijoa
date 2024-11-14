@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Seeso, { UserStatusOption, InitializationErrorType } from "seeso";
 import { GazeInfo, WordPositionInfo } from "../../types/seesoTypes";
 
@@ -10,9 +10,11 @@ const SeesoComponent = ({ wordPositions }: Props) => {
   // 트래킹점 표시 관련 변수 (빨간점)
   // const outputCanvasRef = useRef<HTMLCanvasElement>(null);
   // const gazeInfoRef = useRef<HTMLHeadingElement>(null);
-  // const [gazeInfo, setGazeInfo] = useState<GazeInfo | null>(null);
+  const wordPositionsRef = useRef(wordPositions);
 
+  // const [gazeInfo, setGazeInfo] = useState<GazeInfo | null>(null);
   const [lastTimestamp, setLastTimestamp] = useState<number>(0);
+
   const licenseKey = import.meta.env.VITE_SEESO_SDK_KEY;
   let seeSoInstance: Seeso | null = null;
 
@@ -37,7 +39,7 @@ const SeesoComponent = ({ wordPositions }: Props) => {
 
         // 주의 점수를 주기적으로 확인
         setInterval(() => {
-          console.log("Attention Score: ", seeSoInstance?.getAttentionScore());
+          // console.log("Attention Score: ", seeSoInstance?.getAttentionScore());
           seeSoInstance?.addGazeCallback(onGaze);
         }, 1000); // 1초 간격으로 호출
       } else {
@@ -54,24 +56,28 @@ const SeesoComponent = ({ wordPositions }: Props) => {
 
   // 시선 정보를 갱신하고 화면에 표시하는 함수
   const onGaze = (gazeInfo: GazeInfo) => {
+    // console.log(wordPositionsRef.current);
+
     const currentTime = gazeInfo.timestamp;
     if (currentTime - lastTimestamp >= 1000) {
       setLastTimestamp(currentTime);
-      console.log(`시선 좌표 : (${gazeInfo.x}, ${gazeInfo.y})`);
+
+      const gazeX = gazeInfo.x;
+      const gazeY = gazeInfo.y;
+
+      // console.log(`시선 좌표 : (${gazeX}, ${gazeY})`);
+      const wordUnderGaze = wordPositionsRef.current.find(({ x, y, width, height }) => {
+        // console.log(`gazeX: ${gazeX}, gazeY: ${gazeY}, x: ${x}, y: ${y}, width: ${width}, height: ${height}`);
+        return gazeX >= x && gazeX <= x + width && gazeY >= y && gazeY <= y + height;
+      });
+
+      if (wordUnderGaze) {
+        console.log("내가 본 단어:", wordUnderGaze.word);
+      }
     }
 
     // 트래킹점 표시 셋팅 (빨간점)
     // setGazeInfo(gazeInfo);
-
-    const gazeX = gazeInfo.x;
-    const gazeY = gazeInfo.y;
-    const wordUnderGaze = wordPositions.find(({ x, y, width, height }) => {
-      return gazeX >= x && gazeX <= x + width && gazeY >= y && gazeY <= y + height;
-    });
-
-    if (wordUnderGaze) {
-      console.log("User is looking at:", wordUnderGaze.word);
-    }
   };
 
   // 트래킹점 표시 관련 함수 (빨간점)
@@ -120,7 +126,7 @@ const SeesoComponent = ({ wordPositions }: Props) => {
   // 캘리브레이션 버튼 클릭 핸들러
   const onClickCalibrationBtn = () => {
     const userId = "a1234";
-    const redirectUrl = "https://k11d105.p.ssafy.io/fairytale/content/1"; // seeso 초기화 후 리다이렉트 주소
+    const redirectUrl = "http://localhost:5173/fairytale/content/1"; // seeso 초기화 후 리다이렉트 주소
     const calibrationPoint = 5;
     Seeso.openCalibrationPage(licenseKey ?? "", userId, redirectUrl, calibrationPoint);
   };
@@ -154,15 +160,41 @@ const SeesoComponent = ({ wordPositions }: Props) => {
   //   }
   // }, [gazeInfo]);
 
-  return (
-    <div className="p-3 bg-white rounded-xl grid place-content-center absolute top-0 left-1/2 transform -translate-x-1/2 z-50">
-      {/* 트래킹점 표시 관련 캔버스 (빨간점) */}
-      {/* <canvas id="output" ref={outputCanvasRef} style={{ position: "fixed", top: 0, left: 0 }}></canvas> */}
+  useEffect(() => {
+    wordPositionsRef.current = wordPositions;
+  }, [wordPositions]);
 
-      <p>집중도 분석을 위해 아이트래킹을 설정해주세요 !</p>
-      <button className="bg-yellow-300" onClick={onClickCalibrationBtn}>
-        아이트래킹 설정 바로가기 click!
-      </button>
+  return (
+    <div>
+      {/* 트래킹점 표시 관련 캔버스 (빨간점) */}
+      {/* <canvas className="fixed top-0" id="output" ref={outputCanvasRef}></canvas> */}
+
+      {/* 단어 위치에 따라 배경이 흰색인 div 표시 */}
+      {/* {wordPositions.map((position, index) =>
+        index >= 0 ? (
+          <div
+            key={index}
+            style={{
+              position: "absolute",
+              left: `${position.x}px`,
+              top: `${position.y}px`,
+              width: `${position.width}px`,
+              height: `${position.height}px`,
+              border: "2px solid #FF0000", // 반투명 흰색
+              pointerEvents: "none", // 클릭 이벤트 무시
+              zIndex: 10,
+            }}></div>
+        ) : (
+          <></>
+        )
+      )} */}
+
+      <div className="p-3 bg-white rounded-xl grid place-content-center    fixed top-0 left-1/2 transform -translate-x-1/2 z-50">
+        <p>집중도 분석을 위해 아이트래킹을 설정해주세요 !</p>
+        <button className="bg-yellow-300" onClick={onClickCalibrationBtn}>
+          아이트래킹 설정 바로가기 click!
+        </button>
+      </div>
     </div>
   );
 };

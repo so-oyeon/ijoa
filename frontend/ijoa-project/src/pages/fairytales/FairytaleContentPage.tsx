@@ -262,23 +262,18 @@ const FairyTaleContentPage: React.FC = () => {
 
   // 단어 위치 추출 함수
   const extractWordPositions = () => {
-    const textContainer = document.querySelector(".seeso-text-container") as HTMLElement;
-    if (!textContainer) {
-      console.error("text-container element not found");
+    const container = document.querySelector(".seeso-text-container");
+    if (!container) {
+      console.error("Container element with class 'seeso-text-container' not found.");
       return;
     }
 
-    const words = textContainer.innerText.split(" ");
-    textContainer.innerText = ""; // 기존 텍스트를 지움
-
-    const positions = words.map((word) => {
-      const span = document.createElement("span");
-      span.innerText = word + " ";
-      textContainer.appendChild(span);
-
+    // 각 span 요소의 위치와 크기를 추출
+    const spans = container.querySelectorAll("span");
+    const positions: WordPositionInfo[] = Array.from(spans).map((span) => {
       const rect = span.getBoundingClientRect();
       return {
-        word,
+        word: span.innerText.trim(),
         x: rect.left,
         y: rect.top,
         width: rect.width,
@@ -287,7 +282,7 @@ const FairyTaleContentPage: React.FC = () => {
     });
 
     setWordPositions(positions);
-    console.log("Extracted word positions:", positions); // 좌표 정보 확인
+    console.log("Extracted word positions:", positions);
   };
 
   useEffect(() => {
@@ -334,8 +329,10 @@ const FairyTaleContentPage: React.FC = () => {
             )}
 
             {/* Seeso 시선 추적 글자 처리를 위해 seeso-text-container 클래스명 필요 */}
-            <div className="seeso-text-container px-2 sm:px-12 flex-1 text-sm sm:text-2xl lg:text-4xl font-['MapleBold'] font-bold text-center whitespace-pre-line break-keep">
-              {fairytaleData.content}
+            <div className="seeso-text-container px-2 sm:px-12 flex-1 text-sm sm:text-2xl lg:text-4xl font-['MapleBold'] font-bold whitespace-pre-line break-keep">
+              {fairytaleData.content.split(" ").map((word, index) => (
+                <span key={index}>{word} </span>
+              ))}
             </div>
           </div>
 
@@ -357,8 +354,7 @@ const FairyTaleContentPage: React.FC = () => {
           <div className="absolute top-[-12px] right-10">
             <button
               className="px-3 py-4 bg-gray-700 bg-opacity-50 rounded-2xl shadow-md active:bg-gray-800"
-              onClick={handleOpenMenu}
-            >
+              onClick={handleOpenMenu}>
               <img src={MenuButton} alt="메뉴 버튼" />
               <p className="text-xs text-white">메뉴</p>
             </button>
