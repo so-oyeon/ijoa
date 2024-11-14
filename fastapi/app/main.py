@@ -1,9 +1,9 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
-from services.database import connect_to_db, close_db_connection
-from services.book_service import get_books_and_readers
-from services.recommend_service import recommend_books_for_target_user
-from models.user_request import BookRecommendationRequest
+from .services.database import connect_to_db, close_db_connection
+from .services.book_service import get_books_and_readers
+from .services.recommend_service import recommend_books_for_target_user
+from .models.user_request import BookRecommendationRequest
 from dotenv import load_dotenv
 
 load_dotenv()
