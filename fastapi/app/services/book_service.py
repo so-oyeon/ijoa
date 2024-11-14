@@ -1,5 +1,5 @@
 from typing import List
-from models.user_request import BookReadersRequest
+from ..models.user_request import BookReadersRequest
 from fastapi import FastAPI
 
 async def get_books_and_readers(app: FastAPI) -> List[BookReadersRequest]:
