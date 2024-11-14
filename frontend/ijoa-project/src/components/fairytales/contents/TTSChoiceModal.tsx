@@ -4,6 +4,7 @@ import { ChildrenTTSListResponse } from "../../../types/fairytaleTypes";
 import closebutton from "/assets/close-button.png";
 import Lottie from "react-lottie-player";
 import loadingAnimation from "../../../lottie/footPrint-loadingAnimation.json";
+import DownloadingModal from "./DownloadingModal";
 
 interface TTSChoiceModalProps {
   isOpen: boolean;
@@ -27,6 +28,9 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [ttsList, setTtsList] = useState<ChildrenTTSListResponse[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [creationMessage, setCreationMessage] = useState("");
+  const [downloadInterval, setDownloadInterval] = useState<NodeJS.Timeout | null>(null);
 
   const readAloudEnabled = JSON.parse(localStorage.getItem("readAloudEnabled") || "false");
 
@@ -40,7 +44,7 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({
         const response = await fairyTaleApi.getChildrenTTSList(bookId);
         if (response.status === 200 && Array.isArray(response.data)) {
           setTtsList(response.data);
-          setIsLoading(false); // 데이터 로딩 완료 후 로딩 상태 해제
+          setIsLoading(false);
         }
       } catch (error) {
         console.error("fairyTaleApi의 getChildrenTTSList :", error);
@@ -49,24 +53,81 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({
     };
 
     getChildTTSList();
-  }, [isOpen, bookId]);
 
-  if (!isOpen) return null;
+    return () => {
+      // 컴포넌트 언마운트 시 interval 클리어
+      if (downloadInterval) {
+        clearInterval(downloadInterval);
+        setDownloadInterval(null);
+      }
+    };
+  }, [isOpen, bookId, downloadInterval]);
 
-  const ttsImages = ttsList.map((tts) => tts.image);
-  const ttsNames = ttsList.map((tts) => tts.ttsname);
-  const ttsIds = ttsList.map((tts) => tts.ttsid);
+  const startDownloadCheck = async (ttsId: number) => {
+    try {
+      if (isDownloading) {
+        setCreationMessage("열심히 다운로드 중이에요! 조금만 더 기다려주세요! 🔥");
+
+        setTimeout(() => {
+          setCreationMessage("");
+        }, 3000);
+        return;
+      }
+
+      const response = await fairyTaleApi.getTTSAudioBook(bookId, ttsId);
+      if (response.status === 200) {
+        setIsDownloading(true);
+
+        const interval = setInterval(async () => {
+          const ttsResponse = await fairyTaleApi.getChildrenTTSList(bookId);
+          if (ttsResponse.status === 200 && Array.isArray(ttsResponse.data)) {
+            setTtsList(ttsResponse.data);
+
+            const updatedTTS = ttsResponse.data.find((tts) => tts.ttsid === ttsId);
+            if (updatedTTS?.audio_created) {
+              setIsDownloading(false);
+              clearInterval(interval);
+              setDownloadInterval(null);
+            }
+          }
+        }, 30000);
+        setDownloadInterval(interval);
+      }
+    } catch (error) {
+      if (error instanceof Error && error.message.includes("409")) {
+        setCreationMessage("열심히 다운로드 중이에요! 조금만 더 기다려주세요! 🔥");
+
+        setTimeout(() => {
+          setCreationMessage("");
+        }, 3000);
+      } else {
+        console.error("다운로드 시작 중 에러:", error);
+      }
+    }
+  };
 
   const handleImageClick = (index: number) => {
-    setSelectedIndex(index);
-    setTTSId(ttsIds[index]);
-    setPreviousTTSId(ttsIds[index]);
+    const selectedTTS = ttsList[index];
+
+    if (!selectedTTS.audio_created) {
+      startDownloadCheck(selectedTTS.ttsid);
+    } else {
+      setSelectedIndex(index);
+      setTTSId(selectedTTS.ttsid);
+      setPreviousTTSId(selectedTTS.ttsid);
+    }
   };
 
   const handleClose = () => {
     setTTSId(null);
     onClose();
+    if (downloadInterval) {
+      clearInterval(downloadInterval);
+      setDownloadInterval(null);
+    }
   };
+
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 font-['MapleLight']">
@@ -85,35 +146,19 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({
                 <div className="mt-8 mb-8 flex justify-center items-center">
                   <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
                 </div>
-              ) : ttsImages.length > 0 ? (
+              ) : ttsList.length > 0 ? (
                 <div className="mt-8 mb-8 text-lg">
                   <div className="flex flex-wrap justify-center gap-8">
-                    {ttsImages.slice(0, 2).map((image, index) => (
+                    {ttsList.map((tts, index) => (
                       <div key={index} onClick={() => handleImageClick(index)}>
                         <img
-                          src={image}
-                          alt={ttsNames[index]}
+                          src={tts.image}
+                          alt={tts.ttsname}
                           className={`w-28 h-28 object-cover cursor-pointer rounded-full ${
-                            selectedIndex === index ? "border-[6px] border-[#67CCFF] rounded-full" : ""
+                            selectedIndex === index ? "border-[6px] border-[#67CCFF]" : ""
                           }`}
-                          onLoad={() => setIsLoading(false)} // 이미지 로드 완료 시 로딩 해제
                         />
-                        <p className="mt-2">{ttsNames[index]}</p>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="flex flex-wrap justify-center gap-8">
-                    {ttsImages.slice(2).map((image, index) => (
-                      <div key={index + 2} onClick={() => handleImageClick(index + 2)}>
-                        <img
-                          src={image}
-                          alt={ttsNames[index + 2]}
-                          className={`w-28 h-28 object-cover cursor-pointer rounded-full ${
-                            selectedIndex === index + 2 ? "border-[6px] border-[#67CCFF] rounded-full" : ""
-                          }`}
-                          onLoad={() => setIsLoading(false)} // 이미지 로드 완료 시 로딩 해제
-                        />
-                        <p className="mt-2">{ttsNames[index + 2]}</p>
+                        <p className="mt-2">{tts.ttsname}</p>
                       </div>
                     ))}
                   </div>
@@ -130,6 +175,7 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({
             </div>
           )}
 
+          <p className="text-center text-blue-500">{creationMessage}</p>
           {isReadIng ? (
             <div className="mt-8 flex gap-4 justify-center items-center">
               <button
@@ -158,6 +204,9 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({
             </div>
           )}
         </div>
+
+        {/* DownloadModal 컴포넌트 사용 */}
+        <DownloadingModal isOpen={isDownloading} />
       </div>
     </div>
   );

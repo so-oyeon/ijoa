@@ -216,3 +216,12 @@ export interface ChildrenTTSListResponse {
 export interface TTSPlaybackResponse {
   url: string;
 }
+
+// 동화 TTS 생성
+export interface TTSAudioBookResponse {
+  id: number;
+  name: string;
+  tts: string;
+  image_url: string;
+  trainData: boolean;
+}

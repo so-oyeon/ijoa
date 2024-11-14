@@ -63,13 +63,15 @@ const MyBookSwiper = ({ direction, myBookLists, myBookReadOrNot, progress }: Pro
 
               {/* 진행 상태바 */}
               {progress[index] > 0 && progress[index] < 100 && (
-                <div dir="ltr" className="absolute bottom-2 left-0 w-full h-2 bg-gray-300 rounded-b">
+                <div dir="ltr" className="absolute bottom-2 left-0 w-full h-2 bg-gray-300">
                   <div className="h-full bg-red-400 rounded-b" style={{ width: `${progress[index]}%` }}></div>
                 </div>
               )}
+            <div dir="ltr" className="text-center w-[200px]">
+              <span className="absolute -bottom-7 left-0 text-lg md:text-xl font-semibold font-['MapleLight'] text-black bg-white bg-opacity-50 rounded-b-lg w-full py-1 shadow-md line-clamp-1">
+                {myBookTitles[index]}
+              </span>
             </div>
-            <div dir="ltr" className="text-center mx-auto w-[200px]">
-              <span className="text-lg md:text-xl font-bold text-black line-clamp-1">{myBookTitles[index]}</span>
             </div>
           </div>
         </SwiperSlide>
