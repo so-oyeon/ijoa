@@ -106,15 +106,22 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({
     }
   };
 
-  const handleImageClick = (index: number) => {
+  const handleImageClick = async (index: number) => {
     const selectedTTS = ttsList[index];
 
-    if (!selectedTTS.audio_created) {
-      startDownloadCheck(selectedTTS.ttsid);
-    } else {
-      setSelectedIndex(index);
-      setTTSId(selectedTTS.ttsid);
-      setPreviousTTSId(selectedTTS.ttsid);
+    try {
+      const { data } = await fairyTaleApi.checkTTSCreationStatus(bookId, selectedTTS.ttsid);
+      if (!data.status) {
+        console.log("TTS 생성 상태: false");
+        startDownloadCheck(selectedTTS.ttsid);
+      } else {
+        console.log("TTS 생성 상태: true")
+        setSelectedIndex(index);
+        setTTSId(selectedTTS.ttsid);
+        setPreviousTTSId(selectedTTS.ttsid);
+      }
+    } catch (error) {
+      console.error("TTS 생성 상태 확인 중 에러:", error);
     }
   };
 
