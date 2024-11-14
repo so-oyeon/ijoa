@@ -13,7 +13,7 @@ import {
   QuizAnswerResponse,
   ChildrenTTSListResponse,
   TTSPlaybackResponse,
-  TTSAudioBookResponse
+  TTSAudioBookResponse,
 } from "../types/fairytaleTypes";
 
 export const fairyTaleApi = {
@@ -93,5 +93,10 @@ export const fairyTaleApi = {
   // 동화책 TTS 생성
   getTTSAudioBook: (bookId: number, TTSId: number) => {
     return api.get<TTSAudioBookResponse>(`/tts/audio-book/${bookId}/${TTSId}`);
+  },
+
+  // TTS 생성 여부 확인
+  checkTTSCreationStatus: (bookId: number, ttsId: number) => {
+    return api.get<{ status: boolean }>(`/tts/audios/check/${bookId}/${ttsId}`);
   },
 };
