@@ -55,6 +55,9 @@ const FairyTaleContentPage: React.FC = () => {
   // Seeso eye-tracking 글자 추출을 위한 word 배열
   const [wordPositions, setWordPositions] = useState<WordPositionInfo[]>([]);
 
+  // Seeso eye-tracking 텍스트 영역 추출을 위한 word 배열 (글/그림 집중도 구분)
+  const [textRangePosition, setTextRangePosition] = useState<WordPositionInfo | null>(null);
+
   // 동화책 내용(이미지, 텍스트)을 가져오는 api 통신 함수
   const getFairyTaleContent = useCallback(
     async (page: number) => {
@@ -268,6 +271,15 @@ const FairyTaleContentPage: React.FC = () => {
       return;
     }
 
+    const textRangePosition = container.getBoundingClientRect();
+    setTextRangePosition({
+      word: "",
+      x: textRangePosition.left,
+      y: textRangePosition.top,
+      width: textRangePosition.width,
+      height: textRangePosition.height,
+    });
+
     // 각 span 요소의 위치와 크기를 추출
     const spans = container.querySelectorAll("span");
     const positions: WordPositionInfo[] = Array.from(spans).map((span) => {
@@ -407,7 +419,20 @@ const FairyTaleContentPage: React.FC = () => {
       <FocusAlertModal isOpen={isFocusAlertModalOpen} onClose={handleCloseFocusAlertModal} />
 
       {/* Seeso eye-tracking 컴포넌트 호출 */}
-      <SeesoComponent wordPositions={wordPositions} />
+      <SeesoComponent
+        wordPositions={wordPositions}
+        textRangePosition={
+          textRangePosition
+            ? textRangePosition
+            : {
+                word: "",
+                x: 0,
+                y: 0,
+                width: 0,
+                height: 0,
+              }
+        }
+      />
     </div>
   );
 };

@@ -4,15 +4,20 @@ import { GazeInfo, WordPositionInfo } from "../../types/seesoTypes";
 
 interface Props {
   wordPositions: WordPositionInfo[];
+  textRangePosition: WordPositionInfo;
 }
 
-const SeesoComponent = ({ wordPositions }: Props) => {
-  // 트래킹점 표시 관련 변수 (빨간점)
-  // const outputCanvasRef = useRef<HTMLCanvasElement>(null);
-  // const gazeInfoRef = useRef<HTMLHeadingElement>(null);
-  const wordPositionsRef = useRef(wordPositions);
+const SeesoComponent = ({ wordPositions, textRangePosition }: Props) => {
+  // 여유 범위
+  const margin = 30;
 
-  // const [gazeInfo, setGazeInfo] = useState<GazeInfo | null>(null);
+  // 트래킹점 표시 관련 변수 (빨간점)
+  const outputCanvasRef = useRef<HTMLCanvasElement>(null);
+  const gazeInfoRef = useRef<HTMLHeadingElement>(null);
+  const wordPositionsRef = useRef(wordPositions);
+  const textRangePositionRef = useRef(textRangePosition);
+
+  const [gazeInfo, setGazeInfo] = useState<GazeInfo | null>(null);
   const [lastTimestamp, setLastTimestamp] = useState<number>(0);
 
   const licenseKey = import.meta.env.VITE_SEESO_SDK_KEY;
@@ -57,66 +62,84 @@ const SeesoComponent = ({ wordPositions }: Props) => {
   // 시선 정보를 갱신하고 화면에 표시하는 함수
   const onGaze = (gazeInfo: GazeInfo) => {
     // console.log(wordPositionsRef.current);
+    // console.log(textRangePositionRef.current);
 
     const currentTime = gazeInfo.timestamp;
     if (currentTime - lastTimestamp >= 1000) {
       setLastTimestamp(currentTime);
 
+      // 시선 좌표 추출
       const gazeX = gazeInfo.x;
       const gazeY = gazeInfo.y;
 
       // console.log(`시선 좌표 : (${gazeX}, ${gazeY})`);
+
+      // 단어 추출
       const wordUnderGaze = wordPositionsRef.current.find(({ x, y, width, height }) => {
         // console.log(`gazeX: ${gazeX}, gazeY: ${gazeY}, x: ${x}, y: ${y}, width: ${width}, height: ${height}`);
         return gazeX >= x && gazeX <= x + width && gazeY >= y && gazeY <= y + height;
       });
 
       if (wordUnderGaze) {
-        console.log("내가 본 단어:", wordUnderGaze.word);
+        // console.log("내가 본 단어:", wordUnderGaze.word);
+      }
+
+      // 글 또는 그림 여부 추출
+      const textRange = textRangePositionRef.current;
+
+      if (
+        gazeX >= textRange.x - margin &&
+        gazeX <= textRange.x + textRange.width + margin &&
+        gazeY >= textRange.y - margin &&
+        gazeY <= textRange.y + textRange.height + margin
+      ) {
+        console.log("글 보는 중");
+      } else {
+        console.log("");
       }
     }
 
     // 트래킹점 표시 셋팅 (빨간점)
-    // setGazeInfo(gazeInfo);
+    setGazeInfo(gazeInfo);
   };
 
   // 트래킹점 표시 관련 함수 (빨간점)
-  // const showGazeDotOnDom = (gazeInfo: GazeInfo) => {
-  //   const canvas = outputCanvasRef.current;
-  //   if (canvas) {
-  //     const ctx = canvas.getContext("2d");
-  //     if (ctx) {
-  //       canvas.width = window.innerWidth;
-  //       canvas.height = window.innerHeight;
-  //       ctx.clearRect(0, 0, canvas.width, canvas.height);
-  //       ctx.fillStyle = "#FF0000";
-  //       ctx.beginPath();
-  //       ctx.arc(gazeInfo.x, gazeInfo.y, 10, 0, Math.PI * 2, true);
-  //       ctx.fill();
-  //     }
-  //   }
-  // };
+  const showGazeDotOnDom = (gazeInfo: GazeInfo) => {
+    const canvas = outputCanvasRef.current;
+    if (canvas) {
+      const ctx = canvas.getContext("2d");
+      if (ctx) {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "#FF0000";
+        ctx.beginPath();
+        ctx.arc(gazeInfo.x, gazeInfo.y, 10, 0, Math.PI * 2, true);
+        ctx.fill();
+      }
+    }
+  };
 
-  // const hideGazeInfoOnDom = () => {
-  //   if (gazeInfoRef.current) {
-  //     gazeInfoRef.current.innerText = "";
-  //   }
-  // };
+  const hideGazeInfoOnDom = () => {
+    if (gazeInfoRef.current) {
+      gazeInfoRef.current.innerText = "";
+    }
+  };
 
-  // const hideGazeDotOnDom = () => {
-  //   const canvas = outputCanvasRef.current;
-  //   if (canvas) {
-  //     const ctx = canvas.getContext("2d");
-  //     if (ctx) {
-  //       ctx.clearRect(0, 0, canvas.width, canvas.height);
-  //     }
-  //   }
-  // };
+  const hideGazeDotOnDom = () => {
+    const canvas = outputCanvasRef.current;
+    if (canvas) {
+      const ctx = canvas.getContext("2d");
+      if (ctx) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    }
+  };
 
-  // const hideGaze = () => {
-  //   hideGazeInfoOnDom();
-  //   hideGazeDotOnDom();
-  // };
+  const hideGaze = () => {
+    hideGazeInfoOnDom();
+    hideGazeDotOnDom();
+  };
 
   // 디버그 콜백 함수
   const onDebug = (FPS: number, latency_min: number, latency_max: number, latency_avg: number) => {
@@ -126,7 +149,7 @@ const SeesoComponent = ({ wordPositions }: Props) => {
   // 캘리브레이션 버튼 클릭 핸들러
   const onClickCalibrationBtn = () => {
     const userId = "a1234";
-    const redirectUrl = "http://localhost:5173/fairytale/content/1"; // seeso 초기화 후 리다이렉트 주소
+    const redirectUrl = "https://k11d105.p.ssafy.io/fairytale/content/1"; // seeso 초기화 후 리다이렉트 주소
     const calibrationPoint = 5;
     Seeso.openCalibrationPage(licenseKey ?? "", userId, redirectUrl, calibrationPoint);
   };
@@ -150,26 +173,30 @@ const SeesoComponent = ({ wordPositions }: Props) => {
   }, []);
 
   // 트래킹점 표시 관련 useEffect (빨간점)
-  // useEffect(() => {
-  //   if (gazeInfo) {
-  //     // 트래킹점 표시
-  //     showGazeDotOnDom(gazeInfo);
-  //   } else {
-  //     // 트래킹점 제거
-  //     hideGaze();
-  //   }
-  // }, [gazeInfo]);
+  useEffect(() => {
+    if (gazeInfo) {
+      // 트래킹점 표시
+      showGazeDotOnDom(gazeInfo);
+    } else {
+      // 트래킹점 제거
+      hideGaze();
+    }
+  }, [gazeInfo]);
 
   useEffect(() => {
     wordPositionsRef.current = wordPositions;
   }, [wordPositions]);
+
+  useEffect(() => {
+    textRangePositionRef.current = textRangePosition;
+  }, [textRangePosition]);
 
   return (
     <div>
       {/* 트래킹점 표시 관련 캔버스 (빨간점) */}
       {/* <canvas className="fixed top-0" id="output" ref={outputCanvasRef}></canvas> */}
 
-      {/* 단어 위치에 따라 배경이 흰색인 div 표시 */}
+      {/* 단어 위치에 따라 빨간색 테두리 박스 div 표시 */}
       {/* {wordPositions.map((position, index) =>
         index >= 0 ? (
           <div
@@ -188,6 +215,19 @@ const SeesoComponent = ({ wordPositions }: Props) => {
           <></>
         )
       )} */}
+
+      {/* 텍스트 박스 범위에 따라 빨간색 테두리 박스 div 표시 */}
+      {/* <div
+        style={{
+          position: "absolute",
+          left: `${textRangePosition.x - margin}px`,
+          top: `${textRangePosition.y - margin}px`,
+          width: `${textRangePosition.width + margin * 2}px`,
+          height: `${textRangePosition.height + margin * 2}px`,
+          border: "2px solid #FF0000", // 반투명 흰색
+          pointerEvents: "none", // 클릭 이벤트 무시
+          zIndex: 10,
+        }}></div> */}
 
       <div className="p-3 bg-white rounded-xl grid place-content-center    fixed top-0 left-1/2 transform -translate-x-1/2 z-50">
         <p>집중도 분석을 위해 아이트래킹을 설정해주세요 !</p>
