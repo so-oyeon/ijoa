@@ -1,9 +1,11 @@
+// TTSChoiceModal.tsx
 import React, { useEffect, useState } from "react";
 import { fairyTaleApi } from "../../../api/fairytaleApi";
 import { ChildrenTTSListResponse } from "../../../types/fairytaleTypes";
 import closebutton from "/assets/close-button.png";
 import Lottie from "react-lottie-player";
 import loadingAnimation from "../../../lottie/footPrint-loadingAnimation.json";
+import DownloadingModal from "./DownloadingModal";
 
 interface TTSChoiceModalProps {
   isOpen: boolean;
@@ -27,19 +29,20 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [ttsList, setTtsList] = useState<ChildrenTTSListResponse[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isCreating, setIsCreating] = useState(false);
-  const [creationMessage, setCreationMessage] = useState("");
-  const [selectedAudioCreated, setSelectedAudioCreated] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [downloadInterval, setDownloadInterval] = useState<NodeJS.Timeout | null>(null);
 
   const readAloudEnabled = JSON.parse(localStorage.getItem("readAloudEnabled") || "false");
 
   useEffect(() => {
     if (!isOpen) return;
 
-    const fetchTTSList = async () => {
+    const getChildTTSList = async () => {
+      if (!bookId) return;
+
       try {
         const response = await fairyTaleApi.getChildrenTTSList(bookId);
-        if (response.status === 200) {
+        if (response.status === 200 && Array.isArray(response.data)) {
           setTtsList(response.data);
           setIsLoading(false);
         }
@@ -49,68 +52,66 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({
       }
     };
 
-    fetchTTSList();
+    getChildTTSList();
 
-    const intervalId = setInterval(fetchTTSList, 30000);
-    return () => clearInterval(intervalId);
-  }, [isOpen, bookId]);
+    return () => {
+      // 컴포넌트 언마운트 시 interval 클리어
+      if (downloadInterval) {
+        clearInterval(downloadInterval);
+        setDownloadInterval(null);
+      }
+    };
+  }, [isOpen, bookId, downloadInterval]);
 
-  if (!isOpen) return null;
+  const startDownloadCheck = async (ttsId: number) => {
+    try {
+      const response = await fairyTaleApi.getTTSAudioBook(bookId, ttsId);
+      if (response.status === 200) {
+        setIsDownloading(true);
 
-  const handleImageClick = (index: number) => {
-    setSelectedIndex(index);
-    const selectedTTS = ttsList[index];
-    setTTSId(selectedTTS.ttsid);
-    setPreviousTTSId(selectedTTS.ttsid);
-    setSelectedAudioCreated(selectedTTS.audio_created);
+        // 30초 간격으로 getChildrenTTSList 호출하여 다운로드 완료 여부 확인
+        const interval = setInterval(async () => {
+          const ttsResponse = await fairyTaleApi.getChildrenTTSList(bookId);
+          if (ttsResponse.status === 200 && Array.isArray(ttsResponse.data)) {
+            setTtsList(ttsResponse.data);
+
+            const updatedTTS = ttsResponse.data.find((tts) => tts.ttsid === ttsId);
+            if (updatedTTS?.audio_created) {
+              setIsDownloading(false);
+              clearInterval(interval);
+              setDownloadInterval(null);
+            }
+          }
+        }, 30000); // 30초 간격으로 확인
+        setDownloadInterval(interval);
+      }
+    } catch (error) {
+      console.error("다운로드 시작 중 에러:", error);
+    }
   };
 
-  const handleDownloadClick = async (index: number) => {
+  const handleImageClick = (index: number) => {
     const selectedTTS = ttsList[index];
 
     if (!selectedTTS.audio_created) {
-      setIsCreating(true);
-      const originalMessage = "다운로드 중이에요! 잠시만 기다려주세요!";
-      setCreationMessage(originalMessage);
-
-      try {
-        const response = await fairyTaleApi.getTTSAudioBook(bookId, selectedTTS.ttsid);
-        if (response.status === 200) {
-          setCreationMessage("목소리 생성이 완료됐어요!");
-          setIsCreating(false);
-        }
-      } catch (error) {
-        if (error instanceof Error && error.message.includes("409")) {
-          setCreationMessage("열심히 다운로드 중이에요! 조금만 더 기다려주세요! 🔥");
-
-          setTimeout(() => {
-            setCreationMessage(originalMessage);
-          }, 3000);
-
-          const intervalId = setInterval(async () => {
-            const response = await fairyTaleApi.getChildrenTTSList(bookId);
-            const updatedTTS = response.data.find((tts: ChildrenTTSListResponse) => tts.ttsid === selectedTTS.ttsid);
-
-            if (updatedTTS && updatedTTS.audio_created) {
-              setTtsList((prevList) =>
-                prevList.map((tts) => (tts.ttsid === selectedTTS.ttsid ? { ...tts, audio_created: true } : tts))
-              );
-              setIsCreating(false);
-              clearInterval(intervalId);
-            }
-          }, 5000);
-        } else {
-          setIsCreating(false);
-          setCreationMessage("오류가 발생했습니다. 다시 시도해주세요.");
-        }
-      }
+      startDownloadCheck(selectedTTS.ttsid);
+    } else {
+      setSelectedIndex(index);
+      setTTSId(selectedTTS.ttsid);
+      setPreviousTTSId(selectedTTS.ttsid);
     }
   };
 
   const handleClose = () => {
     setTTSId(null);
     onClose();
+    if (downloadInterval) {
+      clearInterval(downloadInterval);
+      setDownloadInterval(null);
+    }
   };
+
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 font-['MapleLight']">
@@ -129,50 +130,25 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({
                 <div className="mt-8 mb-8 flex justify-center items-center">
                   <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
                 </div>
-              ) : (
-                <>
-                  {ttsList.length > 0 ? (
-                    <div className="mt-8 mb-8 text-lg">
-                      <div
-                        className={`flex ${
-                          ttsList.length === 4 ? "flex-wrap gap-8 justify-between" : "flex-wrap gap-8 justify-center"
-                        }`}
-                      >
-                        {ttsList.map((tts, index) => (
-                          <div
-                            key={index}
-                            onClick={() => handleImageClick(index)}
-                            className={`relative ${ttsList.length === 4 ? "w-1/2" : "w-auto"}`}
-                          >
-                            <img
-                              src={tts.image}
-                              alt={tts.ttsname}
-                              className={`w-28 h-28 object-cover cursor-pointer rounded-full ${
-                                selectedIndex === index ? "border-[6px] border-[#67CCFF]" : ""
-                              }`}
-                              onLoad={() => setIsLoading(false)}
-                            />
-                            <p className="mt-2">{tts.ttsname}</p>
-                            {!tts.audio_created && (
-                              <button
-                                onClick={() => {
-                                  handleDownloadClick(index);
-                                }}
-                                className="absolute inset-0 flex items-center top-[120px] justify-center bg-black bg-opacity-50 text-white text-sm rounded-2xl"
-                              >
-                                {isCreating && selectedIndex === index ? "다운로드 중" : "다운로드 필요"}
-                              </button>
-                            )}
-                          </div>
-                        ))}
+              ) : ttsList.length > 0 ? (
+                <div className="mt-8 mb-8 text-lg">
+                  <div className="flex flex-wrap justify-center gap-8">
+                    {ttsList.map((tts, index) => (
+                      <div key={index} onClick={() => handleImageClick(index)}>
+                        <img
+                          src={tts.image}
+                          alt={tts.ttsname}
+                          className={`w-28 h-28 object-cover cursor-pointer rounded-full ${
+                            selectedIndex === index ? "border-[6px] border-[#67CCFF]" : ""
+                          }`}
+                        />
+                        <p className="mt-2">{tts.ttsname}</p>
                       </div>
-                    </div>
-                  ) : (
-                    <div className="mt-8 mb-8 text-lg text-center text-gray-500">학습된 TTS가 없어요.</div>
-                  )}
-
-                  {isCreating && <p className="text-center text-blue-500">{creationMessage}</p>}
-                </>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="mt-8 mb-8 text-lg text-center text-gray-500">학습된 TTS가 없어요.</div>
               )}
             </>
           )}
@@ -183,44 +159,37 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({
             </div>
           )}
 
-          {/* 읽기 버튼들 - 선택한 TTS의 audio_created가 true일 때만 활성화 */}
-          <div className="mt-8 flex gap-4 justify-center items-center">
-            {isReadIng ? (
-              <>
-                <button
-                  className={`w-36 py-2 text-[#67CCFF] text-lg font-bold bg-white rounded-3xl border-2 border-[#67CCFF] ${
-                    selectedAudioCreated ? "active:bg-[#e0f7ff]" : "opacity-50 cursor-not-allowed"
-                  }`}
-                  onClick={() => {
-                    if (selectedAudioCreated && onContinueReading) onContinueReading();
-                  }}
-                  disabled={!selectedAudioCreated}
-                >
-                  이어서 읽기
-                </button>
-                <button
-                  className={`w-36 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-3xl border-2 border-[#67CCFF] ${
-                    selectedAudioCreated ? "active:bg-[#005f99]" : "opacity-50 cursor-not-allowed"
-                  }`}
-                  onClick={onClose}
-                  disabled={!selectedAudioCreated}
-                >
-                  처음부터 읽기
-                </button>
-              </>
-            ) : (
+          {isReadIng ? (
+            <div className="mt-8 flex gap-4 justify-center items-center">
               <button
-                className={`w-36 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-3xl border-2 border-[#67CCFF] ${
-                  selectedAudioCreated ? "active:bg-[#005f99]" : "opacity-50 cursor-not-allowed"
-                }`}
+                className="w-36 py-2 text-[#67CCFF] text-lg font-bold bg-white rounded-3xl border-2 border-[#67CCFF] active:bg-[#e0f7ff]"
+                onClick={() => {
+                  if (onContinueReading) onContinueReading();
+                }}
+              >
+                이어서 읽기
+              </button>
+              <button
+                className="w-36 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-3xl border-2 border-[#67CCFF] active:bg-[#005f99]"
                 onClick={onClose}
-                disabled={!selectedAudioCreated}
+              >
+                처음부터 읽기
+              </button>
+            </div>
+          ) : (
+            <div className="mt-8 text-lg">
+              <button
+                className="w-36 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-3xl border-2 border-[#67CCFF] active:bg-[#005f99]"
+                onClick={onClose}
               >
                 동화책 읽기
               </button>
-            )}
-          </div>
+            </div>
+          )}
         </div>
+
+        {/* DownloadModal 컴포넌트 사용 */}
+        <DownloadingModal isOpen={isDownloading} />
       </div>
     </div>
   );
