@@ -92,7 +92,7 @@ const LevelTemplate: React.FC<LevelTemplateProps> = ({
       {currentLevel === templateLevel && currentLevel !== 4 && (
         <button
           onClick={() => setIsInfoVisible(true)}
-          className="absolute bottom-[-12px] left-10 px-2 py-3 bg-gray-700 bg-opacity-50 rounded-2xl shadow-md"
+          className="absolute bottom-[-12px] left-10 px-2 py-3 bg-gray-700 bg-opacity-50 rounded-2xl shadow-md active:bg-gray-800"
         >
           <span className="text-xs text-white">정보</span>
           <img src="/assets/child/info-button.png" alt="정보버튼" />
