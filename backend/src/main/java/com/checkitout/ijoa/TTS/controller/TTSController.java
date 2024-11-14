@@ -8,6 +8,7 @@ import com.checkitout.ijoa.TTS.dto.response.*;
 import com.checkitout.ijoa.TTS.service.TTSService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.kafka.common.metrics.Stat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -99,6 +100,13 @@ public class TTSController implements TTSApiDocumentation {
     @GetMapping("/audios/{bookId}")
     public ResponseEntity<?> childTTSList(@PathVariable("bookId") Long bookId) throws IOException {
         List<ChildTTSListDto> responseDto = ttsService.childTTSList(bookId);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
+    @Override
+    @GetMapping("/audios/check/{bookId}/{ttsId}")
+    public ResponseEntity<?> checkAudioBook(@PathVariable("bookId")Long bookId, @PathVariable("ttsId")Long ttsId) throws IOException {
+        StatusDto responseDto = ttsService.checkAudioBook(bookId, ttsId);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
