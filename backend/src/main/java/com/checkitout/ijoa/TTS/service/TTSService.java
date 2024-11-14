@@ -223,6 +223,10 @@ public class TTSService {
 
     // tts모델 학습 시작
     public void startTrain(Long ttsId) {
+
+        if(trainAudioRepository.existsByTtsId(ttsId)){
+            throw new CustomException(ErrorCode.TTS_ALREADY_EXISTS);
+        }
         // 학습데이터
         List<TrainAudio> trainAudios = trainAudioRepository.findByTtsIdOrderByScriptId(ttsId).orElseThrow(()-> new CustomException(ErrorCode.TRAINAUDIO_NOT_FOUND));
 
