@@ -66,7 +66,7 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({
   const startDownloadCheck = async (ttsId: number) => {
     try {
       if (isDownloading) {
-        setCreationMessage("열심히 다운로드 중이에요! 조금만 더 기다려주세요! 🔥");
+        setCreationMessage("열심히 다운로드 중이에요! 잠시 후 다시 시도해주세요! 🔥");
 
         setTimeout(() => {
           setCreationMessage("");
@@ -95,7 +95,7 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({
       }
     } catch (error) {
       if (error instanceof Error && error.message.includes("409")) {
-        setCreationMessage("열심히 다운로드 중이에요! 조금만 더 기다려주세요! 🔥");
+        setCreationMessage("열심히 다운로드 중이에요! 잠시 후 다시 시도해주세요! 🔥");
 
         setTimeout(() => {
           setCreationMessage("");
@@ -115,7 +115,7 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({
         console.log("TTS 생성 상태: false");
         startDownloadCheck(selectedTTS.ttsid);
       } else {
-        console.log("TTS 생성 상태: true")
+        console.log("TTS 생성 상태: true");
         setSelectedIndex(index);
         setTTSId(selectedTTS.ttsid);
         setPreviousTTSId(selectedTTS.ttsid);
