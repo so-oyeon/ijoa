@@ -26,6 +26,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
@@ -51,6 +52,7 @@ public class TTSService {
     private static final String TTS_CREATE_TOPIC = "create_tts";
     // tts 모델 경로 저장
     private static final String TTS_MODEL_TOPIC =  "tts_model_path";
+    private static final String TTS_ERROR_TOPIC="tts_error";
 
 
     private final SecurityUtil securityUtil;
@@ -74,12 +76,19 @@ public class TTSService {
             throw new CustomException(ErrorCode.TTS_LIMIT_EXCEEDED);
         }
 
-        String url = fileService.saveProfileImage(requestDto.getImage());
+        String url;
+        MultipartFile image = requestDto.getImage();
+        if(requestDto.getImage()!=null){
+            url = fileService.saveProfileImage(requestDto.getImage());
+
+        }else{
+            url="https://checkitout-bucket.s3.ap-northeast-2.amazonaws.com/ttsprofile/default.png";
+        }
 
         TTS newTTS = TTSProfileRequestDto.of(requestDto,url,user);
 
         TTS savedTTS = ttsRepository.save(newTTS);
-        return TTSProfileResponseDto.fromTTS(savedTTS,false);
+        return TTSProfileResponseDto.fromTTS(savedTTS,false,checkStatus(savedTTS.getId()));
     }
 
     // TTS 삭제
@@ -93,9 +102,12 @@ public class TTSService {
         checkUser(deleteTTS,user.getId());
 
         //s3 파일 삭제
-        // 프로필 이미지 삭제
-        String key = getKeyFromUrl(deleteTTS.getImage());
-        fileService.deleteFile(key);
+        // 프로필 이미지 디폴트 아니면 삭제
+        if(!"https://checkitout-bucket.s3.ap-northeast-2.amazonaws.com/ttsprofile/default.png".equals(deleteTTS.getImage())){
+            String key = getKeyFromUrl(deleteTTS.getImage());
+            fileService.deleteFile(key);
+
+        }
         // 학습 데이터 삭제
         List<TrainAudio> trainAudios = trainAudioRepository.findByTtsId(deleteTTS.getId());
         if(trainAudios!=null){
@@ -125,13 +137,18 @@ public class TTSService {
 
         TTS updateTTS = ttsRepository.findById(ttsId).orElseThrow(()-> new CustomException(ErrorCode.TTS_NOT_FOUND));
         checkUser(updateTTS,user.getId());
+        String url;
 
         if(requestDto.getImage() != null && !requestDto.getImage().isEmpty()){
             //기존 이미지 s3삭제
-            String key = getKeyFromUrl(updateTTS.getImage());
-            fileService.deleteFile(key);
 
-            String url = fileService.saveProfileImage(requestDto.getImage());
+            if(!"https://checkitout-bucket.s3.ap-northeast-2.amazonaws.com/ttsprofile/default.png".equals(updateTTS.getImage())){
+                String key = getKeyFromUrl(updateTTS.getImage());
+                fileService.deleteFile(key);
+
+            }
+
+            url = fileService.saveProfileImage(requestDto.getImage());
             updateTTS.setImage(url);
         }
 
@@ -141,7 +158,7 @@ public class TTSService {
 
         TTS updatedTTS = ttsRepository.save(updateTTS);
 
-        return TTSProfileResponseDto.fromTTS(updatedTTS,trainAudioRepository.existsByTtsId(updateTTS.getId()));
+        return TTSProfileResponseDto.fromTTS(updatedTTS,trainAudioRepository.existsByTtsId(updateTTS.getId()),checkStatus(updatedTTS.getId()));
     }
 
     // 부모 tts 목록
@@ -153,7 +170,8 @@ public class TTSService {
         List<TTS> ttsList = ttsRepository.findByUserId(user.getId()).orElseThrow(()-> new CustomException(ErrorCode.TTS_NO_CONTENT));
 
         for(TTS ts : ttsList){
-            responseDtos.add(TTSProfileResponseDto.fromTTS(ts,trainAudioRepository.existsByTtsId(ts.getId())));
+
+            responseDtos.add(TTSProfileResponseDto.fromTTS(ts,trainAudioRepository.existsByTtsId(ts.getId()), checkStatus(ts.getId())));
         }
 
         return responseDtos;
@@ -221,15 +239,27 @@ public class TTSService {
         RBucket<String> statusFlag = redissonClient.getBucket(lockKey);
 
         // 상태 플래그가 없으면 플래그를 설정하고 true 반환, 이미 존재하면 false 반환
-        if(!statusFlag.setIfAbsent("IN_PROGRESS")){
+        if("IN_PROGRESS".equals(statusFlag.get())){
             throw new CustomException(ErrorCode.TTS_CREATION_ALREADY_IN_PROGRESS);
         }else{
-            // 만료 시간 설정
+            // 상태를 IN_PROGRESS로 설정하고 만료 시간 설정
+            statusFlag.set("IN_PROGRESS");
             statusFlag.expire(2, TimeUnit.HOURS);
 
             trainAudioKafkaTemplate.send(TTS_CREATE_TOPIC, responseDto);
 
         }
+    }
+
+    // error 시 상태 변환
+    @KafkaListener(topics = TTS_ERROR_TOPIC, groupId = "tts_group", containerFactory = "errorMessageKafkaListenerContainerFactory")
+    public void ttsError(ErrorDto errorDto){
+        Long ttsId = errorDto.getTtsId();
+        // 상태 변환
+        String lockKey = "createTTSModel:"+ttsId;
+        RBucket<String> statusFlag = redissonClient.getBucket(lockKey);
+
+        statusFlag.set("ERROR");
     }
 
 
@@ -369,6 +399,16 @@ public class TTSService {
         if(!tts.getUser().getId().equals(userId)){
             throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
         }
+    }
+
+    // tts 상태 확인
+    private String checkStatus(Long ttsId){
+        // 상태 변환
+        String lockKey = "createTTSModel:"+ttsId;
+        RBucket<String> statusFlag = redissonClient.getBucket(lockKey);
+
+        // flag가 존재하면 반환하고, 없으면 null 반환
+        return statusFlag.get();
     }
 
     public String getKeyFromUrl(String url) {
