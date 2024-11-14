@@ -414,4 +414,18 @@ public class TTSService {
     public String getKeyFromUrl(String url) {
         return url.replace("https://checkitout-bucket.s3.ap-northeast-2.amazonaws.com/", "");
     }
+
+    public StatusDto checkAudioBook(Long bookId, Long ttsId) {
+        StatusDto resposeDto;
+        Fairytale fairytale = fairytaleRepository.findById(bookId).orElseThrow(()-> new CustomException(ErrorCode.FAIRYTALE_NOT_FOUND));
+        TTS tts = ttsRepository.findById(ttsId).orElseThrow(()-> new CustomException(ErrorCode.TTS_NOT_FOUND));
+
+        if(fairytaleTTSRepository.existsByFairytaleAndTts(fairytale, tts)){
+            resposeDto = new StatusDto(true);
+        }else{
+            resposeDto = new StatusDto(false);
+        }
+
+        return resposeDto;
+    }
 }
