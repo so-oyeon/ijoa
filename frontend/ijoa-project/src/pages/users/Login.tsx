@@ -122,13 +122,13 @@ const Login: React.FC<LoginProps> = ({ onAssetsLoaded }) => {
         <div className="w-full flex flex-col items-center space-y-3">
           <button
             onClick={() => openModal("login")}
-           className="w-[30vw] md:w-[30vw] lg:w-[30vw] h-12 md:h-16 lg:h-20 bg-yellow-400 text-black text-lg md:text-xl lg:text-3xl font-bold rounded-full shadow-md border-4 border-white hover:shadow-lg transition-shadow duration-200 active:scale-110"
+           className="w-[30vw] md:w-[30vw] lg:w-[30vw] h-12 md:h-16 lg:h-20 bg-yellow-400 text-gray-800 text-lg md:text-xl lg:text-3xl font-bold rounded-full shadow-md border-4 border-white hover:shadow-lg transition-shadow duration-200 active:scale-110"
           >
             로 그 인
           </button>
           <button
             onClick={() => openModal("signup")}
-            className="w-[30vw] md:w-[30vw] lg:w-[30vw] h-12 md:h-16 lg:h-20 bg-orange-500 text-black text-lg md:text-xl lg:text-3xl font-bold rounded-full shadow-md border-4 border-white hover:shadow-lg transition-shadow duration-200 active:scale-110"
+            className="w-[30vw] md:w-[30vw] lg:w-[30vw] h-12 md:h-16 lg:h-20 bg-orange-500 text-gray-800 text-lg md:text-xl lg:text-3xl font-bold rounded-full shadow-md border-4 border-white hover:shadow-lg transition-shadow duration-200 active:scale-110"
           >
             회 원 가 입
           </button>
