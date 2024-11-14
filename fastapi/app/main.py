@@ -23,7 +23,7 @@ app = FastAPI(
 
 
 
-@app.post("/fastapi/recommend")
+@app.post("/recommend")
 async def recommend_books(childId: int):
     try:
         
