@@ -94,6 +94,16 @@ public class GetFairytaleRankTest {
 
             ChildReadBooks childReadBook = ChildReadBooks.of(1, now(), true, newChild, fairytale, completionCount[i]);
             childReadBooksRepository.save(childReadBook);
+
+            if (i == totalFairytale - 1) {
+                Child newChild2 = Child.createChild(user, "newChild2", "", LocalDate.of(1999, 12, 12), Gender.MALE,
+                        now());
+                childRepository.save(newChild2);
+
+                ChildReadBooks childReadBook2 = ChildReadBooks.of(1, now(), true, newChild2, fairytale,
+                        100);
+                childReadBooksRepository.save(childReadBook2);
+            }
         }
     }
 

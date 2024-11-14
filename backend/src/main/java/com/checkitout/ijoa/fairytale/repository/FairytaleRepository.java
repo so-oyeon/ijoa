@@ -18,14 +18,14 @@ public interface FairytaleRepository extends JpaRepository<Fairytale, Long>, Fai
 
     Page<Fairytale> findByCategory(CATEGORY category, Pageable pageable);
 
-    @Query("SELECT DISTINCT f " +
-            "FROM Fairytale f " +
-            "LEFT JOIN f.childReadBooks crb " +
-            "LEFT JOIN crb.child c " +
-            "ON FUNCTION('YEAR', c.birth) = FUNCTION('YEAR', :childBirth) " +
-            "GROUP BY f.id " +
-            "ORDER BY SUM(crb.completionCount) DESC " +
-            "LIMIT :recommendationCount")
+    @Query("""
+            SELECT DISTINCT f
+            FROM Fairytale f
+            LEFT JOIN f.childReadBooks crb ON FUNCTION('YEAR', crb.child.birth) = FUNCTION('YEAR', :childBirth)
+            GROUP BY f.id
+            ORDER BY SUM(COALESCE(crb.completionCount, 0)) DESC
+            LIMIT :recommendationCount
+            """)
     List<Fairytale> findPopularFairytalesByAgeGroup(@Param("childBirth") LocalDate childBirth,
                                                     @Param("recommendationCount") Integer recommendationCount);
 }
