@@ -150,7 +150,7 @@ const Header = () => {
     <div className="w-full h-24 px-10 py-3 bg-gradient-to-b from-white flex justify-between items-center fixed top-0 z-50">
       <div className="w-2/3 h-full flex items-center space-x-5">
         {/* 로고 */}
-        <img className="h-full active:scale-110" src="/assets/logo.png" alt="" onClick={handleGoToMain} />
+        <img className="h-[100px] active:scale-110" src="/assets/logo.png" alt="" onClick={handleGoToMain}/>
       </div>
 
       <div className="grid grid-cols-5 gap-3">

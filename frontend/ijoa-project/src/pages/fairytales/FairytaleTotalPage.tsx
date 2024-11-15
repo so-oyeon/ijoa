@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "../../css/FairytaleContentPage.css";
 import FairytaleListPage from "./FairytaleListPage";
 import FairytaleSearchPage from "./FairytaleSearchPage";
+import FallingSnow from "../../components/common/SnowFlake";
 
 const FairytaleTotalPage: React.FC = () => {
   const [showList, setShowList] = useState(true);
@@ -27,7 +28,7 @@ const FairytaleTotalPage: React.FC = () => {
           전체 도서
         </button>
       </div>
-
+      <FallingSnow />
       {/* Conditional Rendering */}
       {showList ? <FairytaleListPage /> : <FairytaleSearchPage />}
     </div>
