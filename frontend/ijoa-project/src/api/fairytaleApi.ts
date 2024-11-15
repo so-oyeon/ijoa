@@ -13,7 +13,8 @@ import {
   QuizAnswerResponse,
   ChildrenTTSListResponse,
   TTSPlaybackResponse,
-  TTSAudioBookResponse
+  TTSAudioBookResponse,
+  EyeTrackingRequestData
 } from "../types/fairytaleTypes";
 
 export const fairyTaleApi = {
@@ -93,5 +94,10 @@ export const fairyTaleApi = {
   // 동화책 TTS 생성
   getTTSAudioBook: (bookId: number, TTSId: number) => {
     return api.get<TTSAudioBookResponse>(`/tts/audio-book/${bookId}/${TTSId}`);
+  },
+
+  // 동화책 특정 페이지 시선추적 데이터 저장
+  createEyeTrackingData: (pageHistoryId: number, data: EyeTrackingRequestData) => {
+    return api.post(`/fairytales/reading-histories/${pageHistoryId}/eye-tracking`, data);
   },
 };

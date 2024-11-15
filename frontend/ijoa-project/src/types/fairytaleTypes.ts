@@ -229,9 +229,7 @@ export interface TTSAudioBookResponse {
 // 동화책 특정 페이지 시선추적 데이터 저장 요청 데이터
 export interface EyeTrackingRequestData {
   trackedAt: string;
-  isFaceMissing: boolean;
-  gazeX: number | null;
-  gazeY: number | null;
+  isGazeOutOfScreen: boolean;
   attentionRate: number | null;
   word: string | null;
   isImage: boolean;

@@ -185,9 +185,7 @@ const SeesoComponent = ({ fairytaleId, pageHistoryId, wordPositions, textRangePo
 
     const data = {
       trackedAt: formatToday,
-      isFaceMissing: !(isNaN(gazeX) || isNaN(gazeY)),
-      gazeX: isNaN(gazeX) ? null : gazeX,
-      gazeY: isNaN(gazeY) ? null : gazeY,
+      isGazeOutOfScreen: isNaN(gazeX) || isNaN(gazeY),
       attentionRate: isNaN(attentionRate) ? null : attentionRate,
       word: word,
       isImage: isImage,
@@ -237,7 +235,7 @@ const SeesoComponent = ({ fairytaleId, pageHistoryId, wordPositions, textRangePo
   return (
     <div>
       {/* 트래킹점 표시 관련 캔버스 (빨간점) */}
-      {/* <canvas className="fixed top-0" id="output" ref={outputCanvasRef}></canvas> */}
+      <canvas className="fixed top-0" id="output" ref={outputCanvasRef}></canvas>
 
       {/* 단어 위치에 따라 빨간색 테두리 박스 div 표시 */}
       {/* {wordPositions.map((position, index) =>
