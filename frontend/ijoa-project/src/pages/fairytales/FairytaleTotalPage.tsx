@@ -9,25 +9,23 @@ const FairytaleTotalPage: React.FC = () => {
   return (
     <div className="fairytale-content-page mt-[100px] font-['MapleLight']">
       {/* Toggle Tabs */}
-      <div role="tablist" className="tabs tabs-boxed w-[200px] ml-auto mr-12 flex justify-end">
-        <a
-          role="tab"
-          className={`tab ${
-            showList ? "tab-active text-xl" : "text-md"
+      <div className="border border-[#FFCC00] rounded-sm grid grid-cols-2 w-[230px] ml-auto mr-12 justify-end text-lg">
+        <button
+          className={`px-3 py-1 font-semibold ${
+            showList ? "text-white bg-[#FFCC00]" : "text-[#FFCC00]"
           }`}
           onClick={() => setShowList(true)}
         >
           추천 도서
-        </a>
-        <a
-          role="tab"
-          className={`tab ${
-            !showList ? "tab-active text-xl" : "text-md"
+        </button>
+        <button
+          className={`px-3 py-1 font-semibold ${
+            !showList ? "text-white bg-[#FFCC00]" : "text-[#FFCC00]"
           }`}
           onClick={() => setShowList(false)}
         >
           전체 도서
-        </a>
+        </button>
       </div>
 
       {/* Conditional Rendering */}
