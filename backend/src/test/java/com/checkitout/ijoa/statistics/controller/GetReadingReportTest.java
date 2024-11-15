@@ -103,20 +103,18 @@ public class GetReadingReportTest {
         PageHistory pageHistory = PageHistory.of(child, fairytalePageContent);
         pageHistoryRepository.save(pageHistory);
 
-        EyeTrackingData eyeTrackingData = EyeTrackingData.of(now(), false, false,
-                1.1f, 1.1f, 3.1f, 1.0f, "사과", false, pageHistory);
+        EyeTrackingData eyeTrackingData = EyeTrackingData.of(now(), false, 1.0f, "사과", false, pageHistory);
         eyeTrackingDataRepository.save(eyeTrackingData);
 
-        EyeTrackingData eyeTrackingData2 = EyeTrackingData.of(now().minusDays(1), false, true,
-                null, null, null, null, null, false, pageHistory);
+        EyeTrackingData eyeTrackingData2 = EyeTrackingData.of(now().minusDays(1), true, null, null, false, pageHistory);
         eyeTrackingDataRepository.save(eyeTrackingData2);
 
-        EyeTrackingData eyeTrackingData3 = EyeTrackingData.of(now().minusHours(1), false, true,
-                null, null, null, null, null, false, pageHistory);
+        EyeTrackingData eyeTrackingData3 = EyeTrackingData.of(now().minusHours(1), true, null, null, false,
+                pageHistory);
         eyeTrackingDataRepository.save(eyeTrackingData3);
 
-        EyeTrackingData eyeTrackingData4 = EyeTrackingData.of(now().plusHours(3), false, false,
-                1.1f, 1.1f, 3.1f, 1.0f, "사과", false, pageHistory);
+        EyeTrackingData eyeTrackingData4 = EyeTrackingData.of(now().plusHours(3), false, 1.0f, "사과", false,
+                pageHistory);
         eyeTrackingDataRepository.save(eyeTrackingData4);
     }
 

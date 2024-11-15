@@ -15,7 +15,6 @@ public interface EyeTrackingDataRepository extends JpaRepository<EyeTrackingData
     @Query("""
             SELECT e FROM EyeTrackingData e
             WHERE e.pageHistory.child = :child
-            AND e.isFaceMissing = false
             ORDER BY e.trackedAt ASC
             """)
     List<EyeTrackingData> findTrackedDataByChild(@Param("child") Child child);
@@ -25,7 +24,6 @@ public interface EyeTrackingDataRepository extends JpaRepository<EyeTrackingData
             FROM EyeTrackingData e
             JOIN e.pageHistory ph
             WHERE ph.child = :child
-            AND e.isFaceMissing = false
             AND e.isGazeOutOfScreen = false
             AND e.isImage = false
             AND e.word IS NOT NULL

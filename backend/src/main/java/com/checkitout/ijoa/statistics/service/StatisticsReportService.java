@@ -178,12 +178,10 @@ public class StatisticsReportService {
     public String analyzeImpactOfTextLengthOnAttention(List<EyeTrackingData> eyeTrackingDataList) {
         SimpleRegression regression = new SimpleRegression();
 
-        eyeTrackingDataList.stream()
-                .filter(data -> !data.getIsFaceMissing())
-                .forEach(data -> regression.addData(
-                        data.getPageHistory().getPageContent().getContent().length(),
-                        (data.getAttentionRate() == null || data.getIsGazeOutOfScreen()) ? 0.0 : data.getAttentionRate()
-                ));
+        eyeTrackingDataList.forEach(data -> regression.addData(
+                data.getPageHistory().getPageContent().getContent().length(),
+                (data.getAttentionRate() == null || data.getIsGazeOutOfScreen()) ? 0.0 : data.getAttentionRate()
+        ));
 
         return determineTextLengthConclusion(regression);
     }

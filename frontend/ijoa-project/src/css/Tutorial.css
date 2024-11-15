@@ -4,13 +4,14 @@
   inset: 0;
   background-color: rgba(0, 0, 0, 0);
   z-index: 9998; /* 튜토리얼 모달 아래, 다른 요소 위 */
+  
 }
 
 /* 전체 화면을 어둡게 처리하는 오버레이 */
 .overlay-dark {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 0.3);
   z-index: 9999;
   pointer-events: none;
 }
@@ -22,8 +23,8 @@
   z-index: 10000;
   border-radius: 8px;
   background-color: white;
-  opacity: 95%;
   mix-blend-mode: overlay; /* 강조 영역만 투명하게 보이도록 설정 */
+  
 }
 
 /* 튜토리얼 모달 */
