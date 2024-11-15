@@ -17,7 +17,7 @@ const ExitConfirmModal: React.FC<ExitConfirmModalProps> = ({ isOpen, onClose }) 
 
   // 나가기 버튼 클릭 핸들러
   const handleExitClick = () => {
-    navigate("/child/fairytale/list");
+    navigate("/child/fairytale/total");
   };
 
   return (

@@ -34,7 +34,7 @@ const ChildProfileList = () => {
         localStorage.setItem("bgm", "true");
         localStorage.setItem("quizEnabled", "true");
         localStorage.setItem("readAloudEnabled", "true");
-        navigate("/child/fairytale/list");
+        navigate("/child/fairytale/total");
       }
     } catch (error) {
       console.log("userApi의 switchChild : ", error);

@@ -195,7 +195,7 @@ const FairytaleListPage: React.FC = () => {
 
   return (
     <div>
-      <div className="pt-9 pb-24 px-10 text-xl">
+      <div className="pt-6 pb-24 px-10 text-xl">
         <div className="h-[310px] mb-10 overflow-hidden">
           <div className="mb-5 text-2xl font-bold font-['MapleBold']">🏆 {childInfo?.age}살 인기 동화책</div>
           {popularFairyTales.length > 0 ? (

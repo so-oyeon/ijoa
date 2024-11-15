@@ -4,22 +4,26 @@ import FairytaleListPage from "./FairytaleListPage";
 import FairytaleSearchPage from "./FairytaleSearchPage";
 
 const FairytaleTotalPage: React.FC = () => {
-  const [showList, setShowList] = useState(true); // true for List, false for Search
+  const [showList, setShowList] = useState(true);
 
   return (
-    <div className="fairytale-content-page mt-24 font-['MapleLight'] text-3xl ">
+    <div className="fairytale-content-page mt-[100px] font-['MapleLight']">
       {/* Toggle Tabs */}
-      <div role="tablist" className="tabs tabs-lifted ">
+      <div role="tablist" className="tabs tabs-boxed w-[200px] ml-auto mr-12 flex justify-end">
         <a
           role="tab"
-          className={`tab ${showList ? "tab-active text-3xl [--tab-bg:yellow] [--tab-border-color:orange]" : "text-2xl"}`}
+          className={`tab ${
+            showList ? "tab-active text-xl" : "text-md"
+          }`}
           onClick={() => setShowList(true)}
         >
           추천 도서
         </a>
         <a
           role="tab"
-          className={`tab ${!showList ? "tab-active text-3xl [--tab-bg:yellow] [--tab-border-color:orange]" : "text-2xl"}`}
+          className={`tab ${
+            !showList ? "tab-active text-xl" : "text-md"
+          }`}
           onClick={() => setShowList(false)}
         >
           전체 도서
