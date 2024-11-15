@@ -15,7 +15,7 @@ interface Position {
 }
 
 interface TutorialProps {
-  menuPositions: Position[];
+  menuPositions?: Position[];
 }
 
 // 단계별 콘텐츠
