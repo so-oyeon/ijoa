@@ -22,6 +22,7 @@ async def connect_to_db(app: FastAPI):
         db=DATABASE_CONFIG["db"],
         minsize=1,
         maxsize=10,
+        autocommit=True,
     )
 
 async def close_db_connection(app: FastAPI):
