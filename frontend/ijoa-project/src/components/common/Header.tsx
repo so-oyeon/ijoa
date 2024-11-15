@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import SettingsModal from "../fairytales/main/SettingsModal";
 import ParentSettingsModal from "../../components/parent/ParentSettingsModal";
 import ProfileDropDown from "./ProfileDropDown";
-import Tutorial from "../tutorial/Tutorial"
+import Tutorial from "../tutorial/Tutorial";
 
 const Header = () => {
   const type = localStorage.getItem("userType");
@@ -15,7 +15,7 @@ const Header = () => {
 
   // 로고와 메뉴 위치 상태와 참조 생성
   const menuRefs = useRef<HTMLButtonElement[]>([]);
- 
+
   const [menuPositions, setMenuPositions] = useState<{ top: number; left: number; width: number; height: number }[]>(
     []
   );
@@ -23,7 +23,7 @@ const Header = () => {
   useEffect(() => {
     if (menuRefs.current.length === 0) return;
 
-    setTimeout(() => {      
+    setTimeout(() => {
       const positions = menuRefs.current.map((menu) => {
         if (menu) {
           const rect = menu.getBoundingClientRect();
@@ -46,7 +46,7 @@ const Header = () => {
   }, [type]);
 
   useEffect(() => {
-     {
+    {
       // 조건이 충족되었을 때 실행할 다른 코드가 없다면 아무 작업도 하지 않음
     }
   }, [menuPositions]);
@@ -131,7 +131,7 @@ const Header = () => {
 
   const parentMenu = [
     { img: "child-icon", text: "자녀", action: childClick, isSetting: false },
-    { img: "tts-icon", text: "TTS", action: ttsClick, isSetting: false },
+    { img: "tts-icon", text: "음성학습", action: ttsClick, isSetting: false },
     { img: "stats-icon", text: "통계", action: statsClick, isSetting: false },
     { img: "voice-album-icon", text: "음성앨범", action: voiceAlbumClick, isSetting: false },
     { img: "setting-icon", text: "설정", action: openParentSettingsModal, isSetting: true },
@@ -178,7 +178,7 @@ const Header = () => {
         ))}
 
         {/* Tutorial 컴포넌트에 props 전달 */}
-    <Tutorial menuPositions={menuPositions} />
+        <Tutorial menuPositions={menuPositions} />
 
         {/* 프로필 모달 */}
         {type === "child" && <ProfileDropDown />}
