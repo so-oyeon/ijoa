@@ -55,12 +55,13 @@ const FairytaleListPage: React.FC = () => {
       const response = await fairyTaleApi.getFairyTalesRankByAge();
       if (response.status === 200) {
         const data = response.data;
-
         if (data && Array.isArray(data)) {
           setPopularFairyTales(data);
         } else {
           console.error("유효하지 않은 데이터 구조 :", data);
         }
+      } else if (response.status === 204) {
+        setPopularFairyTales([]); // 데이터가 없을 경우 빈 배열로 설정
       }
     } catch (error) {
       console.error("fairytaleApi의 getFairyTalesRankByAge :", error);
@@ -171,7 +172,7 @@ const FairytaleListPage: React.FC = () => {
         console.log("getTutorialInfo API 오류: ", error);
       }
     };
-  
+
     getTutorialStatus();
   }, [dispatch]);
 
@@ -198,6 +199,7 @@ const FairytaleListPage: React.FC = () => {
       <div className="pt-6 pb-24 px-10 text-xl">
         <div className="h-[310px] mb-10 overflow-hidden">
           <div className="mb-5 text-2xl font-bold font-['MapleBold']">🏆 {childInfo?.age}살 인기 동화책</div>
+
           {popularFairyTales.length > 0 ? (
             <Swiper
               bookCovers={popularCovers}
@@ -206,11 +208,15 @@ const FairytaleListPage: React.FC = () => {
               onBookClick={handlePopularBookClick}
               progress={popularFairyTales?.map((book) => book.progressRate || 0)}
             />
+          ) : popularFairyTales.length === 0 ? (
+            <div className="mt-24 text-lg font-bold">
+              아직 {childInfo?.age}살 인기 동화책 데이터가 부족해요 😅
+            </div>
           ) : (
             <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
           )}
         </div>
-  
+
         {recommendedFairyTales.length > 0 && (
           <div className="h-[310px] mb-10 overflow-hidden">
             <div className="mb-5 text-2xl font-bold font-['MapleBold']">🧸 이런 책 어때요?</div>
@@ -223,7 +229,7 @@ const FairytaleListPage: React.FC = () => {
             />
           </div>
         )}
-  
+
         <div className="h-[310px] overflow-hidden">
           <div className="flex flex-col md:flex-row justify-between mb-5">
             <div className="text-2xl font-bold font-['MapleBold']">🌟 카테고리 별 동화책</div>
@@ -245,7 +251,6 @@ const FairytaleListPage: React.FC = () => {
       <Tutorial />
     </div>
   );
-  
 };
 
 export default FairytaleListPage;
