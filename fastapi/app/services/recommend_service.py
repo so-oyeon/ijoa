@@ -2,7 +2,6 @@ import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity
 from typing import Dict
 from ..models.user_request import BookRecommendationRequest
-from decouple import config
 from dotenv import load_dotenv
 import os
 
@@ -20,9 +19,11 @@ def recommend_books_for_target_user(request: BookRecommendationRequest) -> Dict:
     user_ids = list({user for book in request.books for user in book.user_ids})
     user_book_matrix = pd.DataFrame(book_data, index=user_ids)
 
-    # 추천 대상 사용자가 매트릭스에 있는지 확인
+    # 대상 사용자가 매트릭스에 없을 경우
     if target_user_id not in user_book_matrix.index:
-        return {"error": "Target user not found"}
+        # 인기 책 추천
+        popular_books = user_book_matrix.sum().sort_values(ascending=False).index.tolist()
+        return {"recommended_books": popular_books[:RECOMMEND_LIMIT]}
 
     # 추천 대상 사용자가 읽은 책 확인
     user_read_books = user_book_matrix.loc[target_user_id]
