@@ -21,7 +21,7 @@ public interface FairytaleRepository extends JpaRepository<Fairytale, Long>, Fai
     @Query("""
             SELECT DISTINCT f
             FROM Fairytale f
-            LEFT JOIN f.childReadBooks crb ON FUNCTION('YEAR', crb.child.birth) = FUNCTION('YEAR', :childBirth)
+            JOIN f.childReadBooks crb ON FUNCTION('YEAR', crb.child.birth) = FUNCTION('YEAR', :childBirth)
             GROUP BY f.id
             ORDER BY SUM(COALESCE(crb.completionCount, 0)) DESC
             LIMIT :recommendationCount
