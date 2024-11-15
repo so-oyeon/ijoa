@@ -4,12 +4,13 @@ import { GazeInfo, WordPositionInfo } from "../../types/seesoTypes";
 import { fairyTaleApi } from "../../api/fairytaleApi";
 
 interface Props {
+  fairytaleId: string;
   pageHistoryId: number;
   wordPositions: WordPositionInfo[];
   textRangePosition: WordPositionInfo;
 }
 
-const SeesoComponent = ({ pageHistoryId, wordPositions, textRangePosition }: Props) => {
+const SeesoComponent = ({ fairytaleId, pageHistoryId, wordPositions, textRangePosition }: Props) => {
   // 여유 범위
   const margin = 30;
 
@@ -150,7 +151,7 @@ const SeesoComponent = ({ pageHistoryId, wordPositions, textRangePosition }: Pro
   // 캘리브레이션 버튼 클릭 핸들러
   const onClickCalibrationBtn = () => {
     const userId = "a1234";
-    const redirectUrl = "https://k11d105.p.ssafy.io/fairytale/content/1"; // seeso 초기화 후 리다이렉트 주소
+    const redirectUrl = `http://localhost:5173/fairytale/content/${fairytaleId}`; // seeso 초기화 후 리다이렉트 주소
     const calibrationPoint = 5;
     Seeso.openCalibrationPage(licenseKey ?? "", userId, redirectUrl, calibrationPoint);
   };

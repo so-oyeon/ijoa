@@ -420,6 +420,7 @@ const FairyTaleContentPage: React.FC = () => {
 
       {/* Seeso eye-tracking 컴포넌트 호출 */}
       <SeesoComponent
+        fairytaleId={fairytaleId ?? "0"}
         pageHistoryId={fairytaleData?.pageHistoryId ?? 0}
         wordPositions={wordPositions}
         textRangePosition={
