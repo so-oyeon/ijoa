@@ -23,8 +23,8 @@ export const fairyTaleApi = {
   },
 
   // 사용자 맞춤 책 추천 조회
-  getFairyTaleRecommendations: (page: number, size: number) => {
-    return api.get<FairyTaleRecommendationsResponse>(`/fairytales/recommendations?page=${page}&size=${size}`);
+  getFairyTaleRecommendations: () => {
+    return api.get<FairyTaleRecommendationsResponse>(`/fairytales/recommendations`);
   },
 
   // 카테고리별 동화 리스트 조회

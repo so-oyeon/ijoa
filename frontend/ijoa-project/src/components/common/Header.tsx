@@ -85,12 +85,12 @@ const Header = () => {
 
   // 자녀 도서관 라우팅
   const libraryClick = () => {
-    navigate(`/child/fairytale/search`);
+    navigate(`/child/fairytale/total`);
   };
 
   // 자녀 메인 라우팅
   const fairytalelistClick = () => {
-    navigate(`/child/fairytale/list`);
+    navigate(`/child/fairytale/total`);
   };
 
   // 자녀 내 책장 라우팅

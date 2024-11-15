@@ -13,7 +13,7 @@ const DownloadingModal: React.FC<DownloadingModalProps> = ({ isOpen }) => {
   if (!isOpen) return null;
 
   const toHome = () => {
-    navigate("/child/fairytale/list");
+    navigate("/child/fairytale/total");
   };
 
   return (
