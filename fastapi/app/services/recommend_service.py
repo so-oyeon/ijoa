@@ -22,18 +22,18 @@ def recommend_books_for_target_user(request: BookRecommendationRequest) -> Dict:
     # 인기 책 리스트
     popular_books = user_book_matrix.sum().sort_values(ascending=False).index.tolist()
 
-    # 대상 사용자가 매트릭스에 없을 경우
-    if target_user_id not in user_book_matrix.index:
-        unread_books = [book for book in popular_books if user_book_matrix[book].sum() == 0]
-        return {"recommended_books": unread_books[:RECOMMEND_LIMIT]}
+    # 읽지 않은 책 계산
+    def calculate_unread_books(target_user_id):
+        if target_user_id not in user_book_matrix.index:
+            return [book for book in popular_books if book not in user_book_matrix.columns]
+        user_read_books = user_book_matrix.loc[target_user_id]
+        return [book for book in user_book_matrix.columns if user_read_books.get(book, 0) == 0]
 
-    # 추천 대상 사용자의 읽지 않은 책 확인
-    user_read_books = user_book_matrix.loc[target_user_id]
-    unread_books = user_read_books[user_read_books == 0].index
+    unread_books = calculate_unread_books(target_user_id)
 
-    # 사용자가 읽은 책이 없을 경우
-    if unread_books.empty:
-        return {"recommended_books": [book for book in popular_books if book not in user_read_books][:RECOMMEND_LIMIT]}
+    # 추천 대상 사용자가 매트릭스에 없거나 읽지 않은 책이 없는 경우
+    if not unread_books:
+        return {"recommended_books": popular_books[:RECOMMEND_LIMIT]}
 
     # 사용자 간 유사도 계산 및 추천
     user_similarity = cosine_similarity(user_book_matrix)
@@ -41,7 +41,7 @@ def recommend_books_for_target_user(request: BookRecommendationRequest) -> Dict:
     weighted_scores = user_book_matrix.T.dot(similar_users)
 
     # 읽지 않은 책만 필터링
-    recommended_books = weighted_scores.loc[unread_books].sort_values(ascending=False).index.tolist()[:RECOMMEND_LIMIT]
+    recommended_books = [book for book in weighted_scores.loc[unread_books].sort_values(ascending=False).index][:RECOMMEND_LIMIT]
 
     # 부족한 추천 수를 인기 책으로 보충
     for book in popular_books:
