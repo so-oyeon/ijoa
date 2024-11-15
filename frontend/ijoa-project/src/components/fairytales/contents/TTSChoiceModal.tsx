@@ -5,6 +5,7 @@ import closebutton from "/assets/close-button.png";
 import Lottie from "react-lottie-player";
 import loadingAnimation from "../../../lottie/footPrint-loadingAnimation.json";
 import DownloadingModal from "./DownloadingModal";
+import WithoutTTSConfirmModal from "./WithoutTTSConfirmModal";
 
 interface TTSChoiceModalProps {
   isOpen: boolean;
@@ -12,7 +13,7 @@ interface TTSChoiceModalProps {
   isReadIng: boolean;
   bookId: number;
   setTTSId: (id: number | null) => void;
-  setPreviousTTSId: (id: number) => void;
+  setPreviousTTSId: (id: number | null) => void;
   onContinueReading?: () => void;
 }
 
@@ -33,6 +34,17 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({
   const [downloadInterval, setDownloadInterval] = useState<NodeJS.Timeout | null>(null);
 
   const readAloudEnabled = JSON.parse(localStorage.getItem("readAloudEnabled") || "false");
+
+  const [isWithoutTTSConfirmModalOpen, setIsWithoutTTSConfirmModalOpen] = useState(false);
+
+  const handleModalConfirm = () => {
+    onClose()
+    setIsWithoutTTSConfirmModalOpen(false);
+  };
+
+  const handleModalCancel = () => {
+    setIsWithoutTTSConfirmModalOpen(false);
+  };
 
   useEffect(() => {
     if (!isOpen) return;
@@ -127,11 +139,12 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({
 
   const handleClose = () => {
     setTTSId(null);
-    onClose();
+    setPreviousTTSId(null);
     if (downloadInterval) {
       clearInterval(downloadInterval);
       setDownloadInterval(null);
     }
+    setIsWithoutTTSConfirmModalOpen(true); // 모달을 열기 위해 상태를 true로 설정
   };
 
   if (!isOpen) return null;
@@ -145,9 +158,16 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({
               <button onClick={handleClose} className="absolute top-4 right-4 text-2xl font-bold">
                 <img src={closebutton} alt="닫기 버튼" />
               </button>
+
+              <WithoutTTSConfirmModal
+                isOpen={isWithoutTTSConfirmModalOpen}
+                onConfirm={handleModalConfirm}
+                onCancel={handleModalCancel}
+              />
               <div className="text-xl font-bold">
                 <span className="blue-highlight">누구 목소리</span>로 책을 읽어줄까요?
               </div>
+              <p className="text-sm">아래 목록 중 하나를 선택해주세요!</p>
 
               {isLoading ? (
                 <div className="mt-8 mb-8 flex justify-center items-center">
@@ -186,16 +206,18 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({
           {isReadIng ? (
             <div className="mt-8 flex gap-4 justify-center items-center">
               <button
-                className="w-36 py-2 text-[#67CCFF] text-lg font-bold bg-white rounded-3xl border-2 border-[#67CCFF] active:bg-[#e0f7ff]"
+                className="w-36 py-2 text-[#67CCFF] text-lg font-bold bg-white rounded-3xl border-2 border-[#67CCFF] active:bg-[#e0f7ff] disabled:bg-gray-300 disabled:border-gray-300 disabled:text-white"
                 onClick={() => {
                   if (onContinueReading) onContinueReading();
                 }}
+                disabled={readAloudEnabled && selectedIndex === null}
               >
                 이어서 읽기
               </button>
               <button
-                className="w-36 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-3xl border-2 border-[#67CCFF] active:bg-[#005f99]"
+                className="w-36 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-3xl border-2 border-[#67CCFF] active:bg-[#005f99] disabled:bg-gray-300 disabled:border-gray-300"
                 onClick={onClose}
+                disabled={readAloudEnabled && selectedIndex === null}
               >
                 처음부터 읽기
               </button>
@@ -203,8 +225,9 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({
           ) : (
             <div className="mt-8 text-lg">
               <button
-                className="w-36 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-3xl border-2 border-[#67CCFF] active:bg-[#005f99]"
+                className="w-36 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-3xl border-2 border-[#67CCFF] active:bg-[#005f99] disabled:bg-gray-300 disabled:border-gray-300"
                 onClick={onClose}
+                disabled={readAloudEnabled && selectedIndex === null}
               >
                 동화책 읽기
               </button>
