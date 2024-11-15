@@ -197,6 +197,10 @@ public class ChildrenManagementService {
 
         String profileUrl = child.getProfile();
 
+        if (profileUrl == null || profileUrl.isEmpty()) {
+            return;
+        }
+
         if (!profileUrl.equals(GIRL_PROFILE_DEFAULT_URL) && !profileUrl.equals(BOY_PROFILE_DEFAULT_URL)) {
             fileService.deleteFile(getKeyFromUrl(child.getProfile()));
         }
