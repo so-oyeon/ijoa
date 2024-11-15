@@ -1,13 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import Seeso, { UserStatusOption, InitializationErrorType } from "seeso";
 import { GazeInfo, WordPositionInfo } from "../../types/seesoTypes";
+import { fairyTaleApi } from "../../api/fairytaleApi";
 
 interface Props {
+  pageHistoryId: number;
   wordPositions: WordPositionInfo[];
   textRangePosition: WordPositionInfo;
 }
 
-const SeesoComponent = ({ wordPositions, textRangePosition }: Props) => {
+const SeesoComponent = ({ pageHistoryId, wordPositions, textRangePosition }: Props) => {
   // 여유 범위
   const margin = 30;
 
@@ -16,13 +18,14 @@ const SeesoComponent = ({ wordPositions, textRangePosition }: Props) => {
   const gazeInfoRef = useRef<HTMLHeadingElement>(null);
   const wordPositionsRef = useRef(wordPositions);
   const textRangePositionRef = useRef(textRangePosition);
+  const pageHistoryIdRef = useRef(pageHistoryId);
 
   const [gazeInfo, setGazeInfo] = useState<GazeInfo | null>(null);
-  const [lastTimestamp, setLastTimestamp] = useState<number>(0);
 
   const licenseKey = import.meta.env.VITE_SEESO_SDK_KEY;
   let seeSoInstance: Seeso | null = null;
 
+  // SEESO 초기화
   const initSeeso = async () => {
     const calibrationData = parseCalibrationDataInQueryString();
     if (calibrationData && licenseKey) {
@@ -39,14 +42,7 @@ const SeesoComponent = ({ wordPositions, textRangePosition }: Props) => {
         await seeSoInstance.startTracking(stream, onGaze, onDebug);
         await seeSoInstance.setCalibrationData(calibrationData);
 
-        //   Attention 호출 간격
-        seeSoInstance.setAttentionInterval(10);
-
-        // 주의 점수를 주기적으로 확인
-        setInterval(() => {
-          // console.log("Attention Score: ", seeSoInstance?.getAttentionScore());
-          seeSoInstance?.addGazeCallback(onGaze);
-        }, 1000); // 1초 간격으로 호출
+        seeSoInstance?.addGazeCallback(onGaze);
       } else {
         console.error("Seeso initialization failed.");
       }
@@ -61,46 +57,51 @@ const SeesoComponent = ({ wordPositions, textRangePosition }: Props) => {
 
   // 시선 정보를 갱신하고 화면에 표시하는 함수
   const onGaze = (gazeInfo: GazeInfo) => {
-    // console.log(wordPositionsRef.current);
-    // console.log(textRangePositionRef.current);
-
-    const currentTime = gazeInfo.timestamp;
-    if (currentTime - lastTimestamp >= 1000) {
-      setLastTimestamp(currentTime);
-
-      // 시선 좌표 추출
-      const gazeX = gazeInfo.x;
-      const gazeY = gazeInfo.y;
-
-      // console.log(`시선 좌표 : (${gazeX}, ${gazeY})`);
-
-      // 단어 추출
-      const wordUnderGaze = wordPositionsRef.current.find(({ x, y, width, height }) => {
-        // console.log(`gazeX: ${gazeX}, gazeY: ${gazeY}, x: ${x}, y: ${y}, width: ${width}, height: ${height}`);
-        return gazeX >= x && gazeX <= x + width && gazeY >= y && gazeY <= y + height;
-      });
-
-      if (wordUnderGaze) {
-        // console.log("내가 본 단어:", wordUnderGaze.word);
-      }
-
-      // 글 또는 그림 여부 추출
-      const textRange = textRangePositionRef.current;
-
-      if (
-        gazeX >= textRange.x - margin &&
-        gazeX <= textRange.x + textRange.width + margin &&
-        gazeY >= textRange.y - margin &&
-        gazeY <= textRange.y + textRange.height + margin
-      ) {
-        console.log("글 보는 중");
-      } else {
-        console.log("");
-      }
-    }
-
     // 트래킹점 표시 셋팅 (빨간점)
     setGazeInfo(gazeInfo);
+
+    // 시선 좌표 추출
+    const gazeX = gazeInfo.x;
+    const gazeY = gazeInfo.y;
+
+    // 집중도 추출
+    const attentionRate = seeSoInstance?.getAttentionScore();
+
+    // 단어 추출 (만족하는 요소 없을 시, undefined 반환)
+    const wordUnderGaze = wordPositionsRef.current.find(({ x, y, width, height }) => {
+      return gazeX >= x && gazeX <= x + width && gazeY >= y && gazeY <= y + height;
+    });
+
+    // 글 또는 그림 여부 추출
+    const textRange = textRangePositionRef.current;
+    let isImage = false;
+    // 집중 안할 경우
+    if (isNaN(gazeX) || isNaN(gazeY)) {
+      isImage = false;
+    }
+    // 글 보고 있을 경우
+    else if (
+      gazeX >= textRange.x - margin &&
+      gazeX <= textRange.x + textRange.width + margin &&
+      gazeY >= textRange.y - margin &&
+      gazeY <= textRange.y + textRange.height + margin
+    ) {
+      isImage = false;
+    }
+    // 그림 보고 있을 경우
+    else {
+      isImage = true;
+    }
+
+    // 시선추적 데이터 저장 api 호출
+    if (attentionRate === undefined) return;
+    handleSaveEyeTrackingData(
+      gazeX,
+      gazeY,
+      attentionRate,
+      wordUnderGaze === undefined ? null : wordUnderGaze.word,
+      isImage
+    );
   };
 
   // 트래킹점 표시 관련 함수 (빨간점)
@@ -164,6 +165,43 @@ const SeesoComponent = ({ wordPositions, textRangePosition }: Props) => {
     return jsonString;
   };
 
+  // 동화책 특정 페이지 시선추적 데이터 저장 통신 함수
+  const handleSaveEyeTrackingData = async (
+    gazeX: number,
+    gazeY: number,
+    attentionRate: number,
+    word: string | null, // 단어 정보 없으면 null
+    isImage: boolean
+  ) => {
+    // 현재 년-월-일T시:분:초.밀리초Z 추출
+    const today = new Date();
+    const formatToday = `${today.getFullYear()}-${
+      today.getMonth() + 1
+    }-${today.getDate()}T${today.getHours()}:${today.getMinutes()}:${today
+      .getSeconds()
+      .toString()
+      .padStart(2, "0")}.${today.getMilliseconds().toString().padStart(3, "0")}Z`;
+
+    const data = {
+      trackedAt: formatToday,
+      isFaceMissing: !(isNaN(gazeX) || isNaN(gazeY)),
+      gazeX: isNaN(gazeX) ? null : gazeX,
+      gazeY: isNaN(gazeY) ? null : gazeY,
+      attentionRate: isNaN(attentionRate) ? null : attentionRate,
+      word: word,
+      isImage: isImage,
+    };
+
+    try {
+      const response = await fairyTaleApi.createEyeTrackingData(pageHistoryIdRef.current, data);
+      if (response.status === 201) {
+        console.log(response);
+      }
+    } catch (error) {
+      console.log("fairyTaleApi의 createEyeTrackingData : ", error);
+    }
+  };
+
   useEffect(() => {
     initSeeso();
 
@@ -190,6 +228,10 @@ const SeesoComponent = ({ wordPositions, textRangePosition }: Props) => {
   useEffect(() => {
     textRangePositionRef.current = textRangePosition;
   }, [textRangePosition]);
+
+  useEffect(() => {
+    pageHistoryIdRef.current = pageHistoryId;
+  }, [pageHistoryId]);
 
   return (
     <div>
