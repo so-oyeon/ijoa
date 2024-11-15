@@ -34,7 +34,7 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
 
   // 유효한 이메일인지 검사
   const validateEmail = (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[a-z]{2,63}$/i;
     return emailRegex.test(email);
   };
 
