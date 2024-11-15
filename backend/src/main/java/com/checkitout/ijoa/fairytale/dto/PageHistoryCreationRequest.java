@@ -22,21 +22,9 @@ public class PageHistoryCreationRequest {
     @Schema(description = "시선추적 시간", example = "2024-10-25T12:00:00Z")
     private LocalDateTime trackedAt;
 
-    @NotNull(message = "얼굴 미인식 여부는 필수 항목입니다.")
-    @Schema(description = "얼굴 미인식 여부", example = "false")
-    private Boolean isFaceMissing;
-
+    @NotNull(message = "화면 밖 응시 여부는 필수 항목입니다.")
     @Schema(description = "화면 밖 응시 여부", example = "false")
     private Boolean isGazeOutOfScreen;
-
-    @Schema(description = "x 좌표", example = "1.1")
-    private Float gazeX;
-
-    @Schema(description = "y 좌표", example = "1.1")
-    private Float gazeY;
-
-    @Schema(description = "동공 크기", example = "3.1")
-    private Float pupilSize;
 
     @Schema(description = "집중도", example = "1.0")
     private Float attentionRate;
@@ -49,7 +37,6 @@ public class PageHistoryCreationRequest {
     private Boolean isImage;
 
     public EyeTrackingData toEntity(PageHistory pageHistory) {
-        return EyeTrackingData.of(trackedAt, isFaceMissing, isGazeOutOfScreen, gazeX, gazeY, pupilSize, attentionRate,
-                word, isImage, pageHistory);
+        return EyeTrackingData.of(trackedAt, isGazeOutOfScreen, attentionRate, word, isImage, pageHistory);
     }
 }

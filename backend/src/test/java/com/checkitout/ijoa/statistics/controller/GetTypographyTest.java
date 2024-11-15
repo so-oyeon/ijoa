@@ -113,14 +113,12 @@ public class GetTypographyTest {
 
         for (int i = 0; i < total; i++) {
             for (int j = 0; j < wordCounts[i]; j++) {
-                EyeTrackingData eyeTrackingData = EyeTrackingData.of(now(), false, false,
-                        1.1f, 1.1f, 3.1f, 1.0f, words[i], false, pageHistory);
+                EyeTrackingData eyeTrackingData = EyeTrackingData.of(now(), false, 1.0f, words[i], false, pageHistory);
                 eyeTrackingDataRepository.save(eyeTrackingData);
             }
         }
 
-        EyeTrackingData eyeTrackingData2 = EyeTrackingData.of(now().minusDays(1), false, true,
-                null, null, null, null, null, false, pageHistory);
+        EyeTrackingData eyeTrackingData2 = EyeTrackingData.of(now().minusDays(1), true, null, null, false, pageHistory);
         eyeTrackingDataRepository.save(eyeTrackingData2);
     }
 
