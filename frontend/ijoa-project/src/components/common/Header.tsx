@@ -56,7 +56,7 @@ const Header = () => {
 
   // 자녀 메인 라우팅
   const fairytalelistClick = () => {
-    navigate(`/child/fairytale/list`);
+    navigate(`/child/fairytale/search`);
   };
 
   // 자녀 내 책장 라우팅

@@ -70,7 +70,7 @@ const FairytaleListPage: React.FC = () => {
   // 사용자 맞춤 책 추천 api 통신 함수
   const getRecommendedFairyTales = async () => {
     try {
-      const response = await fairyTaleApi.getFairyTaleRecommendations(1, 8);
+      const response = await fairyTaleApi.getFairyTaleRecommendations();
       if (response.status === 200) {
         const data = response.data;
 
@@ -195,7 +195,7 @@ const FairytaleListPage: React.FC = () => {
 
   return (
     <div>
-      <div className="pt-24 pb-24 px-10 text-xl">
+      <div className="pt-9 pb-24 px-10 text-xl">
         <div className="h-[310px] mb-10 overflow-hidden">
           <div className="mb-5 text-2xl font-bold font-['MapleBold']">🏆 {childInfo?.age}살 인기 동화책</div>
           {popularFairyTales.length > 0 ? (

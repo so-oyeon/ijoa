@@ -86,14 +86,14 @@ const FairytaleSearchPage: React.FC = () => {
   return (
     <div>
       <div className="relative w-full h-screen overflow-y-auto bg-gradient-to-b from-white">
-        <div className="pt-[96px] px-10 flex justify-between items-center mb-4 sticky top-0 bg-white z-40">
+        <div className="pt-6 px-10 flex justify-between items-center mb-6 sticky top-0 bg-white z-40">
           <div className="text-2xl font-bold flex items-center font-['MapleBold']">
             {query ? "🔎 검색 결과 ..." : "📚 전체 동화 목록"}
           </div>
           <SearchBar onInputChange={handleInputChange} />
         </div>
 
-        <div className="px-10 mb-12">
+        <div className="px-10 mb-16">
           {query && searchResults && searchResults.content.length > 0 ? (
             <BookCoverGrid
               bookCovers={searchResults.content.map((item) => item.image)}
@@ -120,7 +120,7 @@ const FairytaleSearchPage: React.FC = () => {
         </div>
 
         {!query && (
-          <div className="flex justify-center items-center my-4 space-x-4 font-['MapleLight']">
+          <div className="flex justify-center items-center space-x-4 font-['MapleLight']">
             <button
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
