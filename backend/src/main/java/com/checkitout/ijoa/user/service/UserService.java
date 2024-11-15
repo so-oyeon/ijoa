@@ -1,6 +1,7 @@
 package com.checkitout.ijoa.user.service;
 
 import com.checkitout.ijoa.child.domain.Child;
+import com.checkitout.ijoa.child.repository.ChildRepository;
 import com.checkitout.ijoa.child.service.ChildrenManagementService;
 import com.checkitout.ijoa.common.dto.ResponseDto;
 import com.checkitout.ijoa.exception.CustomException;
@@ -15,6 +16,7 @@ import com.checkitout.ijoa.user.repository.UserRepository;
 import com.checkitout.ijoa.util.PasswordEncoder;
 import com.checkitout.ijoa.util.SecurityUtil;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final ChildRepository childRepository;
     private final ChildrenManagementService childrenManagementService;
     private final EmailServie emailServie;
 
@@ -114,7 +117,8 @@ public class UserService {
         user.setUpdatedAt(LocalDateTime.now());
 
         //child 비활성화
-        List<Child> children = user.getChildren();
+        List<Child> children = childRepository.findByParentAndIsDeletedFalse(user)
+                .orElseGet(Collections::emptyList);
         for (Child child : children) {
             childrenManagementService.deleteChildProfile(child.getId());
         }
@@ -158,13 +162,13 @@ public class UserService {
     }
 
     // 튜토리얼 완료 처리
-    public void completeTutorial(){
+    public void completeTutorial() {
         User user = securityUtil.getUserByToken();
         user.setCompleteTutorial(true);
         userRepository.save(user);
     }
 
-    public TutorialDto getTutorial(){
+    public TutorialDto getTutorial() {
         User user = securityUtil.getUserByToken();
         TutorialDto tutorialDto = new TutorialDto();
         tutorialDto.setCompleteTutorial(user.isCompleteTutorial());

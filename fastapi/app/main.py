@@ -1,9 +1,9 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from contextlib import asynccontextmanager
-from services.database import connect_to_db, close_db_connection
-from services.book_service import get_books_and_readers
-from services.recommend_service import recommend_books_for_target_user
-from models.user_request import BookRecommendationRequest
+from .services.database import connect_to_db, close_db_connection
+from .services.book_service import get_books_and_readers
+from .services.recommend_service import recommend_books_for_target_user
+from .models.user_request import BookRecommendationRequest
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -16,17 +16,15 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     lifespan=lifespan,
-    # root_path="/fastapi",
     docs_url="/docs",
     openapi_url="/openapi.json"
 )
 
 
-
-@app.post("/fastapi/recommend")
+@app.post("/recommend")
 async def recommend_books(childId: int):
     try:
-        
+
         books = await get_books_and_readers(app)
 
         
@@ -35,7 +33,6 @@ async def recommend_books(childId: int):
             books=books
         )
 
-        
         result = recommend_books_for_target_user(recommendation_request)
 
         if "error" in result:
