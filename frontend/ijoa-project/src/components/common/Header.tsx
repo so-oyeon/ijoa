@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SettingsModal from "../fairytales/main/SettingsModal";
 import ParentSettingsModal from "../../components/parent/ParentSettingsModal";
 import ProfileDropDown from "./ProfileDropDown";
+import Tutorial from "../tutorial/Tutorial";
 
 const Header = () => {
   const type = localStorage.getItem("userType");
@@ -12,10 +13,43 @@ const Header = () => {
 
   const navigate = useNavigate();
 
+  // 로고와 메뉴 위치 상태와 참조 생성
+  const menuRefs = useRef<HTMLButtonElement[]>([]);
+
+  const [menuPositions, setMenuPositions] = useState<{ top: number; left: number; width: number; height: number }[]>(
+    []
+  );
+
+  useEffect(() => {
+    if (menuRefs.current.length === 0) return;
+
+    setTimeout(() => {
+      const positions = menuRefs.current.map((menu) => {
+        if (menu) {
+          const rect = menu.getBoundingClientRect();
+          return {
+            top: rect.top,
+            left: rect.left,
+            width: rect.width,
+            height: rect.height,
+          };
+        }
+        return { top: 0, left: 0, width: 0, height: 0 };
+      });
+      setMenuPositions(positions);
+    }, 0); // 다음 렌더 사이클에서 실행
+  }, []);
+
   useEffect(() => {
     // type이 변경될 때 selectedTab 기본값 설정
     setSelectedTab(type === "parent" ? 0 : null);
   }, [type]);
+
+  useEffect(() => {
+    {
+      // 조건이 충족되었을 때 실행할 다른 코드가 없다면 아무 작업도 하지 않음
+    }
+  }, [menuPositions]);
 
   const handleTabClick = (index: number, action: () => void, isSetting: boolean) => {
     if (!isSetting) {
@@ -51,12 +85,12 @@ const Header = () => {
 
   // 자녀 도서관 라우팅
   const libraryClick = () => {
-    navigate(`/child/fairytale/search`);
+    navigate(`/child/fairytale/total`);
   };
 
   // 자녀 메인 라우팅
   const fairytalelistClick = () => {
-    navigate(`/child/fairytale/list`);
+    navigate(`/child/fairytale/total`);
   };
 
   // 자녀 내 책장 라우팅
@@ -97,7 +131,7 @@ const Header = () => {
 
   const parentMenu = [
     { img: "child-icon", text: "자녀", action: childClick, isSetting: false },
-    { img: "tts-icon", text: "TTS", action: ttsClick, isSetting: false },
+    { img: "tts-icon", text: "음성학습", action: ttsClick, isSetting: false },
     { img: "stats-icon", text: "통계", action: statsClick, isSetting: false },
     { img: "voice-album-icon", text: "음성앨범", action: voiceAlbumClick, isSetting: false },
     { img: "setting-icon", text: "설정", action: openParentSettingsModal, isSetting: true },
@@ -124,6 +158,11 @@ const Header = () => {
         {menuToDisplay.map((menu, index) => (
           <button
             key={index}
+            ref={(el) => {
+              if (el && !menuRefs.current.includes(el)) {
+                menuRefs.current.push(el);
+              }
+            }}
             className={`w-14 flex flex-col justify-center items-center space-y-1 transform transition-transform duration-200`}
             onClick={() => handleTabClick(index, menu.action, menu.isSetting)}
           >
@@ -137,6 +176,9 @@ const Header = () => {
             <p className={`text-sm text-[#B27F44] font-bold`}>{menu.text}</p>
           </button>
         ))}
+
+        {/* Tutorial 컴포넌트에 props 전달 */}
+        <Tutorial menuPositions={menuPositions} />
 
         {/* 프로필 모달 */}
         {type === "child" && <ProfileDropDown />}

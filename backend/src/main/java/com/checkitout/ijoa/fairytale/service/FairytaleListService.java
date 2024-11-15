@@ -15,14 +15,18 @@ import com.checkitout.ijoa.fairytale.repository.ChildReadBooksRepository;
 import com.checkitout.ijoa.fairytale.repository.FairytaleRepository;
 import com.checkitout.ijoa.util.SecurityUtil;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
 @Transactional
@@ -37,6 +41,7 @@ public class FairytaleListService {
     private final ChildReadBooksMapper childReadBooksMapper;
 
     private final SecurityUtil securityUtil;
+    private final WebClient webClient;
 
     @Value("${RECOMMENDATION_COUNT}")
     private Integer recommendationCount;
@@ -118,6 +123,7 @@ public class FairytaleListService {
     /**
      * 동화책 검색 메서드
      */
+    @Transactional(readOnly = true)
     public Page<FairytaleListResponseDto> searchFairytaleList(String title, PageRequestDto requestDto) {
 
         Long childId = securityUtil.getChildByToken().getId();
@@ -131,6 +137,43 @@ public class FairytaleListService {
                 fairytales.getContent(), childId);
 
         return new PageImpl<>(responseDtos, pageable, fairytales.getTotalElements());
+    }
+
+    /**
+     * 동화 추천 메서드
+     */
+    @Transactional(readOnly = true)
+    public Page<FairytaleListResponseDto> recommendFairytaleList() {
+        Long childId = securityUtil.getChildByToken().getId();
+
+        List<Long> recommendedFairytaleIds = webClient.post()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/recommend")
+                        .queryParam("childId", childId)
+                        .build())
+                .contentType(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<Map<String, List<Long>>>() {
+                })
+                .blockOptional()
+                .map(response -> response.get("recommended_books"))
+                .orElseThrow(() -> new CustomException(ErrorCode.FAIRYTALE_NO_CONTENT));
+
+        if (recommendedFairytaleIds.isEmpty()) {
+            throw new CustomException(ErrorCode.FAIRYTALE_NO_CONTENT);
+        }
+
+        List<Fairytale> fairytales = fairytaleRepository.findFairytalesByIds(recommendedFairytaleIds);
+
+        if (fairytales.isEmpty()) {
+            throw new CustomException(ErrorCode.FAIRYTALE_NO_CONTENT);
+        }
+        Pageable pageable = PageRequest.of(0, fairytales.size());
+
+        List<FairytaleListResponseDto> responseDtos = fairytaleMapper.toFairytaleListResponseDtoList(
+                fairytales, childId);
+
+        return new PageImpl<>(responseDtos, pageable, fairytales.size());
     }
 
 }

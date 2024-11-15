@@ -90,7 +90,7 @@ public class ChildrenManagementService {
 
         if (file != null && !file.isEmpty()) {
 
-            fileService.deleteFile(getKeyFromUrl(child.getProfile()));
+            deleteProfile(child);
 
             String profileUrl = determineProfileUrl(file, gender);
             child.setProfile(profileUrl);
@@ -118,10 +118,7 @@ public class ChildrenManagementService {
                 .orElseThrow(() -> new CustomException(ErrorCode.CHILD_NOT_FOUND));
         verifyChildParentRelationship(child);
 
-        String profileUrl = child.getProfile();
-        if (!profileUrl.equals(GIRL_PROFILE_DEFAULT_URL) && !profileUrl.equals(BOY_PROFILE_DEFAULT_URL)) {
-            fileService.deleteFile(getKeyFromUrl(child.getProfile()));
-        }
+        deleteProfile(child);
 
         child.setBirth(null);
         child.setGender(null);
@@ -164,7 +161,9 @@ public class ChildrenManagementService {
         return childMapper.toChildDtoList(activeChildren);
     }
 
-
+    /**
+     * 자녀 유효성 검사 메서드
+     */
     public void verifyChildParentRelationship(Child child) {
 
         Long userId = securityUtil.getCurrentUserId();
@@ -174,6 +173,9 @@ public class ChildrenManagementService {
         }
     }
 
+    /**
+     * 프로필 사진 url 저장 및 결정 메서드
+     */
     private String determineProfileUrl(MultipartFile file, Gender gender) throws IOException {
         if (file != null && !file.isEmpty()) {
             return fileService.saveProfileImage(file);
@@ -181,7 +183,26 @@ public class ChildrenManagementService {
         return (gender == Gender.MALE) ? BOY_PROFILE_DEFAULT_URL : GIRL_PROFILE_DEFAULT_URL;
     }
 
+    /**
+     * S3 사진 삭제용 key 조회 메서드
+     */
     public String getKeyFromUrl(String url) {
         return url.replace("https://checkitout-bucket.s3.ap-northeast-2.amazonaws.com/", "");
+    }
+
+    /**
+     * S3에 업로드된 프로필 삭제 메서드
+     */
+    public void deleteProfile(Child child) {
+
+        String profileUrl = child.getProfile();
+
+        if (profileUrl == null || profileUrl.isEmpty()) {
+            return;
+        }
+
+        if (!profileUrl.equals(GIRL_PROFILE_DEFAULT_URL) && !profileUrl.equals(BOY_PROFILE_DEFAULT_URL)) {
+            fileService.deleteFile(getKeyFromUrl(child.getProfile()));
+        }
     }
 }

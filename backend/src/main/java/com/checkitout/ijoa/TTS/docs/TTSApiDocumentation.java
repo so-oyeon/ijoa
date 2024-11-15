@@ -117,4 +117,11 @@ public interface TTSApiDocumentation {
     public ResponseEntity<?> childTTSList(@PathVariable Long bookId ) throws IOException;
 
 
+    @Operation(summary = "동화책 tts 다운 상태", description = "다운로드 중인 동화책 상태를 반환합니다. ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "조회", content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+    })
+    public ResponseEntity<?> checkAudioBook(@PathVariable Long bookId ,@PathVariable Long ttsId) throws IOException;
+
 }

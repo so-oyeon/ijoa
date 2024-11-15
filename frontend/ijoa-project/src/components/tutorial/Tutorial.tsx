@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "../../redux/store";
 import { closeTutorial, setStep } from "../../redux/tutorialSlice";
@@ -7,28 +7,185 @@ import { userApi } from "../../api/userApi";
 import "../../css/Tutorial.css";
 import closeButton from "/assets/close-button.png";
 
+interface Position {
+  top: number;
+  left: number;
+  width: number;
+  height: number;
+}
+
+interface TutorialProps {
+  menuPositions?: Position[];
+}
+
 // 단계별 콘텐츠
 const stepContents = {
   1: { title: "튜토리얼 안내", text: "아이조아에 오신 것을 환영해요!" },
   2: { title: "헤더 기능 안내", text: "주요 기능에 접근할 수 있습니다." },
-  3: { title: "자녀", text: "등록한 자녀들을 확인하고 선택할 수 있어요!" },
-  4: { title: "TTS", text: "자녀에게 들려주고 싶은 목소리를 녹음하세요!" },
-  5: { title: "통계", text: "자녀 독서 습관을 알아보아요!" },
-  6: { title: "음성앨범", text: "자녀의 대답을 들어볼 수 있어요!" },
-  7: { title: "자녀", text: "등록한 자녀들을 확인하고 선택할 수 있어요!\n지금 바로 등록하러 가볼까요?" },
-  8: { title: "도서관", text: "자녀에게 들려주고 싶은 목소리를 녹음하세요!" },
+  3: { title: "자녀", text: "등록한 자녀 목록을 확인하고\n계정을 선택할 수 있어요!" },
+  4: { title: "음성학습", text: "자녀에게 들려주고 싶은\n목소리를 등록해 보세요!" },
+  5: { title: "통계", text: "자녀의 독서 습관을 확인해 보세요!" },
+  6: { title: "음성앨범", text: "퀴즈에 대한 자녀의 답변을 들어볼 수 있어요!" },
+  7: { title: "자녀", text: "자녀를 등록하면 책 읽기를 시작할 수 있어요!\n지금 바로 등록하러 가볼까요?" },
+  8: { title: "도서관", text: "전체 동화책 목록을 확인하고 제목으로 검색할 수 있어요!" },
   9: { title: "내 책장", text: "내가 읽은 책과 읽고 있는 책을 볼 수 있어요!" },
   10: { title: "내 방", text: "내 캐릭터의 레벨과 모습을 볼 수 있어요!" },
-  11: { title: "설정", text: "읽어주기, 퀴즈, bgm을 껏다 켰다 할 수 있어요!" },
-  12: { title: "프로필", text: "부모로 전환, 로그아웃이 가능해요!" },
-  13: { title: "튜토리얼 끝", text: "이제부터 아이조아와 함께 해볼까요?" },
+  11: { title: "설정", text: "책 읽어주기, 퀴즈, bgm을 껏다 켰다 할 수 있어요!" },
+  12: { title: "프로필", text: "부모 계정으로 전환, 로그아웃이 가능해요!" },
+  13: { title: "튜토리얼 끝", text: "이제 아이조아와 함께해요!" },
 };
 
-const Tutorial: React.FC = () => {
+const Tutorial: React.FC<TutorialProps> = ({ menuPositions }) => {
   const isOpen = useSelector((state: RootState) => state.tutorial.isOpen);
   const dispatch = useDispatch<AppDispatch>();
   const step = useSelector((state: RootState) => state.tutorial.step);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [highlightStyle, setHighlightStyle] = useState<React.CSSProperties>({});
+  const [modalPosition, setModalPosition] = useState<React.CSSProperties>({
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+  });
+
+  useEffect(() => {
+    if (menuPositions && menuPositions.length === 5) {
+      let newHighlightStyle = {};
+      switch (step) {
+        case 1:
+          newHighlightStyle = { top: "50%", left: "50%", width: "0%", height: "0%" };
+          break;
+        case 2: {
+          const leftMost = menuPositions[0].left;
+          const rightMost = menuPositions[4].left + menuPositions[4].width;
+          newHighlightStyle = {
+            top: menuPositions[0].top,
+            left: leftMost,
+            width: rightMost - leftMost,
+            height: menuPositions[0].height,
+          };
+          break;
+        }
+        case 3:
+          newHighlightStyle = {
+            top: menuPositions[0].top,
+            left: menuPositions[0].left,
+            width: menuPositions[0].width,
+            height: menuPositions[0].height,
+          };
+          break;
+        case 4:
+          newHighlightStyle = {
+            top: menuPositions[1].top,
+            left: menuPositions[1].left,
+            width: menuPositions[1].width,
+            height: menuPositions[1].height,
+          };
+          break;
+        case 5:
+          newHighlightStyle = {
+            top: menuPositions[2].top,
+            left: menuPositions[2].left,
+            width: menuPositions[2].width,
+            height: menuPositions[2].height,
+          };
+          break;
+        case 6:
+          newHighlightStyle = {
+            top: menuPositions[3].top,
+            left: menuPositions[3].left,
+            width: menuPositions[3].width,
+            height: menuPositions[3].height,
+          };
+          break;
+        case 7:
+          newHighlightStyle = {
+            top: "210px",
+            left: "630px",
+            width: "12%",
+            height: "170px",
+          };
+          break;
+        case 8:
+          newHighlightStyle = {
+            top: menuPositions[0].top,
+            left: menuPositions[0].left - 15,
+            width: menuPositions[0].width,
+            height: menuPositions[0].height,
+          };
+          break;
+        case 9:
+          newHighlightStyle = {
+            top: menuPositions[1].top,
+            left: menuPositions[1].left - 15,
+            width: menuPositions[1].width,
+            height: menuPositions[1].height,
+          };
+          break;
+        case 10:
+          newHighlightStyle = {
+            top: menuPositions[2].top,
+            left: menuPositions[2].left - 15,
+            width: menuPositions[2].width,
+            height: menuPositions[2].height,
+          };
+          break;
+        case 11:
+          newHighlightStyle = {
+            top: menuPositions[3].top,
+            left: menuPositions[3].left - 15,
+            width: menuPositions[3].width,
+            height: menuPositions[3].height,
+          };
+          break;
+        case 12:
+          newHighlightStyle = {
+            top: menuPositions[4].top,
+            left: menuPositions[4].left - 15,
+            width: menuPositions[4].width,
+            height: menuPositions[4].height,
+          };
+          break;
+        case 13:
+          newHighlightStyle = { top: "50%", left: "50%", width: "0%", height: "0%" };
+          break;
+        default:
+          newHighlightStyle = {};
+          break;
+      }
+      // 강조 효과를 조정
+      setHighlightStyle({
+        ...newHighlightStyle,
+      });
+    }
+  }, [step, menuPositions]);
+
+  // 단계별로 모달 위치 설정
+  useEffect(() => {
+    let newPosition: React.CSSProperties = { top: "50%", left: "50%", transform: "translate(-50%, -50%)" };
+    switch (step) {
+      case 2:
+      case 3:
+      case 4:
+      case 5:
+      case 6:
+      case 8:
+      case 9:
+      case 10:
+      case 11:
+      case 12:
+        newPosition = { top: "100px", right: "40px", left: "auto", transform: "none" };
+        break;
+      case 7:
+        newPosition = { top: "45%", left: "30%", transform: "translate(-50%, -50%)" };
+        break;
+      case 13:
+        newPosition = { top: "50%", left: "50%", transform: "translate(-50%, -50%)" };
+        break;
+      default:
+        break;
+    }
+    setModalPosition(newPosition);
+  }, [step]);
 
   // 튜토리얼 완료 함수 api
   const completeTutorial = async () => {
@@ -102,10 +259,12 @@ const Tutorial: React.FC = () => {
         {/* 클릭 방지 오버레이 */}
         <div className="overlay-click-prevent"></div>
         <div className="overlay-dark"></div>
-        <div className={`overlay-highlight highlight-position-${step}`}></div>
+
+        {/* 단계별 위치 강조 영역 */}
+        <div className="overlay-highlight" style={highlightStyle}></div>
 
         {/* 튜토리얼 모달 */}
-        <div className={`tutorial-modal tutorial-position-${step}`}>
+        <div className="tutorial-modal" style={modalPosition}>
           <button onClick={() => setShowConfirmModal(true)} className="tutorial-close-btn">
             <img src={closeButton} alt="Close" />
           </button>
