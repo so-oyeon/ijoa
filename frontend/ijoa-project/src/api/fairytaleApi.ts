@@ -96,6 +96,12 @@ export const fairyTaleApi = {
     return api.get<TTSAudioBookResponse>(`/tts/audio-book/${bookId}/${TTSId}`);
   },
 
+  // TTS 생성 여부 확인
+  checkTTSCreationStatus: (bookId: number, ttsId: number) => {
+    return api.get<{ status: boolean }>(`/tts/audios/check/${bookId}/${ttsId}`);
+  },
+
+
   // 동화책 특정 페이지 시선추적 데이터 저장
   createEyeTrackingData: (pageHistoryId: number, data: EyeTrackingRequestData) => {
     return api.post(`/fairytales/reading-histories/${pageHistoryId}/eye-tracking`, data);
