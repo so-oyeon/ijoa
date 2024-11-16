@@ -82,32 +82,15 @@ const SeesoComponent = ({
       // 증가 중일 때만 이전 값 저장
       if (previousAttentionScoreRef.current < attentionRate) {
         previousAttentionScoreRef.current = attentionRate;
-        console.log("증가 중임. ", previousAttentionScoreRef.current + "으로 저장");
       } else {
         isDropRef.current = true;
         // 감소 중일 때는 감소 변화값이 0.3 이상인지 확인
         if (!isModalShownRef.current && previousAttentionScoreRef.current - attentionRate > 0.3) {
-          console.log(
-            "감소량 : ",
-            previousAttentionScoreRef.current - attentionRate,
-            "이전 값 : ",
-            previousAttentionScoreRef,
-            "현재 값 : ",
-            attentionRate
-          );
           setIsFocusAlertModalOpen(true);
           previousAttentionScoreRef.current = attentionRate;
-          console.log("감소 중임. ", previousAttentionScoreRef.current + "으로 저장");
         }
       }
     }
-
-    // if (!isModalShownRef.current) {
-    //   if (attentionRate !== undefined && attentionRate < 0.3) {
-    //     setIsFocusAlertModalOpen(true);
-    //     isModalShownRef.current = true; // 모달 상태를 업데이트
-    //   }
-    // }
 
     // 단어 추출 (만족하는 요소 없을 시, undefined 반환)
     const wordUnderGaze = wordPositionsRef.current.find(({ x, y, width, height }) => {
@@ -237,10 +220,7 @@ const SeesoComponent = ({
     };
 
     try {
-      const response = await fairyTaleApi.createEyeTrackingData(pageHistoryIdRef.current, data);
-      if (response.status === 201) {
-        console.log(attentionRate);
-      }
+      await fairyTaleApi.createEyeTrackingData(pageHistoryIdRef.current, data);
     } catch (error) {
       console.log("fairyTaleApi의 createEyeTrackingData : ", error);
     }
@@ -281,39 +261,6 @@ const SeesoComponent = ({
     <div>
       {/* 트래킹점 표시 관련 캔버스 (빨간점) */}
       {/* <canvas className="fixed top-0" id="output" ref={outputCanvasRef}></canvas> */}
-
-      {/* 단어 위치에 따라 빨간색 테두리 박스 div 표시 */}
-      {/* {wordPositions.map((position, index) =>
-        index >= 0 ? (
-          <div
-            key={index}
-            style={{
-              position: "absolute",
-              left: `${position.x}px`,
-              top: `${position.y}px`,
-              width: `${position.width}px`,
-              height: `${position.height}px`,
-              border: "2px solid #FF0000", // 반투명 흰색
-              pointerEvents: "none", // 클릭 이벤트 무시
-              zIndex: 10,
-            }}></div>
-        ) : (
-          <></>
-        )
-      )} */}
-
-      {/* 텍스트 박스 범위에 따라 빨간색 테두리 박스 div 표시 */}
-      {/* <div
-        style={{
-          position: "absolute",
-          left: `${textRangePosition.x - margin}px`,
-          top: `${textRangePosition.y - margin}px`,
-          width: `${textRangePosition.width + margin * 2}px`,
-          height: `${textRangePosition.height + margin * 2}px`,
-          border: "2px solid #FF0000", // 반투명 흰색
-          pointerEvents: "none", // 클릭 이벤트 무시
-          zIndex: 10,
-        }}></div> */}
 
       <div className="p-3 bg-white rounded-xl grid place-content-center    fixed top-0 left-1/2 transform -translate-x-1/2 z-50">
         <p>집중도 분석을 위해 아이트래킹을 설정해주세요 !</p>
