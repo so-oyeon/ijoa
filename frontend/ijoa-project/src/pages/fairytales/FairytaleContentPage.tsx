@@ -294,7 +294,6 @@ const FairyTaleContentPage: React.FC = () => {
     });
 
     setWordPositions(positions);
-    console.log("Extracted word positions:", positions);
   };
 
   useEffect(() => {
@@ -434,6 +433,7 @@ const FairyTaleContentPage: React.FC = () => {
                 height: 0,
               }
         }
+        setIsFocusAlertModalOpen={setIsFocusAlertModalOpen}
       />
     </div>
   );
