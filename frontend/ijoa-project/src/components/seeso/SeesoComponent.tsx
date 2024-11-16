@@ -8,9 +8,16 @@ interface Props {
   pageHistoryId: number;
   wordPositions: WordPositionInfo[];
   textRangePosition: WordPositionInfo;
+  setIsFocusAlertModalOpen: (state: boolean) => void;
 }
 
-const SeesoComponent = ({ fairytaleId, pageHistoryId, wordPositions, textRangePosition }: Props) => {
+const SeesoComponent = ({
+  fairytaleId,
+  pageHistoryId,
+  wordPositions,
+  textRangePosition,
+  setIsFocusAlertModalOpen,
+}: Props) => {
   // 여유 범위
   const margin = 30;
 
@@ -22,6 +29,10 @@ const SeesoComponent = ({ fairytaleId, pageHistoryId, wordPositions, textRangePo
   const pageHistoryIdRef = useRef(pageHistoryId);
 
   const [gazeInfo, setGazeInfo] = useState<GazeInfo | null>(null);
+  const isModalShownRef = useRef(false); // 모달 띄운 여부를 useRef로 관리
+  const previousAttentionScoreRef = useRef(0);
+  const dropScaleRef = useRef(0);
+  const isDropRef = useRef(false);
 
   const licenseKey = import.meta.env.VITE_SEESO_SDK_KEY;
   let seeSoInstance: Seeso | null = null;
@@ -67,6 +78,36 @@ const SeesoComponent = ({ fairytaleId, pageHistoryId, wordPositions, textRangePo
 
     // 집중도 추출
     const attentionRate = seeSoInstance?.getAttentionScore();
+    if (attentionRate !== undefined) {
+      // 증가 중일 때만 이전 값 저장
+      if (previousAttentionScoreRef.current < attentionRate) {
+        previousAttentionScoreRef.current = attentionRate;
+        console.log("증가 중임. ", previousAttentionScoreRef.current + "으로 저장");
+      } else {
+        isDropRef.current = true;
+        // 감소 중일 때는 감소 변화값이 0.3 이상인지 확인
+        if (!isModalShownRef.current && previousAttentionScoreRef.current - attentionRate > 0.3) {
+          console.log(
+            "감소량 : ",
+            previousAttentionScoreRef.current - attentionRate,
+            "이전 값 : ",
+            previousAttentionScoreRef,
+            "현재 값 : ",
+            attentionRate
+          );
+          setIsFocusAlertModalOpen(true);
+          previousAttentionScoreRef.current = attentionRate;
+          console.log("감소 중임. ", previousAttentionScoreRef.current + "으로 저장");
+        }
+      }
+    }
+
+    // if (!isModalShownRef.current) {
+    //   if (attentionRate !== undefined && attentionRate < 0.3) {
+    //     setIsFocusAlertModalOpen(true);
+    //     isModalShownRef.current = true; // 모달 상태를 업데이트
+    //   }
+    // }
 
     // 단어 추출 (만족하는 요소 없을 시, undefined 반환)
     const wordUnderGaze = wordPositionsRef.current.find(({ x, y, width, height }) => {
@@ -176,12 +217,16 @@ const SeesoComponent = ({ fairytaleId, pageHistoryId, wordPositions, textRangePo
   ) => {
     // 현재 년-월-일T시:분:초.밀리초Z 추출
     const today = new Date();
-    const formatToday = `${today.getFullYear()}-${
-      today.getMonth() + 1
-    }-${today.getDate()}T${today.getHours()}:${today.getMinutes()}:${today
-      .getSeconds()
+    const formatToday = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, "0")}-${today
+      .getDate()
       .toString()
-      .padStart(2, "0")}.${today.getMilliseconds().toString().padStart(3, "0")}Z`;
+      .padStart(2, "0")}T${today.getHours().toString().padStart(2, "0")}:${today
+      .getMinutes()
+      .toString()
+      .padStart(2, "0")}:${today.getSeconds().toString().padStart(2, "0")}.${today
+      .getMilliseconds()
+      .toString()
+      .padStart(3, "0")}Z`;
 
     const data = {
       trackedAt: formatToday,
@@ -194,7 +239,7 @@ const SeesoComponent = ({ fairytaleId, pageHistoryId, wordPositions, textRangePo
     try {
       const response = await fairyTaleApi.createEyeTrackingData(pageHistoryIdRef.current, data);
       if (response.status === 201) {
-        console.log(response);
+        console.log(attentionRate);
       }
     } catch (error) {
       console.log("fairyTaleApi의 createEyeTrackingData : ", error);
@@ -235,7 +280,7 @@ const SeesoComponent = ({ fairytaleId, pageHistoryId, wordPositions, textRangePo
   return (
     <div>
       {/* 트래킹점 표시 관련 캔버스 (빨간점) */}
-      <canvas className="fixed top-0" id="output" ref={outputCanvasRef}></canvas>
+      {/* <canvas className="fixed top-0" id="output" ref={outputCanvasRef}></canvas> */}
 
       {/* 단어 위치에 따라 빨간색 테두리 박스 div 표시 */}
       {/* {wordPositions.map((position, index) =>
