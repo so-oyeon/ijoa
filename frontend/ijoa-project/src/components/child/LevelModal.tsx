@@ -84,6 +84,7 @@ const LevelModal: React.FC<LevelModalProps> = ({ minLevel, maxLevel, totalCount,
           <button
             onClick={goToPreviousModalLevel}
             style={{ visibility: currentModalLevel > minLevel ? "visible" : "hidden" }}
+            className="active:scale-110"
           >
             <img src={left_arrow} alt="이전레벨" className="w-20" />
           </button>
@@ -91,6 +92,7 @@ const LevelModal: React.FC<LevelModalProps> = ({ minLevel, maxLevel, totalCount,
           <button
             onClick={goToNextModalLevel}
             style={{ visibility: currentModalLevel < maxLevel ? "visible" : "hidden" }}
+            className="active:scale-110"
           >
             <img src={right_arrow} alt="다음레벨" className="w-20" />
           </button>

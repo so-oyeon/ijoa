@@ -85,7 +85,7 @@ const MyRoom: React.FC = () => {
       {displayLevel > 1 && (
         <button
           onClick={goToPreviousLevel}
-          className="absolute left-0 top-1/2 -translate-y-1/2 px-4 py-2 text-white rounded-md"
+          className="absolute left-0 top-1/2 -translate-y-1/2 px-4 py-2 text-white rounded-md active:scale-110"
         >
           <img src={arrow_left} alt="이전 레벨" className="w-[200px]" />
         </button>
@@ -95,7 +95,7 @@ const MyRoom: React.FC = () => {
       {displayLevel < maxLevel && (
         <button
           onClick={goToNextLevel}
-          className="absolute right-0 top-1/2 -translate-y-1/2 px-4 py-2 text-white rounded-md"
+          className="absolute right-0 top-1/2 -translate-y-1/2 px-4 py-2 text-white rounded-md active:scale-110"
         >
           <img src={arrow_right} alt="다음 레벨" className="w-[200px]" />
         </button>
