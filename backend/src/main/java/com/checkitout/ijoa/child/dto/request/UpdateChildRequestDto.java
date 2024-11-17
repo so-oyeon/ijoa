@@ -1,6 +1,7 @@
 package com.checkitout.ijoa.child.dto.request;
 
 import com.checkitout.ijoa.child.domain.Enum.Gender;
+import com.checkitout.ijoa.common.validation.ValidImageType;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Past;
@@ -21,6 +22,7 @@ public class UpdateChildRequestDto {
     @Schema(description = "자녀 성별(MALE, FEMALE)", example = "FEMALE")
     private Gender gender;
 
+    @ValidImageType
     @Parameter(description = "사용자의 프로필 이미지 파일", schema = @Schema(type = "string", format = "binary"))
     private MultipartFile profileImg;
 }
