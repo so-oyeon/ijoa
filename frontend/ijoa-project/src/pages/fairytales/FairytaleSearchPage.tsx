@@ -46,6 +46,7 @@ const FairytaleSearchPage: React.FC = () => {
           setSearchResults(data);
         } else {
           console.error("유효하지 않은 응답 상태 :", response.status);
+          setSearchResults(null)
         }
       } catch (error) {
         console.error("fairytaleApi의 getFairyTalesBySearch :", error);
