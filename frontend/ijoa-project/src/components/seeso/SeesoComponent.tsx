@@ -190,7 +190,7 @@ const SeesoComponent = ({
   // 캘리브레이션 버튼 클릭 핸들러
   const onClickCalibrationBtn = () => {
     const userId = "a1234";
-    const redirectUrl = `http://localhost:5173/fairytale/content/${fairytaleId}`; // seeso 초기화 후 리다이렉트 주소
+    const redirectUrl = `https://k11d105.p.ssafy.io/fairytale/content/${fairytaleId}`; // seeso 초기화 후 리다이렉트 주소
     const calibrationPoint = 5;
     Seeso.openCalibrationPage(licenseKey ?? "", userId, redirectUrl, calibrationPoint);
   };
@@ -213,21 +213,7 @@ const SeesoComponent = ({
     word: string | null, // 단어 정보 없으면 null
     isImage: boolean
   ) => {
-    // 현재 년-월-일T시:분:초.밀리초Z 추출
-    const today = new Date();
-    const formatToday = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, "0")}-${today
-      .getDate()
-      .toString()
-      .padStart(2, "0")}T${today.getHours().toString().padStart(2, "0")}:${today
-      .getMinutes()
-      .toString()
-      .padStart(2, "0")}:${today.getSeconds().toString().padStart(2, "0")}.${today
-      .getMilliseconds()
-      .toString()
-      .padStart(3, "0")}Z`;
-
     const data = {
-      trackedAt: formatToday,
       isGazeOutOfScreen: isNaN(gazeX) || isNaN(gazeY),
       attentionRate: attentionRate,
       word: word,
