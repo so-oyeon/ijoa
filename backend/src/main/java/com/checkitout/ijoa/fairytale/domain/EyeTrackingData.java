@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Getter
@@ -21,6 +22,7 @@ public class EyeTrackingData {
     @Column(name = "eye_tracking_data_id")
     private Long id;
 
+    @CreationTimestamp
     @Column(nullable = false)
     private LocalDateTime trackedAt;
 
@@ -40,8 +42,7 @@ public class EyeTrackingData {
 
 
     public EyeTrackingData(LocalDateTime trackedAt, Boolean isGazeOutOfScreen, Float attentionRate, String word,
-                           Boolean isImage,
-                           PageHistory pageHistory) {
+                           Boolean isImage, PageHistory pageHistory) {
         this.trackedAt = trackedAt;
         this.isGazeOutOfScreen = isGazeOutOfScreen;
         this.attentionRate = attentionRate;
