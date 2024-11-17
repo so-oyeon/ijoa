@@ -38,7 +38,7 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({
   const [isWithoutTTSConfirmModalOpen, setIsWithoutTTSConfirmModalOpen] = useState(false);
 
   const handleModalConfirm = () => {
-    onClose()
+    onClose();
     setIsWithoutTTSConfirmModalOpen(false);
   };
 
@@ -210,15 +210,13 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({
                 onClick={() => {
                   if (onContinueReading) onContinueReading();
                 }}
-                disabled={readAloudEnabled && selectedIndex === null}
-              >
+                disabled={readAloudEnabled && selectedIndex === null}>
                 이어서 읽기
               </button>
               <button
                 className="w-36 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-3xl border-2 border-[#67CCFF] active:bg-[#005f99] disabled:bg-gray-300 disabled:border-gray-300"
                 onClick={onClose}
-                disabled={readAloudEnabled && selectedIndex === null}
-              >
+                disabled={readAloudEnabled && selectedIndex === null}>
                 처음부터 읽기
               </button>
             </div>
@@ -227,8 +225,7 @@ const TTSChoiceModal: React.FC<TTSChoiceModalProps> = ({
               <button
                 className="w-36 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-3xl border-2 border-[#67CCFF] active:bg-[#005f99] disabled:bg-gray-300 disabled:border-gray-300"
                 onClick={onClose}
-                disabled={readAloudEnabled && selectedIndex === null}
-              >
+                disabled={readAloudEnabled && selectedIndex === null}>
                 동화책 읽기
               </button>
             </div>

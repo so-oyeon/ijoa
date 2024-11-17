@@ -22,6 +22,7 @@ import { WordPositionInfo } from "../../types/seesoTypes";
 import Lottie from "react-lottie-player";
 import loadingAnimation from "../../lottie/footPrint-loadingAnimation.json";
 import { childApi } from "../../api/childApi";
+import EyeTrackingChoiceModal from "../../components/fairytales/contents/EyeTrackingChoiceModal";
 
 const FairyTaleContentPage: React.FC = () => {
   const { fairytaleId } = useParams<{ fairytaleId: string }>();
@@ -48,6 +49,9 @@ const FairyTaleContentPage: React.FC = () => {
   const [ttsId, setTTSId] = useState<number | null>(null);
   const [shownQuizPages, setShownQuizPages] = useState<number[]>([]);
   const [levelUpMessage, setLevelUpMessage] = useState("");
+  const [isSeesoInitialized, setIsSeesoInitialized] = useState(false); // SEESO 초기화 상태 관리
+  const [isSeesoSeetingModal, setIsSeesoSeetingModal] = useState(true); // SEESO 초기화 상태 관리
+  const [isOpenSeesoSetting, setIsOpenSeesoSetting] = useState(false);
 
   const bookId = fairytaleId ? parseInt(fairytaleId, 10) : 0;
   const isReading = currentPage > 0 && currentPage != totalPages;
@@ -378,6 +382,7 @@ const FairyTaleContentPage: React.FC = () => {
       )}
 
       {audioURL && <audio controls src={audioURL} className="hidden" ref={audioPlayRef}></audio>}
+
       {/* TTS 선택 모달 */}
       {isTTSChoiceModalOpen && (
         <TTSChoiceModal
@@ -390,10 +395,21 @@ const FairyTaleContentPage: React.FC = () => {
           onContinueReading={handleContinueReading}
         />
       )}
+
+      {/* 아이트래킹 설정 안내 모달 */}
+      {!isSeesoInitialized && isSeesoSeetingModal && (
+        <EyeTrackingChoiceModal
+          setIsOpenSeesoSetting={setIsOpenSeesoSetting}
+          setIsSeesoSeetingModal={setIsSeesoSeetingModal}
+        />
+      )}
+
       {/* 레벨업 모달 */}
       <LevelUpModal isOpen={isLevelUpModalOpen} message={levelUpMessage} />
+
       {/* 독서완료 모달 */}
       <ReadCompleteModal isOpen={isReadCompleteModalOpen} title={title} from={from} />
+
       {/* 퀴즈 모달 */}
       <QuizModal
         isOpen={isQuizModalOpen && !isQuizDataLoading}
@@ -401,6 +417,7 @@ const FairyTaleContentPage: React.FC = () => {
         quizData={quizData?.text}
         quizId={quizData?.quizId}
       />
+
       {/* 메뉴창 */}
       <FairytaleMenu
         fairytaleCurrentPage={fairytaleCurrentPage}
@@ -414,6 +431,7 @@ const FairyTaleContentPage: React.FC = () => {
         ttsId={ttsId}
         previousTTSId={previousTTSId}
       />
+
       {/* 집중 알람 모달 */}
       <FocusAlertModal isOpen={isFocusAlertModalOpen} onClose={handleCloseFocusAlertModal} />
 
@@ -434,6 +452,10 @@ const FairyTaleContentPage: React.FC = () => {
               }
         }
         setIsFocusAlertModalOpen={setIsFocusAlertModalOpen}
+        setIsSeesoInitialized={setIsSeesoInitialized}
+        isSeesoInitialized={isSeesoInitialized}
+        isOpenSeesoSetting={isOpenSeesoSetting}
+        setIsOpenSeesoSetting={setIsOpenSeesoSetting}
       />
     </div>
   );

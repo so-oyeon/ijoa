@@ -10,6 +10,10 @@ interface Props {
   wordPositions: WordPositionInfo[];
   textRangePosition: WordPositionInfo;
   setIsFocusAlertModalOpen: (state: boolean) => void;
+  setIsSeesoInitialized: (state: boolean) => void;
+  isSeesoInitialized: boolean;
+  isOpenSeesoSetting: boolean;
+  setIsOpenSeesoSetting: (state: boolean) => void;
 }
 
 const SeesoComponent = ({
@@ -18,6 +22,10 @@ const SeesoComponent = ({
   wordPositions,
   textRangePosition,
   setIsFocusAlertModalOpen,
+  setIsSeesoInitialized,
+  isSeesoInitialized,
+  isOpenSeesoSetting,
+  setIsOpenSeesoSetting,
 }: Props) => {
   // 여유 범위
   const margin = 30;
@@ -32,7 +40,7 @@ const SeesoComponent = ({
   const textRangePositionRef = useRef(textRangePosition);
   const pageHistoryIdRef = useRef(pageHistoryId);
 
-  const [isSeesoInitialized, setIsSeesoInitialized] = useState(false); // 초기화 상태 관리
+  // const [isSeesoInitialized, setIsSeesoInitialized] = useState(false); // 초기화 상태 관리
   const [gazeInfo, setGazeInfo] = useState<GazeInfo | null>(null);
   const isModalShownRef = useRef(false); // 모달 띄운 여부를 useRef로 관리
   const previousAttentionScoreRef = useRef(0);
@@ -182,7 +190,7 @@ const SeesoComponent = ({
   // 캘리브레이션 버튼 클릭 핸들러
   const onClickCalibrationBtn = () => {
     const userId = "a1234";
-    const redirectUrl = `https://k11d105.p.ssafy.io/fairytale/content/${fairytaleId}`; // seeso 초기화 후 리다이렉트 주소
+    const redirectUrl = `http://localhost:5173/fairytale/content/${fairytaleId}`; // seeso 초기화 후 리다이렉트 주소
     const calibrationPoint = 5;
     Seeso.openCalibrationPage(licenseKey ?? "", userId, redirectUrl, calibrationPoint);
   };
@@ -273,6 +281,13 @@ const SeesoComponent = ({
   useEffect(() => {
     pageHistoryIdRef.current = pageHistoryId;
   }, [pageHistoryId]);
+
+  useEffect(() => {
+    if (isOpenSeesoSetting) {
+      onClickCalibrationBtn();
+      setIsOpenSeesoSetting(false);
+    }
+  }, [isOpenSeesoSetting]);
 
   return (
     <div>
