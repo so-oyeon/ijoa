@@ -97,7 +97,7 @@ const TTSProfileUpdateeModal = ({ setIsProfileUpdateModal, updateTTSInfo, getPar
         <div className="flex flex-col items-center space-y-8">
           {/* 타이틀 텍스트 */}
           <div className="text-xl font-bold">
-            <span className="blue-highlight">TTS 정보</span>
+            <span className="blue-highlight">더빙 보이스 정보</span>
             <span>를 입력해 주세요</span>
           </div>
 
