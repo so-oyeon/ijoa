@@ -108,7 +108,7 @@ const ReadingStats = () => {
         <ReadingReport childId={selectChild.childId} />
 
         {/* 워드 클라우드 */}
-        <WordCloud />
+        <WordCloud childId={selectChild.childId} />
       </div>
     </div>
   );
