@@ -93,7 +93,7 @@ const TTSList = () => {
   }
 
   return (
-    <div className="min-h-screen pt-24 bg-[#EAF8FF] relative font-['IMBold']">
+    <div className="min-h-screen pt-16 bg-[#EAF8FF] relative font-['IMBold']">
       <div className="p-20 grid gap-10">
         {/* 상단 타이틀 */}
         <div className="flex flex-col justify-center items-center space-y-3">
@@ -101,11 +101,11 @@ const TTSList = () => {
             <img className="w-10" src="/assets/header/parent/tts-icon.png" alt="" />
             <p className="text-[30px] font-semibold">
               {TTSList.length === 0
-                ? "사용자의 목소리로 TTS를 만들어주세요"
-                : "사용자의 목소리로 학습된 TTS 목록이에요"}
+                ? "사용자의 목소리로 더빙 보이스를 만들어주세요"
+                : "사용자의 목소리로 학습된 더빙 보이스 목록이에요"}
             </p>
           </div>
-          <p className="text-lg">TTS 프로필은 4개까지 만들 수 있어요</p>
+          <p className="text-xl">더빙 보이스 프로필은 4개까지 만들 수 있어요</p>
         </div>
 
         <div className="flex justify-center space-x-10">
@@ -149,7 +149,7 @@ const TTSList = () => {
           )}
         </div>
 
-        <p className="text-center">* TTS 프로필을 만들고 목소리를 반드시 학습시켜주세요!</p>
+        <p className="text-center whitespace-pre-line text-xl">{'* 더빙 보이스 프로필을 만들고 목소리를 반드시 학습시켜주세요!\n(학습된 목소리로 아이들에게 동화책을 읽어줄 수 있어요)'}</p>
       </div>
 
       {/* TTS 프로필 생성 모달 */}

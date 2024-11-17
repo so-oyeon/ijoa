@@ -33,7 +33,7 @@ const TTSCreateModal = ({ setIsCreateGuideModal, setIsCreateModal }: Props) => {
         <div className="flex flex-col items-center space-y-8">
           {/* 안내 멘트 */}
           <div className="text-xl text-[#565656] text-center font-bold grid gap-5">
-            <p className="underline underline-offset-1 decoration-8 decoration-[#67CCFF]">TTS 생성</p>
+            <p className="underline underline-offset-1 decoration-8 decoration-[#67CCFF]">더빙 보이스 생성</p>
             <p>10단계에 걸쳐 녹음이 진행됩니다.</p>
             <div className="flex flex-col items-start space-y-2">
               {guideText.map((text, index) => (

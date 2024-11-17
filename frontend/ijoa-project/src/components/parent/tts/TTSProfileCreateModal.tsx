@@ -74,7 +74,7 @@ const TTSProfileCreateModal = ({ setIsProfileCreateModal, setIsCreateCompleted, 
           <>
             {/* 타이틀 텍스트 */}
             <div className="text-xl font-bold">
-              <span className="blue-highlight">TTS 정보</span>
+              <span className="blue-highlight">더빙 보이스 정보</span>
               <span>를 등록해주세요</span>
             </div>
 
