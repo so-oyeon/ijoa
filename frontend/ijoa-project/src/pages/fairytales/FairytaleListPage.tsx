@@ -197,25 +197,19 @@ const FairytaleListPage: React.FC = () => {
   return (
     <div>
       <div className="pt-6 pb-24 px-10 text-xl">
+
+          {popularFairyTales.length > 0 && (
         <div className="h-[310px] mb-10 overflow-hidden">
           <div className="mb-5 text-2xl font-bold font-['MapleBold']">🏆 {childInfo?.age}살 인기 동화책</div>
-
-          {popularFairyTales.length > 0 ? (
             <Swiper
               bookCovers={popularCovers}
               titles={popularTitles}
               isCompleted={popularFairyTales.map((fairyTale) => fairyTale.isCompleted)}
               onBookClick={handlePopularBookClick}
               progress={popularFairyTales?.map((book) => book.progressRate || 0)}
-            />
-          ) : popularFairyTales.length === 0 ? (
-            <div className="mt-24 text-lg font-bold">
-              아직 {childInfo?.age}살 인기 동화책 데이터가 부족해요 😅
-            </div>
-          ) : (
-            <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
+              />
+              </div>
           )}
-        </div>
 
         {recommendedFairyTales.length > 0 && (
           <div className="h-[310px] mb-10 overflow-hidden">
