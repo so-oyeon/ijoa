@@ -386,7 +386,7 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
    - 동화책 검색
        - ElasitcSearch 기반 검색 시스템 <br>
              - 빠르고 유연한 텍스트 검색을 지원 (부분 일치 검색 활용) <br>
-             - Logstash를 사용하여 MySQL 데이터를 ElasticSearch로 동기화
+             - Logstash를 사용하여 MySQL 데이터를 ElasticSearch로 동기화 <br>
              - 동화책 제목 검색에서 키워드의 일부만 입력해도 정확한 결과를 반환
    - 동화책 추천
        - 협업 필터링 기반 추천 시스템 <br>
