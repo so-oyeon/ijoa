@@ -40,7 +40,7 @@ public class ChildrenManagementController implements ChildManagementApiDocumenta
     @PatchMapping(value = "/children/{childId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}, produces = {
             MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<ChildDto> updateChildProfile(
-            @PathVariable Long childId, @ModelAttribute UpdateChildRequestDto requestDto)
+            @PathVariable Long childId, @Valid @ModelAttribute UpdateChildRequestDto requestDto)
             throws IOException {
 
         ChildDto response = childrenManagementService.updateChildProfile(childId, requestDto);

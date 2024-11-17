@@ -131,7 +131,7 @@ const InformationModal: React.FC<InformationModalProps> = ({ isOpen, onClose }) 
                 value={nickname}
                 onChange={(e) => setNickname(e.target.value)}
                 placeholder="닉네임"
-                className="w-60 h-[50px] px-6 border rounded-full bg-gray-100 text-gray-500 placeholder-gray-400 focus:outline-none"
+                className="w-60 h-[50px] px-6 border rounded-full bg-white text-gray-500 placeholder-gray-400 focus:outline-none"
               />
               <TbPencilMinus className="absolute right-5 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl" />
             </div>
@@ -145,7 +145,7 @@ const InformationModal: React.FC<InformationModalProps> = ({ isOpen, onClose }) 
             type="password"
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
-            className="w-60 h-[50px] px-6 border rounded-full bg-gray-100 text-gray-500 placeholder-gray-400 focus:outline-none"
+            className="w-60 h-[50px] px-6 border rounded-full bg-white text-gray-500 placeholder-gray-400 focus:outline-none"
           />
         </div>
 
@@ -155,7 +155,7 @@ const InformationModal: React.FC<InformationModalProps> = ({ isOpen, onClose }) 
             type="password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            className="w-60 h-[50px] px-6 border rounded-full bg-gray-100 text-gray-500 placeholder-gray-400 focus:outline-none"
+            className="w-60 h-[50px] px-6 border rounded-full bg-white text-gray-500 placeholder-gray-400 focus:outline-none"
           />
         </div>
 

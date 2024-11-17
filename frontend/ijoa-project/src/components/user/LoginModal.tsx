@@ -85,9 +85,12 @@ const LoginModal: React.FC<LoginModalProps> = ({ openForgotPasswordModal }) => {
         />
       </div>
       <button
-        className="w-[25vw] h-[50px] md:w-[25vw] md:h-[50px] lg:w-[25vw] lg:h-[60px]  py-3 mb-4 font-bold text-base md:text-lg lg:text-xl bg-yellow-400 rounded-full active:bg-yellow-500"
+        className={`w-[25vw] h-[50px] md:w-[25vw] md:h-[50px] lg:w-[25vw] lg:h-[60px] py-3 mb-4 font-bold text-base md:text-lg lg:text-xl rounded-full active:bg-yellow-500 ${
+          email && password ? "bg-yellow-400" : "bg-gray-300"
+        }`}
         onClick={handleLogin}
         ref={loginButtonRef}
+        disabled={!email || !password}
       >
         로그인
       </button>

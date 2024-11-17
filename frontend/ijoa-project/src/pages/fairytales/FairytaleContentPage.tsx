@@ -22,6 +22,7 @@ import { WordPositionInfo } from "../../types/seesoTypes";
 import Lottie from "react-lottie-player";
 import loadingAnimation from "../../lottie/footPrint-loadingAnimation.json";
 import { childApi } from "../../api/childApi";
+import EyeTrackingChoiceModal from "../../components/fairytales/contents/EyeTrackingChoiceModal";
 
 const FairyTaleContentPage: React.FC = () => {
   const { fairytaleId } = useParams<{ fairytaleId: string }>();
@@ -48,12 +49,18 @@ const FairyTaleContentPage: React.FC = () => {
   const [ttsId, setTTSId] = useState<number | null>(null);
   const [shownQuizPages, setShownQuizPages] = useState<number[]>([]);
   const [levelUpMessage, setLevelUpMessage] = useState("");
+  const [isSeesoInitialized, setIsSeesoInitialized] = useState(false); // SEESO 초기화 상태 관리
+  const [isSeesoSeetingModal, setIsSeesoSeetingModal] = useState(true); // SEESO 초기화 상태 관리
+  const [isOpenSeesoSetting, setIsOpenSeesoSetting] = useState(false);
 
   const bookId = fairytaleId ? parseInt(fairytaleId, 10) : 0;
   const isReading = currentPage > 0 && currentPage != totalPages;
 
   // Seeso eye-tracking 글자 추출을 위한 word 배열
   const [wordPositions, setWordPositions] = useState<WordPositionInfo[]>([]);
+
+  // Seeso eye-tracking 텍스트 영역 추출을 위한 word 배열 (글/그림 집중도 구분)
+  const [textRangePosition, setTextRangePosition] = useState<WordPositionInfo | null>(null);
 
   // 동화책 내용(이미지, 텍스트)을 가져오는 api 통신 함수
   const getFairyTaleContent = useCallback(
@@ -262,23 +269,27 @@ const FairyTaleContentPage: React.FC = () => {
 
   // 단어 위치 추출 함수
   const extractWordPositions = () => {
-    const textContainer = document.querySelector(".seeso-text-container") as HTMLElement;
-    if (!textContainer) {
-      console.error("text-container element not found");
+    const container = document.querySelector(".seeso-text-container");
+    if (!container) {
+      console.error("Container element with class 'seeso-text-container' not found.");
       return;
     }
 
-    const words = textContainer.innerText.split(" ");
-    textContainer.innerText = ""; // 기존 텍스트를 지움
+    const textRangePosition = container.getBoundingClientRect();
+    setTextRangePosition({
+      word: "",
+      x: textRangePosition.left,
+      y: textRangePosition.top,
+      width: textRangePosition.width,
+      height: textRangePosition.height,
+    });
 
-    const positions = words.map((word) => {
-      const span = document.createElement("span");
-      span.innerText = word + " ";
-      textContainer.appendChild(span);
-
+    // 각 span 요소의 위치와 크기를 추출
+    const spans = container.querySelectorAll("span");
+    const positions: WordPositionInfo[] = Array.from(spans).map((span) => {
       const rect = span.getBoundingClientRect();
       return {
-        word,
+        word: span.innerText.trim(),
         x: rect.left,
         y: rect.top,
         width: rect.width,
@@ -287,7 +298,6 @@ const FairyTaleContentPage: React.FC = () => {
     });
 
     setWordPositions(positions);
-    console.log("Extracted word positions:", positions); // 좌표 정보 확인
   };
 
   useEffect(() => {
@@ -335,8 +345,10 @@ const FairyTaleContentPage: React.FC = () => {
             )}
 
             {/* Seeso 시선 추적 글자 처리를 위해 seeso-text-container 클래스명 필요 */}
-            <div className="seeso-text-container px-2 sm:px-12 flex-1 text-sm sm:text-2xl lg:text-4xl font-['MapleBold'] font-bold text-center whitespace-pre-line break-keep">
-              {fairytaleData.content}
+            <div className="seeso-text-container px-2 sm:px-12 flex-1 text-sm sm:text-2xl lg:text-4xl font-['MapleBold'] font-bold whitespace-pre-line break-keep">
+              {fairytaleData.content.split(" ").map((word, index) => (
+                <span key={index}>{word} </span>
+              ))}
             </div>
           </div>
 
@@ -358,8 +370,7 @@ const FairyTaleContentPage: React.FC = () => {
           <div className="absolute top-[-12px] right-10">
             <button
               className="px-3 py-4 bg-gray-700 bg-opacity-50 rounded-2xl shadow-md active:bg-gray-800"
-              onClick={handleOpenMenu}
-            >
+              onClick={handleOpenMenu}>
               <img src={MenuButton} alt="메뉴 버튼" />
               <p className="text-xs text-white">메뉴</p>
             </button>
@@ -372,6 +383,7 @@ const FairyTaleContentPage: React.FC = () => {
       )}
 
       {audioURL && <audio controls src={audioURL} className="hidden" ref={audioPlayRef}></audio>}
+
       {/* TTS 선택 모달 */}
       {isTTSChoiceModalOpen && (
         <TTSChoiceModal
@@ -384,10 +396,21 @@ const FairyTaleContentPage: React.FC = () => {
           onContinueReading={handleContinueReading}
         />
       )}
+
+      {/* 아이트래킹 설정 안내 모달 */}
+      {!isSeesoInitialized && isSeesoSeetingModal && (
+        <EyeTrackingChoiceModal
+          setIsOpenSeesoSetting={setIsOpenSeesoSetting}
+          setIsSeesoSeetingModal={setIsSeesoSeetingModal}
+        />
+      )}
+
       {/* 레벨업 모달 */}
       <LevelUpModal isOpen={isLevelUpModalOpen} message={levelUpMessage} />
+
       {/* 독서완료 모달 */}
       <ReadCompleteModal isOpen={isReadCompleteModalOpen} title={title} from={from} />
+
       {/* 퀴즈 모달 */}
       <QuizModal
         isOpen={isQuizModalOpen && !isQuizDataLoading}
@@ -395,6 +418,7 @@ const FairyTaleContentPage: React.FC = () => {
         quizData={quizData?.text}
         quizId={quizData?.quizId}
       />
+
       {/* 메뉴창 */}
       <FairytaleMenu
         fairytaleCurrentPage={fairytaleCurrentPage}
@@ -408,11 +432,32 @@ const FairyTaleContentPage: React.FC = () => {
         ttsId={ttsId}
         previousTTSId={previousTTSId}
       />
+
       {/* 집중 알람 모달 */}
       <FocusAlertModal isOpen={isFocusAlertModalOpen} onClose={handleCloseFocusAlertModal} />
 
       {/* Seeso eye-tracking 컴포넌트 호출 */}
-      <SeesoComponent wordPositions={wordPositions} />
+      <SeesoComponent
+        fairytaleId={fairytaleId ?? "0"}
+        pageHistoryId={fairytaleData?.pageHistoryId ?? 0}
+        wordPositions={wordPositions}
+        textRangePosition={
+          textRangePosition
+            ? textRangePosition
+            : {
+                word: "",
+                x: 0,
+                y: 0,
+                width: 0,
+                height: 0,
+              }
+        }
+        setIsFocusAlertModalOpen={setIsFocusAlertModalOpen}
+        setIsSeesoInitialized={setIsSeesoInitialized}
+        isSeesoInitialized={isSeesoInitialized}
+        isOpenSeesoSetting={isOpenSeesoSetting}
+        setIsOpenSeesoSetting={setIsOpenSeesoSetting}
+      />
     </div>
   );
 };

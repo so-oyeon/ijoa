@@ -19,6 +19,7 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
   const [nickname, setNickname] = useState("");
   const [emailError, setEmailError] = useState("");
 
+  const [nicknameError, setNicknameError] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(false);
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
@@ -83,8 +84,17 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
     }
   };
 
-  // 이메일 전송 api 통신 함수
   const handleEmailVerification = async () => {
+    // 이메일 유효성 검사
+    if (!validateEmail(email)) {
+      Swal.fire({
+        icon: "error",
+        title: "유효하지 않은 이메일 형식",
+        text: "올바른 이메일 형식을 입력해주세요.",
+      });
+      return; // 이메일 형식이 유효하지 않으면 함수 종료
+    }
+
     setIsLoading(true);
 
     // 이메일 중복 검사
@@ -93,7 +103,8 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
       setIsLoading(false); // 이메일 중복인 경우 로딩 종료
       return;
     }
-    // api 함수 호출
+
+    // API 호출
     try {
       const response = await userApi.sendVerificationCode(email);
       // 이메일 인증 성공 시(201)
@@ -126,7 +137,7 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
       }
     } catch (error) {
       console.log("userApi의 VerificationCodeConfirm : ", error);
-      Swal.fire("인증 실패", "인증 코드가 잘못되었습니다. 다시 확인해 주세요.", "error");
+      Swal.fire("인증 실패", "인증 번호가 잘못되었습니다. 다시 확인해 주세요.", "error");
     }
   };
 
@@ -162,9 +173,15 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
 
   // 닉네임 설정
   const handleNickname = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newNickname = e.target.value;
     setNickname(e.target.value);
+    // 닉네임 유효성 검사
+    if (newNickname.length < 2 || newNickname.length > 10) {
+      setNicknameError("닉네임은 2~10자 이내로 설정해야 합니다.");
+    } else {
+      setNicknameError(""); // 유효한 닉네임일 경우 오류 초기화
+    }
   };
-
   // 회원가입 api 통신 함수
   const handleSubmit = async () => {
     // 입력 필드 유효성 검사
@@ -309,7 +326,7 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
         value={nickname}
         onChange={handleNickname}
       />
-
+      {nicknameError && <p className="text-red-500 text-xs md:text-sm mb-4">* {nicknameError}</p>}
       {generalError && <p className="text-red-500 font-bold text-xs md:text-sm mb-4">* {generalError}</p>}
 
       <button
