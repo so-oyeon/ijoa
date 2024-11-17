@@ -223,6 +223,11 @@ public class TTSService {
 
     // tts모델 학습 시작
     public void startTrain(Long ttsId) {
+        TTS tts = ttsRepository.findById(ttsId).orElseThrow(()-> new CustomException(ErrorCode.TTS_NOT_FOUND));
+
+        if(tts.getTTS()!=null){
+            throw new CustomException(ErrorCode.TTS_ALREADY_EXISTS);
+        }
         // 학습데이터
         List<TrainAudio> trainAudios = trainAudioRepository.findByTtsIdOrderByScriptId(ttsId).orElseThrow(()-> new CustomException(ErrorCode.TRAINAUDIO_NOT_FOUND));
 
@@ -287,9 +292,13 @@ public class TTSService {
 
     // 동화책 audio 생성
     public void createAudioBook(Long bookId, Long ttsId) {
+        Fairytale fairytale = fairytaleRepository.findById(bookId).orElseThrow(()-> new CustomException(ErrorCode.FAIRYTALE_NOT_FOUND));
+        TTS tts = ttsRepository.findById(ttsId).orElseThrow(()-> new CustomException(ErrorCode.TTS_NOT_FOUND));
 
+        if(fairytaleTTSRepository.existsByFairytaleAndTts(fairytale, tts)){
+            throw new CustomException(ErrorCode.AUDIO_ALREADY_EXISTS);
+        }
         List<FairytalePageContent> contents = fairytalePageContentRepository.findByfairytaleId(bookId).orElseThrow(() -> new CustomException(ErrorCode.FAIRYTALE_NOT_FOUND));
-        TTS tts = ttsRepository.findById(ttsId).orElseThrow(() -> new CustomException(ErrorCode.TTS_NOT_FOUND));
 
         String lockKey = "createAudioBook:"+bookId+"_ttsId:"+ttsId;
         RBucket<String> statusFlag = redissonClient.getBucket(lockKey);
@@ -379,15 +388,21 @@ public class TTSService {
 
     // 자녀페이지 TTS리스트
     public List<ChildTTSListDto> childTTSList(Long bookId) {
+        TTS defaultTTS = ttsRepository.findById(63L).orElse(null);
+
         User user = securityUtil.getUserByToken();
         List<TTS> ttsList = ttsRepository.findByUserId(user.getId()).orElseThrow(()-> new CustomException(ErrorCode.TTS_NO_CONTENT) );
         Fairytale fairytale = fairytaleRepository.findById(bookId).orElseThrow(()-> new CustomException(ErrorCode.FAIRYTALE_NOT_FOUND));
         List<ChildTTSListDto> childTTSListDtos = new ArrayList<>();
+
+        boolean audio_created = fairytaleTTSRepository.existsByFairytaleAndTts(fairytale, defaultTTS);
+        childTTSListDtos.add(ChildTTSListDto.from(defaultTTS, audio_created));
+
         for(TTS tts : ttsList){
             if(tts.getTTS() ==null){
                 continue;
             }
-            boolean audio_created = fairytaleTTSRepository.existsByFairytaleAndTts(fairytale, tts);
+            audio_created = fairytaleTTSRepository.existsByFairytaleAndTts(fairytale, tts);
             childTTSListDtos.add(ChildTTSListDto.from(tts, audio_created));
         }
         return childTTSListDtos;
@@ -413,5 +428,19 @@ public class TTSService {
 
     public String getKeyFromUrl(String url) {
         return url.replace("https://checkitout-bucket.s3.ap-northeast-2.amazonaws.com/", "");
+    }
+
+    public StatusDto checkAudioBook(Long bookId, Long ttsId) {
+        StatusDto resposeDto;
+        Fairytale fairytale = fairytaleRepository.findById(bookId).orElseThrow(()-> new CustomException(ErrorCode.FAIRYTALE_NOT_FOUND));
+        TTS tts = ttsRepository.findById(ttsId).orElseThrow(()-> new CustomException(ErrorCode.TTS_NOT_FOUND));
+
+        if(fairytaleTTSRepository.existsByFairytaleAndTts(fairytale, tts)){
+            resposeDto = new StatusDto(true);
+        }else{
+            resposeDto = new StatusDto(false);
+        }
+
+        return resposeDto;
     }
 }

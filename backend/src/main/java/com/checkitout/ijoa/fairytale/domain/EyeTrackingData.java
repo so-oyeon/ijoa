@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Getter
@@ -21,19 +22,12 @@ public class EyeTrackingData {
     @Column(name = "eye_tracking_data_id")
     private Long id;
 
+    @CreationTimestamp
     @Column(nullable = false)
     private LocalDateTime trackedAt;
 
     @Column(nullable = false)
-    private Boolean isFaceMissing;
-
     private Boolean isGazeOutOfScreen;
-
-    private Float gazeX;
-
-    private Float gazeY;
-
-    private Float pupilSize;
 
     private Float attentionRate;
 
@@ -47,25 +41,18 @@ public class EyeTrackingData {
     private PageHistory pageHistory;
 
 
-    public EyeTrackingData(LocalDateTime trackedAt, Boolean isFaceMissing, Boolean isGazeOutOfScreen, Float gazeX,
-                           Float gazeY, Float pupilSize, Float attentionRate, String word, Boolean isImage,
-                           PageHistory pageHistory) {
+    public EyeTrackingData(LocalDateTime trackedAt, Boolean isGazeOutOfScreen, Float attentionRate, String word,
+                           Boolean isImage, PageHistory pageHistory) {
         this.trackedAt = trackedAt;
-        this.isFaceMissing = isFaceMissing;
         this.isGazeOutOfScreen = isGazeOutOfScreen;
-        this.gazeX = gazeX;
-        this.gazeY = gazeY;
-        this.pupilSize = pupilSize;
         this.attentionRate = attentionRate;
         this.word = word;
         this.isImage = isImage;
         this.pageHistory = pageHistory;
     }
 
-    public static EyeTrackingData of(LocalDateTime trackedAt, Boolean isFaceMissing, Boolean isGazeOutOfScreen,
-                                     Float gazeX, Float gazeY, Float pupilSize, Float attentionRate, String word,
-                                     Boolean isImage, PageHistory pageHistory) {
-        return new EyeTrackingData(trackedAt, isFaceMissing, isGazeOutOfScreen, gazeX, gazeY, pupilSize, attentionRate,
-                word, isImage, pageHistory);
+    public static EyeTrackingData of(LocalDateTime trackedAt, Boolean isGazeOutOfScreen, Float attentionRate,
+                                     String word, Boolean isImage, PageHistory pageHistory) {
+        return new EyeTrackingData(trackedAt, isGazeOutOfScreen, attentionRate, word, isImage, pageHistory);
     }
 }

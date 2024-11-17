@@ -2,7 +2,7 @@ import { Routes, Route, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Header from "./components/common/Header";
 import CreateChildProfile from "./pages/parent/ChildProfileList";
-import FairytaleListPage from "./pages/fairytales/FairytaleListPage";
+// import FairytaleListPage from "./pages/fairytales/FairytaleListPage";
 import FairyTaleContentPage from "./pages/fairytales/FairytaleContentPage";
 import Login from "./pages/users/Login";
 import TTSList from "./pages/parent/TTSList";
@@ -11,9 +11,10 @@ import MyBookShelves from "./pages/child/MyBookShelves";
 import VoiceAlbum from "./pages/parent/VoiceAlbum";
 import VoiceAlbumDetail from "./pages/parent/VoiceAlbumDetail";
 import ReadingStatistics from "./pages/parent/ReadingStats";
-import FairytaleSearchPage from "./pages/fairytales/FairytaleSearchPage";
+// import FairytaleSearchPage from "./pages/fairytales/FairytaleSearchPage";
 import MusicManager from "./MusicManager";
 import SplashScreen from "./pages/users/SplashScreen";
+import FairytaleTotalPage from "./pages/fairytales/FairytaleTotalPage";
 
 const App = () => {
   const location = useLocation();
@@ -36,8 +37,8 @@ const App = () => {
     }
   }, [location, isSplashFinished]);
 
-   // 2초 타이머와 이미지 로딩 완료 상태를 모두 확인하여 SplashScreen 종료
-   useEffect(() => {
+  // 2초 타이머와 이미지 로딩 완료 상태를 모두 확인하여 SplashScreen 종료
+  useEffect(() => {
     const timer = setTimeout(() => {
       setIsSplashFinished(true);
     }, 3000); // 3초로 설정
@@ -55,13 +56,7 @@ const App = () => {
       {/* 첫 화면에서 SplashScreen 또는 Login 표시 */}
       <Route
         path="/"
-        element={
-          isSplashFinished ? (
-            <Login onAssetsLoaded={() => setIsLoaded(true)} />
-          ) : (
-            <SplashScreen />
-          )
-        }
+        element={isSplashFinished ? <Login onAssetsLoaded={() => setIsLoaded(true)} /> : <SplashScreen />}
       />
 
       {/* 페이지에 Header가 포함된 화면 */}
@@ -81,10 +76,8 @@ const App = () => {
                 {/* 부모의 음성 앨범 화면 */}
                 <Route path="/parent/voice/album" element={<VoiceAlbum />} />
 
-                {/* 동화 목록 */}
-                <Route path="/child/fairytale/list" element={<FairytaleListPage />} />
-                {/* 동화책 제목 검색 화면 */}
-                <Route path="/child/fairytale/search" element={<FairytaleSearchPage />} />
+                {/* 동화책 인기/추천/카테고리 & 전체도서/검색 화면 */}
+                <Route path="/child/fairytale/total" element={<FairytaleTotalPage />} />
 
                 {/* 내 방 */}
                 <Route path="/child/myroom" element={<MyRoom />} />

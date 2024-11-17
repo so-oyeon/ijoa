@@ -13,7 +13,8 @@ import {
   QuizAnswerResponse,
   ChildrenTTSListResponse,
   TTSPlaybackResponse,
-  TTSAudioBookResponse
+  TTSAudioBookResponse,
+  EyeTrackingRequestData
 } from "../types/fairytaleTypes";
 
 export const fairyTaleApi = {
@@ -23,8 +24,8 @@ export const fairyTaleApi = {
   },
 
   // 사용자 맞춤 책 추천 조회
-  getFairyTaleRecommendations: (page: number, size: number) => {
-    return api.get<FairyTaleRecommendationsResponse>(`/fairytales/recommendations?page=${page}&size=${size}`);
+  getFairyTaleRecommendations: () => {
+    return api.get<FairyTaleRecommendationsResponse>(`/fairytales/recommendations`);
   },
 
   // 카테고리별 동화 리스트 조회
@@ -93,5 +94,16 @@ export const fairyTaleApi = {
   // 동화책 TTS 생성
   getTTSAudioBook: (bookId: number, TTSId: number) => {
     return api.get<TTSAudioBookResponse>(`/tts/audio-book/${bookId}/${TTSId}`);
+  },
+
+  // TTS 생성 여부 확인
+  checkTTSCreationStatus: (bookId: number, ttsId: number) => {
+    return api.get<{ status: boolean }>(`/tts/audios/check/${bookId}/${ttsId}`);
+  },
+
+
+  // 동화책 특정 페이지 시선추적 데이터 저장
+  createEyeTrackingData: (pageHistoryId: number, data: EyeTrackingRequestData) => {
+    return api.post(`/fairytales/reading-histories/${pageHistoryId}/eye-tracking`, data);
   },
 };
