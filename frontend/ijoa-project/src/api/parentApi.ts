@@ -43,6 +43,11 @@ export const parentApi = {
     return api.get(`/children/${childId}/statistics/reading-report`);
   },
 
+  // 독서 분석 보고서 조회
+  getTypography: (childId: number, count: number) => {
+    return api.get(`/children/${childId}/statistics/typography?count=${count}`);
+  },
+
   // TTS 목록 조회
   getParentTTSList: () => {
     return api.get(`/tts/profile`);
