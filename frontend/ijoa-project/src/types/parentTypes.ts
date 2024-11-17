@@ -36,6 +36,12 @@ export interface ReadingReportInfo {
   conclusion: string;
 }
 
+// 집중한 단어 타이포그래피 조회 응답 데이터
+export interface TypographyData {
+  word: string;
+  focusCount: number;
+}
+
 // 부모 TTS 목록 조회 응답 데이터
 export interface ParentTTSInfo {
   id: number;
