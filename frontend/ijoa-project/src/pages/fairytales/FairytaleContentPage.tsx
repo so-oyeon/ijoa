@@ -207,7 +207,7 @@ const FairyTaleContentPage: React.FC = () => {
 
         const quizEnabled = localStorage.getItem("quizEnabled") === "true";
         if (quizEnabled && (newPage + 1) % 5 === 0 && !shownQuizPages.includes(newPage)) {
-          const quizPageNumber = (newPage + 1) / 5;
+          const quizPageNumber = (newPage + 1);
           getQuizData(quizPageNumber);
           setIsQuizModalOpen(true);
           setShownQuizPages((prevPages) => [...prevPages, newPage]);
@@ -310,17 +310,18 @@ const FairyTaleContentPage: React.FC = () => {
     }
   }, [ttsId, fairytaleCurrentPage]);
 
-  // QuizModal 열림 상태 변화에 따른 오디오 제어
   useEffect(() => {
-    if (isQuizModalOpen && audioPlayRef.current) {
-      // QuizModal이 열리면 오디오를 멈추고, 현재 재생 위치를 처음으로 돌림
-      audioPlayRef.current.pause();
-      audioPlayRef.current.currentTime = 0;
+    if (isMenuOpen || isQuizModalOpen || isFocusAlertModalOpen || isReadCompleteModalOpen || isLevelUpModalOpen) {
+      // 메뉴나 QuizModal이 열리면 오디오를 멈추고 재생 위치를 초기화
+      if (audioPlayRef.current) {
+        audioPlayRef.current.pause();
+        audioPlayRef.current.currentTime = 0;
+      }
     } else if (!isQuizModalOpen && !isTTSChoiceModalOpen) {
-      // QuizModal과 TTSChoiceModal이 모두 닫혀 있을 때만 TTS 낭독 재생
+      // 모든 모달이 닫혀 있을 때만 TTS 낭독 재생
       getTTSPlayback();
     }
-  }, [isQuizModalOpen, isTTSChoiceModalOpen, fairytaleCurrentPage]);
+  }, [isMenuOpen, isQuizModalOpen, isTTSChoiceModalOpen, isFocusAlertModalOpen, isReadCompleteModalOpen, isLevelUpModalOpen]);
 
   // 단어 위치 정보 추출
   useEffect(() => {
