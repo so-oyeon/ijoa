@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import Seeso, { UserStatusOption, InitializationErrorType } from "seeso";
 import { GazeInfo, WordPositionInfo } from "../../types/seesoTypes";
 import { fairyTaleApi } from "../../api/fairytaleApi";
+import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 
 interface Props {
   fairytaleId: string;
@@ -21,6 +22,9 @@ const SeesoComponent = ({
   // 여유 범위
   const margin = 30;
 
+  // Seeso 인스턴스를 관리하는 ref
+  const seeSoInstanceRef = useRef<Seeso | null>(null);
+
   // 트래킹점 표시 관련 변수 (빨간점)
   const outputCanvasRef = useRef<HTMLCanvasElement>(null);
   const gazeInfoRef = useRef<HTMLHeadingElement>(null);
@@ -28,10 +32,10 @@ const SeesoComponent = ({
   const textRangePositionRef = useRef(textRangePosition);
   const pageHistoryIdRef = useRef(pageHistoryId);
 
+  const [isSeesoInitialized, setIsSeesoInitialized] = useState(false); // 초기화 상태 관리
   const [gazeInfo, setGazeInfo] = useState<GazeInfo | null>(null);
   const isModalShownRef = useRef(false); // 모달 띄운 여부를 useRef로 관리
   const previousAttentionScoreRef = useRef(0);
-  const dropScaleRef = useRef(0);
   const isDropRef = useRef(false);
 
   const licenseKey = import.meta.env.VITE_SEESO_SDK_KEY;
@@ -42,12 +46,15 @@ const SeesoComponent = ({
     const calibrationData = parseCalibrationDataInQueryString();
     if (calibrationData && licenseKey) {
       seeSoInstance = new Seeso();
+      seeSoInstanceRef.current = seeSoInstance;
 
       // UserStatusOption 객체 생성
       const userStatusOption = new UserStatusOption(true, false, false);
       const errorCode = await seeSoInstance.initialize(licenseKey, userStatusOption);
 
       if (errorCode === InitializationErrorType.ERROR_NONE) {
+        setIsSeesoInitialized(true); // 초기화 성공 시 상태 업데이트
+
         // 카메라 스트림 생성
         const stream = await navigator.mediaDevices.getUserMedia({ video: true });
 
@@ -119,7 +126,7 @@ const SeesoComponent = ({
     }
 
     // 시선추적 데이터 저장 api 호출
-    if (attentionRate === undefined) return;
+    if (attentionRate === undefined || isNaN(attentionRate)) return;
     handleSaveEyeTrackingData(
       gazeX,
       gazeY,
@@ -175,7 +182,7 @@ const SeesoComponent = ({
   // 캘리브레이션 버튼 클릭 핸들러
   const onClickCalibrationBtn = () => {
     const userId = "a1234";
-    const redirectUrl = `http://localhost:5173/fairytale/content/${fairytaleId}`; // seeso 초기화 후 리다이렉트 주소
+    const redirectUrl = `https://k11d105.p.ssafy.io/fairytale/content/${fairytaleId}`; // seeso 초기화 후 리다이렉트 주소
     const calibrationPoint = 5;
     Seeso.openCalibrationPage(licenseKey ?? "", userId, redirectUrl, calibrationPoint);
   };
@@ -214,7 +221,7 @@ const SeesoComponent = ({
     const data = {
       trackedAt: formatToday,
       isGazeOutOfScreen: isNaN(gazeX) || isNaN(gazeY),
-      attentionRate: isNaN(attentionRate) ? null : attentionRate,
+      attentionRate: attentionRate,
       word: word,
       isImage: isImage,
     };
@@ -224,6 +231,16 @@ const SeesoComponent = ({
     } catch (error) {
       console.log("fairyTaleApi의 createEyeTrackingData : ", error);
     }
+  };
+
+  // SEESO 종료
+  const handleRemoveSeeso = () => {
+    const seeSoInstance = seeSoInstanceRef.current;
+    if (seeSoInstance) {
+      seeSoInstance.stopTracking(); // 트래킹 중지
+      seeSoInstanceRef.current = null; // ref 초기화
+    }
+    setIsSeesoInitialized(false); // 상태 초기화
   };
 
   useEffect(() => {
@@ -262,10 +279,19 @@ const SeesoComponent = ({
       {/* 트래킹점 표시 관련 캔버스 (빨간점) */}
       {/* <canvas className="fixed top-0" id="output" ref={outputCanvasRef}></canvas> */}
 
-      <div className="p-3 bg-white rounded-xl grid place-content-center    fixed top-0 left-1/2 transform -translate-x-1/2 z-50">
-        <p>집중도 분석을 위해 아이트래킹을 설정해주세요 !</p>
-        <button className="bg-yellow-300" onClick={onClickCalibrationBtn}>
-          아이트래킹 설정 바로가기 click!
+      {/* 메뉴 버튼 */}
+      <div className="absolute top-[-12px] left-10">
+        <button
+          className="px-3 py-4 bg-gray-700 bg-opacity-50 rounded-2xl shadow-md active:bg-gray-800 flex flex-col items-center space-y-2"
+          onClick={isSeesoInitialized ? handleRemoveSeeso : onClickCalibrationBtn}>
+          <div className="p-1 bg-white rounded-full">
+            {isSeesoInitialized ? (
+              <IoEyeOutline className="text-4xl text-yellow-500" />
+            ) : (
+              <IoEyeOffOutline className="text-4xl text-[#565656]" />
+            )}
+          </div>
+          <p className="text-xs text-white">{isSeesoInitialized ? "집중도 분석 끄기" : "집중도 분석 켜기"}</p>
         </button>
       </div>
     </div>
