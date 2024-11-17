@@ -27,7 +27,6 @@ import com.checkitout.ijoa.user.repository.UserRepository;
 import com.checkitout.ijoa.util.SecurityTestUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -111,37 +110,34 @@ public class CreatePageHistoryTest {
     }
 
     /**
-     * testName, trackedAt, isGazeOutOfScreen, attentionRate, word, isImage
+     * testName, isGazeOutOfScreen, attentionRate, word, isImage
      */
     private static Stream<Arguments> validParameter() {
         return Stream.of(
-                Arguments.of("글을 본 경우", now(), false, 1.0f, "사과", false),
-                Arguments.of("그림을 본 경우", now(), false, 1.0f, null, true)
+                Arguments.of("글을 본 경우", false, 1.0f, "사과", false),
+                Arguments.of("그림을 본 경우", false, 1.0f, null, true)
         );
     }
 
     /**
-     * testName, trackedAt, isGazeOutOfScreen, attentionRate, word, isImage
+     * testName, isGazeOutOfScreen, attentionRate, word, isImage
      */
     private static Stream<Arguments> invalidParameter() {
         return Stream.of(
-                Arguments.of("시선추적 시간이 null인 경우", null, false, 1.0f, "사과", false),
-                Arguments.of("화면 밖 응시 여부가 null인 경우", now(), null, 1.0f, "사과", false),
-                Arguments.of("그림 여부가 null인 경우", now(), false, 1.0f, "사과", null),
-
-                Arguments.of("시선추적 시간이 미래인 경우", now().plusMinutes(1), false, 1.0f, "사과", false)
+                Arguments.of("화면 밖 응시 여부가 null인 경우", null, 1.0f, "사과", false),
+                Arguments.of("그림 여부가 null인 경우", false, 1.0f, "사과", null)
         );
     }
 
     @ParameterizedTest(name = "{index}: {0}")
     @MethodSource("validParameter")
     @DisplayName("[Created] createPageHistory : 동화책 특정 페이지 시선추적 데이터 저장 성공")
-    void createPageHistory_Success(String testName, LocalDateTime trackedAt, Boolean isGazeOutOfScreen,
+    void createPageHistory_Success(String testName, Boolean isGazeOutOfScreen,
                                    Float attentionRate, String word, Boolean isImage) throws Exception {
         // given
         SecurityTestUtil.setUpSecurityContext(user.getId(), child.getId());
-        PageHistoryCreationRequest pageHistoryCreationRequest = new PageHistoryCreationRequest(trackedAt,
-                isGazeOutOfScreen, attentionRate, word, isImage);
+        PageHistoryCreationRequest pageHistoryCreationRequest = new PageHistoryCreationRequest(isGazeOutOfScreen,
+                attentionRate, word, isImage);
         String requestBody = objectMapper.writeValueAsString(pageHistoryCreationRequest);
 
         Long pageHistoryId = pageHistory.getId();
@@ -158,12 +154,12 @@ public class CreatePageHistoryTest {
     @ParameterizedTest(name = "{index}: {0}")
     @MethodSource("invalidParameter")
     @DisplayName("[BadRequest] createPageHistory : 동화책 특정 페이지 시선추적 데이터 저장 성공")
-    void createPageHistory_Fail_BadRequest(String testName, LocalDateTime trackedAt, Boolean isGazeOutOfScreen,
+    void createPageHistory_Fail_BadRequest(String testName, Boolean isGazeOutOfScreen,
                                            Float attentionRate, String word, Boolean isImage) throws Exception {
         // given
         SecurityTestUtil.setUpSecurityContext(user.getId(), child.getId());
-        PageHistoryCreationRequest pageHistoryCreationRequest = new PageHistoryCreationRequest(trackedAt,
-                isGazeOutOfScreen, attentionRate, word, isImage);
+        PageHistoryCreationRequest pageHistoryCreationRequest = new PageHistoryCreationRequest(isGazeOutOfScreen,
+                attentionRate, word, isImage);
         String requestBody = objectMapper.writeValueAsString(pageHistoryCreationRequest);
 
         Long pageHistoryId = pageHistory.getId();
@@ -182,7 +178,7 @@ public class CreatePageHistoryTest {
     void createPageHistory_Fail_FairytaleNotFound() throws Exception {
         // given
         SecurityTestUtil.setUpSecurityContext(user.getId(), child.getId());
-        PageHistoryCreationRequest pageHistoryCreationRequest = new PageHistoryCreationRequest(now(), false, 1.0f, "사과",
+        PageHistoryCreationRequest pageHistoryCreationRequest = new PageHistoryCreationRequest(false, 1.0f, "사과",
                 false);
         String requestBody = objectMapper.writeValueAsString(pageHistoryCreationRequest);
 
@@ -218,7 +214,7 @@ public class CreatePageHistoryTest {
     void createPageHistory_Fail_Unauthorized2() throws Exception {
         // given
         SecurityTestUtil.setUpSecurityContext(user.getId(), null);
-        PageHistoryCreationRequest pageHistoryCreationRequest = new PageHistoryCreationRequest(now(), false, 1.0f, "사과",
+        PageHistoryCreationRequest pageHistoryCreationRequest = new PageHistoryCreationRequest(false, 1.0f, "사과",
                 false);
         String requestBody = objectMapper.writeValueAsString(pageHistoryCreationRequest);
 
@@ -242,7 +238,7 @@ public class CreatePageHistoryTest {
         Child child = Child.createChild(user, "testChild2", "", LocalDate.now(), Gender.MALE, now());
         childRepository.save(child);
         SecurityTestUtil.setUpSecurityContext(user.getId(), child.getId());
-        PageHistoryCreationRequest pageHistoryCreationRequest = new PageHistoryCreationRequest(now(), false, 1.0f, "사과",
+        PageHistoryCreationRequest pageHistoryCreationRequest = new PageHistoryCreationRequest(false, 1.0f, "사과",
                 false);
         String requestBody = objectMapper.writeValueAsString(pageHistoryCreationRequest);
 
