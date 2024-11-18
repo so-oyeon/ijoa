@@ -14,16 +14,21 @@ import org.springframework.stereotype.Repository;
 public interface EyeTrackingDataRepository extends JpaRepository<EyeTrackingData, Long> {
 
     @Query("""
-            SELECT e FROM EyeTrackingData e
-            WHERE e.pageHistory.child = :child
-            AND e.trackedAt >= :startTime
-            AND e.trackedAt < :endTime
-            ORDER BY e.trackedAt ASC
+                SELECT FUNCTION('date_format', e.trackedAt, :format) as timeKey,
+                       AVG(CASE WHEN e.isGazeOutOfScreen = false THEN e.attentionRate ELSE 0 END) * 100 as averageAttention
+                FROM EyeTrackingData e
+                WHERE e.pageHistory.child = :child
+                AND e.trackedAt >= :startTime
+                AND e.trackedAt < :endTime
+                GROUP BY FUNCTION('date_format', e.trackedAt, :format)
+                ORDER BY FUNCTION('date_format', e.trackedAt, :format)
             """)
-    List<EyeTrackingData> findTrackedDataByChildAndDateRange(
+    List<Object[]> findAggregatedDataByChildAndDateRange(
             @Param("child") Child child,
             @Param("startTime") LocalDateTime startTime,
-            @Param("endTime") LocalDateTime endTime);
+            @Param("endTime") LocalDateTime endTime,
+            @Param("format") String format
+    );
 
     @Query("""
             SELECT e.word as word, COUNT(e) as focusCount
