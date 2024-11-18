@@ -9,7 +9,7 @@ const EyeTrackingChoiceModal = ({ setIsOpenSeesoSetting, setIsSeesoSeetingModal 
   const guideText = [
     "화면의 크기와 화면과의 거리를 선택해 주세요.",
     "순서대로 나타나는 5개의 검은색 점을 응시해주세요.",
-    "시선 인식이 완료되면 눈을 5번정도 깜박여주세요. (최종 조정)",
+    "시선 인식이 완료되면 눈을 5번정도 깜박여주세요.",
   ];
   const cautionText = [
     "여러 명이 동시에 화면을 쳐다보면 제대로 인식되지 않을 수 있습니다.",
