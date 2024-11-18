@@ -101,8 +101,12 @@ public class QuizService {
         QuizBook quizBook = quizBookRepository.findByChildIdAndFairytaleId(child.getId(),quiz.getFairytale().getId());
         if(quizBook==null){
             quizBook= QuizBook.of(child,quiz.getFairytale());
-            quizBook = quizBookRepository.save(quizBook);
+            quizBook.onCreate();
         }
+        else{
+            quizBook.onUpdate();
+        }
+        quizBook = quizBookRepository.save(quizBook);
         String currentTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
 
         String key = "anwer/" + requestDto.getChildId() + "/"+requestDto.getQuizId() + "/" + currentTime+"_" + requestDto.getFileName();
@@ -130,12 +134,12 @@ public class QuizService {
 
     public Page<QuizBookResponseDto> getQuizBookList(QuizBookRequestDto requestDto, Long childId, Pageable pageable) {
 
-        // LocalDate로 파싱
-        LocalDate start = LocalDate.parse(requestDto.getStartDate());
-        LocalDate end = LocalDate.parse(requestDto.getEndDate());
+        // LocalDateTime으로 파싱
+        LocalDateTime start = LocalDateTime.parse(requestDto.getStartDate());
+        LocalDateTime end = LocalDateTime.parse(requestDto.getEndDate());
 
 
-        Page<QuizBook> quizBooks =  quizBookRepository.findByChildIdAndCreatedAtBetween(childId, start, end,pageable);
+        Page<QuizBook> quizBooks =  quizBookRepository.findByChildIdAndUpdatedAtBetweenOrderByUpdatedAt(childId, start, end,pageable);
 
         return quizBooks.map(QuizBookResponseDto::from);
 

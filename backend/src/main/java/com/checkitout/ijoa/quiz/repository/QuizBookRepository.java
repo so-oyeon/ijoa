@@ -11,6 +11,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface QuizBookRepository extends JpaRepository<QuizBook,Long> {
-    Page<QuizBook> findByChildIdAndCreatedAtBetween(Long childId, LocalDate start, LocalDate end,Pageable pageable);
+    Page<QuizBook> findByChildIdAndUpdatedAtBetweenOrderByUpdatedAt(Long childId, LocalDateTime start, LocalDateTime end,Pageable pageable);
     QuizBook findByChildIdAndFairytaleId(Long childId, Long fairytaleId);
 }
