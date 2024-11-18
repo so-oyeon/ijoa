@@ -10,20 +10,21 @@ interface Props {
 const ChildDropDown = ({ childList, setSelectChild }: Props) => {
   const [isOpen, setIsOpen] = useState(false); // 드롭다운 열기/닫기 상태
   const location = useLocation();
-  const childId2 = location.state?.childId2;
+  const childId = location.state?.childId;
 
-  // childId2가 존재하면 해당 자녀를 선택
+  // childId가 존재하면 해당 자녀를 선택
   useEffect(() => {
-    if (childId2) {
-      const selectedChild = childList.find(child => child.childId === childId2);
+    if (childId) {
+      const selectedChild = childList.find((child) => child.childId === childId);
       if (selectedChild) {
         setSelectChild(selectedChild); // 자녀 선택 상태로 설정
       }
     }
-  }, [childId2, childList, setSelectChild]);
+  }, [childId, childList, setSelectChild]);
 
   const handleSelectChild = (child: ChildInfo) => {
     setSelectChild(child);
+    location.state.type = "none";
     setIsOpen(false); // 항목을 선택하면 드롭다운을 닫음
   };
 

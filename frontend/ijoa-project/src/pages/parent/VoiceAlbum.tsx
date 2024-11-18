@@ -73,8 +73,7 @@ const VoiceAlbum = () => {
         </div>
 
         {/* 날짜 메뉴 드롭다운 */}
-        <div className="h-full pt-16 relative">
-          <div className="w-8 aspect-1 bg-[#FC9B35] rounded-full shadow-[1px_3px_3px_2px_rgba(0,0,0,0.2)] absolute top-5 left-1/2"></div>
+        <div className="h-full relative">
           <DateList setSelectStartDate={setSelectStartDate} setSelectEndDate={setSelectEndDate} />
         </div>
       </div>

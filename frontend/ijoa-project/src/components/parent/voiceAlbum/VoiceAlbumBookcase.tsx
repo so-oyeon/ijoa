@@ -6,6 +6,7 @@ import { VoiceAlbumBookInfo } from "../../../types/voiceAlbumTypes";
 import { parentApi } from "../../../api/parentApi";
 import Lottie from "react-lottie-player";
 import loadingAnimation from "../../../lottie/footPrint-loadingAnimation.json";
+import { useLocation } from "react-router-dom";
 
 interface Props {
   selectStartDate: string;
@@ -14,6 +15,7 @@ interface Props {
 }
 
 const VoiceAlbumList = ({ selectStartDate, selectEndDate, childId }: Props) => {
+  const location = useLocation();
   const [bookList, setBookList] = useState<VoiceAlbumBookInfo[] | null>(null);
   const [totalPage, setTotalPage] = useState<number | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -34,12 +36,16 @@ const VoiceAlbumList = ({ selectStartDate, selectEndDate, childId }: Props) => {
 
   const getVoiceAlbumBookList = async () => {
     const data = {
-      startDate: selectStartDate,
-      endDate: selectEndDate,
+      startDate: selectStartDate + "T00:00:00",
+      endDate: selectEndDate + "T23:59:59",
     };
 
     try {
-      const response = await parentApi.getVoiceAlbumBookList(childId, currentPage, data);
+      const response = await parentApi.getVoiceAlbumBookList(
+        location.state.type === "none" ? childId : location.state.childId,
+        currentPage,
+        data
+      );
       if (response.status === 200) {
         setTotalPage(response.data.totalPages);
         setBookList(response.data.content);
