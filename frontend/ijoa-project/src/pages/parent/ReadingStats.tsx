@@ -155,7 +155,6 @@ const ReadingStats = () => {
           <div className="grid grid-cols-3">
             {/* 읽은 책 수 */}
             <p className="text-xl font-semibold">
-              자녀가&nbsp;
               <span className="text-3xl text-[#24A994] font-semibold">책</span>을 읽은 시간!
             </p>
 
