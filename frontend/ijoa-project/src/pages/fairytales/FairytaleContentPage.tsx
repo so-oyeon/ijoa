@@ -211,9 +211,7 @@ const FairyTaleContentPage: React.FC = () => {
           getQuizData(quizPageNumber);
           setIsQuizModalOpen(true);
           setShownQuizPages((prevPages) => [...prevPages, newPage]);
-        } else if (newPage === Math.floor(fairytaleData.totalPages / 2)) {
-          setIsFocusAlertModalOpen(true);
-        }
+        } 
       }
     }
   };
