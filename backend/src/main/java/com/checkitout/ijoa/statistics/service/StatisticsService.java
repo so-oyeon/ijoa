@@ -6,7 +6,6 @@ import com.checkitout.ijoa.child.domain.Child;
 import com.checkitout.ijoa.child.repository.ChildRepository;
 import com.checkitout.ijoa.exception.CustomException;
 import com.checkitout.ijoa.fairytale.domain.CATEGORY;
-import com.checkitout.ijoa.fairytale.domain.EyeTrackingData;
 import com.checkitout.ijoa.fairytale.repository.ChildReadBooksRepository;
 import com.checkitout.ijoa.fairytale.repository.EyeTrackingDataRepository;
 import com.checkitout.ijoa.statistics.dto.CategoryStatisticsResponse;
@@ -16,10 +15,11 @@ import com.checkitout.ijoa.statistics.util.StatisticsUtil;
 import com.checkitout.ijoa.user.domain.User;
 import com.checkitout.ijoa.util.SecurityUtil;
 import jakarta.persistence.Tuple;
+import java.sql.Date;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -48,12 +48,10 @@ public class StatisticsService {
         StatisticsUtil.validateChildAccess(user, child);
 
         LocalDateTime startDateTime = startDate.atStartOfDay();
-
         LocalDateTime endDateTime = getEndDateTime(startDate, period);
 
-        // 해당 기간의 시선추적 데이터 조회
-        List<EyeTrackingData> eyeTrackingDataList = eyeTrackingDataRepository
-                .findTrackedDataByChildAndDateRange(child, startDateTime, endDateTime);
+        List<Map<String, Object>> eyeTrackingDataList = eyeTrackingDataRepository
+                .findAggregatedDataByChildAndDateRange(child, startDateTime, endDateTime, period);
 
         if (eyeTrackingDataList.isEmpty()) {
             return Collections.emptyList();
@@ -105,30 +103,32 @@ public class StatisticsService {
     }
 
     // 데이터 처리
-    private List<FocusTimeResponse> generateFocusTimeResponses(List<EyeTrackingData> dataList,
+    private List<FocusTimeResponse> generateFocusTimeResponses(List<Map<String, Object>> dataList,
                                                                LocalDateTime start, LocalDateTime end, String period) {
-        Map<String, List<Float>> groupedData = initializeTimeSlots(start, end, period);
+        Map<String, Float> groupedData = initializeTimeSlots(start, end, period);
 
-        // 데이터 그룹핑
-        for (EyeTrackingData data : dataList) {
-            String timeKey = getTimeKey(data.getTrackedAt(), period);
-            float attentionRate = data.getIsGazeOutOfScreen() ? 0f : data.getAttentionRate();
-            groupedData.get(timeKey).add(attentionRate);
+        // 집계된 데이터로 채우기
+        for (Map<String, Object> data : dataList) {
+            LocalDate trackedDate = ((Date) data.get("trackedDate")).toLocalDate();
+            int timeSlot = ((Number) data.get("timeSlot")).intValue();
+            String timeKey = formatTimeKey(timeSlot, period, trackedDate.atStartOfDay());
+            Double avgAttention = (Double) data.get("avgAttention");
+            groupedData.put(timeKey, avgAttention != null ? avgAttention.floatValue() : null);
         }
 
         // 평균 계산 및 응답 생성
         return groupedData.entrySet().stream()
-                .map(entry -> FocusTimeResponse.of(entry.getKey(), calculateAverage(entry.getValue())))
+                .map(entry -> FocusTimeResponse.of(entry.getKey(), entry.getValue()))
                 .collect(Collectors.toList());
     }
 
     // 기간에 따른 슬롯 초기화
-    private Map<String, List<Float>> initializeTimeSlots(LocalDateTime start, LocalDateTime end, String period) {
-        Map<String, List<Float>> groupedData = new LinkedHashMap<>();
+    private Map<String, Float> initializeTimeSlots(LocalDateTime start, LocalDateTime end, String period) {
+        Map<String, Float> groupedData = new LinkedHashMap<>();
 
         LocalDateTime current = start;
         while (current.isBefore(end)) {
-            groupedData.put(getTimeKey(current, period), new ArrayList<>());
+            groupedData.put(getTimeKey(current, period), null);
             current = switch (period) {
                 case "daily" -> current.plusHours(1);
                 case "weekly", "monthly" -> current.plusDays(1);
@@ -140,22 +140,25 @@ public class StatisticsService {
         return groupedData;
     }
 
-    private String getTimeKey(LocalDateTime dateTime, String period) {
+    private String formatTimeKey(int timeSlot, String period, LocalDateTime startDate) {
         return switch (period) {
-            case "daily" -> String.format("%02d:00", dateTime.getHour());
-            case "weekly" -> dateTime.format(DateTimeFormatter.ofPattern("E", Locale.KOREAN));
-            case "monthly" -> dateTime.toLocalDate().toString();
-            case "yearly" -> String.valueOf(dateTime.getMonthValue());
+            case "daily", "monthly", "yearly" -> String.valueOf(timeSlot);
+            case "weekly" -> {
+                DayOfWeek dayOfWeek = DayOfWeek.of((timeSlot == 1) ? 7 : timeSlot - 1);
+                LocalDateTime date = startDate.with(dayOfWeek);
+                yield date.format(DateTimeFormatter.ofPattern("E", Locale.KOREAN));
+            }
             default -> throw new CustomException(INVALID_PERIOD);
         };
     }
 
-    // 평균 집중도 계산
-    private Float calculateAverage(List<Float> values) {
-        return values.isEmpty() ? null :
-                (float) values.stream()
-                        .mapToDouble(Float::doubleValue)
-                        .average()
-                        .orElse(0.0) * 100;
+    private String getTimeKey(LocalDateTime dateTime, String period) {
+        return switch (period) {
+            case "daily" -> String.valueOf(dateTime.getHour());
+            case "weekly" -> dateTime.format(DateTimeFormatter.ofPattern("E", Locale.KOREAN));
+            case "monthly" -> String.valueOf(dateTime.getDayOfMonth());
+            case "yearly" -> String.valueOf(dateTime.getMonthValue());
+            default -> throw new CustomException(INVALID_PERIOD);
+        };
     }
 }
