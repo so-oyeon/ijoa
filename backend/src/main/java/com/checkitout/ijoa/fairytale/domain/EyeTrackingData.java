@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Getter
@@ -22,7 +21,6 @@ public class EyeTrackingData {
     @Column(name = "eye_tracking_data_id")
     private Long id;
 
-    @CreationTimestamp
     @Column(nullable = false)
     private LocalDateTime trackedAt;
 
