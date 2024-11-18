@@ -90,7 +90,13 @@ const TTSProfileCreateModal = ({ setIsProfileCreateModal, setIsCreateCompleted, 
               <div className="w-8 aspect-1 bg-white rounded-full bg-opacity-50 shadow-[1px_3px_2px_0_rgba(0,0,0,0.2)] flex justify-center items-center absolute -top-3 -right-3">
                 <TbPencilMinus className="text-xl" />
               </div>
-              <input className="hidden" type="file" ref={ttsProfileImgRef} onChange={handleFileChange} />
+              <input
+                className="hidden"
+                type="file"
+                accept=".png, .jpg, .jpeg"
+                ref={ttsProfileImgRef}
+                onChange={handleFileChange}
+              />
             </div>
 
             {/* 이름 입력 */}
