@@ -79,7 +79,7 @@ const WordCloud = ({ childId }: Props) => {
     <div className="pt-5 flex flex-col relative">
       <div className="grow p-4 border-4 border-[#F5F5F5] rounded-2xl">
         <p className="w-2/3 py-1 text-center font-semibold bg-[#B1EBAB] rounded-full absolute top-0 left-1/2 transform -translate-x-1/2 z-10">
-          이런 책이 재밌어요
+          이런 단어를 좋아해요!
         </p>
 
         <div className="w-full h-[200px] flex flex-col justify-center items-center">
