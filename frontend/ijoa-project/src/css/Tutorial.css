@@ -1,0 +1,130 @@
+/* 클릭 방지 오버레이 */
+.overlay-click-prevent {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0);
+  z-index: 9998; /* 튜토리얼 모달 아래, 다른 요소 위 */
+  
+}
+
+/* 전체 화면을 어둡게 처리하는 오버레이 */
+.overlay-dark {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 9999;
+  pointer-events: none;
+}
+
+/* 강조할 요소만 밝게 보이는 오버레이 */
+.overlay-highlight {
+  position: fixed;
+  pointer-events: none;
+  z-index: 10000;
+  border-radius: 8px;
+  background-color: white;
+  mix-blend-mode: overlay; /* 강조 영역만 투명하게 보이도록 설정 */
+  
+}
+
+/* 튜토리얼 모달 */
+.tutorial-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10001;
+  background-color: white;
+  padding: 32px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+  max-width: 400px;
+  text-align: center;
+  line-height: 2;
+}
+
+/* 닫기 버튼 스타일 */
+.tutorial-close-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  color: gray;
+  font-size: 1.2rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* 기본 버튼 스타일 */
+.tutorial-btn {
+  padding: 8px 16px;
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+/* 이전 버튼 스타일 */
+.tutorial-prev-btn {
+  background-color: #ccc;
+  color: white;
+}
+
+/* 다음 버튼 스타일 */
+.tutorial-next-btn {
+  background-color: #67ccff;
+  color: white;
+}
+
+.tutorial-next-btn:active {
+  background-color: #005f99;
+}
+
+/* 완료 버튼 스타일 */
+.tutorial-complete-btn {
+  background-color: #4caf50;
+  color: white;
+}
+
+/* 확인 모달 */
+.confirm-modal {
+  position: fixed;
+  z-index: 10001;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5); /* 어둡기 조정 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.confirm-modal-content {
+  background-color: white;
+  padding: 40px;
+  border-radius: 8px;
+  text-align: center;
+  width: 300px;
+}
+
+.confirm-modal-buttons {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.confirm-btn,
+.cancel-btn {
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.cancel-btn {
+  background-color: #ccc;
+}

@@ -1,0 +1,191 @@
+body {
+  width: 100%;
+  min-height: 600px;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+#scene {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 1200px;
+  height: 600px;
+  overflow: hidden;
+  margin-top: -300px;
+  margin-left: -600px;
+}
+#curtain {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+}
+
+#curtain .left,
+#curtain .right {
+  position: absolute;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  /* 추후 빨간 커튼 이미지로 대체 */
+  background-image: url("/assets/child/curtain.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+#curtain .left {
+  left: 0;
+  transform-origin: top right;
+}
+#curtain .right {
+  left: 50%;
+  transform-origin: top left;
+}
+
+.ground {
+  position: absolute;
+  left: 50%;
+  top: 133%;
+  width: 10000px;
+  height: 10000px;
+  margin-left: -5000px;
+  border-radius: 100%;
+}
+
+h1 {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: block;
+  width: 500px;
+  height: 150px;
+  margin-top: -90px;
+  margin-left: -250px;
+  text-align: center;
+  font-family: "Open Sans", sans-serif;
+  font-size: 10em;
+  color: white;
+  transform: scale(0.75);
+  opacity: 0;
+}
+
+#scene.expand {
+  width: 140%;
+  left: -20%;
+  margin-left: 0;
+  animation-fill-mode: forwards;
+  animation-name: expand-scene-horizontaly, expand-scene-verticaly;
+  animation-duration: 2.5s, 1.5s;
+  animation-timing-function: ease-in-out, ease-in-out;
+  animation-delay: 0s, 2.5s;
+  animation-iteration-count: 1, 1;
+  animation-direction: normal, normal;
+}
+
+#curtain.open .left {
+  animation-fill-mode: forwards;
+  animation-name: curtain-opening, left-curtain-opening;
+  animation-duration: 2s, 4s;
+  animation-timing-function: ease-in-out, ease-in-out;
+  animation-delay: 0s, 0s;
+  animation-iteration-count: 1, 1;
+  animation-direction: normal, normal;
+  transform: translate(-100%) rotate(20deg) scale(0, 2);
+}
+#curtain.open .right {
+  animation-fill-mode: forwards;
+  animation-name: curtain-opening, right-curtain-opening;
+  animation-duration: 2s, 4s;
+  animation-timing-function: ease-in-out, ease-in-out;
+  animation-delay: 0s, 0s;
+  animation-iteration-count: 1, 1;
+  animation-direction: normal, normal;
+  transform: translate(100%) rotate(-20deg) scale(0, 2);
+}
+
+#scene.expand .ground {
+  animation-fill-mode: forwards;
+  animation-name: ground-rising;
+  animation-duration: 6s;
+  animation-timing-function: ease-out;
+  animation-delay: 0s;
+  animation-iteration-count: 1;
+  animation-direction: normal;
+}
+
+#scene.expand h1 {
+  animation-fill-mode: forwards;
+  animation-name: text-zoom, text-fade-in, text-glowing;
+  animation-duration: 5s, 1s, 1s;
+  animation-timing-function: ease-out, ease-in-out, ease-in-out;
+  animation-delay: 3s, 3s, 0s;
+  animation-iteration-count: 1, 1, infinite;
+  animation-direction: normal, normal, alternate;
+}
+
+.fade-out {
+  animation-fill-mode: forwards;
+  animation-name: fade-out;
+  animation-duration: 1s;
+  animation-timing-function: ease-in;
+  animation-delay: 0s;
+  animation-iteration-count: 1;
+  animation-direction: normal;
+}
+
+@keyframes expand-scene-horizontaly {
+  from {
+    width: 1200px;
+    left: 50%;
+    margin-left: -600px;
+  }
+  to {
+    width: 140%;
+    left: -20%;
+    margin-left: 0;
+  }
+}
+
+@keyframes expand-scene-verticaly {
+  from {
+    top: 50%;
+    height: 600px;
+    margin-top: -300px;
+  }
+  to {
+    top: 0;
+    height: 100%;
+    margin-top: 0;
+  }
+}
+
+@keyframes left-curtain-opening {
+  from {
+    transform: translate(0) rotate(0) scale(1, 1);
+  }
+  to {
+    transform: translate(-100%) rotate(20deg) scale(0, 2);
+  }
+}
+
+@keyframes right-curtain-opening {
+  from {
+    transform: translate(0) rotate(0) scale(1, 1);
+  }
+  to {
+    transform: translate(100%) rotate(-20deg) scale(0, 2);
+  }
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    color: white;
+    opacity: 0;
+  }
+}

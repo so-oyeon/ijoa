@@ -1,0 +1,10 @@
+/* 기본 스플래시 화면 스타일 */
+.splash-screen {
+  opacity: 1;
+  transition: opacity 1s ease; /* 1초 동안 서서히 사라짐 */
+}
+
+/* fade-out 클래스가 추가되면 서서히 사라짐 */
+.fade-out {
+  opacity: 0;
+}

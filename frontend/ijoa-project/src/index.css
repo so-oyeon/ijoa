@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.swal2-confirm {
+  @apply bg-[#67CCFF] text-white font-semibold py-3 px-8 rounded-full hover:bg-blue-500;
+}
+.swal2-popup {
+  max-width: 400px;
+  padding: 1.5rem;
+  border-radius: 20px;
+}
+
+.swal2-title {
+  font-size: 20px;
+}

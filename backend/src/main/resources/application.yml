@@ -2,6 +2,10 @@ spring:
   application:
     name: backend
 
+  mvc:
+    servlet:
+      path: /api/v1
+
   config:
     import: optional:file:.env[.properties]
 
@@ -24,18 +28,58 @@ spring:
     init:
       mode: always
 
-    # JPA ??
-    jpa:
+  # JPA
+  jpa:
+    hibernate:
+      ddl-auto: ${DDL_AUTO_OPTION}
+    properties:
       hibernate:
-        ddl-auto: ${DDL_AUTO_OPTION}
-      properties:
-        hibernate:
-          dialect: org.hibernate.dialect.MySQL8Dialect
-          format_sql: true
-          default_batch_fetch_size: 100
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+        default_batch_fetch_size: 100
 
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      password: ${REDIS_PASSWORD:}
+      port: 6379
 
-# Log ?? ??
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${EMAIL_USER}
+    password: ${EMAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 50000
+    auth-code-expiration-millis: 300000 # 5 * 60 * 1000 == 5분
+
+  kafka:
+    bootstrap-servers: ${KAFKA_HOST}:${KAFKA_PORT}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      heartbeat.interval.ms: 5000
+    properties:
+      spring:
+        json:
+          trusted-packages: "*"
+
+  elasticsearch:
+    uris: ${ELASTIC_URI}
+    username: ${ELASTIC_USER}
+    password: ${ELASTIC_PW}
+# Log
 logging:
   level:
     org:
@@ -44,3 +88,55 @@ logging:
       hibernate:
         SQL: debug
         type: trace
+
+# S3 설정
+cloud:
+  aws:
+    s3:
+      bucket: checkitout-bucket
+    stack:
+      auto: false
+    region:
+      static: ap-northeast-2
+
+cors:
+  url: ${CORS_URL}
+openai:
+  model: gpt-4o
+  api:
+    key: ${GPT_KEY}
+    url: https://api.openai.com/v1/chat/completions
+
+
+# Blue 서버 프로파일
+---
+spring:
+  config:
+    activate:
+      on-profile: blue
+
+server:
+  port: 8080  # Blue 인스턴스의 포트
+
+# Green 서버 프로파일
+---
+spring:
+  config:
+    activate:
+      on-profile: green
+
+server:
+  port: 8081  # Green 인스턴스의 포트
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info  # 헬스체크와 정보 엔드포인트를 노출
+  endpoint:
+    health:
+      show-details: always     # health 엔드포인트에서 세부 정보 표시
+
+springdoc:
+  swagger-ui:
+    persist-authorization: true
