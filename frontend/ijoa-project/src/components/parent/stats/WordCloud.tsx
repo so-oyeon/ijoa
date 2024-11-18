@@ -1,8 +1,9 @@
+import { useEffect, useState } from "react";
 import Lottie from "react-lottie-player";
+import ReactWordcloud from "react-wordcloud";
 import loadingAnimation from "../../../lottie/footPrint-loadingAnimation.json";
 import { parentApi } from "../../../api/parentApi";
 import { TypographyData } from "../../../types/parentTypes";
-import { useEffect, useState } from "react";
 
 interface Props {
   childId: number;
@@ -17,14 +18,14 @@ const WordCloud = ({ childId }: Props) => {
 
     try {
       setIsLoading(true);
-      const response = await parentApi.getTypography(Number(childId), 5);
+      const response = await parentApi.getTypography(Number(childId), 10);
       if (response.status === 200) {
         setData(response.data);
       } else if (response.status === 204) {
         setData([]);
       }
     } catch (error) {
-      console.log("", error);
+      console.log("Error:", error);
     } finally {
       setIsLoading(false);
     }
@@ -34,7 +35,7 @@ const WordCloud = ({ childId }: Props) => {
     getTypographyData();
   }, [childId]);
 
-  if (!data || isLoading) {
+  if (isLoading) {
     return (
       <div className="grow border-4 border-[#F5F5F5] rounded-2xl flex flex-col justify-center items-center">
         <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
@@ -43,7 +44,7 @@ const WordCloud = ({ childId }: Props) => {
     );
   }
 
-  if (data.length === 0) {
+  if (!data || data.length === 0) {
     return (
       <div className="grow border-4 border-[#F5F5F5] rounded-2xl flex flex-col justify-center items-center">
         <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
@@ -52,17 +53,37 @@ const WordCloud = ({ childId }: Props) => {
     );
   }
 
+  // 랜덤 색상 함수 (예시)
+  const getRandomColor = () => {
+    const colors = ['#FF5733', '#33FF57', '#3357FF', '#F3FF33', '#FF33F3'];
+    return colors[Math.floor(Math.random() * colors.length)];
+  };
+
+  // ReactWordcloud 옵션 설정
+  const options = {
+    rotations: 0,
+    rotationAngles: [-90, 0] as [number, number],
+    fontSizes: [20, 60] as [number, number],
+    fontFamily: 'MapleLight',
+    color: 'random-light',
+  };
+
+  // 데이터를 ReactWordcloud에 맞는 형식으로 변환
+  const words = data.map((item) => ({
+    text: item.word, // 단어
+    value: Math.floor(Math.random() * 100) + 10, // 랜덤 가중치 값 (frequency 대신 사용)
+    color: getRandomColor(), // 랜덤 색상 지정
+  }));
+
   return (
     <div className="pt-5 flex flex-col relative">
-      <div className="grow p-3 border-4 border-[#F5F5F5] rounded-2xl">
-        <p className="w-2/3 py-2 text-center font-semibold bg-[#B1EBAB] rounded-full absolute top-0 left-1/2 transform -translate-x-1/2">
-          이런 책이 재밌어요
+      <div className="grow p-4 border-4 border-[#F5F5F5] rounded-2xl">
+        <p className="w-2/3 py-1 text-center font-semibold bg-[#B1EBAB] rounded-full absolute top-0 left-1/2 transform -translate-x-1/2 z-10">
+          이런 단어를 좋아해요!
         </p>
 
-        <div className="w-full h-full flex flex-col justify-center items-center">
-          {data.map((item, index) => (
-            <p key={index}>{item.word}</p>
-          ))}
+        <div className="w-full h-[200px] flex flex-col justify-center items-center">
+          <ReactWordcloud words={words} options={options} />
         </div>
       </div>
     </div>

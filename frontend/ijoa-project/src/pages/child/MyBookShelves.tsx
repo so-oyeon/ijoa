@@ -60,7 +60,7 @@ const MyBookShelves: React.FC = () => {
       {isCurtainOpen && (
         <>
           <p
-            className={`w-full absolute top-[95px] font-bold mb-10 text-3xl ${
+            className={`w-full absolute top-[90px] font-bold mb-10 text-3xl ${
               myBookLists.length > 0 ? "text-black" : "hidden"
             } text-center`}
           >
@@ -90,7 +90,7 @@ const MyBookShelves: React.FC = () => {
               </div>
             ) : myBookLists.length >= 13 ? (
               <>
-                <div className="mb-16 mt-20">
+                <div className="mb-16 mt-24">
                   <MyBookSwiper
                     direction=""
                     myBookLists={firstHalf}
