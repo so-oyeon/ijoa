@@ -235,12 +235,15 @@ const SignupModal: React.FC<Props> = ({ onClose }) => {
 
   if (isLoading) {
     return (
-      <div className="py-10 flex flex-col justify-center items-center space-y-5">
-        <Lottie className="w-40 aspect-1" loop play animationData={loadingAnimation} />
-        <p className="font-semibold">{guideText[guideIdx]}</p>
+      <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">
+        <div className="relative w-1/4 py-10 text-center bg-white rounded-2xl shadow-lg">
+          <Lottie className="w-40 aspect-1 mx-auto" loop play animationData={loadingAnimation} />
+          <p className="font-semibold mt-5">{guideText[guideIdx]}</p>
+        </div>
       </div>
     );
   }
+  
 
   return (
     <div className="px-5 pt-10">

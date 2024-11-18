@@ -104,8 +104,9 @@ const VoiceAlbumDetailCard = ({ voiceInfo, childId, voiceListLength }: Props) =>
   return (
     <div
       className={`${
-        voiceListLength === 1 ? "w-1/3" : "w-full"
-      } h-full p-5 bg-white rounded-2xl flex flex-col justify-between space-y-5`}>
+        voiceListLength === 1 ? "w-1/3" : voiceListLength === 2 ? "w-2/3" : "w-full"
+      } h-full p-5 bg-white rounded-2xl flex flex-col justify-between space-y-5`}
+    >
       <img className="w-full aspect-2 rounded-xl object-cover" src={voiceInfo.image} alt="" />
 
       <div className="grow grid grid-cols-[1fr_4fr] gap-5 place-items-center">
