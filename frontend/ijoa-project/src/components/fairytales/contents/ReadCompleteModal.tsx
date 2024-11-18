@@ -6,10 +6,9 @@ import Animals from "/assets/fairytales/images/animals.png";
 interface ReadCompleteModalProps {
   isOpen: boolean;
   title: string;
-  from: string;
 }
 
-const ReadCompleteModal: React.FC<ReadCompleteModalProps> = ({ isOpen, title = "", from }) => {
+const ReadCompleteModal: React.FC<ReadCompleteModalProps> = ({ isOpen, title = "" }) => {
   const navigate = useNavigate();
   if (!isOpen) return null;
 
