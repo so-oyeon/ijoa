@@ -66,6 +66,7 @@ const WordCloud = ({ childId }: Props) => {
     fontSizes: [20, 60] as [number, number],
     fontFamily: 'MapleLight',
     color: 'random-light',
+    enableTooltip: false, 
   };
 
   // 데이터를 ReactWordcloud에 맞는 형식으로 변환
