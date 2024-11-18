@@ -52,7 +52,7 @@ const ReadingStats = () => {
     <div className="h-screen px-20 pt-28 pb-10 grid grid-rows-2 gap-3 font-['IMBold']">
       {/* 상단 내용 */}
       <div className="grid grid-cols-[1fr_4fr_2fr] gap-3">
-        <div className="flex flex-col justify-center items-center space-y-3 relative z-[60]">
+        <div className="flex flex-col justify-center items-center space-y-3 relative z-40">
           <img
             className="w-3/4 aspect-1 bg-white rounded-full border object-cover"
             src={selectChild.profileUrl}
