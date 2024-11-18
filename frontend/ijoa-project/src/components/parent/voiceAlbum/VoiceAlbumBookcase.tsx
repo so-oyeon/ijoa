@@ -34,8 +34,8 @@ const VoiceAlbumList = ({ selectStartDate, selectEndDate, childId }: Props) => {
 
   const getVoiceAlbumBookList = async () => {
     const data = {
-      startDate: selectStartDate,
-      endDate: selectEndDate,
+      startDate: selectStartDate + "T00:00:00",
+      endDate: selectEndDate + "T23:59:59",
     };
 
     try {

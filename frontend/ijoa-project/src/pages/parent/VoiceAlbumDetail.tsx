@@ -16,7 +16,7 @@ const VoiceAlbumDetail = () => {
   const navigate = useNavigate();
   const { bookId } = useParams();
   const location = useLocation(); // state: childId, bookTitle
-  const childId2 = location.state?.childId;
+  const childId = location.state?.childId;
   const [voiceList, setVoiceList] = useState<VoiceAlbumBookDetailInfo[] | null>(null);
   const [swiper, setSwiper] = useState<SwiperClass>();
   const [isBeginning, setIsBeginning] = useState(true);
@@ -34,14 +34,14 @@ const VoiceAlbumDetail = () => {
   };
 
   const handleGoToList = () => {
-    navigate("/parent/voice/album", { state: { childId2 } });
+    navigate("/parent/voice/album", { state: { childId } });
   };
 
   const getVoiceAlbumCardData = async () => {
     if (bookId === undefined) return;
 
     try {
-      const response = await parentApi.getVoiceAlbumBookDetail(childId2, bookId);
+      const response = await parentApi.getVoiceAlbumBookDetail(childId, bookId);
       if (response.status === 200) {
         setVoiceList(response.data);
       }
@@ -71,8 +71,7 @@ const VoiceAlbumDetail = () => {
           {/* 목록으로 버튼 */}
           <button
             className="px-5 py-2 text-2xl text-white bg-[#FFA64A] rounded-full flex items-center space-x-3 active:scale-110"
-            onClick={handleGoToList}
-          >
+            onClick={handleGoToList}>
             <FaArrowLeft />
             <span>목록으로</span>
           </button>
@@ -88,7 +87,7 @@ const VoiceAlbumDetail = () => {
               slidesPerView={3} // 보여질 슬라이더 수
               spaceBetween={30} // 슬라이더 간격
               centeredSlides={true} // 슬라이더의 center 유무
-              allowTouchMove={false} // 마우스로 슬라이더 이동 유무
+              allowTouchMove={true} // 마우스로 슬라이더 이동 유무
               // 슬라이더가 변경될 때
               onSlideChange={(e) => {
                 // 현재 슬라이더 인덱스 접근
@@ -101,8 +100,7 @@ const VoiceAlbumDetail = () => {
               // 슬라이더 변수화
               onSwiper={(e) => {
                 setSwiper(e);
-              }}
-            >
+              }}>
               {voiceList.map((voice, index) => (
                 <SwiperSlide className="flex-grow" key={index}>
                   <VoiceAlbumDetailCard
@@ -127,7 +125,7 @@ const VoiceAlbumDetail = () => {
               className={`text-6xl text-[#FBCA4E] ${isBeginning ? "opacity-50" : "active:scale-110"}`}
               onClick={handlePrev}
             />
-            <p className="w-24 text-4xl text-center font-semibold text-[#5E3200]">
+            <p className="w-36 text-4xl text-center font-semibold text-[#5E3200]">
               {currentSlideIdx + 1} / {voiceList.length}
             </p>
             <TbArrowBigRightFilled
