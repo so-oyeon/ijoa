@@ -26,7 +26,7 @@ const TTSCreateCompleteModal = ({ setIsCreateCompleted, setIsCreateGuideModal, g
         <div className="w-full flex flex-col justify-between items-center space-y-8">
           {/* 타이틀 텍스트 */}
           <div className="text-2xl text-center font-bold flex flex-col space-y-2">
-            <p>TTS 프로필을</p>
+            <p>더빙 보이스 프로필을</p>
             <p>생성했어요!</p>
           </div>
 
