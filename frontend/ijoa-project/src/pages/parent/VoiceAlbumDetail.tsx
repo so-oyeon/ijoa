@@ -16,7 +16,7 @@ const VoiceAlbumDetail = () => {
   const navigate = useNavigate();
   const { bookId } = useParams();
   const location = useLocation(); // state: childId, bookTitle
-
+  const childId2 = location.state?.childId;
   const [voiceList, setVoiceList] = useState<VoiceAlbumBookDetailInfo[] | null>(null);
   const [swiper, setSwiper] = useState<SwiperClass>();
   const [isBeginning, setIsBeginning] = useState(true);
@@ -34,14 +34,14 @@ const VoiceAlbumDetail = () => {
   };
 
   const handleGoToList = () => {
-    navigate("/parent/voice/album");
+    navigate("/parent/voice/album", { state: { childId2 } });
   };
 
   const getVoiceAlbumCardData = async () => {
     if (bookId === undefined) return;
 
     try {
-      const response = await parentApi.getVoiceAlbumBookDetail(location.state.childId, bookId);
+      const response = await parentApi.getVoiceAlbumBookDetail(childId2, bookId);
       if (response.status === 200) {
         setVoiceList(response.data);
       }
@@ -71,7 +71,8 @@ const VoiceAlbumDetail = () => {
           {/* 목록으로 버튼 */}
           <button
             className="px-5 py-2 text-2xl text-white bg-[#FFA64A] rounded-full flex items-center space-x-3 active:scale-110"
-            onClick={handleGoToList}>
+            onClick={handleGoToList}
+          >
             <FaArrowLeft />
             <span>목록으로</span>
           </button>
@@ -100,7 +101,8 @@ const VoiceAlbumDetail = () => {
               // 슬라이더 변수화
               onSwiper={(e) => {
                 setSwiper(e);
-              }}>
+              }}
+            >
               {voiceList.map((voice, index) => (
                 <SwiperSlide className="flex-grow" key={index}>
                   <VoiceAlbumDetailCard

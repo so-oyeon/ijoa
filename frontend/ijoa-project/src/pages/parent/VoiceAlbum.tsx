@@ -58,7 +58,7 @@ const VoiceAlbum = () => {
       <img className="w-24 absolute left-1/4 top-10 z-10" src="/assets/parent/voiceAlbum/bookcase-icon.png" alt="" />
 
       <div className="grid gap-3">
-        <div className="flex flex-col justify-center items-center space-y-3">
+        <div className="flex flex-col justify-center items-center space-y-3 mt-2">
           <img
             className="w-1/3 aspect-1 bg-white rounded-full border object-cover"
             src={selectChild.profileUrl}
