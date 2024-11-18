@@ -61,7 +61,7 @@ public enum ErrorCode {
     ANSWER_NOT_FOUND(HttpStatus.NOT_FOUND, "QUIZ-003", "답변이 존재하지 않습니다."),
 
     // statistics
-    INVALID_PERIOD(HttpStatus.BAD_REQUEST, "STATISTICS-001", "기간는 daily, weekly, monthly, yearly 중 하나여야 합니다."),
+    INVALID_PERIOD(HttpStatus.BAD_REQUEST, "STATISTICS-001", "기간은 daily, weekly, monthly, yearly 중 하나여야 합니다."),
 
     // childreadbooks
     CHILD_READ_BOOK_NOT_FOUND(HttpStatus.NOT_FOUND, "READ-001", "읽은 책을 찾을 수 없습니다.");

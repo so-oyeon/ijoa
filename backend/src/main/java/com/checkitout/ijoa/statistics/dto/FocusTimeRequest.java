@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 public class FocusTimeRequest {
 
     @NotBlank(message = "기간은 필수 입력 값입니다.")
-    @Pattern(regexp = "daily|weekly|monthly|yearly", message = "기간는 daily, weekly, monthly, yearly 중 하나여야 합니다.")
+    @Pattern(regexp = "daily|weekly|monthly|yearly", message = "기간은 daily, weekly, monthly, yearly 중 하나여야 합니다.")
     @Schema(description = "기간", example = "weekly")
     private String period;
 
