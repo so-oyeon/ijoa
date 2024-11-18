@@ -206,6 +206,11 @@ const TTSCreateModal = ({ setIsCreateModal, ttsId, getParentTTSList }: Props) =>
     }
   };
 
+  const handleCloseModal = () => {
+    getParentTTSList();
+    setIsCreateModal(false);
+  };
+
   // 페이지 렌더링 시, TTS 스크립트 목록 조회
   useEffect(() => {
     getTTSScript();
@@ -240,7 +245,7 @@ const TTSCreateModal = ({ setIsCreateModal, ttsId, getParentTTSList }: Props) =>
       <div className="w-1/2 p-10 bg-white rounded-2xl shadow-lg">
         {/* 닫기 버튼 */}
         <div className="w-full flex justify-end">
-          <img className="w-10 h-10" src="/assets/close-button.png" alt="" onClick={() => setIsCreateModal(false)} />
+          <img className="w-10 h-10" src="/assets/close-button.png" alt="" onClick={handleCloseModal} />
         </div>
 
         <div className="flex flex-col items-center space-y-8">

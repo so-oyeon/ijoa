@@ -16,6 +16,12 @@ export interface ChildCreateInfo {
   profileImg: string;
 }
 
+// 히스토그램 집중한 시간 요청 데이터
+export interface FocusTimeRequestInfo {
+  period: string;
+  startDate: string;
+}
+
 // 히스토그램 집중한 시간 응답 데이터
 export interface FocusTimeUnitInfo {
   unit: string;
@@ -49,6 +55,7 @@ export interface ParentTTSInfo {
   tts: string;
   image_url: string;
   trainData: boolean;
+  status: string;
 }
 
 // TTS 학습 스크립트 목록 조회 응답 데이터
