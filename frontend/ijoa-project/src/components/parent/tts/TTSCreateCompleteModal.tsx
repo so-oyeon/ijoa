@@ -35,7 +35,7 @@ const TTSCreateCompleteModal = ({ setIsCreateCompleted, setIsCreateGuideModal, g
           <button
             className="w-full px-8 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-xl border-2 border-[#67CCFF] active:bg-[#005f99]"
             onClick={handleCreateTTS}>
-            목소리 TTS 만들기
+            더빙 보이스 만들기
           </button>
         </div>
       </div>
