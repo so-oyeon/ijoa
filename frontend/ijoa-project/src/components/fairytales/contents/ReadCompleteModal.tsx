@@ -30,11 +30,7 @@ const ReadCompleteModal: React.FC<ReadCompleteModalProps> = ({ isOpen, title = "
 
   // 홈으로 렌더링하는 함수
   const toHome = () => {
-    if (from === "list") {
-      navigate("/child/fairytale/total");
-    } else if (from === "search") {
-      navigate("/child/fairytale/total");
-    }
+    navigate("/child/fairytale/total");
   };
 
   return (
@@ -47,8 +43,7 @@ const ReadCompleteModal: React.FC<ReadCompleteModalProps> = ({ isOpen, title = "
           <div className="text-lg sm:text-xl md:text-2xl font-bold text-center whitespace-pre-line">{message}</div>
           <button
             className="mt-6 px-6 sm:px-8 py-2 text-white text-base sm:text-lg font-bold bg-[#67CCFF] rounded-2xl border-2 border-[#67CCFF] active:bg-[#005f99]"
-            onClick={toHome}
-          >
+            onClick={toHome}>
             목록 화면으로
           </button>
         </div>
