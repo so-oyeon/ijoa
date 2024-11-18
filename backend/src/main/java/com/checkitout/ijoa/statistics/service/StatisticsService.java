@@ -156,6 +156,6 @@ public class StatisticsService {
                 (float) values.stream()
                         .mapToDouble(Float::doubleValue)
                         .average()
-                        .orElse(0.0);
+                        .orElse(0.0) * 100;
     }
 }

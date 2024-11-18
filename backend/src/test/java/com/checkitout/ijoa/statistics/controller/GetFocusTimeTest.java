@@ -169,7 +169,7 @@ public class GetFocusTimeTest {
     @DisplayName("[NoContent] getFocusTime : 집중한 시간 그래프 조회 성공 - 데이터가 없는 경우")
     void getFocusTime_Success_NoContent() throws Exception {
         // given
-        Child newChild = Child.createChild(user, "testChild2", "", LocalDate.now(), Gender.MALE, now());
+        Child newChild = Child.createChild(user, "newChild", "", LocalDate.now(), Gender.MALE, now());
         childRepository.save(newChild);
 
         SecurityTestUtil.setUpSecurityContext(user.getId(), null);
@@ -248,7 +248,7 @@ public class GetFocusTimeTest {
         User otherUser = User.createUser("test2@test.com", "password", "test", now());
         userRepository.save(otherUser);
 
-        Child otherChild = Child.createChild(otherUser, "testChild2", "", LocalDate.now(), Gender.MALE, now());
+        Child otherChild = Child.createChild(otherUser, "otherChild", "", LocalDate.now(), Gender.MALE, now());
         childRepository.save(otherChild);
 
         SecurityTestUtil.setUpSecurityContext(user.getId(), null);
