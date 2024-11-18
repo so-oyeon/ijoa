@@ -199,12 +199,12 @@ public class StatisticsReportService {
     private static String determineTimeBasedAttentionConclusion(double pValue, String bestTimeSlot) {
         if (pValue < STATISTICAL_SIGNIFICANCE_THRESHOLD) {
             return String.format(
-                    "%s 에는 제일 잘 집중해요! 눈도 반짝반짝, 마음도 준비 완료였어요!",
+                    "%s에 제일 잘 집중해요! 눈도 반짝반짝, 마음도 준비 완료였어요!",
                     bestTimeSlot
             );
         } else {
             return String.format(
-                    "%s 에는 집중력이 조금 더 빛났지만, 모든 시간에 책을 즐겁게 봤어요!",
+                    "%s에 집중력이 조금 더 빛났지만, 모든 시간에 책을 즐겁게 봤어요!",
                     bestTimeSlot
             );
         }
