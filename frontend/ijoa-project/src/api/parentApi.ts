@@ -1,5 +1,5 @@
 import api from "../lib/axios";
-import { ChildInfo, TTSFileStorageUrlInfo } from "../types/parentTypes"
+import { ChildInfo, FocusTimeRequestInfo, TTSFileStorageUrlInfo } from "../types/parentTypes"
 import { VoiceAlbumDateRange } from "../types/voiceAlbumTypes";
 
 export const parentApi = {
@@ -29,8 +29,8 @@ export const parentApi = {
   },
 
   // 히스토그램 집중한 시간 차트 조회
-  getFocusTimeData: (childId: number, interval: string) => {
-    return api.get(`/children/${childId}/statistics/focus-time`, { params: { interval } });
+  getFocusTimeData: (childId: number, data: FocusTimeRequestInfo) => {
+    return api.get(`/children/${childId}/statistics/focus-time`, { params: data });
   },
 
   // 도넛형 차트 분류별 독서 통계 조회

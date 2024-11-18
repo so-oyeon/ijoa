@@ -21,14 +21,12 @@ const TTSProfileDeleteConfirmModal: React.FC<TTSProfileDeleteConfirmModalProps> 
           <div className="flex flex-col md:flex-row gap-4 justify-center items-center mt-6">
             <button
               onClick={onClose}
-              className="w-full md:w-28 py-2 text-white text-lg font-bold bg-[#FF8067] rounded-2xl border-2 border-[#FF8067] active:bg-red-500"
-            >
+              className="w-full md:w-28 py-2 text-white text-lg font-bold bg-[#FF8067] rounded-2xl border-2 border-[#FF8067] active:bg-red-500">
               취소
             </button>
             <button
               onClick={onDeleteConfirm}
-              className="w-full md:w-28 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-2xl border-2 border-[#67CCFF] active:bg-[#005f99]"
-            >
+              className="w-full md:w-28 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-2xl border-2 border-[#67CCFF] active:bg-[#005f99]">
               삭제
             </button>
           </div>
