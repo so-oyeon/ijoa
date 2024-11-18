@@ -24,6 +24,7 @@ const ChildDropDown = ({ childList, setSelectChild }: Props) => {
 
   const handleSelectChild = (child: ChildInfo) => {
     setSelectChild(child);
+    location.state.type = "none";
     setIsOpen(false); // 항목을 선택하면 드롭다운을 닫음
   };
 

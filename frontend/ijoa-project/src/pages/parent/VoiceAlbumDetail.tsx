@@ -34,7 +34,7 @@ const VoiceAlbumDetail = () => {
   };
 
   const handleGoToList = () => {
-    navigate("/parent/voice/album", { state: { childId } });
+    navigate("/parent/voice/album", { state: { type: "detail", childId } });
   };
 
   const getVoiceAlbumCardData = async () => {

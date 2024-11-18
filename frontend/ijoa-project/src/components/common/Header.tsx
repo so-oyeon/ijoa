@@ -75,7 +75,7 @@ const Header = () => {
 
   // 부모 음성앨범 라우팅
   const voiceAlbumClick = () => {
-    navigate(`/parent/voice/album`);
+    navigate(`/parent/voice/album`, { state: { type: "none" } });
   };
 
   // 자녀 내 방 라우팅
@@ -150,7 +150,7 @@ const Header = () => {
     <div className="w-full h-24 px-10 py-3 bg-gradient-to-b from-white flex justify-between items-center fixed top-0 z-50">
       <div className="w-2/3 h-full flex items-center space-x-5">
         {/* 로고 */}
-        <img className="h-[100px] active:scale-110" src="/assets/logo.png" alt="" onClick={handleGoToMain}/>
+        <img className="h-[100px] active:scale-110" src="/assets/logo.png" alt="" onClick={handleGoToMain} />
       </div>
 
       <div className="grid grid-cols-5 gap-3">
@@ -164,8 +164,7 @@ const Header = () => {
               }
             }}
             className={`w-14 flex flex-col justify-center items-center space-y-1 transform transition-transform duration-200`}
-            onClick={() => handleTabClick(index, menu.action, menu.isSetting)}
-          >
+            onClick={() => handleTabClick(index, menu.action, menu.isSetting)}>
             <img
               className={`w-12 aspect-1 p-2 bg-white rounded-full object-cover shadow-[0_3px_3px_1px_rgba(0,0,0,0.1)] ${
                 selectedTab === index ? "bg-[#F8FFAB]" : ""
