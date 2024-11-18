@@ -19,7 +19,7 @@ const BookCoverSwiper: React.FC<BookCoverSwiperProps> = ({
   titles,
   onBookClick,
   spaceBetween = 10,
-  slidesPerView = 6,
+  slidesPerView = 6.5,
   isCompleted,
   progress,
 }) => {
@@ -55,7 +55,7 @@ const BookCoverSwiper: React.FC<BookCoverSwiperProps> = ({
     >
       {bookCovers.map((cover, index) => (
         <SwiperSlide key={index} style={{ overflow: "visible" }}>
-          <div onClick={() => onBookClick(index)} className="block text-center cursor-pointer">
+          <div onClick={() => onBookClick(index)} className="block w-[200px] text-center cursor-pointer">
             <div className="relative w-[200px] h-[220px]">
               <img
                 src={cover}

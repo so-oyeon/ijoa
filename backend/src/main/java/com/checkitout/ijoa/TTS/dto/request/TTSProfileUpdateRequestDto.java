@@ -1,6 +1,7 @@
 package com.checkitout.ijoa.TTS.dto.request;
 
 import com.checkitout.ijoa.TTS.domain.TTS;
+import com.checkitout.ijoa.common.validation.ValidImageType;
 import com.checkitout.ijoa.user.domain.User;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -18,6 +19,7 @@ public class TTSProfileUpdateRequestDto {
     @Schema(description = "TTS 이름", example = "엄마")
     private String name;
 
+    @ValidImageType
     @Parameter(description = "사용자의 프로필 이미지 파일", schema = @Schema(type = "string", format = "binary"))
     private MultipartFile image;
 

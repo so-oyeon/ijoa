@@ -40,7 +40,7 @@ public class TTSController implements TTSApiDocumentation {
 
     @Override
     @PatchMapping(value = "/{ttsId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> updateTTSProfile(@PathVariable("ttsId") Long ttsId, @ModelAttribute TTSProfileUpdateRequestDto requestDto) throws IOException {
+    public ResponseEntity<?> updateTTSProfile(@PathVariable("ttsId") Long ttsId,@Valid @ModelAttribute TTSProfileUpdateRequestDto requestDto) throws IOException {
         TTSProfileResponseDto responseDto = ttsService.updateTTS(ttsId,requestDto);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
