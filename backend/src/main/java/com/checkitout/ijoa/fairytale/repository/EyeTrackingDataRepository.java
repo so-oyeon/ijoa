@@ -3,6 +3,7 @@ package com.checkitout.ijoa.fairytale.repository;
 import com.checkitout.ijoa.child.domain.Child;
 import com.checkitout.ijoa.fairytale.domain.EyeTrackingData;
 import jakarta.persistence.Tuple;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,9 +16,14 @@ public interface EyeTrackingDataRepository extends JpaRepository<EyeTrackingData
     @Query("""
             SELECT e FROM EyeTrackingData e
             WHERE e.pageHistory.child = :child
+            AND e.trackedAt >= :startTime
+            AND e.trackedAt < :endTime
             ORDER BY e.trackedAt ASC
             """)
-    List<EyeTrackingData> findTrackedDataByChild(@Param("child") Child child);
+    List<EyeTrackingData> findTrackedDataByChildAndDateRange(
+            @Param("child") Child child,
+            @Param("startTime") LocalDateTime startTime,
+            @Param("endTime") LocalDateTime endTime);
 
     @Query("""
             SELECT e.word as word, COUNT(e) as focusCount

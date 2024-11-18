@@ -38,7 +38,8 @@ public class StatisticsController implements StatisticsApiDocumentation {
     @GetMapping("/focus-time")
     public ResponseEntity<List<FocusTimeResponse>> getFocusTime(@PathVariable Long childId,
                                                                 @Valid @ModelAttribute FocusTimeRequest request) {
-        List<FocusTimeResponse> result = statisticsService.getFocusTime(childId, request.getInterval());
+        List<FocusTimeResponse> result =
+                statisticsService.getFocusTime(childId, request.getPeriod(), request.getStartDate());
 
         HttpStatus status = result.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK;
 
