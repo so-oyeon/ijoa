@@ -121,9 +121,10 @@ public class GetFocusTimeTest {
      */
     private static Stream<Arguments> validParameter() {
         return Stream.of(
-                Arguments.of("주기가 date인 경우", "date"),
-                Arguments.of("주기가 day인 경우", "day"),
-                Arguments.of("주기가 hour인 경우", "hour")
+                Arguments.of("기간이 daily인 경우", "daily", LocalDate.now()),
+                Arguments.of("기간이 weekly인 경우", "weekly", LocalDate.now()),
+                Arguments.of("기간이 monthly인 경우", "monthly", LocalDate.now().withDayOfMonth(1)),
+                Arguments.of("기간이 yearly인 경우", "yearly", LocalDate.now().withDayOfYear(1))
         );
     }
 
@@ -132,20 +133,23 @@ public class GetFocusTimeTest {
      */
     private static Stream<Arguments> invalidParameter() {
         return Stream.of(
-                Arguments.of("주기가 null인 경우", null),
+                Arguments.of("기간이 null인 경우", null, String.valueOf(LocalDate.now())),
+                Arguments.of("시작 날짜가 null인 경우", "weekly", null),
 
-                Arguments.of("주기가 빈 경우", ""),
+                Arguments.of("기간이 빈 경우", "", String.valueOf(LocalDate.now())),
 
-                Arguments.of("주기가 공백 경우", " "),
+                Arguments.of("기간이 공백 경우", " ", String.valueOf(LocalDate.now())),
 
-                Arguments.of("주기가 date|day|hour가 아닌 경우", "interval")
+                Arguments.of("기간이 daily|weekly|monthly|yearly가 아닌 경우", "period", String.valueOf(LocalDate.now())),
+
+                Arguments.of("시작 날짜가 미래인 경우", "daily", String.valueOf(LocalDate.now().plusDays(1)))
         );
     }
 
     @ParameterizedTest(name = "{index}: {0}")
     @MethodSource("validParameter")
     @DisplayName("[OK] getFocusTime : 집중한 시간 그래프 조회 성공")
-    void getFocusTime_Success(String testName, String interval) throws Exception {
+    void getFocusTime_Success(String testName, String period, LocalDate startDate) throws Exception {
         // given
         SecurityTestUtil.setUpSecurityContext(user.getId(), null);
 
@@ -153,7 +157,8 @@ public class GetFocusTimeTest {
 
         // when
         ResultActions result = mockMvc.perform(get(BASE_URL, childId)
-                .param("interval", interval)
+                .param("period", period)
+                .param("startDate", startDate.toString())
                 .contentType(MediaType.APPLICATION_JSON_VALUE));
 
         // then
@@ -164,7 +169,7 @@ public class GetFocusTimeTest {
     @DisplayName("[NoContent] getFocusTime : 집중한 시간 그래프 조회 성공 - 데이터가 없는 경우")
     void getFocusTime_Success_NoContent() throws Exception {
         // given
-        Child newChild = Child.createChild(user, "newChild", "", LocalDate.now(), Gender.MALE, now());
+        Child newChild = Child.createChild(user, "testChild2", "", LocalDate.now(), Gender.MALE, now());
         childRepository.save(newChild);
 
         SecurityTestUtil.setUpSecurityContext(user.getId(), null);
@@ -173,7 +178,8 @@ public class GetFocusTimeTest {
 
         // when
         ResultActions result = mockMvc.perform(get(BASE_URL, childId)
-                .param("interval", "date")
+                .param("period", "daily")
+                .param("startDate", String.valueOf(LocalDate.now()))
                 .contentType(MediaType.APPLICATION_JSON_VALUE));
 
         // then
@@ -183,7 +189,7 @@ public class GetFocusTimeTest {
     @ParameterizedTest(name = "{index}: {0}")
     @MethodSource("invalidParameter")
     @DisplayName("[BadRequest] getFocusTime : 집중한 시간 그래프 조회 실패")
-    void getFocusTime_Fail_BadRequest(String testName, String interval) throws Exception {
+    void getFocusTime_Fail_BadRequest(String testName, String period, String startDate) throws Exception {
         // given
         SecurityTestUtil.setUpSecurityContext(user.getId(), null);
 
@@ -191,7 +197,8 @@ public class GetFocusTimeTest {
 
         // when
         ResultActions result = mockMvc.perform(get(BASE_URL, childId)
-                .param("interval", interval)
+                .param("period", period)
+                .param("startDate", startDate)
                 .contentType(MediaType.APPLICATION_JSON_VALUE));
 
         // then
@@ -208,7 +215,8 @@ public class GetFocusTimeTest {
 
         // when
         ResultActions result = mockMvc.perform(get(BASE_URL, nonExistentChildId)
-                .param("interval", "day")
+                .param("period", "weekly")
+                .param("startDate", String.valueOf(LocalDate.now()))
                 .contentType(MediaType.APPLICATION_JSON_VALUE));
 
         // then
@@ -225,7 +233,8 @@ public class GetFocusTimeTest {
 
         // when
         ResultActions result = mockMvc.perform(get(BASE_URL, childId)
-                .param("interval", "day")
+                .param("period", "weekly")
+                .param("startDate", String.valueOf(LocalDate.now()))
                 .contentType(MediaType.APPLICATION_JSON_VALUE));
 
         // then
@@ -239,7 +248,7 @@ public class GetFocusTimeTest {
         User otherUser = User.createUser("test2@test.com", "password", "test", now());
         userRepository.save(otherUser);
 
-        Child otherChild = Child.createChild(otherUser, "otherChild", "", LocalDate.now(), Gender.MALE, now());
+        Child otherChild = Child.createChild(otherUser, "testChild2", "", LocalDate.now(), Gender.MALE, now());
         childRepository.save(otherChild);
 
         SecurityTestUtil.setUpSecurityContext(user.getId(), null);
@@ -248,7 +257,8 @@ public class GetFocusTimeTest {
 
         // when
         ResultActions result = mockMvc.perform(get(BASE_URL, childId)
-                .param("interval", "day")
+                .param("period", "daily")
+                .param("startDate", String.valueOf(LocalDate.now()))
                 .contentType(MediaType.APPLICATION_JSON_VALUE));
 
         // then
