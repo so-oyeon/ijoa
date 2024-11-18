@@ -43,7 +43,7 @@ const HistogramChart = ({ childId, filter, apiDate }: Props) => {
     if (!dataType) return;
 
     getFocusTimeData();
-  }, [dataType, childId]);
+  }, [dataType, apiDate, childId]);
 
   useEffect(() => {
     switch (filter) {

@@ -34,11 +34,22 @@ const ReadingStats = () => {
 
       case "1주일": {
         const startOfWeek = new Date(currentDate);
-        startOfWeek.setDate(currentDate.getDate() - 6);
+        startOfWeek.setDate(currentDate.getDate() - 6); // 1주일 전 날짜로 설정
+
+        // 시작 날짜의 연도, 월, 일 가져오기
+        const startYear = startOfWeek.getFullYear();
         const startMonth = String(startOfWeek.getMonth() + 1).padStart(2, "0");
         const startDate = String(startOfWeek.getDate()).padStart(2, "0");
-        setFormattedDate(`${startMonth}/${startDate}~${month}/${date}`);
-        setApiDate(`${year}-${month}-${date}`);
+
+        // 현재 날짜의 월, 일 가져오기
+        const currentMonth = String(currentDate.getMonth() + 1).padStart(2, "0");
+        const currentDateFormatted = String(currentDate.getDate()).padStart(2, "0");
+
+        // 포맷팅된 날짜 설정
+        setFormattedDate(`${startMonth}/${startDate}~${currentMonth}/${currentDateFormatted}`);
+
+        // API에 사용할 주 시작 날짜 설정
+        setApiDate(`${startYear}-${startMonth}-${startDate}`);
         break;
       }
 

@@ -3,6 +3,7 @@ import Seeso, { UserStatusOption, InitializationErrorType } from "seeso";
 import { GazeInfo, WordPositionInfo } from "../../types/seesoTypes";
 import { fairyTaleApi } from "../../api/fairytaleApi";
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
+import { FaRegDotCircle } from "react-icons/fa";
 
 interface Props {
   fairytaleId: string;
@@ -29,6 +30,9 @@ const SeesoComponent = ({
 }: Props) => {
   // 여유 범위
   const margin = 30;
+
+  // Seeso 트래킹 점 유무 관리
+  const [isCanvas, setIsCanvas] = useState(false);
 
   // Seeso 인스턴스를 관리하는 ref
   const seeSoInstanceRef = useRef<Seeso | null>(null);
@@ -237,6 +241,11 @@ const SeesoComponent = ({
     setIsSeesoInitialized(false); // 상태 초기화
   };
 
+  // SEESO 트래킹 점 on/off
+  const handleSetCanvas = () => {
+    setIsCanvas((prev) => !prev);
+  };
+
   useEffect(() => {
     initSeeso();
 
@@ -278,14 +287,29 @@ const SeesoComponent = ({
   return (
     <div>
       {/* 트래킹점 표시 관련 캔버스 (빨간점) */}
-      {/* <canvas className="fixed top-0" id="output" ref={outputCanvasRef}></canvas> */}
+      {isCanvas && <canvas className="fixed top-0" id="output" ref={outputCanvasRef}></canvas>}
+
+      {/* 트래킹점 표시 on/off 버튼 */}
+      <div className="absolute top-[-12px] left-44">
+        <button
+          className="px-3 py-4 bg-gray-700 bg-opacity-50 rounded-2xl shadow-md active:bg-gray-800 flex flex-col items-center space-y-2"
+          onClick={handleSetCanvas}>
+          <div className="p-1 bg-white rounded-full">
+            {isCanvas ? (
+              <FaRegDotCircle className="text-4xl text-red-500" />
+            ) : (
+              <FaRegDotCircle className="text-4xl text-[#565656]" />
+            )}
+          </div>
+          <p className="text-xs text-white">{isCanvas ? "트래킹점 끄기" : "트래킹점 켜기"}</p>
+        </button>
+      </div>
 
       {/* 메뉴 버튼 */}
       <div className="absolute top-[-12px] left-10">
         <button
           className="px-3 py-4 bg-gray-700 bg-opacity-50 rounded-2xl shadow-md active:bg-gray-800 flex flex-col items-center space-y-2"
-          onClick={isSeesoInitialized ? handleRemoveSeeso : onClickCalibrationBtn}
-        >
+          onClick={isSeesoInitialized ? handleRemoveSeeso : onClickCalibrationBtn}>
           <div className="p-1 bg-white rounded-full">
             {isSeesoInitialized ? (
               <IoEyeOutline className="text-4xl text-yellow-500" />
