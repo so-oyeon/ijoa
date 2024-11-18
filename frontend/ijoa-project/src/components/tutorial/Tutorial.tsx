@@ -99,12 +99,12 @@ const Tutorial: React.FC<TutorialProps> = ({ menuPositions }) => {
           break;
         case 7:
           newHighlightStyle = {
-            top: "42%",
+            top: "47%",
             left: "50%",
             right: "50%",
-            width: "16%",
+            width: "80%",
             transform: "translate(-50%, -50%)",
-            height: "170px",
+            height: "280px",
           };
           break;
         case 8:
@@ -178,7 +178,7 @@ const Tutorial: React.FC<TutorialProps> = ({ menuPositions }) => {
         newPosition = { top: "100px", right: "40px", left: "auto", transform: "none" };
         break;
       case 7:
-        newPosition = { top: "47%", left: "25%", transform: "translate(-50%, -50%)" };
+        newPosition = { top: "47%", left: "50%", transform: "translate(-50%, -50%)" };
         break;
       case 13:
         newPosition = { top: "50%", left: "50%", transform: "translate(-50%, -50%)" };
