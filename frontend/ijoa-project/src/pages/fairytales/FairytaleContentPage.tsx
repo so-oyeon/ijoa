@@ -205,7 +205,7 @@ const FairyTaleContentPage: React.FC = () => {
         getFairyTaleContent(newPage);
 
         const quizEnabled = localStorage.getItem("quizEnabled") === "true";
-        if (quizEnabled && (newPage + 1) % 5 === 0 && !shownQuizPages.includes(newPage)) {
+        if (quizEnabled && (newPage + 1) % 5 === 0 && !shownQuizPages.includes(newPage) && (newPage + 1) != totalPages) {
           const quizPageNumber = newPage + 1;
           getQuizData(quizPageNumber);
           setIsQuizModalOpen(true);
