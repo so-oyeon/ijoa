@@ -3,9 +3,10 @@
 interface Props {
   setIsCreateGuideModal: (state: boolean) => void;
   setIsCreateModal: (state: boolean) => void;
+  getParentTTSList: () => void;
 }
 
-const TTSCreateModal = ({ setIsCreateGuideModal, setIsCreateModal }: Props) => {
+const TTSCreateModal = ({ setIsCreateGuideModal, setIsCreateModal, getParentTTSList }: Props) => {
   const guideText = [
     "정해진 스크립트에 맞춰 녹음을 진행해 주세요.",
     "조용한 공간에서 녹음을 진행해 주세요.",
@@ -17,17 +18,17 @@ const TTSCreateModal = ({ setIsCreateGuideModal, setIsCreateModal }: Props) => {
     setIsCreateModal(true);
   };
 
+  const handleCloseModal = () => {
+    getParentTTSList();
+    setIsCreateGuideModal(false);
+  };
+
   return (
     <div className="py-8 bg-black bg-opacity-60 flex justify-center items-center fixed inset-0 z-50  font-['MapleLight']">
       <div className="w-1/2 p-10 bg-white rounded-2xl shadow-lg">
         {/* 닫기 버튼 */}
         <div className="w-full flex justify-end">
-          <img
-            className="w-10 h-10"
-            src="/assets/close-button.png"
-            alt=""
-            onClick={() => setIsCreateGuideModal(false)}
-          />
+          <img className="w-10 h-10" src="/assets/close-button.png" alt="" onClick={handleCloseModal} />
         </div>
 
         <div className="flex flex-col items-center space-y-8">

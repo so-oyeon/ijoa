@@ -24,7 +24,7 @@ DATA_PATH = "/home/ssafy/ijoa/app/dataset"
 
 OPTIMIZER_WD_ONLY_ON_WEIGHTS = True
 START_WITH_EVAL = True
-BATCH_SIZE = 10
+BATCH_SIZE = 3
 GRAD_ACUMM_STEPS = 10 #42
 
 # 체크포인트 파일 경로
@@ -53,7 +53,7 @@ def get_latest_subfolder_path(folder_path):
     """
     subfolders = [os.path.join(folder_path, d) for d in os.listdir(folder_path) if os.path.isdir(os.path.join(folder_path, d))]
     latest_subfolder = max(subfolders, key=os.path.getmtime) if subfolders else None
-    return latest_subfolder
+    return latest_subfolder+"/"
 
 def send_model_path_to_kafka(tts_id, model_path):
     print("send_model_path_to_kafka")
@@ -75,6 +75,19 @@ def send_model_path_to_kafka(tts_id, model_path):
     producer.produce(topic, json.dumps(message))
     producer.flush()
     print(f"Kafka로 모델 경로 전송 완료: {model_path}")
+
+def send_error_to_kafka(tts_id, error_message):
+    # Kafka로 보낼 메시지 생성
+    message = {
+        "ttsId": tts_id,
+        "errorMassage": error_message
+    }
+    
+    # 메시지를 Kafka 토픽으로 전송
+    topic = "tts_error"  # 원하는 Kafka 토픽 이름
+    producer.produce(topic, json.dumps(message))
+    producer.flush()
+    print(f"Kafka로 error message 전송 완료")    
 
 def download_from_s3(wav_paths,tts_id):
     print("download s3")
@@ -101,165 +114,131 @@ def train_tts_model(request_data):
     tts_id = request_data["tts_id"]
     path = request_data["path"]
     OUTPUT_FOLDER =os.path.join(OUT_PATH,str(tts_id))
-    
-    # S3에서 Wav 파일 다운로드
-    local_wav_paths = download_from_s3(path,tts_id)
-    
-    # data_dir = f'/home/ssafy/ijoa/app/dataset/{tts_id}/wavs/audio1.wav'
-    # if not os.path.exists(data_dir):
-    #     print(f"Directory does not exist: {data_dir}")
-    # else:
-    #     print("Directory exists")
-    
-    # config_dataset = BaseDatasetConfig(
-    #     formatter="ljspeech",
-    #     dataset_name="dataset",
-    #     # metadata 경로 바꿔야함 
-    #     path=f"/home/ssafy/ijoa/app/dataset/{tts_id}",
-    #     meta_file_train= "/home/ssafy/ijoa/app/dataset/metadata.txt",
-    #     language="ko",
-    #     )
 
-    # # Add here the configs of the datasets
-    # DATASETS_CONFIG_LIST = [config_dataset]
+    try:
 
-    # file_name = path[1].split('/')[-1]
-    # # Training sentences generations
-    # SPEAKER_REFERENCE = [
-    #     os.path.join(DATA_PATH,str(tts_id),"wavs","audio2.wav") # speaker reference to be used in training test sentences
-    # ]
+        # S3에서 Wav 파일 다운로드
+        local_wav_paths = download_from_s3(path,tts_id)
     
-    # LANGUAGE = config_dataset.language
+        config_dataset = BaseDatasetConfig(
+            formatter="ljspeech",
+            dataset_name="dataset",
+            # metadata 경로 바꿔야함 
+            path=f"/home/ssafy/ijoa/app/dataset/{tts_id}",
+            meta_file_train= "/home/ssafy/ijoa/app/dataset/metadata.txt",
+            language="ko",
+            )
+
+        # Add here the configs of the datasets
+        DATASETS_CONFIG_LIST = [config_dataset]
+
+        file_name = path[1].split('/')[-1]
+        # Training sentences generations
+        SPEAKER_REFERENCE = [
+            os.path.join(DATA_PATH,str(tts_id),"wavs","audio2.wav") # speaker reference to be used in training test sentences
+        ]
+    
+        LANGUAGE = config_dataset.language
     
 
-    # # 모델 설정
-    # model_args = GPTArgs(
-    #     max_conditioning_length=132300,  # 6 secs
-    #     min_conditioning_length=66150,  # 3 secs
-    #     debug_loading_failures=False,
-    #     max_wav_length=255995, 
-    #     max_text_length=200,
-    #     mel_norm_file=MEL_NORM_FILE,
-    #     dvae_checkpoint=DVAE_CHECKPOINT,
-    #     xtts_checkpoint=XTTS_CHECKPOINT,  # checkpoint path of the model that you want to fine-tune
-    #     tokenizer_file=TOKENIZER_FILE,
-    #     gpt_num_audio_tokens=1026,
-    #     gpt_start_audio_token=1024,
-    #     gpt_stop_audio_token=1025,
-    #     gpt_use_masking_gt_prompt_approach=True,
-    #     gpt_use_perceiver_resampler=True,
-    # )
+        # 모델 설정
+        model_args = GPTArgs(
+            max_conditioning_length=302300, # 12
+            min_conditioning_length=66150,  # 3 secs
+            debug_loading_failures=False,
+            max_wav_length=255995, 
+            max_text_length=200,
+            mel_norm_file=MEL_NORM_FILE,
+            dvae_checkpoint=DVAE_CHECKPOINT,
+            xtts_checkpoint=XTTS_CHECKPOINT,  # checkpoint path of the model that you want to fine-tune
+            tokenizer_file=TOKENIZER_FILE,
+            gpt_num_audio_tokens=1026,
+            gpt_start_audio_token=1024,
+            gpt_stop_audio_token=1025,
+            gpt_use_masking_gt_prompt_approach=True,
+            gpt_use_perceiver_resampler=True,
+        )
     
-    # audio_config = XttsAudioConfig(sample_rate=22050, dvae_sample_rate=22050, output_sample_rate=24000)
+        audio_config = XttsAudioConfig(sample_rate=22050, dvae_sample_rate=22050, output_sample_rate=24000)
 
-    # config = GPTTrainerConfig(
-    #     output_path=OUTPUT_FOLDER,
-    #     model_args=model_args,
-    #     run_name=RUN_NAME,
-    #     project_name=PROJECT_NAME,
-    #     run_description="""
-    #         GPT XTTS training
-    #         """,
-    #     audio=audio_config,
-    #     batch_size=BATCH_SIZE,
-    #     batch_group_size=48,
-    #     eval_batch_size=BATCH_SIZE,
-    #     num_loader_workers=8,
-    #     eval_split_max_size= 256,
-    #     save_step=10000,
-    #     save_n_checkpoints=1,
-    #     save_checkpoints=True,
-    #     # target_loss="loss",
-    #     print_eval=False,
-    #     # Optimizer values like tortoise, pytorch implementation with modifications to not apply WD to non-weight parameters.
-    #     optimizer="AdamW",
-    #     optimizer_wd_only_on_weights=OPTIMIZER_WD_ONLY_ON_WEIGHTS,
-    #     optimizer_params={"betas": [0.9, 0.96], "eps": 1e-8, "weight_decay": 1e-2},
-    #     lr=5e-06,  # learning rate
-    #     lr_scheduler="StepLR",
-    #     # it was adjusted accordly for the new step scheme
-    #     lr_scheduler_params={"step_size": 50, "gamma": 0.5, "last_epoch": -1},
-    #     test_sentences=[
-    #         {
-    #             "text": "나에게는 그들보다 이 점등인이 더 나은 사람이야. 적어도 점등인은 그들과는 달리, 남을 위해 일하기 때문이야. 너는 나에게 이 세상에 단 하나뿐인 존재가 되는 거고, 나도 너에게 세상에 하나뿐인 존재가 되는 거야.",
-    #             "speaker_wav": SPEAKER_REFERENCE,
-    #             "language": LANGUAGE,
-    #         },
-    #         {
-    #             "text": "넌 네가 길들인 것에 영원히 책임이 있어. 누군가에게 길들여진다는 것은 눈물을 흘릴 일이 생긴다는 뜻일지도 몰라. 네 장미꽃이 소중한 이유는 그 꽃을 위해 네가 애쓴 시간 때문이야. 다른 사람에게는 열어주지 않는 문을 당신에게만 열어주는 사람이 있다면 그 사람은 당신의 진정한 친구이다.",
-    #             "speaker_wav": SPEAKER_REFERENCE,
-    #             "language": LANGUAGE,
-    #         },
-    #         {
-    #             "text": "세상에서 가장 어려운 일은 사람이 사람의 마음을 얻는 일이야. 내가 좋아하는 사람이 나를 좋아해 주는 건 기적이야.",
-    #             "speaker_wav": SPEAKER_REFERENCE,
-    #             "language": LANGUAGE,
-    #         },
+        config = GPTTrainerConfig(
+            epochs=10,
+            output_path=OUTPUT_FOLDER,
+            model_args=model_args,
+            run_name=RUN_NAME,
+            project_name=PROJECT_NAME,
+            run_description="""
+                GPT XTTS training
+                """,
+            audio=audio_config,
+            batch_size=BATCH_SIZE,
+            batch_group_size=48,
+            eval_batch_size=BATCH_SIZE,
+            num_loader_workers=8,
+            eval_split_max_size= 256,
+            save_step=10000,
+            save_n_checkpoints=1,
+            save_checkpoints=True,
+            # target_loss="loss",
+            print_eval=False,
+            # Optimizer values like tortoise, pytorch implementation with modifications to not apply WD to non-weight parameters.
+            optimizer="AdamW",
+            optimizer_wd_only_on_weights=OPTIMIZER_WD_ONLY_ON_WEIGHTS,
+            optimizer_params={"betas": [0.9, 0.96], "eps": 1e-8, "weight_decay": 1e-2},
+            lr=5e-06,  # learning rate
+            lr_scheduler="StepLR",
+            # it was adjusted accordly for the new step scheme
+            lr_scheduler_params={"step_size": 50, "gamma": 0.5, "last_epoch": -1},
+            test_sentences=[
+                {
+                    "text": "세상에서 가장 어려운 일은 사람이 사람의 마음을 얻는 일이야. 내가 좋아하는 사람이 나를 좋아해 주는 건 기적이야.",
+                    "speaker_wav": SPEAKER_REFERENCE,
+                    "language": LANGUAGE,
+                },
 
-    #     ],
-    # )
+            ],
+        )
+    
+        # 모델 초기화 및 데이터셋 로드
+        model = GPTTrainer.init_from_config(config)
+        train_samples, eval_samples = load_tts_samples(
+            DATASETS_CONFIG_LIST,
+            eval_split=True,
+            eval_split_max_size=config.eval_split_max_size,
+            eval_split_size=0.1, ###########0.02, # config.eval_split_size,
+        )
+    except Exception as e:
+        error_message = f"모델 학습 데이터 로딩 오류 발생: {str(e)}"
+        print(error_message)
+        send_error_to_kafka(tts_id, error_message)
 
-    # # 모델 초기화 및 데이터셋 로드
-    # model = GPTTrainer.init_from_config(config)
-    # train_samples, eval_samples = load_tts_samples(
-    #     DATASETS_CONFIG_LIST,
-    #     eval_split=True,
-    #     eval_split_max_size=config.eval_split_max_size,
-    #     eval_split_size=0.05, ###########0.02, # config.eval_split_size,
-    # )
-    # print(f"훈련 샘플 수: {len(train_samples)}")
-    # print(f"평가 샘플 수: {len(eval_samples)}")
+    try:
+        # 모델 학습
+        trainer = Trainer(
+            TrainerArgs(
+                restore_path=None,  # xtts checkpoint is restored via xtts_checkpoint key so no need of restore it using Trainer restore_path parameter
+                skip_train_epoch=False,
+                start_with_eval=START_WITH_EVAL,
+                grad_accum_steps=GRAD_ACUMM_STEPS,
+            ),
+            config,
+            output_path=OUT_PATH,
+            model=model,
+            train_samples=train_samples,
+            eval_samples=eval_samples,
+        )
 
-    # # 모델 학습
-    # trainer = Trainer(
-    #     TrainerArgs(
-    #         restore_path=None,  # xtts checkpoint is restored via xtts_checkpoint key so no need of restore it using Trainer restore_path parameter
-    #         skip_train_epoch=False,
-    #         start_with_eval=START_WITH_EVAL,
-    #         grad_accum_steps=GRAD_ACUMM_STEPS,
-    #     ),
-    #     config,
-    #     output_path=OUT_PATH,
-    #     model=model,
-    #     train_samples=train_samples,
-    #     eval_samples=eval_samples,
-    # )
+        trainer.fit()
 
-    # trainer.fit()
-
-    # final_model_path = get_latest_subfolder_path(OUTPUT_FOLDER)
-    final_model_path = "/home/ssafy/ijoa/app/run/training/1/GPT_XTTS_v2.0-November-06-2024_04+36PM-0000000/"
-    if final_model_path:
-        send_model_path_to_kafka(tts_id, final_model_path)
-    else:
-        print("최신 모델 경로를 찾지 못했습니다.")
-
-# if __name__ == "__main__":
-#     # 예제 요청 데이터
-#     request_data = {
-# 	"tts_id": 9,
-# 	"path": [
-# 		"train/1/20241107_014200/audio1.wav",
-# 		"train/1/20241107_014200/audio2.wav",
-# 		"train/1/20241107_014200/audio3.wav",
-# 		"train/1/20241107_014200/audio4.wav",
-# 		"train/1/20241107_014200/audio5.wav",
-# 		"train/1/20241107_014200/audio6.wav",
-# 		"train/1/20241107_014200/audio7.wav",
-# 		"train/1/20241107_014200/audio8.wav",
-# 		"train/1/20241107_014200/audio9.wav",
-# 		"train/1/20241107_014200/audio10.wav",
-# 		"train/1/20241107_014200/audio11.wav",
-# 		"train/1/20241107_014200/audio12.wav",
-# 		"train/1/20241107_014200/audio13.wav",
-# 		"train/1/20241107_014200/audio14.wav",
-# 		"train/1/20241107_014200/audio15.wav",
-# 		"train/1/20241107_014200/audio16.wav",
-# 		"train/1/20241107_014200/audio17.wav",
-# 		"train/1/20241107_014200/audio18.wav",
-# 		"train/1/20241107_014200/audio19.wav",
-# 		"train/1/20241107_014200/audio20.wav",
-# 		"train/1/20241107_014200/audio21.wav"
-# 	]
-# }
-#     train_tts_model(request_data)
+        final_model_path = get_latest_subfolder_path(OUTPUT_FOLDER)
+        # final_model_path = "/home/ssafy/ijoa/app/run/training/1/GPT_XTTS_v2.0-November-06-2024_04+36PM-0000000/"
+        if final_model_path:
+            send_model_path_to_kafka(tts_id, final_model_path)
+        else:
+            print("최신 모델 경로를 찾지 못했습니다.")
+    
+    except Exception as e:
+        error_message = f"모델 학습 중 오류 발생: {str(e)}"
+        print(error_message)
+        send_error_to_kafka(tts_id, error_message)
+    

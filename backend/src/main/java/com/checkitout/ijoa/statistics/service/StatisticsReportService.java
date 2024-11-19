@@ -34,8 +34,6 @@ public class StatisticsReportService {
     private final RestTemplate template;
 
     private static final double BALANCED_GAZE_THRESHOLD = 5.0;
-    private static final double LOW_OUT_OF_SCREEN_THRESHOLD = 10.0;
-    private static final double MODERATE_OUT_OF_SCREEN_THRESHOLD = 20.0;
     private static final double STATISTICAL_SIGNIFICANCE_THRESHOLD = 0.05;
     private static final double MINIMUM_RELIABLE_R_SQUARED = 0.2;
 
@@ -76,14 +74,12 @@ public class StatisticsReportService {
         // 시선 위치에 따른 분류 및 비율 계산
         long textCount = countTextAreaGaze(eyeTrackingDataList);
         long imageCount = countImageAreaGaze(eyeTrackingDataList);
-        long outOfScreenCount = countOutOfScreenGaze(eyeTrackingDataList);
 
         double totalCount = eyeTrackingDataList.size();
         double textRatio = (textCount / totalCount) * 100;
         double imageRatio = (imageCount / totalCount) * 100;
-        double outOfScreenRatio = (outOfScreenCount / totalCount) * 100;
 
-        return determineGazeDistributionConclusion(textRatio, imageRatio, outOfScreenRatio);
+        return determineGazeDistributionConclusion(textRatio, imageRatio);
     }
 
     // 시선 위치 카운팅 메서드들
@@ -96,12 +92,6 @@ public class StatisticsReportService {
     private long countImageAreaGaze(List<EyeTrackingData> dataList) {
         return dataList.stream()
                 .filter(data -> data.getIsImage() && !data.getIsGazeOutOfScreen())
-                .count();
-    }
-
-    private long countOutOfScreenGaze(List<EyeTrackingData> dataList) {
-        return dataList.stream()
-                .filter(EyeTrackingData::getIsGazeOutOfScreen)
                 .count();
     }
 
@@ -119,7 +109,7 @@ public class StatisticsReportService {
                 .toList();
 
         if (groups.size() < 2) {
-            return "아직 충분한 독서 데이터가 수집되지 않았습니다.";
+            return "아직 책을 읽은 시간이 다양하지 않아요. 여러 시간대에 책을 읽으면 더 유용한 분석을 할 수 있을 거예요!";
         }
 
         // ANOVA 분석 수행
@@ -129,7 +119,7 @@ public class StatisticsReportService {
         // 최적 시간대 결정
         Map.Entry<String, Double> bestTimeSlot = findBestTimeSlot(timeSlotData);
 
-        return determineTimeBasedAttentionConclusion(pValue, bestTimeSlot.getKey(), bestTimeSlot.getValue() * 100);
+        return determineTimeBasedAttentionConclusion(pValue, bestTimeSlot.getKey());
     }
 
     private Map<String, List<Float>> groupDataByTimeSlot(List<EyeTrackingData> dataList) {
@@ -190,50 +180,32 @@ public class StatisticsReportService {
      * 결론
      */
     // 시선 분포 결론 도출
-    private String determineGazeDistributionConclusion(double textRatio, double imageRatio, double outOfScreenRatio) {
+    private String determineGazeDistributionConclusion(double textRatio, double imageRatio) {
         StringBuilder conclusion = new StringBuilder();
 
         // 주요 시선 영역 파악
         if (Math.abs(textRatio - imageRatio) <= BALANCED_GAZE_THRESHOLD) {
-            conclusion.append(String.format(
-                    "텍스트 영역(%.1f%%)과 이미지 영역(%.1f%%)에 대한 시선 분포가 균형적이며, ",
-                    textRatio, imageRatio
-            ));
+            conclusion.append("그림도 재미있고 글씨도 재미있었어요! 둘 다 열심히 보면서 이야기를 즐겼어요!");
         } else if (textRatio > imageRatio) {
-            conclusion.append(String.format(
-                    "텍스트 영역(%.1f%%)에 이미지 영역(%.1f%%)보다 더 많은 시선이 분포하며, ",
-                    textRatio, imageRatio
-            ));
+            conclusion.append("저는 글씨가 더 재미있었어요! 그림도 예뻤지만, 글 속 이야기에 더 푹 빠졌어요!");
         } else {
-            conclusion.append(String.format(
-                    "이미지 영역(%.1f%%)에 텍스트 영역(%.1f%%)보다 더 많은 시선이 분포하며, ",
-                    imageRatio, textRatio
-            ));
-        }
-
-        // 화면 밖 응시 평가
-        if (outOfScreenRatio <= LOW_OUT_OF_SCREEN_THRESHOLD) {
-            conclusion.append(String.format("화면 밖 응시(%.1f%%)가 매우 적어 집중도가 높습니다.", outOfScreenRatio));
-        } else if (outOfScreenRatio <= MODERATE_OUT_OF_SCREEN_THRESHOLD) {
-            conclusion.append(String.format("화면 밖 응시(%.1f%%)가 적절한 수준입니다.", outOfScreenRatio));
-        } else {
-            conclusion.append(String.format("화면 밖 응시(%.1f%%)가 다소 높아 집중도 개선이 필요합니다.", outOfScreenRatio));
+            conclusion.append("저는 그림이 더 재미있어요! 글씨는 조금 어려워서 그림을 더 오래 보고 있었나 봐요!");
         }
 
         return conclusion.toString();
     }
 
     // 시간대별 집중도 결론 도출
-    private static String determineTimeBasedAttentionConclusion(double pValue, String bestTimeSlot, double maxRate) {
+    private static String determineTimeBasedAttentionConclusion(double pValue, String bestTimeSlot) {
         if (pValue < STATISTICAL_SIGNIFICANCE_THRESHOLD) {
             return String.format(
-                    "%s 시간대에 가장 높은 집중도(%.1f%%)를 보입니다.",
-                    bestTimeSlot, maxRate
+                    "%s에 제일 잘 집중해요! 눈도 반짝반짝, 마음도 준비 완료였어요!",
+                    bestTimeSlot
             );
         } else {
             return String.format(
-                    "%s 시간대의 집중도(%.1f%%)가 비교적 높지만, 시간대별 차이는 크지 않습니다.",
-                    bestTimeSlot, maxRate
+                    "%s에 집중력이 조금 더 빛났지만, 모든 시간에 책을 즐겁게 봤어요!",
+                    bestTimeSlot
             );
         }
     }
@@ -243,17 +215,17 @@ public class StatisticsReportService {
 
         // R-squared가 너무 낮으면 신뢰할 수 없다고 판단
         if (regression.getRSquare() < MINIMUM_RELIABLE_R_SQUARED) {
-            return "분석 결과의 신뢰도가 낮습니다.";
+            return "아직 결과가 조금 부족해요. 책을 더 많이 읽으면 더 도움되는 분석을 할 수 있을 거예요!";
         }
 
         if (regression.getSignificance() >= STATISTICAL_SIGNIFICANCE_THRESHOLD) {
-            return "글의 길이는 집중도에 유의미한 영향을 미치지 않습니다.";
+            return "글이 길어도 짧아도 똑같이 열심히 보고 있었어요! 글의 길이는 크게 상관없어요!";
         }
 
         return switch (Double.compare(regression.getSlope(), 0.0)) {
-            case -1 -> "글이 길수록 집중력이 낮아지는 경향이 있습니다.";
-            case 1 -> "글이 길수록 집중력이 높아지는 경향이 있습니다.";
-            default -> "글의 길이와 관계없이 일정한 집중도를 유지합니다.";
+            case -1 -> "글이 길어지면 조금씩 쉬고 싶어 했던 것 같아요. 아직은 짧고 간단한 게 더 편안한가 봐요!";
+            case 1 -> "글이 길어질수록 점점 더 재미있어져서 계속 보고 싶어요!";
+            default -> "글이 길어도 짧아도 괜찮아요! 저는 이야기가 너무 좋아요!";
         };
     }
 
@@ -272,8 +244,8 @@ public class StatisticsReportService {
                         2. 시간대별 집중도: %s
                         3. 텍스트 길이 영향: %s
 
-                        위 분석 결과를 종합하여, 이 유아의 독서 패턴을 바탕으로 독서습관을 향상할 수 있는 솔루션을 2-3문장으로 간단히 요약해주세요.
-                        전체적인 독서 성향과 가장 효과적인 독서 방법을 중심으로 작성해주세요.
+                        이 아이의 독서 패턴을 바탕으로, 더 재미있고 효과적으로 책을 읽을 수 있는 방법을 2-3문장으로 제안해 주세요.
+                        아이가 책을 더 즐기고 배울 수 있도록, 따뜻하고 긍정적인 말로 조언을 부탁드려요!
                         """,
                 child.getName(), child.getBirth(), child.getGender(),
                 gazeDistribution,

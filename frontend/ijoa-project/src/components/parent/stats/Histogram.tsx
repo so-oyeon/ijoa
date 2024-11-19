@@ -8,9 +8,10 @@ import loadingAnimation from "../../../lottie/footPrint-loadingAnimation.json";
 interface Props {
   childId: number;
   filter: string;
+  apiDate: string;
 }
 
-const HistogramChart = ({ childId, filter }: Props) => {
+const HistogramChart = ({ childId, filter, apiDate }: Props) => {
   const [data, setData] = useState<FocusTimeUnitInfo[] | null>(null);
   const [dataType, setDataType] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -18,9 +19,14 @@ const HistogramChart = ({ childId, filter }: Props) => {
   const getFocusTimeData = async () => {
     if (!dataType) return;
 
+    const data = {
+      period: dataType,
+      startDate: apiDate,
+    };
+
     try {
       setIsLoading(true);
-      const response = await parentApi.getFocusTimeData(childId, dataType);
+      const response = await parentApi.getFocusTimeData(childId, data);
       if (response.status === 200) {
         setData(response.data);
       } else if (response.status === 204) {
@@ -37,18 +43,21 @@ const HistogramChart = ({ childId, filter }: Props) => {
     if (!dataType) return;
 
     getFocusTimeData();
-  }, [dataType, childId]);
+  }, [dataType, apiDate, childId]);
 
   useEffect(() => {
     switch (filter) {
-      case "일자":
-        setDataType("date");
+      case "1일":
+        setDataType("daily");
         break;
-      case "요일":
-        setDataType("day");
+      case "1주일":
+        setDataType("weekly");
         break;
-      case "시간":
-        setDataType("hour");
+      case "1달":
+        setDataType("monthly");
+        break;
+      case "1년":
+        setDataType("yearly");
         break;
     }
   }, [filter]);

@@ -58,7 +58,7 @@ const VoiceAlbum = () => {
       <img className="w-24 absolute left-1/4 top-10 z-10" src="/assets/parent/voiceAlbum/bookcase-icon.png" alt="" />
 
       <div className="grid gap-3">
-        <div className="flex flex-col justify-center items-center space-y-3">
+        <div className="flex flex-col justify-center items-center space-y-3 mt-2">
           <img
             className="w-1/3 aspect-1 bg-white rounded-full border object-cover"
             src={selectChild.profileUrl}
@@ -73,8 +73,7 @@ const VoiceAlbum = () => {
         </div>
 
         {/* 날짜 메뉴 드롭다운 */}
-        <div className="h-full pt-16 relative">
-          <div className="w-8 aspect-1 bg-[#FC9B35] rounded-full shadow-[1px_3px_3px_2px_rgba(0,0,0,0.2)] absolute top-5 left-1/2"></div>
+        <div className="h-full relative">
           <DateList setSelectStartDate={setSelectStartDate} setSelectEndDate={setSelectEndDate} />
         </div>
       </div>

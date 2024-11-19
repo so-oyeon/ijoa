@@ -30,7 +30,6 @@ const FairyTaleContentPage: React.FC = () => {
   const title = location.state?.title;
   const currentPage = location.state?.currentPage;
   const totalPages = location.state?.totalPages;
-  const from = location.state?.from;
   const [fairytaleCurrentPage, setFairytaleCurrentPage] = useState(0);
   const [fairytaleData, setFairytaleData] = useState<FairyTaleContentResponse>();
   const [quizData, setQuizData] = useState<QuizQuestionResponse>();
@@ -206,14 +205,12 @@ const FairyTaleContentPage: React.FC = () => {
         getFairyTaleContent(newPage);
 
         const quizEnabled = localStorage.getItem("quizEnabled") === "true";
-        if (quizEnabled && (newPage + 1) % 5 === 0 && !shownQuizPages.includes(newPage)) {
-          const quizPageNumber = (newPage + 1);
+        if (quizEnabled && (newPage + 1) % 5 === 0 && !shownQuizPages.includes(newPage) && (newPage + 1) != totalPages) {
+          const quizPageNumber = newPage + 1;
           getQuizData(quizPageNumber);
           setIsQuizModalOpen(true);
           setShownQuizPages((prevPages) => [...prevPages, newPage]);
-        } else if (newPage === Math.floor(fairytaleData.totalPages / 2)) {
-          setIsFocusAlertModalOpen(true);
-        }
+        } 
       }
     }
   };
@@ -321,7 +318,14 @@ const FairyTaleContentPage: React.FC = () => {
       // 모든 모달이 닫혀 있을 때만 TTS 낭독 재생
       getTTSPlayback();
     }
-  }, [isMenuOpen, isQuizModalOpen, isTTSChoiceModalOpen, isFocusAlertModalOpen, isReadCompleteModalOpen, isLevelUpModalOpen]);
+  }, [
+    isMenuOpen,
+    isQuizModalOpen,
+    isTTSChoiceModalOpen,
+    isFocusAlertModalOpen,
+    isReadCompleteModalOpen,
+    isLevelUpModalOpen,
+  ]);
 
   // 단어 위치 정보 추출
   useEffect(() => {
@@ -409,7 +413,7 @@ const FairyTaleContentPage: React.FC = () => {
       <LevelUpModal isOpen={isLevelUpModalOpen} message={levelUpMessage} />
 
       {/* 독서완료 모달 */}
-      <ReadCompleteModal isOpen={isReadCompleteModalOpen} title={title} from={from} />
+      <ReadCompleteModal isOpen={isReadCompleteModalOpen} title={title} />
 
       {/* 퀴즈 모달 */}
       <QuizModal

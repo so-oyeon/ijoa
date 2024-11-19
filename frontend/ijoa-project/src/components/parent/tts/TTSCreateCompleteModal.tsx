@@ -26,7 +26,7 @@ const TTSCreateCompleteModal = ({ setIsCreateCompleted, setIsCreateGuideModal, g
         <div className="w-full flex flex-col justify-between items-center space-y-8">
           {/* 타이틀 텍스트 */}
           <div className="text-2xl text-center font-bold flex flex-col space-y-2">
-            <p>TTS 프로필을</p>
+            <p>더빙 보이스 프로필을</p>
             <p>생성했어요!</p>
           </div>
 
@@ -35,7 +35,7 @@ const TTSCreateCompleteModal = ({ setIsCreateCompleted, setIsCreateGuideModal, g
           <button
             className="w-full px-8 py-2 text-white text-lg font-bold bg-[#67CCFF] rounded-xl border-2 border-[#67CCFF] active:bg-[#005f99]"
             onClick={handleCreateTTS}>
-            목소리 TTS 만들기
+            더빙 보이스 만들기
           </button>
         </div>
       </div>

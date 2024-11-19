@@ -49,7 +49,7 @@ const ReadingReport = ({ childId }: Props) => {
 
   return (
     <div className="grow px-5 border-4 border-[#F5F5F5] rounded-2xl overflow-y-auto">
-      <p className="py-3 text-xl font-semibold bg-white sticky top-0 z-50">
+      <p className="py-3 text-xl font-semibold bg-white sticky top-0 z-30">
         <span className="underline underline-offset-[-3px] decoration-8 decoration-[#FDC94F]">독서 분석</span>
         &nbsp;보고서
       </p>
@@ -87,7 +87,7 @@ const ReadingReport = ({ childId }: Props) => {
         {reportData.conclusion}
       </p>
 
-      <div className="pb-3 bg-white sticky bottom-0 z-50"></div>
+      <div className="pb-3 bg-white sticky bottom-0 z-30"></div>
     </div>
   );
 };

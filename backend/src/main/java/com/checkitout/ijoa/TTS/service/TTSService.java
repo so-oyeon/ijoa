@@ -388,15 +388,13 @@ public class TTSService {
 
     // 자녀페이지 TTS리스트
     public List<ChildTTSListDto> childTTSList(Long bookId) {
-        TTS defaultTTS = ttsRepository.findById(63L).orElse(null);
 
         User user = securityUtil.getUserByToken();
         List<TTS> ttsList = ttsRepository.findByUserId(user.getId()).orElseThrow(()-> new CustomException(ErrorCode.TTS_NO_CONTENT) );
         Fairytale fairytale = fairytaleRepository.findById(bookId).orElseThrow(()-> new CustomException(ErrorCode.FAIRYTALE_NOT_FOUND));
         List<ChildTTSListDto> childTTSListDtos = new ArrayList<>();
 
-        boolean audio_created = fairytaleTTSRepository.existsByFairytaleAndTts(fairytale, defaultTTS);
-        childTTSListDtos.add(ChildTTSListDto.from(defaultTTS, audio_created));
+        boolean audio_created;
 
         for(TTS tts : ttsList){
             if(tts.getTTS() ==null){
