@@ -5,6 +5,7 @@ import CloseButton from "/assets/close-button.png";
 import SoundButton from "/assets/fairytales/buttons/sound-button.png";
 import MuteButton from "/assets/fairytales/buttons/sound-button-mute.png";
 import ExitButton from "/assets/fairytales/buttons/exit-button.png";
+import TTSChangeButton from "/assets/fairytales/buttons/tts-change-button.png";
 
 interface FairytaleMenuProps {
   isOpen: boolean;
@@ -17,6 +18,7 @@ interface FairytaleMenuProps {
   audioPlayRef: React.RefObject<HTMLAudioElement>;
   ttsId: number | null;
   previousTTSId: number | null;
+  setIsTTSChoiceModalOpen: (state: boolean) => void;
 }
 const FairytaleMenu: React.FC<FairytaleMenuProps> = ({
   isOpen,
@@ -29,6 +31,7 @@ const FairytaleMenu: React.FC<FairytaleMenuProps> = ({
   audioPlayRef,
   previousTTSId,
   ttsId,
+  setIsTTSChoiceModalOpen,
 }) => {
   const [isSoundOn, setIsSoundOn] = useState(true);
   const [isExitConfirmModalOpen, setIsExitConfirmModalOpen] = useState(false);
@@ -50,6 +53,11 @@ const FairytaleMenu: React.FC<FairytaleMenuProps> = ({
 
   const handleCloseExitConfirmModal = () => {
     setIsExitConfirmModalOpen(false);
+  };
+
+  const handleChangeVoice = () => {
+    onClose();
+    setIsTTSChoiceModalOpen(true);
   };
 
   if (!isOpen) return null;
@@ -77,7 +85,21 @@ const FairytaleMenu: React.FC<FairytaleMenuProps> = ({
           </button>
         )}
 
-        <button className="px-4 md:px-6 py-2 md:py-3 text-white rounded-lg active:scale-110" onClick={handleOpenExitConfirmModal}>
+        <button
+          className="px-4 md:px-6 py-2 md:py-3 text-white rounded-lg active:scale-110"
+          onClick={handleChangeVoice}>
+          <img
+            src={TTSChangeButton}
+            alt={ttsId ? "목소리 바꾸기" : "목소리 설정하기"}
+            className="w-24 md:w-40"
+          />
+
+          <p className="mt-2 md:mt-3 text-lg md:text-xl font-semibold">{ttsId ? "목소리 바꾸기" : "목소리 설정하기"}</p>
+        </button>
+
+        <button
+          className="px-4 md:px-6 py-2 md:py-3 text-white rounded-lg active:scale-110"
+          onClick={handleOpenExitConfirmModal}>
           <img src={ExitButton} alt="나가기 버튼" className="w-24 md:w-40" />
           <p className="mt-2 md:mt-3 text-lg md:text-xl font-semibold">나가기</p>
         </button>
@@ -94,7 +116,7 @@ const FairytaleMenu: React.FC<FairytaleMenuProps> = ({
           />
         </div>
       </div>
-      
+
       <ExitConfirmModal isOpen={isExitConfirmModalOpen} onClose={handleCloseExitConfirmModal} />
     </div>
   );

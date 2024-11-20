@@ -301,7 +301,7 @@ const FairyTaleContentPage: React.FC = () => {
     getFairyTaleContent(fairytaleCurrentPage); // 페이지 내용 로드
   }, [fairytaleCurrentPage, getFairyTaleContent, isTTSChoiceModalOpen, isQuizModalOpen]);
 
-  useEffect(() => {
+  useEffect(() => { 
     if (ttsId !== null && !isTTSChoiceModalOpen && !isQuizModalOpen) {
       getTTSPlayback();
     }
@@ -435,6 +435,7 @@ const FairyTaleContentPage: React.FC = () => {
         audioPlayRef={audioPlayRef}
         ttsId={ttsId}
         previousTTSId={previousTTSId}
+        setIsTTSChoiceModalOpen={setIsTTSChoiceModalOpen}
       />
 
       {/* 집중 알람 모달 */}
