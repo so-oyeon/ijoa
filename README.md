@@ -340,8 +340,8 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         <td><strong>자녀 설정</strong></td>
     </tr>
     <tr align="center"> 
-        <td> ![부모설정.gif](./gif/childSettings.gif) </td>
-        <td> ![settings.gif](./gif/settings.gif) </td>
+        <td> ![부모설정.gif](./gif/parentSettings.gif) </td>
+        <td> ![settings.gif](./gif/childSettings.gif) </td>
     </tr>
     <tr> 
         <td>
