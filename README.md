@@ -133,8 +133,8 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         <td><strong>로그인</strong></td>
     </tr>
     <tr align="center"> 
-        <td> <img src= "assets/readme/signup.gif"> </td>
-        <td> <img src= "assets/readme/login.gif"> </td>
+        <td> ![회원가입.gif](./회원가입.gif) </td>
+        <td> ![로그인.gif](./로그인.gif) </td>
     </tr>
     <tr> 
         <td>
@@ -155,8 +155,8 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         <td><strong>자녀 메인</strong></td>
     </tr>
     <tr align="center"> 
-        <td> <img src= "assets/부모/부모메인.gif"> </td>
-        <td> <img src= "assets/아이/자녀메인.gif"> </td>
+        <td> ![부모메인.gif](./부모메인.gif) </td>
+        <td> ![자녀메인.gif](./자녀메인.gif) </td>
     </tr>
     <tr> 
         <td>
@@ -181,7 +181,7 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         <td><strong>음성 학습</strong></td>
     </tr>
     <tr align="center"> 
-        <td> <img src= "assets/공통/스플래시.gif"> </td>
+        <td> ![음성 학습.gif](./음성 학습.gif) </td>
     </tr>
     <tr> 
         <td>
@@ -198,7 +198,7 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         <td><strong>통계</strong></td>
     </tr>
     <tr align="center"> 
-        <td> <img src= "assets/공통/스플래시.gif"> </td>
+        <td> ![통계.gif](./통계.gif) </td>
     </tr>
     <tr> 
         <td>
@@ -217,7 +217,7 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         <td><strong>음성 앨범</strong></td>
     </tr>
     <tr align="center"> 
-        <td> <img src= "assets/공통/스플래시.gif"> </td>
+        <td> ![음성 앨범.gif](./음성 앨범.gif) </td>
     </tr>
     <tr> 
         <td>
@@ -234,7 +234,7 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         <td><strong>부모 설정</strong></td>
     </tr>
     <tr align="center"> 
-        <td> <img src= "assets/공통/스플래시.gif"> </td>
+        <td> ![부모설정.gif](./부모설정.gif) </td>
     </tr>
     <tr> 
         <td>
@@ -251,11 +251,11 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
 <table>    
     <tr align="center" > 
         <td><strong>아이트래킹 설정</strong></td>
-        <td><strong>집중 알림 모달</strong></td>
+        <td><strong>집중 알림 안내</strong></td>
     </tr>
     <tr align="center"> 
-        <td> <img src= "assets/공통/스플래시.gif"> </td>
-        <td> <img src= "assets/공통/스플래시.gif"> </td>
+        <td> ![eyetracking.gif](./eyetracking.gif) </td>
+        <td> ![시선추적.gif](./시선추적.gif) </td>
     </tr>
     <tr> 
         <td>
@@ -272,8 +272,8 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         <td><strong>동화 낭독</strong></td>
     </tr>
     <tr align="center"> 
-        <td> <img src= "assets/아이/토끼와거북이.gif"> </td>
-        <td> <img src= "assets/아이/금도끼은도끼.gif"> </td>
+        <td> ![더빙보이스선택.gif](./더빙보이스선택.gif) </td>
+        <td> ![동화낭독.gif](./동화낭독.gif) </td>
     </tr>
     <tr> 
         <td>
@@ -295,8 +295,8 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         <td><strong>동화 퀴즈</strong></td>
     </tr>
     <tr align="center"> 
-        <td> <img src= "assets/아이/토끼와거북이.gif"> </td>
-        <td> <img src= "assets/아이/금도끼은도끼.gif"> </td>
+        <td> ![동화메뉴.gif](./동화메뉴.gif) </td>
+        <td> ![동화낭독-1.gif](./동화낭독-1.gif) </td>
     </tr>
     <tr> 
         <td>
@@ -310,32 +310,22 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         </td>
 </table>
 
-### 내 책장
+### 내 책장, 내 방
 
 <table>    
     <tr align="center" > 
         <td><strong>내 책장</strong></td>
+        <td><strong>내 방</strong></td>
     </tr>
     <tr align="center"> 
-        <td> <img src= "assets/공통/스플래시.gif"> </td>
+        <td> ![mybook.gif](./mybook.gif) </td>
+        <td> ![myroom.gif](./myroom.gif) </td>
     </tr>
     <tr> 
         <td>
              - 읽는 중인 동화, 다 읽은 동화 목록 조회 <br>
             - 독서 진행 상태바, 완독 여부 뱃지 조회
         </td>
-</table>
-
-### 내 방
-
-<table>    
-    <tr align="center" > 
-        <td><strong>내 방</strong></td>
-    </tr>
-    <tr align="center"> 
-        <td> <img src= "assets/공통/스플래시.gif"> </td>
-    </tr>
-    <tr> 
         <td>
              - 현재 레벨, 캐릭터 확인 <br>
             - 정보창에서 다음 단계 요건 충족을 위해 읽어야 될 책 수, 다음 단계 캐릭터 조회
@@ -349,7 +339,7 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         <td><strong>자녀 설정</strong></td>
     </tr>
     <tr align="center"> 
-        <td> <img src= "assets/공통/스플래시.gif"> </td>
+        <td> ![settings.gif](./settings.gif) </td>
     </tr>
     <tr> 
         <td>
@@ -364,7 +354,7 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         <td><strong>자녀 프로필</strong></td>
     </tr>
     <tr align="center"> 
-        <td> <img src= "assets/공통/스플래시.gif"> </td>
+        <td> ![profile.gif](./profile.gif) </td>
     </tr>
     <tr> 
         <td>
