@@ -117,7 +117,7 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         <td><strong>스플래시</strong></td>
     </tr>
     <tr align="center"> 
-        <td> <img src= "assets/readme/splash.gif"> </td>
+        <td> ![스플래쉬.gif](./gif/스플래쉬.gif) </td>
     </tr>
     <tr> 
         <td>
