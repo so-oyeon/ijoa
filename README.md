@@ -250,6 +250,19 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
 
 <table>    
     <tr align="center" > 
+        <td><strong>아이트래킹 설정</strong></td>
+    </tr>
+    <tr align="center"> 
+        <td> <img src= "assets/공통/스플래시.gif"> </td>
+    </tr>
+    <tr> 
+        <td>
+             - SEESO 아이트래킹 초기 설정
+        </td>
+</table>
+
+<table>    
+    <tr align="center" > 
         <td><strong>책 읽어주기 목소리 선택</strong></td>
         <td><strong>동화 낭독</strong></td>
     </tr>
