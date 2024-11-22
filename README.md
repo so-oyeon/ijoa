@@ -227,23 +227,6 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         </td>
 </table>
 
-### 부모 설정
-
-<table>    
-    <tr align="center" > 
-        <td><strong>부모 설정</strong></td>
-    </tr>
-    <tr align="center"> 
-        <td> ![부모설정.gif](./gif/childSettings.gif) </td>
-    </tr>
-    <tr> 
-        <td>
-             - 비밀번호 인증을 통한 회원 정보(닉네임 또는 비밀번호) 수정<br>
-            - 로그아웃<br>
-            - 회원탈퇴
-        </td>
-</table>
-
 ## 👶 아이 기능
 
 ### 동화책 읽기
@@ -296,7 +279,7 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
     </tr>
     <tr align="center"> 
         <td> ![동화메뉴.gif](./gif/fairytaleMenu.gif) </td>
-        <td> ![퀴즈.gif](./gif/fairytaleQuestion.gif) </td>
+        <td> ![퀴즈-2.gif](./gif/fairytaleQuestion.gif) </td>
     </tr>
     <tr> 
         <td>
@@ -332,21 +315,6 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         </td>
 </table>
 
-### 자녀 설정
-
-<table>    
-    <tr align="center" > 
-        <td><strong>자녀 설정</strong></td>
-    </tr>
-    <tr align="center"> 
-        <td> ![settings.gif](./gif/settings.gif) </td>
-    </tr>
-    <tr> 
-        <td>
-             - 책 읽어주기, 퀴즈, BGM on/off 설정
-        </td>
-</table>
-
 ### 자녀 프로필
 
 <table>    
@@ -361,6 +329,28 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
              - 자녀 닉네임, 나이 조회 <br>
             - 부모 계정으로 전환 <br>
             - 로그아웃
+        </td>
+</table>
+
+### 설정
+
+<table>    
+    <tr align="center" > 
+        <td><strong>부모 설정</strong></td>
+        <td><strong>자녀 설정</strong></td>
+    </tr>
+    <tr align="center"> 
+        <td> ![부모설정.gif](./gif/childSettings.gif) </td>
+        <td> ![settings.gif](./gif/settings.gif) </td>
+    </tr>
+    <tr> 
+        <td>
+             - 비밀번호 인증을 통한 회원 정보(닉네임 또는 비밀번호) 수정<br>
+            - 로그아웃<br>
+            - 회원탈퇴
+        </td>
+        <td>
+             - 책 읽어주기, 퀴즈, BGM on/off 설정
         </td>
 </table>
 
