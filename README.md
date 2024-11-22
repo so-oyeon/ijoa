@@ -117,7 +117,7 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         <td><strong>스플래시</strong></td>
     </tr>
     <tr align="center"> 
-        <td> ![스플래쉬.gif](./gif/스플래쉬.gif) </td>
+        <td> ![스플래쉬.gif](./gif/splash.gif) </td>
     </tr>
     <tr> 
         <td>
@@ -133,8 +133,8 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         <td><strong>로그인</strong></td>
     </tr>
     <tr align="center"> 
-        <td> ![회원가입.gif](./회원가입.gif) </td>
-        <td> ![로그인.gif](./로그인.gif) </td>
+        <td> ![회원가입.gif](./gif/signup.gif) </td>
+        <td> ![로그인.gif](./gif/login.gif) </td>
     </tr>
     <tr> 
         <td>
@@ -155,8 +155,8 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         <td><strong>자녀 메인</strong></td>
     </tr>
     <tr align="center"> 
-        <td> ![부모메인.gif](./부모메인.gif) </td>
-        <td> ![자녀메인.gif](./자녀메인.gif) </td>
+        <td> ![부모메인.gif](./gif/parentMain.gif) </td>
+        <td> ![자녀메인.gif](./gif/childMain.gif) </td>
     </tr>
     <tr> 
         <td>
@@ -181,7 +181,7 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         <td><strong>음성 학습</strong></td>
     </tr>
     <tr align="center"> 
-        <td> ![음성 학습.gif](./음성 학습.gif) </td>
+        <td> ![음성 학습.gif](./gif/learningVoice.gif) </td>
     </tr>
     <tr> 
         <td>
@@ -198,7 +198,7 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         <td><strong>통계</strong></td>
     </tr>
     <tr align="center"> 
-        <td> ![통계.gif](./통계.gif) </td>
+        <td> ![통계.gif](./gif/statistics.gif) </td>
     </tr>
     <tr> 
         <td>
@@ -217,7 +217,7 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         <td><strong>음성 앨범</strong></td>
     </tr>
     <tr align="center"> 
-        <td> ![음성 앨범.gif](./음성 앨범.gif) </td>
+        <td> ![음성 앨범.gif](./gif/voiceAlbum.gif) </td>
     </tr>
     <tr> 
         <td>
@@ -234,7 +234,7 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         <td><strong>부모 설정</strong></td>
     </tr>
     <tr align="center"> 
-        <td> ![부모설정.gif](./부모설정.gif) </td>
+        <td> ![부모설정.gif](./gif/childSettings.gif) </td>
     </tr>
     <tr> 
         <td>
@@ -254,8 +254,8 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         <td><strong>집중 알림 안내</strong></td>
     </tr>
     <tr align="center"> 
-        <td> ![eyetracking.gif](./eyetracking.gif) </td>
-        <td> ![시선추적.gif](./시선추적.gif) </td>
+        <td> ![eyetracking.gif](./gif/intensiveGuidance.gif) </td>
+        <td> ![시선추적.gif](./gif/eyeTracking.gif) </td>
     </tr>
     <tr> 
         <td>
@@ -272,8 +272,8 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         <td><strong>동화 낭독</strong></td>
     </tr>
     <tr align="center"> 
-        <td> ![더빙보이스선택.gif](./더빙보이스선택.gif) </td>
-        <td> ![동화낭독.gif](./동화낭독.gif) </td>
+        <td> ![더빙보이스선택.gif](./gif/chooseDubbingVoice.gif) </td>
+        <td> ![동화낭독.gif](./gif/readFairytale.gif) </td>
     </tr>
     <tr> 
         <td>
@@ -295,8 +295,8 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         <td><strong>동화 퀴즈</strong></td>
     </tr>
     <tr align="center"> 
-        <td> ![동화메뉴.gif](./동화메뉴.gif) </td>
-        <td> ![동화낭독-1.gif](./동화낭독-1.gif) </td>
+        <td> ![동화메뉴.gif](./gif/fairytaleMenu.gif) </td>
+        <td> ![퀴즈.gif](./gif/fairytaleQuestion.gif) </td>
     </tr>
     <tr> 
         <td>
@@ -318,8 +318,8 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         <td><strong>내 방</strong></td>
     </tr>
     <tr align="center"> 
-        <td> ![mybook.gif](./mybook.gif) </td>
-        <td> ![myroom.gif](./myroom.gif) </td>
+        <td> ![mybook.gif](./gif/mybook.gif) </td>
+        <td> ![myroom.gif](./gif/myroom.gif) </td>
     </tr>
     <tr> 
         <td>
@@ -339,7 +339,7 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         <td><strong>자녀 설정</strong></td>
     </tr>
     <tr align="center"> 
-        <td> ![settings.gif](./settings.gif) </td>
+        <td> ![settings.gif](./gif/settings.gif) </td>
     </tr>
     <tr> 
         <td>
@@ -354,7 +354,7 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         <td><strong>자녀 프로필</strong></td>
     </tr>
     <tr align="center"> 
-        <td> ![profile.gif](./profile.gif) </td>
+        <td> ![profile.gif](./gif/profile.gif) </td>
     </tr>
     <tr> 
         <td>
