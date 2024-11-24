@@ -205,12 +205,12 @@ const FairyTaleContentPage: React.FC = () => {
         getFairyTaleContent(newPage);
 
         const quizEnabled = localStorage.getItem("quizEnabled") === "true";
-        if (quizEnabled && (newPage + 1) % 5 === 0 && !shownQuizPages.includes(newPage) && (newPage + 1) != totalPages) {
+        if (quizEnabled && (newPage + 1) % 5 === 0 && !shownQuizPages.includes(newPage) && newPage + 1 != totalPages) {
           const quizPageNumber = newPage + 1;
           getQuizData(quizPageNumber);
           setIsQuizModalOpen(true);
           setShownQuizPages((prevPages) => [...prevPages, newPage]);
-        } 
+        }
       }
     }
   };
@@ -301,7 +301,7 @@ const FairyTaleContentPage: React.FC = () => {
     getFairyTaleContent(fairytaleCurrentPage); // 페이지 내용 로드
   }, [fairytaleCurrentPage, getFairyTaleContent, isTTSChoiceModalOpen, isQuizModalOpen]);
 
-  useEffect(() => {
+  useEffect(() => { 
     if (ttsId !== null && !isTTSChoiceModalOpen && !isQuizModalOpen) {
       getTTSPlayback();
     }
@@ -357,21 +357,21 @@ const FairyTaleContentPage: React.FC = () => {
           </div>
 
           {fairytaleCurrentPage > 0 && (
-            <div className="absolute left-4 md:left-10 top-1/2 transform -translate-y-1/2">
+            <div className="absolute left-4 md:left-10 top-1/2 transform -translate-y-1/2 z-50">
               <button className="bg-transparent border-none active:scale-125" onClick={handleLeftClick}>
                 <img src={LeftArrow} alt="왼쪽 화살표" className="w-16 md:w-32" />
               </button>
             </div>
           )}
 
-          <div className="absolute right-4 md:right-10 top-1/2 transform -translate-y-1/2">
+          <div className="absolute right-4 md:right-10 top-1/2 transform -translate-y-1/2 z-50">
             <button className="bg-transparent border-none active:scale-125" onClick={handleRightClick}>
               <img src={RightArrow} alt="오른쪽 화살표" className="w-16 md:w-32" />
             </button>
           </div>
 
           {/* 메뉴 버튼 */}
-          <div className="absolute top-[-12px] right-10">
+          <div className="absolute top-[-12px] right-10 z-50">
             <button
               className="px-3 py-4 bg-gray-700 bg-opacity-50 rounded-2xl shadow-md active:bg-gray-800"
               onClick={handleOpenMenu}>
@@ -435,6 +435,7 @@ const FairyTaleContentPage: React.FC = () => {
         audioPlayRef={audioPlayRef}
         ttsId={ttsId}
         previousTTSId={previousTTSId}
+        setIsTTSChoiceModalOpen={setIsTTSChoiceModalOpen}
       />
 
       {/* 집중 알람 모달 */}
