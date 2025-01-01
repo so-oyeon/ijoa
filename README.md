@@ -11,6 +11,7 @@
 ![팀원](https://github.com/user-attachments/assets/929ad517-d627-4aa4-a236-3a341c4a315c)
 
 ## 🛠 기술스택
+
 <table>
     <tr>
         <td><b>Back-end</b></td>
@@ -65,13 +66,9 @@
     </tr>
 </table>
 
-
-
-
 ## ⚙ 아키텍쳐 구조도
 
 ![아키텍쳐](https://github.com/user-attachments/assets/06247ac9-7d28-47ea-b14c-a7436597d29c)
-
 
 ## 🖥 프로젝트 소개
 
@@ -102,7 +99,7 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
 - 생성된 음성을 활용한 동화책 낭독 기능 제공
 - 아이트래킹 기술로 아이의 시선을 추적하여 관심사와 독서 집중 패턴 분석
 - 동화책 내용과 관련된 퀴즈를 통해 독서 흥미 유발
-- 퀴즈에 대한 아이의 음성 답변을 확인하여 관심사를 파악하고, 부모와 아이 간의 유대감 형성 지원 
+- 퀴즈에 대한 아이의 음성 답변을 확인하여 관심사를 파악하고, 부모와 아이 간의 유대감 형성 지원
 
 ▪️ **기대효과**
 
@@ -114,12 +111,13 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
 ## 🔎 기능 소개
 
 ### 스플래시
+
 <table>    
     <tr align="center" > 
         <td><strong>스플래시</strong></td>
     </tr>
     <tr align="center"> 
-        <td> <img src= "assets/공통/스플래시.gif"> </td>
+        <td> ![스플래쉬.gif](./gif/splash.gif) </td>
     </tr>
     <tr> 
         <td>
@@ -135,8 +133,8 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         <td><strong>로그인</strong></td>
     </tr>
     <tr align="center"> 
-        <td> <img src= "assets/아이/아이로그인.gif"> </td>
-        <td> <img src= "assets/부모/부모로그인.gif"> </td>
+        <td> ![회원가입.gif](./gif/signup.gif) </td>
+        <td> ![로그인.gif](./gif/login.gif) </td>
     </tr>
     <tr> 
         <td>
@@ -157,8 +155,8 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         <td><strong>자녀 메인</strong></td>
     </tr>
     <tr align="center"> 
-        <td> <img src= "assets/부모/부모메인.gif"> </td>
-        <td> <img src= "assets/아이/자녀메인.gif"> </td>
+        <td> ![부모메인.gif](./gif/parentMain.gif) </td>
+        <td> ![자녀메인.gif](./gif/childMain.gif) </td>
     </tr>
     <tr> 
         <td>
@@ -183,7 +181,7 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         <td><strong>음성 학습</strong></td>
     </tr>
     <tr align="center"> 
-        <td> <img src= "assets/공통/스플래시.gif"> </td>
+        <td> ![음성 학습.gif](./gif/learningVoice.gif) </td>
     </tr>
     <tr> 
         <td>
@@ -200,7 +198,7 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         <td><strong>통계</strong></td>
     </tr>
     <tr align="center"> 
-        <td> <img src= "assets/공통/스플래시.gif"> </td>
+        <td> ![통계.gif](./gif/statistics.gif) </td>
     </tr>
     <tr> 
         <td>
@@ -219,7 +217,7 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         <td><strong>음성 앨범</strong></td>
     </tr>
     <tr align="center"> 
-        <td> <img src= "assets/공통/스플래시.gif"> </td>
+        <td> ![음성 앨범.gif](./gif/voiceAlbum.gif) </td>
     </tr>
     <tr> 
         <td>
@@ -229,27 +227,27 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         </td>
 </table>
 
-### 부모 설정
-
-<table>    
-    <tr align="center" > 
-        <td><strong>부모 설정</strong></td>
-    </tr>
-    <tr align="center"> 
-        <td> <img src= "assets/공통/스플래시.gif"> </td>
-    </tr>
-    <tr> 
-        <td>
-             - 비밀번호 인증을 통한 회원 정보(닉네임 또는 비밀번호) 수정<br>
-            - 로그아웃<br>
-            - 회원탈퇴
-        </td>
-</table>
-
-
 ## 👶 아이 기능
 
 ### 동화책 읽기
+
+<table>    
+    <tr align="center" > 
+        <td><strong>아이트래킹 설정</strong></td>
+        <td><strong>집중 알림 안내</strong></td>
+    </tr>
+    <tr align="center"> 
+        <td> ![eyetracking.gif](./gif/intensiveGuidance.gif) </td>
+        <td> ![시선추적.gif](./gif/eyeTracking.gif) </td>
+    </tr>
+    <tr> 
+        <td>
+             - SEESO 아이트래킹 초기 설정
+        </td>
+        <td>
+              - 아이의 시선 이탈 지속될 시 집중 유도를 위한 알림
+        </td>
+</table>
 
 <table>    
     <tr align="center" > 
@@ -257,8 +255,8 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         <td><strong>동화 낭독</strong></td>
     </tr>
     <tr align="center"> 
-        <td> <img src= "assets/아이/토끼와거북이.gif"> </td>
-        <td> <img src= "assets/아이/금도끼은도끼.gif"> </td>
+        <td> ![더빙보이스선택.gif](./gif/chooseDubbingVoice.gif) </td>
+        <td> ![동화낭독.gif](./gif/readFairytale.gif) </td>
     </tr>
     <tr> 
         <td>
@@ -270,8 +268,6 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
             - 선택한 목소리로 동화 스크립트 낭독 (다시 듣기 가능)<br>
             - 스크립트와 맞는 이미지를 통한 가독성 향상<br>
             - 사이드의 화살표 클릭으로 이전 페이지, 다음 페이지로 이동<br>
-            - 동화책 내용 관련 퀴즈를 통한 독서 집중 유도<br>
-            - 아이의 시선 이탈 지속될 시 집중 유도를 위한 알림<br>
             - 요건 충족 시 레벨업 알림 및 독서 완료 알림 
         </td>
 </table>
@@ -282,13 +278,14 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         <td><strong>동화 퀴즈</strong></td>
     </tr>
     <tr align="center"> 
-        <td> <img src= "assets/아이/토끼와거북이.gif"> </td>
-        <td> <img src= "assets/아이/금도끼은도끼.gif"> </td>
+        <td> ![동화메뉴.gif](./gif/fairytaleMenu.gif) </td>
+        <td> ![퀴즈-2.gif](./gif/fairytaleQuestion.gif) </td>
     </tr>
     <tr> 
         <td>
             - 책 읽어주기 기능 on/off 선택 <br>
-            - 전체 페이지 조회 및 특정 페이지로 이동
+            - 전체 페이지 조회 및 특정 페이지로 이동 <br>
+            - 더빙 보이스 목소리 변경
         </td>
         <td>
             - 동화 내용 관련 질문을 통한 독서 집중 유도<br>
@@ -296,62 +293,36 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         </td>
 </table>
 
-### 내 책장
+### 내 책장, 내 방
 
 <table>    
     <tr align="center" > 
         <td><strong>내 책장</strong></td>
+        <td><strong>내 방</strong></td>
     </tr>
     <tr align="center"> 
-        <td> <img src= "assets/공통/스플래시.gif"> </td>
+        <td> ![mybook.gif](./gif/mybook.gif) </td>
+        <td> ![myroom.gif](./gif/myroom.gif) </td>
     </tr>
     <tr> 
         <td>
              - 읽는 중인 동화, 다 읽은 동화 목록 조회 <br>
             - 독서 진행 상태바, 완독 여부 뱃지 조회
         </td>
-</table>
-
-
-### 내 방
-
-<table>    
-    <tr align="center" > 
-        <td><strong>내 방</strong></td>
-    </tr>
-    <tr align="center"> 
-        <td> <img src= "assets/공통/스플래시.gif"> </td>
-    </tr>
-    <tr> 
         <td>
              - 현재 레벨, 캐릭터 확인 <br>
             - 정보창에서 다음 단계 요건 충족을 위해 읽어야 될 책 수, 다음 단계 캐릭터 조회
         </td>
 </table>
 
-
-### 자녀 설정
-<table>    
-    <tr align="center" > 
-        <td><strong>자녀 설정</strong></td>
-    </tr>
-    <tr align="center"> 
-        <td> <img src= "assets/공통/스플래시.gif"> </td>
-    </tr>
-    <tr> 
-        <td>
-             - 책 읽어주기, 퀴즈, BGM on/off 설정
-        </td>
-</table>
-
-
 ### 자녀 프로필
+
 <table>    
     <tr align="center" > 
         <td><strong>자녀 프로필</strong></td>
     </tr>
     <tr align="center"> 
-        <td> <img src= "assets/공통/스플래시.gif"> </td>
+        <td> ![profile.gif](./gif/profile.gif) </td>
     </tr>
     <tr> 
         <td>
@@ -361,46 +332,65 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         </td>
 </table>
 
+### 설정
+
+<table>    
+    <tr align="center" > 
+        <td><strong>부모 설정</strong></td>
+        <td><strong>자녀 설정</strong></td>
+    </tr>
+    <tr align="center"> 
+        <td> ![부모설정.gif](./gif/parentSettings.gif) </td>
+        <td> ![settings.gif](./gif/childSettings.gif) </td>
+    </tr>
+    <tr> 
+        <td>
+             - 비밀번호 인증을 통한 회원 정보(닉네임 또는 비밀번호) 수정<br>
+            - 로그아웃<br>
+            - 회원탈퇴
+        </td>
+        <td>
+             - 책 읽어주기, 퀴즈, BGM on/off 설정
+        </td>
+</table>
 
 ## 👨‍💻 활용기술, 기술 설명
 
 **1. TTS (Text-to-Speech) 기술**
-   - XTTS-v2 모델
-       - 적은 데이터로도 고품질 학습 가능
-       - 미세 파라미터 조정을 통해 음성 품질 개선
-   - Kafka
-       - TTS 학습 및 오디오 생성 과정을 효율적으로 처리
-       - 분산형 메시지 스트리밍 플랫폼으로 데이터 처리 병렬화
-   - 분산락
-       - 중복 학습 및 생성 요청 방지
-         
+
+- XTTS-v2 모델
+  - 적은 데이터로도 고품질 학습 가능
+  - 미세 파라미터 조정을 통해 음성 품질 개선
+- Kafka
+  - TTS 학습 및 오디오 생성 과정을 효율적으로 처리
+  - 분산형 메시지 스트리밍 플랫폼으로 데이터 처리 병렬화
+- 분산락
+  - 중복 학습 및 생성 요청 방지
+
 **2. 통계 기술**
-   - 시간대별 집중도 분석
-       - 일월분산분석(ANOVA)을 통해 특정 시간대의 집중도 비교
-       - p-value로 통계적 유의미성 확인
-   - 텍스트 길이와 집중도 간 관계
-       - 단순 회귀 분석으로 두 변수의 선형 관계 분석
-       - R^2, 기울기, p-value로 모델 신뢰도 및 관계 확인
-         
+
+- 시간대별 집중도 분석
+  - 일월분산분석(ANOVA)을 통해 특정 시간대의 집중도 비교
+  - p-value로 통계적 유의미성 확인
+- 텍스트 길이와 집중도 간 관계
+  - 단순 회귀 분석으로 두 변수의 선형 관계 분석
+  - R^2, 기울기, p-value로 모델 신뢰도 및 관계 확인
+
 **3. 검색 및 추천**
-   - 동화책 검색
-       - ElasitcSearch 기반 검색 시스템 <br>
-             - 빠르고 유연한 텍스트 검색을 지원 (부분 일치 검색 활용) <br>
-             - Logstash를 사용하여 MySQL 데이터를 ElasticSearch로 동기화 <br>
-             - 동화책 제목 검색에서 키워드의 일부만 입력해도 정확한 결과를 반환
-   - 동화책 추천
-       - 협업 필터링 기반 추천 시스템 <br>
-             - 코사인 유사도를 사용해 사용자 간 읽기 패턴 유사성을 계산<br>
-             - 유사한 사용자의 가중치를 기반으로, 읽지 않은 동화책 중 점수가 높은 순서로 추천<br>
-             - 콜드 스타트 문제 완화: 추천 수가 부족한 경우 인기 동화책을 활용하여 보완
+
+- 동화책 검색
+  - ElasitcSearch 기반 검색 시스템 <br> - 빠르고 유연한 텍스트 검색을 지원 (부분 일치 검색 활용) <br> - Logstash를 사용하여 MySQL 데이터를 ElasticSearch로 동기화 <br> - 동화책 제목 검색에서 키워드의 일부만 입력해도 정확한 결과를 반환
+- 동화책 추천
+  - 협업 필터링 기반 추천 시스템 <br> - 코사인 유사도를 사용해 사용자 간 읽기 패턴 유사성을 계산<br> - 유사한 사용자의 가중치를 기반으로, 읽지 않은 동화책 중 점수가 높은 순서로 추천<br> - 콜드 스타트 문제 완화: 추천 수가 부족한 경우 인기 동화책을 활용하여 보완
 
 **4. 기타 기술**
-   - 아이트래킹 분석 (SEESO SDK)
-   - 모델 성능 최적화
-      - 병렬 처리를 통해 전체 시스템 효율 극대화
 
+- 아이트래킹 분석 (SEESO SDK)
+- 모델 성능 최적화
+  - 병렬 처리를 통해 전체 시스템 효율 극대화
 
 ## 🚩 산출물
+
 <table>    
     <tr align="center" > 
         <td><strong>개발 목업</strong></td>
@@ -437,6 +427,5 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
     </tr>
 </table>
 
-
 ## ✅ 최종발표 ppt
-아이조아 최종발표 ppt (추후 링크 추가 예정)
+![](./D105_PPT.mp4)

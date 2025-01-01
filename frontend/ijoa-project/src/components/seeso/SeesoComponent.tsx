@@ -32,7 +32,7 @@ const SeesoComponent = ({
   const margin = 30;
 
   // Seeso 트래킹 점 유무 관리
-  const [isCanvas, setIsCanvas] = useState(false);
+  const [isCanvas, setIsCanvas] = useState(true);
 
   // Seeso 인스턴스를 관리하는 ref
   const seeSoInstanceRef = useRef<Seeso | null>(null);
