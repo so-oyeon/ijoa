@@ -117,7 +117,7 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         <td><strong>스플래시</strong></td>
     </tr>
     <tr align="center"> 
-        <td> ![스플래쉬.gif](./gif/splash.gif) </td>
+        <td> <img src="./gif/splash.gif" alt="스플래쉬.gif"> </td>
     </tr>
     <tr> 
         <td>
@@ -133,8 +133,8 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         <td><strong>로그인</strong></td>
     </tr>
     <tr align="center"> 
-        <td> ![회원가입.gif](./gif/signup.gif) </td>
-        <td> ![로그인.gif](./gif/login.gif) </td>
+        <td> <img src="./gif/signup.gif" alt="회원가입.gif"> </td>
+        <td> <img src="./gif/login.gif" alt="로그인.gif"> </td>
     </tr>
     <tr> 
         <td>
@@ -155,8 +155,8 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         <td><strong>자녀 메인</strong></td>
     </tr>
     <tr align="center"> 
-        <td> ![부모메인.gif](./gif/parentMain.gif) </td>
-        <td> ![자녀메인.gif](./gif/childMain.gif) </td>
+        <td> <img src="./gif/parentMain.gif" alt="부모메인.gif"> </td>
+        <td> <img src="./gif/childMain.gif" alt="자녀메인.gif"> </td>
     </tr>
     <tr> 
         <td>
@@ -181,7 +181,7 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         <td><strong>음성 학습</strong></td>
     </tr>
     <tr align="center"> 
-        <td> ![음성 학습.gif](./gif/learningVoice.gif) </td>
+        <td> <img src="./gif/learningVoice.gif" alt="음성 학습.gif"> </td>
     </tr>
     <tr> 
         <td>
@@ -198,7 +198,7 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         <td><strong>통계</strong></td>
     </tr>
     <tr align="center"> 
-        <td> ![통계.gif](./gif/statistics.gif) </td>
+        <td> <img src="./gif/statistics.gif" alt="통계.gif"> </td>
     </tr>
     <tr> 
         <td>
@@ -217,7 +217,7 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         <td><strong>음성 앨범</strong></td>
     </tr>
     <tr align="center"> 
-        <td> ![음성 앨범.gif](./gif/voiceAlbum.gif) </td>
+        <td> <img src="./gif/voiceAlbum.gif" alt="음성 앨범.gif"> </td>
     </tr>
     <tr> 
         <td>
@@ -237,8 +237,8 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         <td><strong>집중 알림 안내</strong></td>
     </tr>
     <tr align="center"> 
-        <td> ![eyetracking.gif](./gif/intensiveGuidance.gif) </td>
-        <td> ![시선추적.gif](./gif/eyeTracking.gif) </td>
+        <td> <img src="./gif/intensiveGuidance.gif" alt="eyetracking.gif"> </td>
+        <td> <img src="./gif/eyeTracking.gif" alt="시선추적.gif"> </td>
     </tr>
     <tr> 
         <td>
@@ -255,8 +255,8 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         <td><strong>동화 낭독</strong></td>
     </tr>
     <tr align="center"> 
-        <td> ![더빙보이스선택.gif](./gif/chooseDubbingVoice.gif) </td>
-        <td> ![동화낭독.gif](./gif/readFairytale.gif) </td>
+        <td> <img src="./gif/chooseDubbingVoice.gif" alt="더빙보이스선택.gif"> </td>
+        <td> <img src="./gif/readFairytale.gif" alt="동화낭독.gif"> </td>
     </tr>
     <tr> 
         <td>
@@ -278,8 +278,8 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         <td><strong>동화 퀴즈</strong></td>
     </tr>
     <tr align="center"> 
-        <td> ![동화메뉴.gif](./gif/fairytaleMenu.gif) </td>
-        <td> ![퀴즈-2.gif](./gif/fairytaleQuestion.gif) </td>
+        <td> <img src="./gif/fairytaleMenu.gif" alt="동화메뉴.gif"> </td>
+        <td> <img src="./gif/fairytaleQuestion.gif" alt="퀴즈-2.gif"> </td>
     </tr>
     <tr> 
         <td>
@@ -301,8 +301,8 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         <td><strong>내 방</strong></td>
     </tr>
     <tr align="center"> 
-        <td> ![mybook.gif](./gif/mybook.gif) </td>
-        <td> ![myroom.gif](./gif/myroom.gif) </td>
+        <td> <img src="./gif/mybook.gif" alt="mybook.gif"> </td>
+        <td> <img src="./gif/myroom.gif" alt="myroom.gif"> </td>
     </tr>
     <tr> 
         <td>
@@ -322,7 +322,7 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         <td><strong>자녀 프로필</strong></td>
     </tr>
     <tr align="center"> 
-        <td> ![profile.gif](./gif/profile.gif) </td>
+        <td> <img src="./gif/profile.gif" alt="profile.gif"> </td>
     </tr>
     <tr> 
         <td>
@@ -340,8 +340,8 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
         <td><strong>자녀 설정</strong></td>
     </tr>
     <tr align="center"> 
-        <td> ![부모설정.gif](./gif/parentSettings.gif) </td>
-        <td> ![settings.gif](./gif/childSettings.gif) </td>
+        <td> <img src="./gif/parentSettings.gif" alt="부모설정.gif"> </td>
+        <td> <img src="./gif/childSettings.gif" alt="settings.gif"> </td>
     </tr>
     <tr> 
         <td>
@@ -406,7 +406,7 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
             <td><strong>ERD</strong></td>
     </tr>
     <tr align="center">
-            <td> ![D105_ERD.png](./D105_ERD.png) </td>
+            <td> <img src="./D105_ERD.png" alt="D105_ERD.png"> </td>
     </tr>
 </table>
 <br>
@@ -428,4 +428,5 @@ AI를 활용한 목소리 학습을 통해 아이들이 독서에 흥미를 느�
 </table>
 
 ## ✅ 최종발표 ppt
-![](./D105_PPT.mp4)
+https://github.com/user-attachments/assets/6096df5f-7d26-400f-b415-70c54690e716
+
